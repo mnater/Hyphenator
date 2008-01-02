@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de">
+<head>
+<title>hyph.js</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body {
+	width:50%;
+	max-width:15cm;
+	text-align:left;
+	margin-left:25%;
+	margin-right:25%;
+	font:10pt/14pt Georgia;
+	color:#222222;
+}
+h1 {
+	font:16pt/18pt Georgia;
+}
+h2 {
+	font:16pt/18pt Georgia;
+}
+h3 {
+	font:italic 16pt/18pt Georgia;
+}
+p {
+	text-align:justify;
+	font:10pt/14pt Georgia;
+	}
+blockquote {
+	text-align:left;
+	font:italic 10pt/14pt Georgia;
+	}
+table {
+	width:100%;
+	border: 1px solid #555555;
+	border-collapse:collapse
+}
+th {
+	text-align:left;
+}
+tr {
+	text-align:left;
+	border: 1px solid #555555;
+}
+code {
+	text-align:left;
+	white-space:pre;
+	font:10pt/14pt monospace;
+	color:#000033;
+}
+</style>
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+window.onload=function() {
+    Hyphenator.setMinWordLength(5);
+    Hyphenator.setHyphenChar('-');
+	Hyphenator.hyphenateDocument();
+}
+</script>
+
+</head>
+<body>
+<h1>Hinweise zum Gebrauch von dehyph.js</h1>
+<p class="hyphenate">Diese Datei gibt Hinweise zum Gebrauch des Skriptes und setzt dieses auch ein und dient so als Testcase. Um Trennungen zu sehen kann die Fensterbreite des Browsers verändert werden.</p>
+
+
+<h2>Version</h2>
+<p class="hyphenate">Diese Datei bezieht sich auf Version 5 des Skripts. Siehe auch die <a href="http://www.mnn.ch/hyph/versionhist.html">Änderungsliste der jeweiligen Versionen</a> für eventuell neuere Versionen. Diese Version kann auf deutsch-, französisch- und englischsprachigen Webseiten eingesetzt werden.</p>
+
+<h2>Verwendung auf einer Webseite</h2>
+<p>Das Skript wird im &lt;head&gt;-Block einer HTML-Datei eingebunden:<br />
+<code>&lt;script src="http://www.mnn.ch/hyph/v5/Hyphenator.js"
+        type="text/javascript"&gt;
+&lt;/script&gt;</code><br />
+Durch das Einbinden dieses Script wird automatisch das Objekt <code>Hyphenator</code> erstellt.</p>
+<p>Anschliessend muss die Methode <code>Hyphenator.hyphenateDocument()</code> ausgeführt werden, sobald die gesammte Datei geladen ist:<br />
+<code>&lt;script type="text/javascript"&gt;
+window.onload=function() {
+	Hyphenator.hyphenateDocument(6,'&shy;');
+}
+&lt;/script&gt;</code></p>
+<p class="hyphenate" id="eins">Das Script sucht automatisch alle Elemente mit der Klasse "hyphenate" (z.B. <code>&lt;p class="hyphenate"&gt;</code>) und nimmt die Silbentrennung in diesen Elementen und ihren Kind-Elementen vor. Zur Angabe der Sprache muss das Attribut <a href="http://edition-w3.de/TR/1999/REC-html401-19991224/struct/dirlang.html#h-8.1">lang</a> oder <a href="http://www.w3.org/TR/xhtml1/#C_7">xml:lang</a> in mindestens einem übergeordneten Element-Tag stehen.</p>
+
+
+<h2>Verwendung als Bookmarklet</h2>
+<p class="hyphenate" id="zwei">Um die Silbentrennung auf "fremden" Seiten durchzuführen (z.B. vor dem Druck der Seite) kann man im Browser das folgende <a href="http://de.wikipedia.org/wiki/Bookmarklet">Bookmarklet</a> definieren, welches das Script lädt und die Trennung <em>in allen Elementen</em> durchführt:</p>
+<p style="text-align:left;"><a href="javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://www.mnn.ch/hyph/v5/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}">javascript: if (document.createElement) { void(head=document.getElementsByTagName('head').item(0)); void(script=document.createElement('script')); void(script.src='http://www.mnn.ch/hyph/v5/Hyphenator.js?bm=true'); void(script.type='text/javascript'); void(head.appendChild(script));}
+</a><br />
+(diesen Link als Lesezeichen speichern).</p>
+<p class="hyphenate"><em>Achtung:</em>Je nach Seite kann das einige Sekunden dauern!</p>
+
+
+<h2>Browserkompatibilität</h2>
+<table class="hyphenate">
+<thead>
+<tr><th>Browser</th><th>Version</th><th>Bemerkung(en)</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="background-color:#009933;">IE</td><td>&gt;=6</td><td>Fehldarstellung des Zero-Width-Space (nur IE6)</td>
+</tr>
+<tr>
+<td style="background-color:#FF6633;">Firefox (und andere Gecko-Anwendungen)</td><td>&gt;=2</td><td>Firefox unterstützt &amp;shy; erst ab Version 3. Darunter Trennung nur nach Bindestrichen.</td>
+</tr>
+<tr>
+<td style="background-color:#009933;">Opera</td><td>&gt;=9</td><td></td>
+</tr>
+<tr>
+<td style="background-color:#009933;">Safari (und andere WebKit-Anwendungen)</td><td>&gt;=2</td><td></td>
+</tr>
+</tbody>
+</table>
+
+<h1>Trennung von verschiedensprachigen Dokumenten</h1>
+<p class="hyphenate" lang="de">Mit dem Attribut <code>lang</code> kann die Sprache eines Textes angegeben werden; so kann sprachenspezifisch getrennt werden. Als Beispiel dienen ein französischer und ein englischer Text von J.J. Rousseau:<br />
+<span lang="fr">FR: Je forme une entreprise qui n'eut jamais d'exemple, et dont l'exécution n'aura point d'imitateur. Je veux montrer à mes semblables un homme dans toute la vérité de la nature; et cet homme, ce sera moi. </span><br />
+<span lang="en"> EN: I have entered upon a performance which is without example, whose accomplishment will have no imitator.  I mean to present my fellow-mortals with a man in all the integrity of nature; and this man shall be myself.</span>
+</p>
+</body>
+</html>
