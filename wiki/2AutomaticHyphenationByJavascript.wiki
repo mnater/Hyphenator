@@ -103,7 +103,7 @@ Because the script has to traverse all elements and hyphenates them all, this mo
 Read the code!
 
 == Getting and using the script ==
-Just download, unzip and read the readme how to use it on your page.
+Just [http://code.google.com/p/hyphenator/downloads/list download], unzip and read the [3HowTo how to] use it on your page.
 
 You can use it as a bookmarklet, too. By clicking this bookmarklet you can hyphenate whatever webage you want. To set the bookmarklet just save the following script as a bookmark: 
 {{{
