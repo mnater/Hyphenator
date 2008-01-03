@@ -24,7 +24,7 @@ var Hyphenator=(function(){
 	/************ may be changed ************/
 	var verbose=false; // turn visual feedback on:true/off:false
 	var debug=false; // turn debug mode on:true/off:false
-	var basepath='http://127.0.0.1/~mnater/mnn/hyph/v5/'; // change this if you copied the script to your webspace
+	var basepath='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var languages={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
 	var prompterStrings={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
 						 'en':'The language of these website could not be determined automatically. Please indicate main language: \n\nEnglish: en\tGerman: de\tFrench: fr',
