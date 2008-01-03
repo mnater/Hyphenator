@@ -26,7 +26,7 @@ Automatic hyphenation is quite complex: It depends fairly on the particular lang
 
 In most text processing applications lexical algorithms are used to find components and hyphenation points for each word. Words and components that can't be found on the list have to be hyphenated manually. The disadvantage of this approach is the extended use of storage space and the fact that unknown words (often compounds) can't be hyphenated.
 
-Pattern based algorithms are the other side of the game. They compute patterns out of long lists of hyphenated words and later use this patterns to find hyphenation points. The most known algorithm of this kind is Franklin Mark Liangs (see [http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), which has been developped 1983 and is used in apps like LaTeX and OpenOffice. Pattern based algorithms are - depending on the length of the initial word list - to find 90% of all hyphenation points. Although they can produce confusions with other words (such as “recover” vs. “re-cover”) wich have to be edited manually.
+Pattern based algorithms are the other side of the game. They compute patterns out of long lists of hyphenated words and later use this patterns to find hyphenation points. The most known algorithm of this kind is Franklin Mark Liangs (see [http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), which has been developped 1983 and is used in apps like LaTeX and Openoffice. Pattern based algorithms are - depending on the length of the initial word list - to find 90% of all hyphenation points. Although they can produce confusions with other words (such as “recover” vs. “re-cover”) wich have to be edited manually.
 
 == Using hyphenation on webpages today ==
 The [http://www.w3.org/TR/html401/struct/text.html#h-9.3.3 HTML401-Standard] says
@@ -52,8 +52,8 @@ Although hyphenation isn't very important on webpages, it may lead to nicer layo
 
 
 == And now? ==
-With its comming version 3.0 even Firefox will support `&shy;`. An automated hyphenation is going to be more and more interesting. Until browsers have there own hyphenation-mechanism, hyphenation has to be done either during the authoring of the text (by the editor) or just before the page is delivered (by a script on the server) or in the users browser (by JavaScript).
+With its comming version 3.0 even Firefox will support `&shy;`. An automated hyphenation is going to be more and more interesting. Until browsers have there own hyphenation-mechanism, hyphenation has to be done either during the authoring of the text (by the editor) or just before the page is delivered (by a script on the server) or in the users browser (by Javascript).
 
-Using JavaScript on the clientside has the big advantages that hyphenation can be turn on and off by the user and isn't seen by search bots.
+Using Javascript on the clientside has the big advantages that hyphenation can be turn on and off by the user and isn't seen by search bots.
 
-The <a href="hyphenation2.html">second part</a> of this article shows a possible implementation in JavaScript.
+The <a href="hyphenation2.html">second part</a> of this article shows a possible implementation in Javascript.
