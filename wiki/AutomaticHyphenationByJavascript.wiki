@@ -45,11 +45,11 @@ the programm was able to find almost 90% of all hyphenation points. To find all 
 patterns would have been necessary &ndash; a great deal too much for computers of this time.
 
 Later, patterns for many other languages have been computed and are used in todays software 
-like OpenOffice and LaTeX.
+like Openoffice and LaTeX.
 
 Patterns are available online at [http://www.ctan.org/tex-archive/language/hyphenation/" CTAN] under the LaTeX Project Public License.
 
-== Implementation in JavaScript ==
+== Implementation in Javascript ==
 Due to its low memory usage and its simplicity Liangs algorithm suits very well for usage on 
 webpages. As you will see, the entire script including one pattern library isn't bigger then 100KB and fast 
 enough.
@@ -64,39 +64,39 @@ but is read in less then 30ms.
 
 Liang proposes to use a trie as basic data structure for the patterns. I did it, too. But it 
 was too slow (assumed I did everything right!): With a trie many searches for patterns could be avoided, but 
-traversing the trie was so slow, that looking up for all possible patterns in a simple JavaScript-Object won the 
+traversing the trie was so slow, that looking up for all possible patterns in a simple Javascript-Object won the 
 game.
 
 === How it works ===
   #Prepare your HTML-documents by
-    *Encoding it in UTF-8.
-	*Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
-	*Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting).
-  #Include the script by adding the following code to your HTML-document:
-	{{{
-    <script src="http://www.mnn.ch/hyph/v5/Hyphenator.js"
-	        type="text/javascript">
-    </script>
-	}}}
-	You may also [http://code.google.com/p/hyphenator/downloads/list download it] and load it from your server. If you do that, you will also have to change the hardcoded basepath in the script (somewhere around line 28).
-  #Invoke the script, when the page is loaded:
-	{{{
-	<script type="text/javascript">
-    	window.onload=function() {
-	    	Hyphenator.hyphenateDocument();
-	    };
-    </script>
-	}}}}
+    * Encoding it in UTF-8.
+    * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
+    * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting).
+  # Include the script by adding the following code to your HTML-document:
+{{{
+<script src="http://www.mnn.ch/hyph/v5/Hyphenator.js"
+		type="text/javascript">
+</script>
+}}}
+    You may also [http://code.google.com/p/hyphenator/downloads/list download it] and load it from your server. If you do that, you will also have to change the hardcoded basepath in the script (somewhere around line 28).
+  # Invoke the script, when the page is loaded:
+{{{
+<script type="text/javascript">
+	window.onload=function() {
+		Hyphenator.hyphenateDocument();
+	};
+</script>
+}}}}
 	Done.
 	There are some settings you can change before invoking the script:
 	To change the minimal length of words to be hyphenated (default=6, the lower the number the slower the script), use this:
-	{{{
-	Hyphenator.setMinWordLength(4);
-	}}}
+{{{
+Hyphenator.setMinWordLength(4);
+}}}
 	To change the hyphen character (defaults to &amp;shy;):
-	{{{
-	Hyphenator.setHyphenChar('|');
-	}}}
+{{{
+Hyphenator.setHyphenChar('|');
+}}}
 	Other settings are hardcoded in the script. Read it, and change them!
 
 When the function `Hyphenator.hyphenateDocument()` is called, the script hyphenates all text of elements having the attribute `class="hyphenate"` — even the text of their child-elements.
