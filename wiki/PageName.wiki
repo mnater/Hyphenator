@@ -1,6 +1,6 @@
 #About automatic hyphenation by Javascript
 
-= Hyphenation in HTML with JavaScript - Part 2 =
+= Hyphenation in HTML with Javascript - Part 2 =
 
 == Abstract ==
 This Article treats in its [http://code.google.com/p/hyphenator/wiki/HyphenationInHTML first part] the problem of word hyphenation in current webbrowsers. In this second part a javascript doing automatic word hyphenation is presented as a possible solution. This script relies on Liangs thesis and uses hyphenation patterns from the LaTeX-Distribution.
