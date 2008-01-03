@@ -78,7 +78,7 @@ game.
 		type="text/javascript">
 </script>
 }}}
-    You may also [http://code.google.com/p/hyphenator/downloads/list download it] and load it from your server. If you do that, you will also have to change the hardcoded basepath in the script (somewhere around line 28).
+  You may also [http://code.google.com/p/hyphenator/downloads/list download it] and load it from your server. If you do that, you will also have to change the hardcoded basepath in the script (somewhere around line 28).
   # Invoke the script, when the page is loaded:
 {{{
 <script type="text/javascript">
@@ -86,7 +86,7 @@ game.
 		Hyphenator.hyphenateDocument();
 	};
 </script>
-}}}}
+}}}
 	Done.
 	There are some settings you can change before invoking the script:
 	To change the minimal length of words to be hyphenated (default=6, the lower the number the slower the script), use this:
