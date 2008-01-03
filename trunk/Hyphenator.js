@@ -144,8 +144,7 @@ var Hyphenator=(function(){
 		if(languages[lang] && !patternsloaded[lang]) {
 	        var url=basepath+'patterns/'+lang+'.js';
 	        if(lang=="de") {
-	        	//url=basepath+'patterns/newpatterns/de.js';
-	        	url=basepath+'patterns/dep.js';
+	        	url=basepath+'patterns/newpatterns/de.js';
 	        }
 		} else {
 			return;
