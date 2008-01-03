@@ -170,7 +170,7 @@ var Hyphenator=(function(){
 			var elements=body.getElementsByTagName('*');
 			for(var i=0; i<elements.length; i++)
 			{
-				if(elements[i].classNameindexOf(hyphenateclass)!=-1) {
+				if(elements[i].className.indexOf(hyphenateclass)!=-1) {
 					Hyphenator.hyphenateElement(elements[i]);
 				}
 			}
