@@ -371,6 +371,7 @@ var Hyphenator=(function(){
 				hyphen=String.fromCharCode(173);
 			}
 			return result.join(hyphen);
+		}
 	};
 })();
 if(Hyphenator.isBookmarklet()) {
