@@ -167,11 +167,19 @@ var Hyphenator=(function(){
 		if(Hyphenator.isBookmarklet()) {
 			Hyphenator.hyphenateElement(body);
 		} else {
-			var elements=body.getElementsByTagName('*');
-			for(var i=0; i<elements.length; i++)
-			{
-				if(elements[i].className.indexOf(hyphenateclass)!=-1) {
+			if(document.getElementsByClassName) {
+				var elements=document.getElementsByClassName(hyphenateclass);
+				for(var i=0; i<elements.length; i++)
+				{
 					Hyphenator.hyphenateElement(elements[i]);
+				}
+			} else {
+				var elements=body.getElementsByTagName('*');
+				for(var i=0; i<elements.length; i++)
+				{
+					if(elements[i].className.indexOf(hyphenateclass)!=-1) {
+						Hyphenator.hyphenateElement(elements[i]);
+					}
 				}
 			}
 		}
