@@ -22,24 +22,22 @@
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
-	var verbose=false; // turn visual feedback on:true/off:false
-	var debug=false; // turn debug mode on:true/off:false
-	var basepath='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
-	var languages={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
-	var prompterStrings={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
+	var DEBUG=false; // turn DEBUG mode on:true/off:false
+	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
+	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
+	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
 						 'en':'The language of these website could not be determined automatically. Please indicate main language: \n\nEnglish: en\tGerman: de\tFrench: fr',
 						 'fr':'La langue de cette site ne pouvait pas %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue: \n\nFran%E7ais: fr\tAnglais: en\tAllemand: de'};
-	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
-	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy;
-	var min=6; // only hyphanete words longer then or equal to 'min'
 	
 	/************ don't change! ************/
+	var DONTHYPHENATE={'script':true,'code':true,'pre':true,'img':true,'br':true};
+	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
+	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy; Change by Hyphenator.setHyphenChar(c);
+	var min=6; // only hyphanete words longer then or equal to 'min'. Change by Hyphenator.setMinWordLength(n);
 	var bookmarklet=false;
 	var patternsloaded={}; // this is set when the patterns are loaded
 	var preparestate=0; //0: not initialized, 1: loading patterns, 2: ready
 	var mainlanguage=null;
-	var donthyphenate={'script':true,'code':true,'pre':true,'img':true,'br':true};
-
 	
 	/************ UA related ************/
 	var zerowidthspace='';
@@ -106,13 +104,13 @@ var Hyphenator=(function(){
 			var text='';
 			var ul=(navigator.language)?navigator.language:navigator.userLanguage;
 			ul=ul.substring(0,2);
-			if(languages[ul]) {
-				text=prompterStrings[ul];
+			if(SUPPORTEDLANG[ul]) {
+				text=PROMPTERSTRINGS[ul];
 			} else {
-				text=prompterStrings.en;
+				text=PROMPTERSTRINGS.en;
 			}
 			var lang=window.prompt(unescape(text), ul);
-			if(languages[lang]) {
+			if(SUPPORTEDLANG[lang]) {
 				mainlanguage = lang;
 			}
 		}
@@ -139,12 +137,12 @@ var Hyphenator=(function(){
 	// Why not using AJAX? Because it is restricted to load data
 	// only from the same site - so the Bookmarklet won't work...
 	function _loadPatterns(lang) {
-		if(debug)
+		if(DEBUG)
 			_log("load patterns "+lang);
-		if(languages[lang] && !patternsloaded[lang]) {
-	        var url=basepath+'patterns/'+lang+'.js';
+		if(SUPPORTEDLANG[lang] && !patternsloaded[lang]) {
+	        var url=BASEPATH+'patterns/'+lang+'.js';
 	        if(lang=="de") {
-	        	url=basepath+'patterns/newpatterns/de.js';
+	        	url=BASEPATH+'patterns/newpatterns/de.js';
 	        }
 		} else {
 			return;
@@ -156,7 +154,7 @@ var Hyphenator=(function(){
 			script.type='text/javascript';
 			head.appendChild(script);
 		}
-		if(debug)
+		if(DEBUG)
 			_log('Loading '+url);
 	};
 
@@ -187,7 +185,7 @@ var Hyphenator=(function(){
 
 	/************ init methods ************/
 	function _autoinit() {
-		for(var lang in languages) {
+		for(var lang in SUPPORTEDLANG) {
 			patternsloaded[lang]=false;
 		}
 		_autoSetMainLanguage();
@@ -205,11 +203,14 @@ var Hyphenator=(function(){
 		patterns:{}, // patterns are stored in here, when they have finished loading
 		
 		//public methods
+		setClassName: function(str) {
+            hyphenateclass=str || 'hyphenate';
+		},
 		setMinWordLength: function(mymin) {
-            min=mymin;
+            min=mymin || 6;
 		},
 		setHyphenChar: function(str) {
-            hyphen=str;
+            hyphen=str || String.fromCharCode(173);
 		},
 		isPatternLoaded: function(lang) {
 			return patternsloaded[lang];
@@ -222,30 +223,34 @@ var Hyphenator=(function(){
 		},
 		prepare: function() {
         // get all languages that are used and preload the patterns
-			if(debug)
+			if(DEBUG)
 				_log("preparing-state: 1 (loading)");
 			preparestate=1;
-			var languages={};
-			languages[mainlanguage]=true;
+			var doclanguages={};
+			doclanguages[mainlanguage]=true;
 			var elements=document.getElementsByTagName('body')[0].getElementsByTagName('*');
 			var lang=null;
 			for(var i=0; i<elements.length; i++) {
-				if((lang=_getLang(elements[i])) && !languages[lang]) {
-					languages[lang]=true;
+				if((lang=_getLang(elements[i])) && !doclanguages[lang]) {
+					if(SUPPORTEDLANG[lang]) {
+						doclanguages[lang]=true;
+					} else {
+						//alert('Language '+lang+' is not yet supported.');
+					}
 				}
 			}
-			if(debug) {
-				for(var l in languages) {
+			if(DEBUG) {
+				for(var l in doclanguages) {
 					_log("language found: "+l);
 				}
 			}
-			for(lang in languages) {
+			for(lang in doclanguages) {
 				_loadPatterns(lang);
 			}
 			// wait until they are loaded
 			interval=window.setInterval(function(){
 				finishedLoading=false;
-				for(lang in languages) {
+				for(lang in doclanguages) {
 					if(!patternsloaded[lang]) {
 						finishedLoading=false;
 						break;
@@ -256,14 +261,14 @@ var Hyphenator=(function(){
 				if(finishedLoading) {
 					window.clearInterval(interval);
 					preparestate=2;
-					if(debug)
+					if(DEBUG)
 						_log("preparing-state: 2 (loaded)");
 				}
 			},100);
 
 		},
 		hyphenateDocument: function() {
-			if(debug)
+			if(DEBUG)
 				_log("hyphenateDocument");
 			if(preparestate!=2) {
 				if(preparestate==0) {
@@ -283,25 +288,25 @@ var Hyphenator=(function(){
         // if there is text hyphenate each word
         // if there are other elements, go deeper!
 		// maybe this could be faster, somehow!
-			if(debug)
+			if(DEBUG)
 				_log("hyphenateElement: "+el.tagName+" id: "+el.id);
 			if(!lang) {
-				if(debug)
+				if(DEBUG)
 					_log("lang not set");
 				var lang=_getLang(el);
-				if(debug)
+				if(DEBUG)
 					_log("set lang to "+lang);
 			} else {
-				if(debug)
+				if(DEBUG)
 					_log("got lang from parent ("+lang+")");
 				var newlang=_getLang(el);
 				if(newlang!=lang) {
 					var lang=newlang;
-					if(debug)
+					if(DEBUG)
 						_log("but element has own lang ("+lang+")");
 				}
 			}
-			if(debug)
+			if(DEBUG)
 				_log("language: "+lang);
 			var cn=el.childNodes;
 			for(var i=0; i<cn.length; i++) {
@@ -320,7 +325,7 @@ var Hyphenator=(function(){
                     }
                     var genRegExp=new RegExp('('+url+')|('+wrd+')','gi');
                     cn[i].data=cn[i].data.replace(genRegExp,hyphenate);
-                } else if(cn[i].nodeType==1 && !donthyphenate[cn[i].nodeName.toLowerCase()]) {			//typ 1=element node -> recursion
+                } else if(cn[i].nodeType==1 && !DONTHYPHENATE[cn[i].nodeName.toLowerCase()]) {			//typ 1=element node -> recursion
                     Hyphenator.hyphenateElement(cn[i],lang);
                 }
             }
