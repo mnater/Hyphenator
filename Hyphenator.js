@@ -318,44 +318,51 @@ var Hyphenator=(function(){
             }
         },
 		hyphenateWord    : function(lang,word) {
-			if(word.search(/­/)!=-1) { //this RegEx only contains the unicode char 'Soft Hyphen' wich may not be visible in some editors!
+			var word=new String(word);
+			if(word.indexOf('­')!=-1) { //this String only contains the unicode char 'Soft Hyphen' wich may not be visible in some editors!
 				//word already contains shy; -> leave at it is!
 				return word;
 			}
 			//finally the core hyphenation algorithm
-			if(debug)
-				_log("hyphenateWord: "+word);
 			var positions = new Array(); 		//hyphenating points
 			var result = new Array();			//syllabs
-			var w='_'+word.toLowerCase()+'_';	//mark beginning an end
-			for(var i=0; i<w.length; i++) {
+			var w=new String('_'+word.toLowerCase()+'_');	//mark beginning an end
+			var wl=w.length;
+			var i=wl-2;
+			do {
 				positions[i]=0;
-			}
-			for(var s=0; s<w.length; s++) {		//walk throug word letter by letter
-				var maxl=w.length-s;
-				for(var l=Hyphenator.shortestPattern[lang]; l<=maxl && l<=Hyphenator.longestPattern[lang]; l++) {	//enlarge the window shortest pattern has length 2, longest length 10
-					var part=w.substring(s).substring(0,l);	//window from position s with length l
-					//if(debug)
-					   //_log('window: '+part);
+			} while(--i);
+			var s=wl;
+			do {
+				var maxl=wl-s;
+				var window=w.substring(s);
+				for(var l=Hyphenator.shortestPattern[lang]; l<=maxl && l<=Hyphenator.longestPattern[lang]; l++) {
+					var part=window.substring(0,l);	//window from position s with length l
+					/*alert('Hyphenator.shortestPattern[lang]='+Hyphenator.shortestPattern[lang]+'\r'
+							+'maxl='+maxl+'\r'
+							+'Hyphenator.longestPattern[lang]='+Hyphenator.longestPattern[lang]+'\r'
+							+'l='+(l+1)+'\r'
+							+'part="'+part+'"\r');*/
 					var values=null;
-					if((values=Hyphenator.patterns[lang][part])!=null) {		//get patterns and values from list
+					if(Hyphenator.patterns[lang][part]!==undefined) {
+						values=new String(Hyphenator.patterns[lang][part]);
 						var i=s;
-                        if(debug)
-                            _log('pattern found: '+part+' with value: '+values);
-						for(var p=0; p<values.length; p++) {
-							if(parseInt(values.charAt(p))>positions[i]) {
-								positions[i]=parseInt(values.charAt(p)); //set the values, overwriting lower values
+						var v;
+						for(var p=0; p<values.length; p++, i++) {
+							v=parseInt(values.charAt(p));
+							if(v>positions[i]) {
+								positions[i]=v; //set the values, overwriting lower values
 							}
-							i++;
 						}
 					}
 				}
-			}
+			} while(s--)
 			//pop the begin-/end-markers (_) 
 			positions.pop();
 			positions.shift();
-			for(i=0; i<word.length; i++) {
-				if(parseInt(positions[i])%2 != 0 && i!=0 && i>=Hyphenator.leftmin[lang] && i<=word.length-Hyphenator.rightmin[lang]) {
+			wl=word.length;
+			for(i=0; i<wl; i++) {
+				if(!!(positions[i]&1) && i>=Hyphenator.leftmin[lang] && i<=word.length-Hyphenator.rightmin[lang]) {
 					result.push(word.substring(result.join('').length,i)); //Silben eintragen
 				}
 			}
@@ -364,14 +371,6 @@ var Hyphenator=(function(){
 				hyphen=String.fromCharCode(173);
 			}
 			return result.join(hyphen);
-		},
-		hyphenateURL: function(url){
-			var res='';
-			res=url.replace(/\//gi,String.fromCharCode(8203)+'/');
-			res=res.replace(/\./gi,String.fromCharCode(8203)+'.');
-			return res;
-		}
-		
 	};
 })();
 if(Hyphenator.isBookmarklet()) {
