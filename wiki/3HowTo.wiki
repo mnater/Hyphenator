@@ -12,8 +12,7 @@ This article explains what you will have to do and gives you some configuration 
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting).
   # Include the script by adding the following code to your HTML-document:
 {{{
-<script src="http://www.mnn.ch/hyph/v5/Hyphenator.js"
-		type="text/javascript">
+<script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js" type="text/javascript">
 </script>
 }}} 
     You may also [http://code.google.com/p/hyphenator/downloads/list download it] and load it from your server. If you do that, you will also have to change the hardcoded basepath in the script (somewhere around line 28).
@@ -58,7 +57,7 @@ What could be better than a working example?
 				text-align:justify;
 			}
 		</style>
-		<script src="Hyphenator.js" type="text/javascript"></script>
+		<script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			window.onload=function() {
 				Hyphenator.setMinWordLength(4);
