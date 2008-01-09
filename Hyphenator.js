@@ -22,7 +22,7 @@
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
-	var DEBUG=false; // turn DEBUG mode on:true/off:false
+	var DEBUG=true; // turn DEBUG mode on:true/off:false
 	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
@@ -231,7 +231,7 @@ var Hyphenator=(function(){
 			var elements=document.getElementsByTagName('body')[0].getElementsByTagName('*');
 			var lang=null;
 			for(var i=0; i<elements.length; i++) {
-				if((lang=_getLang(elements[i])) && !doclanguages[lang]) {
+				if(lang=_getLang(elements[i])) {
 					if(SUPPORTEDLANG[lang]) {
 						doclanguages[lang]=true;
 					} else {
