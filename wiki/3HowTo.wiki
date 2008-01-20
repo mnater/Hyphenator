@@ -80,3 +80,5 @@ If you want to hyphenate a foreign website (a website whose webmaster aren't you
 {{{
 javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
 }}}
+
+If the pages language isn't set, you will have to edit it manually in a popping-up prompt.
