@@ -1,7 +1,7 @@
 #labels Featured
 #How to use Hyphenator on your website
 
-= Using Hyphenator on a website =
+= Using Hyphenator on your website =
 You can freely use Hyphenator on your website. Send me a notice about it, if you feel like.
 This article explains what you will have to do and gives you some configuration hints.
 
@@ -72,4 +72,11 @@ What could be better than a working example?
 		<p class="hyphenate text" lang="en">English words are shorter in the average then german words. <span lang="de">«Silbentrennungsalgorithmus»</span> for example is quite long.</p>
 	</body>
 </html>
+}}}
+
+= Using Hyphentor as a Bookmarklet =
+If you want to hyphenate a foreign website (a website whose webmaster aren't you) you can "install" hyphenator as a [http://en.wikipedia.org/wiki/Bookmarklet Bookmarklet] in your browser(s). Simply safe the following Javascript code as a bookmark. When you're on the site to be hyphenated you click on that bookmarklet to start hyphenating the page.
+
+{{{
+javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
 }}}
