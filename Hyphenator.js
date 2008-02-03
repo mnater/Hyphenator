@@ -394,7 +394,14 @@ var Hyphenator=(function(){
 				hyphen=String.fromCharCode(173);
 			}
 			return result.join(hyphen);
+		},
+		hyphenateURL: function(url){
+			var res='';
+			res=url.replace(/\//gi,String.fromCharCode(8203)+'/');
+			res=res.replace(/\./gi,String.fromCharCode(8203)+'.');
+			return res;
 		}
+
 	};
 })();
 if(Hyphenator.isBookmarklet()) {
