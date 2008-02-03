@@ -22,7 +22,7 @@
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
-	var DEBUG=true; // turn DEBUG mode on:true/off:false
+	var DEBUG=false; // turn DEBUG mode on:true/off:false
 	var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
 	//var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
@@ -317,7 +317,6 @@ var Hyphenator=(function(){
                     var wrdRE=new RegExp(wrd,'i');
                     var urlRE=new RegExp(url,'i');
                     function hyphenate(word) {
-                        //alert(word);
                         if(word.search(urlRE)!=-1) {
                             return Hyphenator.hyphenateURL(word);
                         } else {
@@ -332,7 +331,9 @@ var Hyphenator=(function(){
             }
         },
 		hyphenateWord    : function(lang,word) {
-			alert(word);
+			if(word=='') {
+				return '';
+			}
 			var word=new String(word);
 			if(word.indexOf('­')!=-1) { //this String only contains the unicode char 'Soft Hyphen' wich may not be visible in some editors!
 				//word already contains shy; -> leave at it is!
