@@ -23,7 +23,8 @@ var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
 	var DEBUG=true; // turn DEBUG mode on:true/off:false
-	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
+	var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
+	//var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
 						 'en':'The language of these website could not be determined automatically. Please indicate main language: \n\nEnglish: en\tGerman: de\tFrench: fr',
@@ -331,10 +332,19 @@ var Hyphenator=(function(){
             }
         },
 		hyphenateWord    : function(lang,word) {
+			alert(word);
 			var word=new String(word);
 			if(word.indexOf('­')!=-1) { //this String only contains the unicode char 'Soft Hyphen' wich may not be visible in some editors!
 				//word already contains shy; -> leave at it is!
 				return word;
+			}
+			if(word.indexOf('-')!=-1) {
+				//word contains '-' -> put a zerowidthspace after it and hyphenate the parts separated with '-'
+				var parts=word.split('-');
+				for(var w in parts) {
+					parts[w]=Hyphenator.hyphenateWord(lang,parts[w]);
+				}
+				return parts.join('-'+zerowidthspace);
 			}
 			//finally the core hyphenation algorithm
 			var positions = new Array(); 		//hyphenating points
