@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de">
 <head>
-<title>hyph.js</title>
+<title>hyph.js - test</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <style type="text/css">
 body {
@@ -51,20 +51,28 @@ code {
 	font:10pt/14pt monospace;
 	color:#000033;
 }
+.hyphenate {
+	visibility:hidden;
+}
 </style>
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 window.onload=function() {
- Hyphenator.setMinWordLength(5);
- Hyphenator.setHyphenChar('-');
+	Hyphenator.setMinWordLength(5);
+	Hyphenator.setHyphenChar('-');
 	Hyphenator.hyphenateDocument();
 }
 </script>
 
 </head>
 <body>
-<h1>Fehler</h1>
-<p class="hyphenate">Mini-OLED-Dis&shy;plays Baden-Würthemberg Calmy-Rey Gross-Klein-Schreibung Schwarz-Weiss-Denken gegenüber-stehen</p>
+<h1>Testwörter</h1>
+<p class="hyphenate">Diese Datei bezieht sich auf Version 5 des Skripts. Siehe auch die <a href="http://www.mnn.ch/hyph/versionhist.html">Änderungsliste der jeweiligen Versionen</a> für eventuell neuere Versionen. Diese Version kann auf deutsch-, französisch- und englischsprachigen Webseiten eingesetzt werden.</p>
+<p class="hyphenate"><a href="http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js">http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js</a> <a href="http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js">http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js</a> <a href="http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js">http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js</a></p>
+
+
+
+
 <h1>schwierige Wörter</h1>
 <p class="h">Abtreibung<br />
 abtrennen<br />
