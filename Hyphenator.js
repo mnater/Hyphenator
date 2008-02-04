@@ -1,4 +1,4 @@
-/**************** Preamble ****************/
+﻿/**************** Preamble ****************/
 // This script is licensed under the creative commons license
 // Attribution-Share Alike 2.5 Switzerland
 // You are free to share and to remix this work under the 
@@ -313,6 +313,7 @@ var Hyphenator=(function(){
 			for(var i=0; i<cn.length; i++) {
 				if(cn[i].nodeType==3) {				//type 3=#text -> hyphenate!
                     var wrd='[\\w'+Hyphenator.specialChars[lang]+'­-]{'+min+',}';
+                    alert(wrd);
                     var url='(\\w*:\/\/)((\\w*:)?(\\w*)@)?([\\w\.]*)?(:\\d*)?(\/[\\w#!:.?+=&%@!\-]*)*';
                     var wrdRE=new RegExp(wrd,'i');
                     var urlRE=new RegExp(url,'i');
@@ -329,6 +330,7 @@ var Hyphenator=(function(){
                     Hyphenator.hyphenateElement(cn[i],lang);
                 }
             }
+            el.style.visibility='visible';
         },
 		hyphenateWord    : function(lang,word) {
 			if(word=='') {
