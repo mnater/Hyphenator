@@ -1,4 +1,4 @@
-Hyphenator.leftmin['de']=2;
+﻿Hyphenator.leftmin['de']=2;
 Hyphenator.rightmin['de']=2;
 Hyphenator.shortestPattern['de']=2;
 Hyphenator.longestPattern['de']=10;
