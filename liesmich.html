@@ -51,12 +51,15 @@ code {
 	font:10pt/14pt monospace;
 	color:#000033;
 }
+.hyphenate {
+	visibility:hidden;
+}
 </style>
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 window.onload=function() {
     Hyphenator.setMinWordLength(5);
-    Hyphenator.setHyphenChar('-');
+    //Hyphenator.setHyphenChar('-');
 	Hyphenator.hyphenateDocument();
 }
 </script>
