@@ -1,3 +1,4 @@
+#labels Featured,Phase-Deploy
 #How to deal with inaccurate hyphenation
 
 = Automatic hyphenation is good, but not error-free =
@@ -23,4 +24,5 @@ There two possible ways:
     };
 </script>
   }}}
-Now, Hyphenator knows how to hyphenate "Urinstinkt" and that "Fortran" hasn't to be hyphenated at all. The values have to be in a comma-separated string with no spaces.
+Now, Hyphenator knows how to hyphenate "Urinstinkt" and that "Fortran" hasn't to be hyphenated at all.
+_The values have to be in a comma-separated string with no spaces._
