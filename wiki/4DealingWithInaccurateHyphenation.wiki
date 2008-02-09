@@ -1,0 +1,26 @@
+#How to deal with inaccurate hyphenation
+
+= Automatic hyphenation is good, but not error-free =
+
+There three types of errors
+  * *the algorithm doesn't find a hyphenation point:* this is not very severe, but not very nice either
+  * *the algorithm finds to much hyphenation points:* severe!
+  * *the algorithm finds a hyphenation point, that grammatically is OK, but syntactically faulty:* e.g. Urin-stinkt in german
+
+It's almost impossible for an algorithm to decide basing of the context of a word, how it has to be hyphenated.
+
+== How to manually adjust hyphenation ==
+
+There two possible ways:
+
+  # *Directly edit the text:* if you manually put at least one &shy; in a word, this word isn't hyphenated by Hyphenator any further. But you have to edit the word each time it is used!
+  # *Create an exceptions list:*  When the script is invoked, you can define exceptions that are globally available for the whole script:
+  {{{
+<script type="text/javascript">
+    window.onload=function() {
+        Hyphenator.hyphenateDocument();
+        Hyphenator.addExceptions('Ur-instinkt,Fortran');
+    };
+</script>
+  }}}
+Now, Hyphenator knows how to hyphenate "Urinstinkt" and that "Fortran" hasn't to be hyphenated at all. The values have to be in a comma-separated string with no spaces.
