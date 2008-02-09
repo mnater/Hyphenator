@@ -4,7 +4,7 @@
 // You are free to share and to remix this work under the 
 // following conditions: Attribution and Share-Alike
 // See http://creativecommons.org/licenses/by-sa/2.5/ch/deed.en
-// Thus you are free to use it for commercial purposes.
+// Thus you are free to use it  commercial purposes.
 //
 // Dieses Script steht unter der Creative Commons-Lizenz
 // Attribution-Share Alike 2.5 Switzerland
@@ -22,7 +22,7 @@
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
-	var DEBUG=false; // turn DEBUG mode on:true/off:false
+	var DEBUG=true; // turn DEBUG mode on:true/off:false
 	//var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
 	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
@@ -32,6 +32,7 @@ var Hyphenator=(function(){
 	
 	/************ don't change! ************/
 	var DONTHYPHENATE={'script':true,'code':true,'pre':true,'img':true,'br':true,'samp':true,'kbd':true,'var':true,'abbr':true,'acronym':true,'sub':true,'sup':true,'button':true,'option':true,'label':true};
+	var HYPHENATION={};
 	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
 	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy; Change by Hyphenator.setHyphenChar(c);
 	var min=6; // only hyphanete words longer then or equal to 'min'. Change by Hyphenator.setMinWordLength(n);
@@ -207,6 +208,15 @@ var Hyphenator=(function(){
 		patterns:{}, // patterns are stored in here, when they have finished loading
 		
 		//public methods
+		addExceptions: function(words) { //words is a comma separated string of words
+		 	var w=words.split(',');
+		 	for(var i=0; i<w.length; i++) {
+		 		var key=w[i].replace(/-/g,'');
+				if(!HYPHENATION[key]) {
+					HYPHENATION[key]=w[i];
+				}
+			}
+		},	
 		setClassName: function(str) {
             hyphenateclass=str || 'hyphenate';
 		},
@@ -336,16 +346,21 @@ var Hyphenator=(function(){
                     Hyphenator.hyphenateElement(cn[i],lang);
                 }
             }
-            //el.style.visibility='visible';
+            el.style.visibility='visible';
         },
 		hyphenateWord    : function(lang,word) {
 			if(word=='') {
 				return '';
 			}
-			var word=new String(word);
 			if(word.indexOf('­')!=-1) { //this String only contains the unicode char 'Soft Hyphen' wich may not be visible in some editors!
 				//word already contains shy; -> leave at it is!
 				return word;
+			}
+			if(hyphen=='&shy;') {
+				hyphen=String.fromCharCode(173);
+			}
+			if(HYPHENATION[word]) {
+				return HYPHENATION[word].replace(/-/g,hyphen);
 			}
 			if(word.indexOf('-')!=-1) {
 				//word contains '-' -> put a zerowidthspace after it and hyphenate the parts separated with '-'
@@ -394,9 +409,6 @@ var Hyphenator=(function(){
 				}
 			}
 			result.push(word.substring(result.join('').length,i)); //Letzte Silbe eintragen
-			if(hyphen=='&shy;') {
-				hyphen=String.fromCharCode(173);
-			}
 			return result.join(hyphen);
 		},
 		hyphenateURL: function(url){
