@@ -31,7 +31,7 @@ var Hyphenator=(function(){
 						 'fr':'La langue de cette site ne pouvait pas %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue: \n\nFran%E7ais: fr\tAnglais: en\tAllemand: de'};
 	
 	/************ don't change! ************/
-	var DONTHYPHENATE={'script':true,'code':true,'pre':true,'img':true,'br':true};
+	var DONTHYPHENATE={'script':true,'code':true,'pre':true,'img':true,'br':true,'samp':true,'kbd':true,'var':true,'abbr':true,'acronym':true,'sub':true,'sup':true,'button':true,'option':true,'label':true};
 	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
 	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy; Change by Hyphenator.setHyphenChar(c);
 	var min=6; // only hyphanete words longer then or equal to 'min'. Change by Hyphenator.setMinWordLength(n);
@@ -48,6 +48,8 @@ var Hyphenator=(function(){
 		var ua=navigator.userAgent.toLowerCase();
 		if(ua.indexOf('firefox')!=-1 || ua.indexOf('msie 7')!=-1) {
 			zerowidthspace=String.fromCharCode(8203); //UTF zero width space
+		} else if(ua.indexOf('msie 6')!=-1) {
+			zerowidthspace='';
 		}
 	}
 	
@@ -123,9 +125,10 @@ var Hyphenator=(function(){
 		if(!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').substring(0,2);
 		}
-		if(!!el.getAttribute('xml:lang')) {
+		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
+		/*if(!!el.getAttribute('xml:lang')) {
 			return el.getAttribute('xml:lang').substring(0,2);
-		}
+		}*/
 		if(mainlanguage) {
 			return mainlanguage;
 		}
@@ -311,7 +314,7 @@ var Hyphenator=(function(){
 				_log("language: "+lang);
 			var cn=el.childNodes;
 			for(var i=0; i<cn.length; i++) {
-				if(cn[i].nodeType==3) {				//type 3=#text -> hyphenate!
+				if(cn[i].nodeType==3 && cn[i].data.length>=min) {				//type 3=#text -> hyphenate!
                     var wrd='[\\w'+Hyphenator.specialChars[lang]+'­-]{'+min+',}';
                     var url='(\\w*:\/\/)((\\w*:)?(\\w*)@)?([\\w\.]*)?(:\\d*)?(\/[\\w#!:.?+=&%@!\-]*)*';
                     var wrdRE=new RegExp(wrd,'i');
@@ -325,11 +328,15 @@ var Hyphenator=(function(){
                     }
                     var genRegExp=new RegExp('('+url+')|('+wrd+')','gi');
                     cn[i].data=cn[i].data.replace(genRegExp,hyphenate);
+                    if(DEBUG)
+						_log("hyphenation done for: "+el.tagName+" id: "+el.id);
                 } else if(cn[i].nodeType==1 && !DONTHYPHENATE[cn[i].nodeName.toLowerCase()]) {			//typ 1=element node -> recursion
+                    if(DEBUG)
+						_log("traversing: "+cn[i].nodeName.toLowerCase());
                     Hyphenator.hyphenateElement(cn[i],lang);
                 }
             }
-            el.style.visibility='visible';
+            //el.style.visibility='visible';
         },
 		hyphenateWord    : function(lang,word) {
 			if(word=='') {
@@ -343,8 +350,8 @@ var Hyphenator=(function(){
 			if(word.indexOf('-')!=-1) {
 				//word contains '-' -> put a zerowidthspace after it and hyphenate the parts separated with '-'
 				var parts=word.split('-');
-				for(var w in parts) {
-					parts[w]=Hyphenator.hyphenateWord(lang,parts[w]);
+				for(var i=0; i<parts.length; i++) {
+					parts[i]=Hyphenator.hyphenateWord(lang,parts[i]);
 				}
 				return parts.join('-'+zerowidthspace);
 			}
@@ -363,11 +370,6 @@ var Hyphenator=(function(){
 				var window=w.substring(s);
 				for(var l=Hyphenator.shortestPattern[lang]; l<=maxl && l<=Hyphenator.longestPattern[lang]; l++) {
 					var part=window.substring(0,l);	//window from position s with length l
-					/*alert('Hyphenator.shortestPattern[lang]='+Hyphenator.shortestPattern[lang]+'\r'
-							+'maxl='+maxl+'\r'
-							+'Hyphenator.longestPattern[lang]='+Hyphenator.longestPattern[lang]+'\r'
-							+'l='+(l+1)+'\r'
-							+'part="'+part+'"\r');*/
 					var values=null;
 					if(Hyphenator.patterns[lang][part]!==undefined) {
 						values=new String(Hyphenator.patterns[lang][part]);
@@ -399,8 +401,8 @@ var Hyphenator=(function(){
 		},
 		hyphenateURL: function(url){
 			var res='';
-			res=url.replace(/\//gi,String.fromCharCode(8203)+'/');
-			res=res.replace(/\./gi,String.fromCharCode(8203)+'.');
+			res=url.replace(/\//gi,zerowidthspace+'/');
+			res=res.replace(/\./gi,zerowidthspace+'.');
 			return res;
 		}
 
