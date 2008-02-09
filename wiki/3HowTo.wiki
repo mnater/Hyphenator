@@ -39,7 +39,7 @@ Hyphenator.setHyphenChar('|');
 When the function `Hyphenator.hyphenateDocument()` is called, the script hyphenates all text of elements having the attribute `class="hyphenate"` — even the text of their child-elements.
 
 == The Example ==
-What could be better than a working example?
+What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingExample.html working example]?
 {{{
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 	"http://www.w3.org/TR/html4/strict.dtd">
@@ -63,6 +63,7 @@ What could be better than a working example?
 				Hyphenator.setMinWordLength(4);
 				//Hyphenator.setHyphenChar('·');
 				Hyphenator.hyphenateDocument();
+                                Hyphenator.addExceptions('ziem-lich');
 			}
 		</script>
 	</head>
