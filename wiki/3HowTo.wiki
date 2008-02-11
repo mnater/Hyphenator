@@ -83,3 +83,17 @@ javascript:if(document.createElement){void(head=document.getElementsByTagName('h
 }}}
 
 If the pages language isn't set, you will have to edit it manually in a popping-up prompt.
+
+= Run Hyphenator onDOMContentLoaded =
+Modern Webbrowsers have a mechanism to run scripts directly after the DOM is loaded (whereas window.onload is fired, when all elements including images, videos... finished loading).
+Running Hyphenator when the DOM is loaded results in a quicker hyphenation on pages with big images.
+
+To do so, write this on your site:
+{{{
+<script type="text/javascript">
+    Hyphenator.setMinWordLength(5);
+    //any further settings...
+    Hyphenator.run();
+</script>
+}}}
+Since there is no need of window.onload this is much more straight forward and will soon replace the old way...
