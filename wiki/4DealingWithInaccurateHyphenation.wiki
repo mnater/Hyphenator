@@ -19,8 +19,8 @@ There two possible ways:
   {{{
 <script type="text/javascript">
     window.onload=function() {
-        Hyphenator.hyphenateDocument();
         Hyphenator.addExceptions('Ur-instinkt,Fortran');
+        Hyphenator.hyphenateDocument();
     };
 </script>
   }}}
