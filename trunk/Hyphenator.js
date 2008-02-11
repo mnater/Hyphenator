@@ -23,8 +23,8 @@ var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
 	var DEBUG=false; // turn DEBUG mode on:true/off:false
-	//var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
-	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
+	var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
+	//var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
 						 'en':'The language of these website could not be determined automatically. Please indicate main language: \n\nEnglish: en\tGerman: de\tFrench: fr',
@@ -189,6 +189,51 @@ var Hyphenator=(function(){
 			}
 		}
 	};
+	
+	//Run automatically when the DOM is loaded
+	/*  
+	 *  Code by Stuart Langridge
+	 *  http://www.kryogenix.org/days/2007/09/26/shortloaded
+	 *  based on code by Dean Edwards and John Resig
+	 *  http://dean.edwards.name/weblog/2006/06/again/
+	 *	http://javascript.nwbox.com/ContentLoaded/
+	 *
+	 */
+	function _runOnContentLoaded() {
+		(function(i) {
+			var u =navigator.userAgent;
+			var e=/*@cc_on!@*/false;
+			var st =setTimeout;
+			if(/webkit/i.test(u)) {
+				st(function(){
+						var dr=document.readyState;
+						if(dr=="loaded"||dr=="complete") {
+							i()
+						} else {
+							st(arguments.callee,10);
+						}
+					},
+				10);
+			}
+			else if((/mozilla/i.test(u)&&!/(compati)/.test(u)) || (/opera/i.test(u))) {
+				document.addEventListener("DOMContentLoaded",i,false);
+			} else if(e) {
+				(function(){
+					var t=document.createElement('doc:rdy');
+					try{
+						t.doScroll('left');
+						i();
+						t=null;
+					} catch(e) {
+						st(arguments.callee,0);
+					}
+				})();
+			} else {
+				window.onload=i;
+			}
+		})(Hyphenator.hyphenateDocument);
+	};
+
 
 	/************ init methods ************/
 	function _autoinit() {
@@ -210,6 +255,9 @@ var Hyphenator=(function(){
 		patterns:{}, // patterns are stored in here, when they have finished loading
 		
 		//public methods
+		run: function() {
+			_runOnContentLoaded();
+		},
 		addExceptions: function(words) { //words is a comma separated string of words
 		 	var w=words.split(',');
 		 	for(var i=0, l=w.length; i<l; i++) {
@@ -335,7 +383,7 @@ var Hyphenator=(function(){
 			}
 			var genRegExp=new RegExp('('+url+')|('+wrd+')','gi');
             for(var i=0; (n=el.childNodes[i]); i++) {
-				if(n.nodeType==3 && n.data.length>=min) {				//type 3=#text -> hyphenate!
+				if(n.nodeType==3 && n.data.length>=min) { //type 3=#text -> hyphenate!
                     n.data=n.data.replace(genRegExp,__hyphenate);
                     if(DEBUG)
 						_log("hyphenation done for: "+el.tagName+" id: "+el.id);
