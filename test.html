@@ -56,14 +56,17 @@ code {
 }
 </style>
 <script src="Hyphenator.js" type="text/javascript"></script>
-<script src="patterns/newpatterns/de.js" type="text/javascript"></script>
 <script type="text/javascript">
-window.onload=function() {
+	Hyphenator.setMinWordLength(5);
+	Hyphenator.setHyphenChar('|');
+	Hyphenator.addExceptions('An-alpha-be-ten,Gelb-rand,Ur-instinkt,Haus-esel,Kirsch-wein,Blu-men-topf-er-de');
+	Hyphenator.run();
+/*window.onload=function() {
 	Hyphenator.setMinWordLength(5);
 	Hyphenator.setHyphenChar('|');
 	Hyphenator.hyphenateDocument();
 	Hyphenator.addExceptions('An-alpha-be-ten,Gelb-rand,Ur-instinkt,Haus-esel,Kirsch-wein');
-}
+}*/
 </script>
 
 </head>
@@ -72,6 +75,11 @@ window.onload=function() {
 <p class="hyphenate">Diese Datei bezieht sich auf Version 5 des Skripts. Siehe auch die <a href="http://www.mnn.ch/hyph/versionhist.html">Änderungsliste der jeweiligen Versionen</a> für eventuell neuere Versionen. Diese Version kann auf deutsch-, französisch- und englischsprachigen Webseiten eingesetzt werden.</p>
 <p class="hyphenate"><a href="http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js">http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js</a> <a href="http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js">http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js</a> <a href="http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js">http://code.google.com/p/hyphenator/source/browse/trunk/Hyphenator.js</a></p>
 
+  <script type="text/javascript">
+   // create a unique image source so that this page works with continued testing
+   var src = "http://www.nasa.gov/images/content/84857main_EC04-0325-23_lg.jpg?" + Number(new Date);
+   document.write("<img src=" + src + " height=24 width=30>");
+  </script>
 
 
 
