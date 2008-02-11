@@ -22,9 +22,9 @@
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
-	var DEBUG=true; // turn DEBUG mode on:true/off:false
-	//var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
-	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
+	var DEBUG=false; // turn DEBUG mode on:true/off:false
+	var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
+	//var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
 						 'en':'The language of these website could not be determined automatically. Please indicate main language: \n\nEnglish: en\tGerman: de\tFrench: fr',
@@ -40,6 +40,8 @@ var Hyphenator=(function(){
 	var patternsloaded={}; // this is set when the patterns are loaded
 	var preparestate=0; //0: not initialized, 1: loading patterns, 2: ready
 	var mainlanguage=null;
+	var url='(\\w*:\/\/)((\\w*:)?(\\w*)@)?([\\w\.]*)?(:\\d*)?(\/[\\w#!:.?+=&%@!\-]*)*';
+	var urlRE=new RegExp(url,'i');
 	
 	/************ UA related ************/
 	var zerowidthspace='';
@@ -48,7 +50,7 @@ var Hyphenator=(function(){
 	function _createZeroWidthSpace() {
 		var ua=navigator.userAgent.toLowerCase();
 		if(ua.indexOf('firefox')!=-1 || ua.indexOf('msie 7')!=-1) {
-			zerowidthspace=String.fromCharCode(8203); //UTF zero width space
+			zerowidthspace=String.fromCharCode(8203); //Unicode zero width space
 		} else if(ua.indexOf('msie 6')!=-1) {
 			zerowidthspace='';
 		}
@@ -58,7 +60,7 @@ var Hyphenator=(function(){
 	function _checkIfBookmarklet() {
 		var loc=null;
 		var jsArray = document.getElementsByTagName('script');
-		for(var i=0; i<jsArray.length; i++) {
+		for(var i=0, l=jsArray.length; i<l; i++) {
 			if(!!jsArray[i].getAttribute('src')) {
 				loc=jsArray[i].getAttribute('src');
 			}
@@ -172,13 +174,13 @@ var Hyphenator=(function(){
 		} else {
 			if(document.getElementsByClassName) {
 				var elements=document.getElementsByClassName(hyphenateclass);
-				for(var i=0; i<elements.length; i++)
+				for(var i=0, l=elements.length; i<l; i++)
 				{
 					Hyphenator.hyphenateElement(elements[i]);
 				}
 			} else {
 				var elements=body.getElementsByTagName('*');
-				for(var i=0; i<elements.length; i++)
+				for(var i=0, l=elements.length; i<l; i++)
 				{
 					if(elements[i].className.indexOf(hyphenateclass)!=-1) {
 						Hyphenator.hyphenateElement(elements[i]);
@@ -210,7 +212,7 @@ var Hyphenator=(function(){
 		//public methods
 		addExceptions: function(words) { //words is a comma separated string of words
 		 	var w=words.split(',');
-		 	for(var i=0; i<w.length; i++) {
+		 	for(var i=0, l=w.length; i<l; i++) {
 		 		var key=w[i].replace(/-/g,'');
 				if(!HYPHENATION[key]) {
 					HYPHENATION[key]=w[i];
@@ -244,7 +246,7 @@ var Hyphenator=(function(){
 			doclanguages[mainlanguage]=true;
 			var elements=document.getElementsByTagName('body')[0].getElementsByTagName('*');
 			var lang=null;
-			for(var i=0; i<elements.length; i++) {
+			for(var i=0, l=elements.length; i<l; i++) {
 				if(lang=_getLang(elements[i])) {
 					if(SUPPORTEDLANG[lang]) {
 						doclanguages[lang]=true;
@@ -322,28 +324,25 @@ var Hyphenator=(function(){
 			}
 			if(DEBUG)
 				_log("language: "+lang);
-			var cn=el.childNodes;
-			for(var i=0; i<cn.length; i++) {
-				if(cn[i].nodeType==3 && cn[i].data.length>=min) {				//type 3=#text -> hyphenate!
-                    var wrd='[\\w'+Hyphenator.specialChars[lang]+'­-]{'+min+',}';
-                    var url='(\\w*:\/\/)((\\w*:)?(\\w*)@)?([\\w\.]*)?(:\\d*)?(\/[\\w#!:.?+=&%@!\-]*)*';
-                    var wrdRE=new RegExp(wrd,'i');
-                    var urlRE=new RegExp(url,'i');
-                    function hyphenate(word) {
-                        if(word.search(urlRE)!=-1) {
-                            return Hyphenator.hyphenateURL(word);
-                        } else {
-                            return Hyphenator.hyphenateWord(lang,word);
-                        }
-                    }
-                    var genRegExp=new RegExp('('+url+')|('+wrd+')','gi');
-                    cn[i].data=cn[i].data.replace(genRegExp,hyphenate);
+			var wrd='[\\w'+Hyphenator.specialChars[lang]+'­-]{'+min+',}';
+			var wrdRE=new RegExp(wrd,'i');
+			function __hyphenate(word) {
+				if(urlRE.test(word)) {
+					return Hyphenator.hyphenateURL(word);
+				} else {
+					return Hyphenator.hyphenateWord(lang,word);
+				}
+			}
+			var genRegExp=new RegExp('('+url+')|('+wrd+')','gi');
+            for(var i=0; (n=el.childNodes[i]); i++) {
+				if(n.nodeType==3 && n.data.length>=min) {				//type 3=#text -> hyphenate!
+                    n.data=n.data.replace(genRegExp,__hyphenate);
                     if(DEBUG)
 						_log("hyphenation done for: "+el.tagName+" id: "+el.id);
-                } else if(cn[i].nodeType==1 && !DONTHYPHENATE[cn[i].nodeName.toLowerCase()]) {			//typ 1=element node -> recursion
+                } else if(n.nodeType==1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1=element node -> recursion
                     if(DEBUG)
-						_log("traversing: "+cn[i].nodeName.toLowerCase());
-                    Hyphenator.hyphenateElement(cn[i],lang);
+						_log("traversing: "+n.nodeName.toLowerCase());
+                    Hyphenator.hyphenateElement(n,lang);
                 }
             }
             el.style.visibility='visible';
@@ -365,15 +364,15 @@ var Hyphenator=(function(){
 			if(word.indexOf('-')!=-1) {
 				//word contains '-' -> put a zerowidthspace after it and hyphenate the parts separated with '-'
 				var parts=word.split('-');
-				for(var i=0; i<parts.length; i++) {
+				for(var i=0, l=parts.length; i<l; i++) {
 					parts[i]=Hyphenator.hyphenateWord(lang,parts[i]);
 				}
 				return parts.join('-'+zerowidthspace);
 			}
 			//finally the core hyphenation algorithm
-			var positions = new Array(); 		//hyphenating points
-			var result = new Array();			//syllabs
-			var w=new String('_'+word.toLowerCase()+'_');	//mark beginning an end
+			var positions = []; 		//hyphenating points
+			var result = [];			//syllabs
+			var w='_'+word.toLowerCase()+'_';	//mark beginning an end
 			var wl=w.length;
 			var i=wl-2;
 			do {
@@ -387,10 +386,10 @@ var Hyphenator=(function(){
 					var part=window.substring(0,l);	//window from position s with length l
 					var values=null;
 					if(Hyphenator.patterns[lang][part]!==undefined) {
-						values=new String(Hyphenator.patterns[lang][part]);
+						values=Hyphenator.patterns[lang][part];
 						var i=s;
 						var v;
-						for(var p=0; p<values.length; p++, i++) {
+						for(var p=0, l=values.length; p<l; p++, i++) {
 							v=parseInt(values.charAt(p));
 							if(v>positions[i]) {
 								positions[i]=v; //set the values, overwriting lower values
