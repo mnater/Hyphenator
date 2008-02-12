@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<title>Hyphenator.js - Readme</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body {
+	width:50%;
+	max-width:15cm;
+	text-align:left;
+	margin-left:25%;
+	margin-right:25%;
+	font:10pt/14pt Georgia;
+	color:#222222;
+}
+h1 {
+	font:16pt/18pt Georgia;
+}
+h2 {
+	font:16pt/18pt Georgia;
+}
+h3 {
+	font:italic 16pt/18pt Georgia;
+}
+p {
+	text-align:justify;
+	font:10pt/14pt Georgia;
+	}
+blockquote {
+	text-align:left;
+	font:italic 10pt/14pt Georgia;
+	}
+table {
+	width:100%;
+	border: 1px solid #555555;
+	border-collapse:collapse
+}
+th {
+	text-align:left;
+}
+tr {
+	text-align:left;
+	border: 1px solid #555555;
+}
+code {
+	text-align:left;
+	white-space:pre;
+	font:10pt/14pt monospace;
+	color:#000033;
+}
+.hyphenate {
+	visibility:hidden;
+}
+</style>
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+    Hyphenator.setMinWordLength(5);
+    //Hyphenator.setHyphenChar('-');
+	Hyphenator.run();
+</script>
+
+</head>
+<body>
+<h1>Notes about using Hyphenator.js</h1>
+<p class="hyphenate">This site contains some hints about using Hyphenator and uses it itself. So it's a sort of testcase, too. To see in-word line-breaking, change the size of the window.</p>
+
+<h2>Version</h2>
+<p class="hyphenate">This text refers to version 5 of the script. Please have a look at <a href="http://code.google.com/p/hyphenator/">http://code.google.com/p/hyphenator/</a> for further information. Hyphenator can be used on english, german and french webpages.</p>
+
+<h2>Use Hyphenator on your webpage</h2>
+<p class="hyphenate">Include the script in the &lt;head&gt;-Block of your webpage:<br />
+<code>&lt;script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js"
+        type="text/javascript"&gt;
+&lt;/script&gt;</code><br />
+By including the script the object <code>Hyphenator</code> is automatically generated.</p>
+<p class="hyphenate">The next step is to run Hyphenator:<br />
+<code>&lt;script type="text/javascript"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;Hyphenator.run();
+&lt;/script&gt;</code>
+</p>
+<p class="hyphenate" id="eins">The script searches all elements with the class "hyphenate" (e.g. <code>&lt;p class="hyphenate"&gt;</code>) and hyphenates text and child-nodes in this elements. To set a specific language, <a href="http://edition-w3.de/TR/1999/REC-html401-19991224/struct/dirlang.html#h-8.1">lang</a> has to be set in at least one parent element.</p>
+
+
+<h2>Use as a Bookmarklet</h2>
+<p class="hyphenate" id="zwei">To hyphenate a foreign site (e.g. before you print it) you may install the following <a href="http://de.wikipedia.org/wiki/Bookmarklet">Bookmarklet</a>. It loads the script and hyphenates <em>all elements</em>, so it's slower than the original script.</p>
+<p style="text-align:left;"><a href="javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}">javascript: if (document.createElement) { void(head=document.getElementsByTagName('head').item(0)); void(script=document.createElement('script')); void(script.src='http://www.mnn.ch/hyph/v5/Hyphenator.js?bm=true'); void(script.type='text/javascript'); void(head.appendChild(script));}
+</a><br />
+(save this link as a bookmark).</p>
+
+<h2>Compatibility:</h2>
+<table class="hyphenate" lang="de">
+<thead>
+<tr><th>Browser</th><th>Version</th><th>Note(s)</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="background-color:#009933;">IE</td><td>&gt;=6</td><td>misrepresentation of ero width space</td>
+</tr>
+<tr>
+<td style="background-color:#FF6633;">Firefox (and other Geckos)</td><td>&gt;=2</td><td>Firefox supports &amp;shy; only since Version 3. Older versions only break after a hyphen-minus.</td>
+</tr>
+<tr>
+<td style="background-color:#009933;">Opera</td><td>&gt;=9</td><td></td>
+</tr>
+<tr>
+<td style="background-color:#009933;">Safari (and other WebKits)</td><td>&gt;=2</td><td></td>
+</tr>
+</tbody>
+</table>
+
+<h1>Hyphenation in document with miscellaneous languages</h1>
+<p class="hyphenate" lang="de">With the attribute <code>lang</code> you can specify the language of an elements text; that way, Hyphenator can load language-specific patterns. As an example, here is a french and english text by J.J. Rousseau:<br />
+<span lang="fr">FR: Je forme une entreprise qui n'eut jamais d'exemple, et dont l'exécution n'aura point d'imitateur. Je veux montrer à mes semblables un homme dans toute la vérité de la nature; et cet homme, ce sera moi. </span><br />
+<span lang="en"> EN: I have entered upon a performance which is without example, whose accomplishment will have no imitator.  I mean to present my fellow-mortals with a man in all the integrity of nature; and this man shall be myself.</span>
+</p>
+</body>
+</html>
