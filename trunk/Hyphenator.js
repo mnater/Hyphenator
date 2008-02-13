@@ -23,8 +23,8 @@ var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
 	var DEBUG=false; // turn DEBUG mode on:true/off:false
-	//var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
-	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
+	var BASEPATH='http://127.0.0.1/~mnater/mnn/hyph/%20working/trunk/';
+	//var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true}; //delete languages that you won't use (for better performance)
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\nDeutsch: de\tEnglisch: en\tFranz%F6sisch: fr',
 						 'en':'The language of these website could not be determined automatically. Please indicate main language: \n\nEnglish: en\tGerman: de\tFrench: fr',
@@ -425,8 +425,9 @@ var Hyphenator=(function(){
 			var i=wl-2;
 			do {
 				positions[i]=0;
-			} while(--i);
-			var s=wl;
+			} while(i--);
+			var s=wl-1;
+
 			do {
 				var maxl=wl-s;
 				var window=w.substring(s);
@@ -435,7 +436,7 @@ var Hyphenator=(function(){
 					var values=null;
 					if(Hyphenator.patterns[lang][part]!==undefined) {
 						values=Hyphenator.patterns[lang][part];
-						var i=s;
+						var i=s-1;
 						var v;
 						for(var p=0, l=values.length; p<l; p++, i++) {
 							v=parseInt(values.charAt(p));
@@ -446,11 +447,8 @@ var Hyphenator=(function(){
 					}
 				}
 			} while(s--)
-			//pop the begin-/end-markers (_) 
-			positions.pop();
-			positions.shift();
 			wl=word.length;
-			for(i=0; i<wl; i++) {
+			for(i=1; i<wl; i++) {
 				if(!!(positions[i]&1) && i>=Hyphenator.leftmin[lang] && i<=word.length-Hyphenator.rightmin[lang]) {
 					result.push(word.substring(result.join('').length,i)); //Silben eintragen
 				}
