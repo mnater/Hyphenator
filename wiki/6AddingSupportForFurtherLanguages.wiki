@@ -1,0 +1,34 @@
+#How to add support for further languages
+
+= What we have now =
+
+Currently, there's only support for
+  * english
+  * german
+  * french
+  * portuguese (comming soon)
+
+But Hyphenator is written in a manner that makes it easy to add support for other languages.
+
+= What you can do =
+
+To add a further language, language pattern file is needed. If you have a (complete) list of hyphenated words you may be able to compute patterns by your own (if you can, you know how). If not, go to http://www.ctan.org and search the LaTeX hyphenation patterns for your language.
+
+Next steps you will have to do are:
+  # converting the patterns
+  # changing code in Hyphenator.js
+  # send-in changings and patterns if you feel like (I'll take you as a supporter for this language, you'll get full attribution)
+
+== Converting the patterns ==
+  * LaTeX patterns are coming in this form: `.ab3s2`, but Hyphenator uses `"_abs":"0032"`.
+  You may write a little script in your preferred language to do the conversion (my own script isn't ready to be published yet).
+  * All pattern files should be encoded with *UTF-8 (with BOM)*.
+  * Copy an other pattern file and replace the patterns.
+  * Adjust the other variables as following:
+  || _Name_ || _Description_ ||
+  || Hyphenator.leftmin || On the old line, there shall remain this number of letters at minimum (preventing e.g. '  a-') ||
+  || Hyphenator.rightmin || This number of letters at minimum are on the newline (preventing e.g. '-a ') ||
+  || Hyphenator.shortestPattern || The sortest pattern in the list (for better performance) ||
+  || Hyphenator.longestPattern || The longest pattern in the list (for better performance) ||
+  || Hyphenator.specialChars || Non-ASCII-letters used in this language ||
+  * Dont forget to change the language in each variable.
