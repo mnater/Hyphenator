@@ -37,7 +37,8 @@ With a Javascript-packer (http://dean.edwards.name/packer/) Hyphenator.js could 
 </script>
 }}}
   Preloaded pattern files won't be loaded again!
-  If you want to prevent Hyphentor from remote loading patterns, you can explicitly turn of this functionality:
+
+  If you want to prevent Hyphenator from remote loading patterns, you can explicitly turn of this functionality:
   {{{
 Hyphenator.setRemoteLoading(false);
   }}}
