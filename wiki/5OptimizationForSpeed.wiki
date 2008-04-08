@@ -37,4 +37,8 @@ With a Javascript-packer (http://dean.edwards.name/packer/) Hyphenator.js could 
 </script>
 }}}
   Preloaded pattern files won't be loaded again!
+  If you want to prevent Hyphentor from remote loading patterns, you can explicitly turn of this functionality:
+  {{{
+Hyphenator.setRemoteLoading(false);
+  }}}
   * *Cache pattern files:* If your site often uses Hyphenator.js you may think about caching pattern files in the browsers cache by sending an appropriate HTTP-Header.
