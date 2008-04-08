@@ -34,7 +34,8 @@ var Hyphenator=(function(){
 	
 	/************ don't change! ************/
 	var DONTHYPHENATE={'script':true,'code':true,'pre':true,'img':true,'br':true,'samp':true,'kbd':true,'var':true,'abbr':true,'acronym':true,'sub':true,'sup':true,'button':true,'option':true,'label':true};
-	var HYPHENATION={};
+	var hyphenation={};
+	var enableRemoteLoading=true;
 	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
 	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy; Change by Hyphenator.setHyphenChar(c);
 	var min=6; // only hyphanete words longer then or equal to 'min'. Change by Hyphenator.setMinWordLength(n);
@@ -264,8 +265,8 @@ var Hyphenator=(function(){
 		 	var w=words.split(',');
 		 	for(var i=0, l=w.length; i<l; i++) {
 		 		var key=w[i].replace(/-/g,'');
-				if(!HYPHENATION[key]) {
-					HYPHENATION[key]=w[i];
+				if(!hyphenation[key]) {
+					hyphenation[key]=w[i];
 				}
 			}
 		},	
@@ -277,6 +278,9 @@ var Hyphenator=(function(){
 		},
 		setHyphenChar: function(str) {
             hyphen=str || String.fromCharCode(173);
+		},
+		setRemoteLoading: function(bool) {
+			enableRemoteLoading=bool;
 		},
 		isPatternLoaded: function(lang) {
 			return patternsloaded[lang];
@@ -336,7 +340,7 @@ var Hyphenator=(function(){
 		hyphenateDocument: function() {
 			if(DEBUG)
 				_log("hyphenateDocument");
-			if(preparestate!=2) {
+			if(preparestate!=2 && enableRemoteLoading) {
 				if(preparestate==0) {
 					Hyphenator.prepare();               // load all language patterns that are used
 				}
@@ -408,8 +412,8 @@ var Hyphenator=(function(){
 			if(hyphen=='&shy;') {
 				hyphen=String.fromCharCode(173);
 			}
-			if(HYPHENATION[word]) {
-				return HYPHENATION[word].replace(/-/g,hyphen);
+			if(hyphenation[word]) {
+				return hyphenation[word].replace(/-/g,hyphen);
 			}
 			if(word.indexOf('-')!=-1) {
 				//word contains '-' -> put a zerowidthspace after it and hyphenate the parts separated with '-'
