@@ -11,7 +11,7 @@ English's not my first language. Please post corrections . Thank you.
 
 
 == `text-align:justify; vs. text-align:left;` ==
-Text in current browsers is  set ragged-left per default. With the CSS-property `text-align:justify;` it can be set in hyphenless justification. This leads to an ugly typeface with big spacings, particularly in narrow columns with long words.
+Text in current browsers is set ragged-left per default. With the CSS-property `text-align:justify;` it can be set in hyphenless justification. This leads to an ugly typeface with big spacings, particularly in narrow columns with long words.
 
 Beside that justified text on webpages is controversial. Ragged-left text together with a short line length and generous line spacing is said to bring better readability because it leads the eye. So the eye doesn't get lost when jumping to a new line.
 
