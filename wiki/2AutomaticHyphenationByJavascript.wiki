@@ -4,9 +4,8 @@
 = Automatic hyphenation in HTML with Javascript =
 
 == Abstract ==
-This Article treats in its [http://code.google.com/p/hyphenator/wiki/HyphenationInHTML first part] the problem of word hyphenation in current webbrowsers. In this second part a javascript doing automatic word hyphenation is presented as a possible solution. This script relies on Liangs thesis and uses hyphenation patterns from the LaTeX-Distribution.
+This Article treats in its [http://code.google.com/p/hyphenator/wiki/1HyphenationInHTML first part] the problem of word hyphenation in current webbrowsers. In this second part a javascript doing automatic word hyphenation is presented as a possible solution. This script relies on Liangs thesis and uses hyphenation patterns from the LaTeX-Distribution.
 
-This document has been hyphenated automatically by the script. Change the size of th window to see the results.
 English's not my first language. Please send in corrections. Thank you.
 
 
@@ -59,15 +58,15 @@ enough.
 First I tried to use the patterns directly in their original format `n1tr`. A pattern file like this was 
 about 40KB but it took over 2 seconds to read it.
 
-Thats why I converted them to JSON-formatting (`{"ntr":"0100"}`), which uses more then zwice as much space 
-but is read in less then 30ms.
+Thats why I converted them to a JSON-format (`{"ntr":"0100"}`), which uses more then twice as much space 
+but is read in less than 30ms.
 
 Liang proposes to use a trie as basic data structure for the patterns. I did it, too. But it 
 was too slow (assumed I did everything right!): With a trie many searches for patterns could be avoided, but 
 traversing the trie was so slow, that looking up for all possible patterns in a simple Javascript-Object won the 
 game.
 
-== How it works (jus an overview) ==
+== How it works (just an overview) ==
 There are two modes:
   # Running when the page is loaded
   # Running as a Bookmarklet
@@ -94,7 +93,7 @@ The script does his work almost exactly as explained above. But there are some s
   # On creation the script guesses the main language of the site, and decides if it's running as a bookmarklet or not. If it can't find a hint on the language it displays a user prompt.
   # When the page is loaded it can start the hyphenation process by calling `Hyphenator.hyphenateDocument();`:
     # the `Hyphenator.prepare` walks through the document and looks what languages are used. It then loads the necessary patterns.
-    # When all patterns are loaded, it hyphenates da <body>-Element (and all its children).
+    # When all patterns are loaded, it hyphenates the <body>-Element (and all its children).
     # The function `Hyphenator.hyphenateElement()` further takes care of the <body> by extracting its child-Nodes. The child-Nodes are recursively traversed until they are text-Nodes, which contents are replaced with hyphenated texts.
 
 Because the script has to traverse all elements and hyphenates them all, this mode may take a while to complete (some seconds). Beside that loading the patterns _and the script_ take their time depending on bandwith.

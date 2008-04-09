@@ -35,11 +35,12 @@ Next steps you will have to do are:
   * Dont forget to change the language in each variable and to change the filename accordingly.
 
 == adapt code in Hyphenator ==
-----
-coming soon
-----
+There are three variables that have to be changed to add a further language.
+  * `SUPPORTEDLANG`: Please use the ISO 639-1-Code for the language to be supported.
+  * `LANGUAGEHINT` and
+  * `PROMPTERSTRINGS`: This strings are used if the language of a document isn't defined. Please translate this short text to the language to be supported.
+  
+Make some tests to see, if it works!
 
 == send in changings and patterns ==
-----
-coming soon
-----
+If you like to support Hyphenator, you may send in the work you've done. You'll get full attribution I will ask you to put your Mail in the header of the pattern file (see nl.js for example).

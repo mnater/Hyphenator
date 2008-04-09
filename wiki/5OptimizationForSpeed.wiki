@@ -8,7 +8,7 @@ For most tasks Hyphenator is fast enough, but speed is cool and there things you
 
 == Execution speed ==
 I'm permanently tweaking the code for execution speed. If there's a nanosecond to save, I want to save it!
-Nevertheless the're differences in execution speed depending on the browser you use. In general a more recent version is faster.
+Nevertheless there are differences in execution speed depending on the browser you use. In general a more recent version is faster.
 
 *What an webauthor can do:*
 The depth of the DOM-Tree has a big impact on the speed of Hyphenator. It takes a quite bit of time hyphenate a document with <body class="hyphenate"> and highly nested code (layout tables, lots of divs in divs in divs...). But its quite fast to just hyphenate all p-Elements.
@@ -31,9 +31,7 @@ With a Javascript-packer (http://dean.edwards.name/packer/) Hyphenator.js could 
 <script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js" type="text/javascript"></script>
 <script src="http://hyphenator.googlecode.com/svn/trunk/patterns/en.js" type="text/javascript"></script>
 <script type="text/javascript">
-  window.onload=function() {
     Hyphenator.hyphenateDocument();
-  }
 </script>
 }}}
   Preloaded pattern files won't be loaded again!

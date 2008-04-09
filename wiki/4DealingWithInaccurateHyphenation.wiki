@@ -8,7 +8,7 @@ There three types of errors
   * *the algorithm finds to much hyphenation points:* severe!
   * *the algorithm finds a hyphenation point, that grammatically is OK, but syntactically faulty:* e.g. Urin-stinkt in german
 
-It's almost impossible for an algorithm to decide basing of the context of a word, how it has to be hyphenated.
+It's almost impossible for an algorithm to decide, basing on the context of a word, how it has to be hyphenated.
 
 == How to manually adjust hyphenation ==
 
@@ -18,10 +18,8 @@ There two possible ways:
   # *Create an exceptions list:*  When the script is invoked, you can define exceptions that are globally available for the whole script:
   {{{
 <script type="text/javascript">
-    window.onload=function() {
         Hyphenator.addExceptions('Ur-instinkt,Fortran');
-        Hyphenator.hyphenateDocument();
-    };
+        Hyphenator.run();
 </script>
   }}}
 Now, Hyphenator knows how to hyphenate "Urinstinkt" and that "Fortran" hasn't to be hyphenated at all.
