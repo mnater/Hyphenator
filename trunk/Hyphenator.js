@@ -23,7 +23,7 @@ var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
 	var DEBUG=false; // turn DEBUG mode on:true/off:false
-	//var BASEPATH='http://127.0.0.1/~mnater/mnn/hyph/%20working/trunk/';
+	//var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
 	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true, 'nl':true}; //delete languages that you won't use (for better performance)
 	var LANGUAGEHINT='Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
@@ -38,6 +38,7 @@ var Hyphenator=(function(){
 	var enableRemoteLoading=true;
 	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
 	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy; Change by Hyphenator.setHyphenChar(c);
+	var urlhyphen=String.fromCharCode(8203); // the hyphe for urls, defaults to zerowidthspace; Change by Hyphenator.setUrlHyphenChar(c);
 	var min=6; // only hyphanete words longer then or equal to 'min'. Change by Hyphenator.setMinWordLength(n);
 	var bookmarklet=false;
 	var patternsloaded={}; // this is set when the patterns are loaded
@@ -49,7 +50,8 @@ var Hyphenator=(function(){
 	/************ UA related ************/
 	var zerowidthspace='';
 	// The zerowidthspace is inserted after a '-' in compound words
-	// like this, Firefox and IE will break after '-' if necessary
+	// like this, even Firefox and IE will break after '-' if necessary.
+	// zerowidthspace is also used to break URLs
 	function _createZeroWidthSpace() {
 		var ua=navigator.userAgent.toLowerCase();
 		if(ua.indexOf('firefox')!=-1 || ua.indexOf('msie 7')!=-1) {
@@ -279,6 +281,9 @@ var Hyphenator=(function(){
 		setHyphenChar: function(str) {
             hyphen=str || String.fromCharCode(173);
 		},
+		setUrlHyphenChar: function(str) {
+            urlhyphen=str || String.fromCharCode(8203);
+		},
 		setRemoteLoading: function(bool) {
 			enableRemoteLoading=bool;
 		},
@@ -463,10 +468,7 @@ var Hyphenator=(function(){
 			return result.join(hyphen);
 		},
 		hyphenateURL: function(url){
-			var res='';
-			res=url.replace(/\//gi,zerowidthspace+'/');
-			res=res.replace(/\./gi,zerowidthspace+'.');
-			return res;
+			return url.replace(/([:\/\.\?#&_,;!@]+)/gi,'$&'+urlhyphen);
 		}
 
 	};
