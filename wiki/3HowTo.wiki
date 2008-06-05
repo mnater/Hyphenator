@@ -1,4 +1,3 @@
-#labels Featured
 #How to use Hyphenator on your website
 
 = Using Hyphenator on your website =
