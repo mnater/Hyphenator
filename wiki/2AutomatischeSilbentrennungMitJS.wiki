@@ -42,56 +42,53 @@ Dank des geringen Speicherbedarfs und seiner Einfachheit eignet sich Liangs Algo
 (Alle Zeitmessungen fanden auf einem älteren !PowerMac G4/933MHz in Safari 2.0.4 statt. Neuere Rechnermodelle dürften wesentlich schneller sein.)
 
 === Aufbereitung der Trennmusters ===
-First I tried to use the patterns directly in their original format `n1tr`. A pattern file like this was 
-about 40KB but it took over 2 seconds to read it.
+Zuerst habe ich versucht, die Trennmuster direkt, also in der Form `n1tr` zu übernehmen. In dieser Form ist auch der sprachenspezifische Ersatz der Trennmuster denkbar. Das Skript brauchte so nur etwa 40KB, dafür aber zwei Sekunden, um diese Trennmuster einzulesen.
 
-Thats why I converted them to a JSON-format (`{"ntr":"0100"}`), which uses more then twice as much space 
-but is read in less than 30ms.
+Deshalb habe ich die Muster auch in JSON notiert (`{"ntr":"0100"}`), wodurch der Speicherbedarf auf 92KB aufgebläht wurde. Das Einlesen der Muster gelang so aber in 30ms.</p>
 
-Liang proposes to use a trie as basic data structure for the patterns. I did it, too. But it 
-was too slow (assumed I did everything right!): With a trie many searches for patterns could be avoided, but 
-traversing the trie was so slow, that looking up for all possible patterns in a simple Javascript-Object won the 
-game.
+Für die Implementierung eines Tries, wie sie Liang vorschlägt, ist JavaScript allerding zu langsam (vorausgesetzt, ich habe alles richtig gemacht). Mit einem Trie könnten zwar viele Suchläufe nach Mustern vermieden werden; das Suchen im Trie war in meinen Tests aber soviel langsamer als das Suchen im Objekt, dass diese Ersparnis mehr als zunichte gemacht wurde. Wirklich schneller wäre ein Trie nur, wenn er von der JavaScript-Core zur Verfügung gestellt würde.
 
-== How it works (just an overview) ==
-There are two modes:
-  # Running when the page is loaded
-  # Running as a Bookmarklet
+== Wie es funktioniert (Übersicht) ==
+Es gibt zwei Modi:
+  # Start, wenn die Seite geladen ist
+  # Start, wenn der Benutzer ein Bookmarklet klickt
 
-=== Running when the page is loaded ===
-This mode is used, when you include Hyphenator on your own webpage. It is highly customizable and fast.
+=== Start, wenn die Seite geladen ist ===
+Dieser Modus wird verwendet, wenn Sie Hyphenator auf Ihrer Website verwenden. Er ist hoch anpassungsfähig und schnell.
 
-The script is doing its work as follows:
-  # By including the `Hyphenator.js` in your HTML a Hyphenator-Object is automatically created but hyphenation is not executed yet.
-  # On creation the script guesses the main language of the site, and decides if it's running as a bookmarklet or not. If it can't find a hint on the language it displays a user prompt.
-  # When the page is loaded it can start the hyphenation process by calling `Hyphenator.hyphenateDocument();`:
-    # the `Hyphenator.prepare` walks through the document and looks what languages are used. It then loads the necessary patterns.
-    # When all patterns are loaded, it looks for all elements with `class="hyphenate"`.
-    # The function `Hyphenator.hyphenateElement()` further takes care of these elements by extracting their child-Nodes. The child-Nodes are recursively traversed until they are text-Nodes, which contents are replaced with hyphenated texts.
-    
-By applying the `class="hyphenate"` only to a small set of elements you can massively speed up the script. Beside that laoding the patterns take their time depending on bandwith.
+Das Script läuft in groben Zügen wie folgt ab:
+  # Indem Sie `Hyphenator.js` in ihrer HTML-Datei laden, wird automatisch ein Hyphenator-Objekt erzeugt. Die Trennungen werden aber noch nicht ausgeführt.
+  # Während dieses Vorgangs versucht das Script die Sprache der Seite zu ermitteln und bestimmt, ob es als Bookmarklet läuft oder nicht. Wenn es keinen Hinweis auf die verwendete Sprache findet, verlangt es eine Benutzerangabe.
+  # Wenn die Seite fertig geladen ist, startet das Script den Trennungsprozess `Hyphenator.hyphenateDocument();`:
+    # Die `Hyphenator.prepare`-Funktion durchsucht das Dokument nach weiteren Sprachen und lädt die entsprechenden Trennmuster.
+    # Sobald alle Trennmuster geladen sind, werden die Elemente mit `class="hyphenate"` gesucht.
+    # Die Funktion `Hyphenator.hyphenateElement()` bearbeitet nun diese Elemente, indem sie rekursiv in deren Kind-Knoten sucht, bis sie Text-Knoten findet. Die Inhalte dieser Textknoten werden ersetzt durch nach Silben getrennten Text.
 
-=== Running as a Bookmarklet ===
-This mode is used when you start Hyphenator from a Bookmarklet on any arbitray webpage. It's slower end lesser customizable.
+Indem nur eine kleine Auswahl von Elementen mit `class="hyphenate"`  ausgezeichnet werden, kann das Script stark beschleunigt werden. Unabhängig von der Bestimmung der Trennstellen beansprucht das Herunterladen der Trennmuster – abhängig von der Bandbreite – seine Zeit.
 
-The script does his work almost exactly as explained above. But there are some small changes:
-  # By starting the bookmarklet, the script is included in the page and has to be loaded first.
-  # By including the `Hyphenator.js` in your HTML a Hyphenator-Object is automatically created but hyphenation is not executed yet.
-  # On creation the script guesses the main language of the site, and decides if it's running as a bookmarklet or not. If it can't find a hint on the language it displays a user prompt.
-  # When the page is loaded it can start the hyphenation process by calling `Hyphenator.hyphenateDocument();`:
-    # the `Hyphenator.prepare` walks through the document and looks what languages are used. It then loads the necessary patterns.
-    # When all patterns are loaded, it hyphenates the <body>-Element (and all its children).
-    # The function `Hyphenator.hyphenateElement()` further takes care of the <body> by extracting its child-Nodes. The child-Nodes are recursively traversed until they are text-Nodes, which contents are replaced with hyphenated texts.
+=== Verwendung als Bookmarklet ===
+Dieser Modus ist dann nützlich, wenn Texte einer beliebige Website, die Sie besuchen, getrennt werden sollen. Der Ablauf des Scripts ist langsamer und weniger beeinflussbar.
 
-Because the script has to traverse all elements and hyphenates them all, this mode may take a while to complete (some seconds). Beside that loading the patterns _and the script_ take their time depending on bandwith.
+Das Script macht seine Arbeit fast gleich wie oben bereits beschrieben. Es gibt aber einige kleine Unterschiede:
+  # Wen das Bookmarklet gestartet wird, wird das Script in die Website eingebunden und muss erst einmal geladen werden.
+  # Indem Sie `Hyphenator.js` in ihrer HTML-Datei laden, wird automatisch ein Hyphenator-Objekt erzeugt. Die Trennungen werden aber noch nicht ausgeführt. 
+  # Während dieses Vorgangs versucht das Script die Sprache der Seite zu ermitteln und bestimmt, ob es als Bookmarklet läuft oder nicht. Wenn es keinen Hinweis auf die verwendete Sprache findet, verlangt es eine Benutzerangabe.
+  # Wenn die Seite fertig geladen ist, startet das Script den Trennungsprozess `Hyphenator.hyphenateDocument();`:
+    # Die `Hyphenator.prepare`-Funktion durchsucht das Dokument nach weiteren Sprachen und lädt die entsprechenden Trennmuster.
+    # Sobald alle Trennmuster geladen sind, wird das `<body>`-Element getrennt.
+    # Die Funktion `Hyphenator.hyphenateElement()` bearbeitet das `<body>`-Element, indem sie rekursiv in dessen Kind-Knoten sucht, bis sie Text-Knoten findet. Die Inhalte dieser Textknoten werden ersetzt durch nach Silben getrennten Text.
 
-== How it works (the fussy details) ==
-Read the code!
+Weil das Script alle Elemente unterhalb des `<body>`-Elements durchläuft und alle Text-Knoten nach Silben trennt, braucht das Script in diesem Modus etwas länger. Ausserdem müssen auch hier die Trennmuster und _zusätzlich das Script_ heruntergeladen werden, was auch Zeit beansprucht.
 
-== Getting and using the script ==
-Just [http://code.google.com/p/hyphenator/downloads/list download], unzip and read the [3HowTo how to] use it on your page.
+== Wie es funktioniert (en Détail) ==
+Studier den Code!
 
-You can use it as a bookmarklet, too. By clicking this bookmarklet you can hyphenate whatever webage you want. To set the bookmarklet just save the following script as a bookmark: 
+== Das Script herunterladen und einbinden ==
+Einfach [http://code.google.com/p/hyphenator/downloads/list downloaden], entpacken und die [3Anleitung Anleitung] lesen, wie man das Script auf einer Website einbindet.
+
+Sie können es auch als Bookmarklet verwenden. Wenn man dann auf das Bookmarklet klickt kann man auf jeder beliebiegen Website die Silbentrennung durchführen.
+Einfach das folgende Script als Bookmark abspeichern:
+
 {{{
 javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://www.mnn.ch/hyph/v5/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
 }}}
