@@ -1,4 +1,4 @@
-#About automatic hyphenation by Javascript
+#summary automatic hyphenation by Javascript
 
 = Automatic hyphenation in HTML with Javascript =
 
