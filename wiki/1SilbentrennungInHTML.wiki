@@ -1,7 +1,7 @@
 #About hyphenation in HTML
 
 = Hyphenation in HTML =
-[zur deutschen Version]
+[http://code.google.com/p/hyphenator/wiki/1HyphenationInHTML go to the englisch version]
 
 == Abstract ==
 Dieser Artikel behandelt in diesem ersten Teil das Problem der Silbentrennung in den aktuellen Webbrowsern. Im [http://code.google.com/p/hyphenator/wiki/2AutomaticHypheationByJavascript zweiten Teil] wird als mögliche Lösung ein Javascript vorgestellt, welches die Silbentrennung automatisch durchführt. Dieses Script beruht auf einer Arbeit von Franklin M. Liang und verwendet die Trennmuster aus der LaTeX-Distribution.
