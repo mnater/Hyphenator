@@ -45,7 +45,7 @@ Der grosse Nachteil der vorgängigen Trennung mit &shy; ist, dass Wörter, welch
 Ich gehe davon aus, dass auch Suchmaschinen solche Wörter nicht indizieren.
 
 == Silbentrennung im Web morgen ==
-Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS&nbsp;3] (heute ist CSS&nbsp;2.1 aktuell), wird es möglich sein, das Trennungsverhalten von Textabsätzen mittels CSS zu steuern. Aber auch hier wird nicht vorgeschrieben, dass Browser diese Silbentrennung vornehmen müssen.
+Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (heute ist CSS&nbsp;2.1 aktuell), wird es möglich sein, das Trennungsverhalten von Textabsätzen mittels CSS zu steuern. Aber auch hier wird nicht vorgeschrieben, dass Browser diese Silbentrennung vornehmen müssen.
 
 == Zusammenfassung ==
 Silbentrennung im Web ist nicht so wichtig, da der Blocksatz ohnehin keinen hohen Stellenwert hat. Trotzdem kann sie – auch im Flattersatz – bei schmalen Spalten nötig bzw. hilfreich sein. Silbentrennungen müssen zur Zeit vom Autor manuell mit dem Sonderzeichen &shy; vorgenommen werden, welches aber vom Firefox derzeit nicht unterstützt wird. Eine automatische browserseitige Silbentrennung für HTML gibt es bislang nicht.
