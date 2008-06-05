@@ -1,5 +1,5 @@
+#summary Silbentrennung in HTML (Inhalte)
 #labels Featured
-#Silbentrennung in HTML (Inhalte)
 
 = Table of Contents =
 
