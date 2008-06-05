@@ -3,7 +3,7 @@
 
 = Table of Contents =
 
-  # [http://code.google.com/p/hyphenator/wiki/1 Silbentrennung InHTML Silbentrennung in HTML]
+  # [http://code.google.com/p/hyphenator/wiki/1SilbentrennungInHTML Silbentrennung in HTML]
   # Automatische Silbentrennung durch Javascript
   # Gebrauchshinweise zu Hyphenator
   # Umgang mit Fehltrennungen
