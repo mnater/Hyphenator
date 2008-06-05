@@ -3,10 +3,10 @@
 
 = Table of Contents =
 
-  # Hyphenation in HTML
-  # Automatic hyphenation by Javascript
-  # How to use hyphenator
-  # Dealing with inaccurate hyphenation
-  # Optimization fo speed
-  # Adding support for further languages
-  # Contributing to the project
+  # [http://code.google.com/p/hyphenator/wiki/1HyphenationInHTML Hyphenation in HTML]
+  # [http://code.google.com/p/hyphenator/wiki/2AutomaticHyphenationByJavascript Automatic hyphenation by Javascript]
+  # [http://code.google.com/p/hyphenator/wiki/3HowTo How to use hyphenator]
+  # [http://code.google.com/p/hyphenator/wiki/4DealingWithInaccurateHyphenation Dealing with inaccurate hyphenation]
+  # [http://code.google.com/p/hyphenator/wiki/5OptimizationForSpeed Optimization fo speed]
+  # [http://code.google.com/p/hyphenator/wiki/6AddingSupportForFurtherLanguages Adding support for further languages]
+  # [http://code.google.com/p/hyphenator/wiki/7ContributingToTheProject Contributing to the project]
