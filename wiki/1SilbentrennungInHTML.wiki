@@ -55,4 +55,4 @@ Mit der kommenden Version 3.0 wird auch Firefox &shy; unterstützen. Eine Autom
 
 Eine Umsetzung in Javascript hat den Vorteil, dass die Silbentrennung den Text für Suchfunktionen nicht a priori unleserlich macht und vom Benutzer ein- oder ausgeschaltet werden kann.
 
-Der [silbentrennung2.html zweite Teil] dieses Artikels befasst sich mit der Implementierung einer automatischen Silbentrennung in Javascript.
+Der [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS zweite Teil] dieses Artikels befasst sich mit der Implementierung einer automatischen Silbentrennung in Javascript.
