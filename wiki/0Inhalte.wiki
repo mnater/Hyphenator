@@ -1,4 +1,4 @@
-#summary Silbentrennung in HTML (Inhalte)
+#summary Inhaltsverzeichnis
 #labels Featured
 
 = Table of Contents =
