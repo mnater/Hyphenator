@@ -1,4 +1,4 @@
-#labels Featured,Phase-Deploy
+#labels Phase-Deploy
 #There some things you can do to speed up Hyphenator
 
 = How fast is Hyphenator? =
