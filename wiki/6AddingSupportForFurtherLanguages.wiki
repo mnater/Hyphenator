@@ -1,4 +1,3 @@
-#labels Featured
 #How to add support for further languages
 
 = What we have now =
