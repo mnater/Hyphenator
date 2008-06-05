@@ -39,9 +39,9 @@ Die Trennmuster sind online bei [http://www.ctan.org/tex-archive/language/hyphen
 == Implementierung in Javascript ==
 Dank des geringen Speicherbedarfs und seiner Einfachheit eignet sich Liangs Algorithmus hervorragend für den Einsatz im Web. Wie sich zeigen wird, benötigt das gesammte Skript inklusive Trennmuster höchstens 100KB und ist hinreichend schnell.
 
-(Alle Zeitmessungen fanden auf einem älteren PowerMac G4/933MHz in Safari 2.0.4 statt. Neuere Rechnermodelle dürften wesentlich schneller sein.)
+(Alle Zeitmessungen fanden auf einem älteren !PowerMac G4/933MHz in Safari 2.0.4 statt. Neuere Rechnermodelle dürften wesentlich schneller sein.)
 
-=== Preparing the patterns ===
+=== Aufbereitung der Trennmusters ===
 First I tried to use the patterns directly in their original format `n1tr`. A pattern file like this was 
 about 40KB but it took over 2 seconds to read it.
 
