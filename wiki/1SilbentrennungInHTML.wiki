@@ -37,7 +37,7 @@ _Diejenigen Browser, die weiche Trennzeichen interpretieren, müssen folgende Se
 
 _In HTML wird der normale Trennstrich durch das '-'-Zeichen (&#45; oder &#x2D;) repräsentiert. Das weiche Trennzeichen wird repräsentiert durch die Zeichen-Entity-Referenz &shy; (soft hyphen, &#173; oder &#xAD;)_
 
-Der HTML-Standard schreibt also nicht vor, dass Browser das &shy;-Zeichen als Trennstelle erkennen müssen. Zur Zeit nehmen aber alle aktuellen Browser (Internet Explorer ab Verion&nbsp;5, Safari&nbsp;2, Opera ab Version&nbsp;7.1) ausser Firefox&nbsp;2.0 Trennungen vor.
+Der HTML-Standard schreibt also nicht vor, dass Browser das &shy;-Zeichen als Trennstelle erkennen müssen. Zur Zeit nehmen aber alle aktuellen Browser (Internet Explorer ab Verion 5, Safari 2, Opera ab Version 7.1) ausser Firefox 2.0 Trennungen vor.
 (Update vom 5.7.2007: Die zukünftige Browserengine von Firefox, Gecko 1.9 unterstützt &shy; seit dem [http://www.mozilla.org/projects/firefox/3.0a6/releasenotes/ sechsten Alpha-Release]. Diese Entwicklungen werden in Firefox 3.0 integriert.)
 Die Trennstellen (&shy;) muss der Autor aber manuell einfügen.
 
@@ -45,13 +45,13 @@ Der grosse Nachteil der vorgängigen Trennung mit &shy; ist, dass Wörter, welch
 Ich gehe davon aus, dass auch Suchmaschinen solche Wörter nicht indizieren.
 
 == Silbentrennung im Web morgen ==
-Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (heute ist CSS&nbsp;2.1 aktuell), wird es möglich sein, das Trennungsverhalten von Textabsätzen mittels CSS zu steuern. Aber auch hier wird nicht vorgeschrieben, dass Browser diese Silbentrennung vornehmen müssen.
+Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (heute ist CSS 2.1 aktuell), wird es möglich sein, das Trennungsverhalten von Textabsätzen mittels CSS zu steuern. Aber auch hier wird nicht vorgeschrieben, dass Browser diese Silbentrennung vornehmen müssen.
 
 == Zusammenfassung ==
 Silbentrennung im Web ist nicht so wichtig, da der Blocksatz ohnehin keinen hohen Stellenwert hat. Trotzdem kann sie – auch im Flattersatz – bei schmalen Spalten nötig bzw. hilfreich sein. Silbentrennungen müssen zur Zeit vom Autor manuell mit dem Sonderzeichen &shy; vorgenommen werden, welches aber vom Firefox derzeit nicht unterstützt wird. Eine automatische browserseitige Silbentrennung für HTML gibt es bislang nicht.
 
 == Wie weiter? ==
-Mit der kommenden Version&nbsp;3.0 wird auch Firefox &shy; unterstützen. Eine Automatisierung der Silbentrennung wird deshalb immer interessanter. Bis die Browser selbst eine Silbentrennung integriert haben, muss diese entweder beim Schreiben der Texte (durch den Texteditor), vor dem Ausliefern auf dem Server (mittels CGI-Skript) oder im Browser (Javascript) vorgenommen werden.
+Mit der kommenden Version 3.0 wird auch Firefox &shy; unterstützen. Eine Automatisierung der Silbentrennung wird deshalb immer interessanter. Bis die Browser selbst eine Silbentrennung integriert haben, muss diese entweder beim Schreiben der Texte (durch den Texteditor), vor dem Ausliefern auf dem Server (mittels CGI-Skript) oder im Browser (Javascript) vorgenommen werden.
 
 Eine Umsetzung in Javascript hat den Vorteil, dass die Silbentrennung den Text für Suchfunktionen nicht a priori unleserlich macht und vom Benutzer ein- oder ausgeschaltet werden kann.
 
