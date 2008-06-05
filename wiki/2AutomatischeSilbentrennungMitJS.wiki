@@ -3,7 +3,7 @@
 = Automatische Silbentrennung im Browser mit !JavaScript =
 
 == Zusammenfassung ==
-Dieser Artikel behandelt im [http://code.google.com/p/hyphenator/wiki/1SilbentrennungInHTML ersten Teil] die Problematik der Silbentrennung (Hyphenation) in Webbrowsern und führt in diesem  [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS zweiten Teil] als möglichen Lösungsansatz eine automatische Silbentrennung an. Diese beruht auf dem Ansatz von Liang, verwendet die Trennmuster für die deutsche Silbentrennung aus der LaTeX-Distribution und ist in JavaScript implementiert.
+Dieser Artikel behandelt im [http://code.google.com/p/hyphenator/wiki/1SilbentrennungInHTML ersten Teil] die Problematik der Silbentrennung (Hyphenation) in Webbrowsern und führt in diesem  [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS zweiten Teil] als möglichen Lösungsansatz eine automatische Silbentrennung an. Diese beruht auf dem Ansatz von Liang, verwendet die Trennmuster für die deutsche Silbentrennung aus der LaTeX-Distribution und ist in !JavaScript implementiert.
 
 == Liangs Thesis ==
 Frankling Mark Liang erarbeitete 1983 im Rahmen seiner Doktorarbeit einen Algorithmus für die automatische Silbentrennung für das Textsatzsystem (La)TeX. Damals war es wichtig, dass das Programm möglichst wenig Arbeitsspeicher brauchte – eine Wörterliste mit allen Wörtern und Trennstellen kam also nicht in Frage.
