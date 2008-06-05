@@ -18,13 +18,10 @@
 // Mathias Nater, Zürich, 2007
 // mnater at mac dot com
 /**************** Preamble ****************/
-
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
 	var DEBUG=false; // turn DEBUG mode on:true/off:false
-	//var BASEPATH='http://192.168.0.5/~mnater/mnn/hyph/%20working/trunk/';
-	var BASEPATH='http://hyphenator.googlecode.com/svn/trunk/'; // change this if you copied the script to your webspace
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true, 'nl':true}; //delete languages that you won't use (for better performance)
 	var LANGUAGEHINT='Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n'+LANGUAGEHINT,
@@ -33,6 +30,16 @@ var Hyphenator=(function(){
 						 'nl':'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n'+LANGUAGEHINT};
 	
 	/************ don't change! ************/
+	var BASEPATH=function(){
+		var s=document.getElementsByTagName('script'),i=0,p,t;
+		while(t=s[i++].src) {
+			p=t.indexOf('Hyphenator.js');
+			if(p!=-1) {
+				return t.substring(0,p);
+			}
+		}
+		return 'http://hyphenator.googlecode.com/svn/trunk/';
+	}();
 	var DONTHYPHENATE={'script':true,'code':true,'pre':true,'img':true,'br':true,'samp':true,'kbd':true,'var':true,'abbr':true,'acronym':true,'sub':true,'sup':true,'button':true,'option':true,'label':true};
 	var hyphenation={};
 	var enableRemoteLoading=true;
@@ -45,8 +52,9 @@ var Hyphenator=(function(){
 	var preparestate=0; //0: not initialized, 1: loading patterns, 2: ready
 	var mainlanguage=null;
 	var url='(\\w*:\/\/)((\\w*:)?(\\w*)@)?([\\w\.]*)?(:\\d*)?(\/[\\w#!:.?+=&%@!\-]*)*';
+	var mail='[\\w-\\.]+@[\\w\\.]+';
 	var urlRE=new RegExp(url,'i');
-	
+	var mailRE=new RegExp(mail,'i');
 	/************ UA related ************/
 	var zerowidthspace='';
 	// The zerowidthspace is inserted after a '-' in compound words
@@ -137,6 +145,12 @@ var Hyphenator=(function(){
 		/*if(!!el.getAttribute('xml:lang')) {
 			return el.getAttribute('xml:lang').substring(0,2);
 		}*/
+		//instead, we have to do this (thanks to borgzor):
+		try {
+			if(!!el.getAttribute('xml:lang')) {
+				return el.getAttribute('xml:lang').substring(0,2);
+			}
+		} catch (ex) {}
 		if(mainlanguage) {
 			return mainlanguage;
 		}
@@ -147,7 +161,7 @@ var Hyphenator=(function(){
 	// Loads the hyphenation-patterns for specific languages
 	// by adding a new <script>-Element
 	// Why not using AJAX? Because it is restricted to load data
-	// only from the same site - so the Bookmarklet won't work...
+	// only from the same site - so the Bookmarklet won't work with Ajax...
 	function _loadPatterns(lang) {
 		if(DEBUG)
 			_log("load patterns "+lang);
@@ -383,16 +397,16 @@ var Hyphenator=(function(){
 			}
 			if(DEBUG)
 				_log("language: "+lang);
-			var wrd='[\\w'+Hyphenator.specialChars[lang]+'­-]{'+min+',}';
+			var wrd='[\\w'+Hyphenator.specialChars[lang]+'@­-]{'+min+',}';
 			var wrdRE=new RegExp(wrd,'i');
 			function __hyphenate(word) {
-				if(urlRE.test(word)) {
+				if(urlRE.test(word) || mailRE.test(word)) {
 					return Hyphenator.hyphenateURL(word);
 				} else {
 					return Hyphenator.hyphenateWord(lang,word);
 				}
 			}
-			var genRegExp=new RegExp('('+url+')|('+wrd+')','gi');
+			var genRegExp=new RegExp('('+url+')|('+mail+')|('+wrd+')','gi');
             for(var i=0; (n=el.childNodes[i]); i++) {
 				if(n.nodeType==3 && n.data.length>=min) { //type 3=#text -> hyphenate!
                     n.data=n.data.replace(genRegExp,__hyphenate);
@@ -438,7 +452,6 @@ var Hyphenator=(function(){
 				positions[i]=0;
 			} while(i--);
 			var s=wl-1;
-
 			do {
 				var maxl=wl-s;
 				var window=w.substring(s);
