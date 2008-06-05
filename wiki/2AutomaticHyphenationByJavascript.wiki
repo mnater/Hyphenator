@@ -1,4 +1,3 @@
-#labels Featured
 #About automatic hyphenation by Javascript
 
 = Automatic hyphenation in HTML with Javascript =
