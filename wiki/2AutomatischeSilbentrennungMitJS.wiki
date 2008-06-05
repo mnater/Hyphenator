@@ -1,0 +1,101 @@
+#About Automatische Silbentrennung in Javacript
+
+= Automatische Silbentrennung im Browser mit Javascript =
+
+== Zusammenfassung ==
+Dieser Artikel behandelt im <a href="silbentrennung1.html">ersten Teil</a> die Problematik der Silbentrennung (Hyphenation) in Webbrowsern und führt im <a href="silbentrennung2.html">zweiten Teil</a> als möglichen Lösungsansatz eine automatische Silbentrennung an. Diese beruht auf dem Ansatz von Liang, verwendet die Trennmuster für die deutsche Silbentrennung aus der LaTeX-Distribution und ist in JavaScript implementiert.
+
+== Liangs Thesis ==
+Frankling Mark Liang erarbeitete 1983 im Rahmen seiner Doktorarbeit einen Algorithmus für die automatische Silbentrennung für das Textsatzsystem (La)TeX. Damals war es wichtig, dass das Programm möglichst wenig Arbeitsspeicher brauchte &ndash; eine Wörterliste mit allen Wörtern und Trennstellen kam also nicht in Frage.
+Liangs Doktorvater und Schöpfer von (La)Tex, Donald Knuth, hatte bereits einen Algorithmus programmiert, der englische Wörter trennen konnte, indem unter anderem Präfixe und Suffixe abgetrennt wurden. Liang ging aber weiter.
+
+Er hat aus einer Wortliste mit Trennstellen eine Reihe von Zeichenmustern berechnet, die zusammen mit Zahlwerten auf mögliche Trenn- und Nichttrennstellen rückschliessen lassen. Dabei markieren ungerade Zahlen mögliche Trennstellen. Diese Muster (patterns) sehen etwa so aus:
+`1be 2il 2lb n1tr 1nu 1si tr6`.
+Möchte man für ein bestimmtes Wort Trennstellen finden, sucht man alle passenden Muster heraus und kombiniert die Zahlen &ndash; eine höhere Zahl überschreibt dabei eine kleinere.
+
+Für das Wort `Silbentrennung` passen die oben bereits aufgezeigten Muster und ergeben:
+
+{{{
+ s i l b e n t r e n n u n g 
+      1b e
+  2i l
+    2l b
+           n1t r
+                    1n u
+1s i
+             t r6
+-----------------------------
+1s2i2l1b e n1t r6e n1n u n g
+}}}
+Es wird also `Sil|ben|tren|nung` getrennt.
+
+Liang tried many different parameters for the computation of the patterns. He preferred to miss 
+out a hyphenation point instead of setting a false one. During his tests he found that with only about 5000 patterns 
+the programm was able to find almost 90% of all hyphenation points. To find all hyphenation points over 20'000 
+patterns would have been necessary &ndash; a great deal too much for computers of this time.
+
+Later, patterns for many other languages have been computed and are used in todays software 
+like Openoffice and LaTeX.
+
+Patterns are available online at [http://www.ctan.org/tex-archive/language/hyphenation/" CTAN] under the LaTeX Project Public License.
+
+== Implementation in Javascript ==
+Due to its low memory usage and its simplicity Liangs algorithm suits very well for usage on 
+webpages. As you will see, the entire script including one pattern library isn't bigger then 100KB and fast 
+enough.
+(First benchmarks have been taken on an older Powermac G4/933MHz and Safari 2.0.4. Current machines will be much faster.)
+
+=== Preparing the patterns ===
+First I tried to use the patterns directly in their original format `n1tr`. A pattern file like this was 
+about 40KB but it took over 2 seconds to read it.
+
+Thats why I converted them to a JSON-format (`{"ntr":"0100"}`), which uses more then twice as much space 
+but is read in less than 30ms.
+
+Liang proposes to use a trie as basic data structure for the patterns. I did it, too. But it 
+was too slow (assumed I did everything right!): With a trie many searches for patterns could be avoided, but 
+traversing the trie was so slow, that looking up for all possible patterns in a simple Javascript-Object won the 
+game.
+
+== How it works (just an overview) ==
+There are two modes:
+  # Running when the page is loaded
+  # Running as a Bookmarklet
+
+=== Running when the page is loaded ===
+This mode is used, when you include Hyphenator on your own webpage. It is highly customizable and fast.
+
+The script is doing its work as follows:
+  # By including the `Hyphenator.js` in your HTML a Hyphenator-Object is automatically created but hyphenation is not executed yet.
+  # On creation the script guesses the main language of the site, and decides if it's running as a bookmarklet or not. If it can't find a hint on the language it displays a user prompt.
+  # When the page is loaded it can start the hyphenation process by calling `Hyphenator.hyphenateDocument();`:
+    # the `Hyphenator.prepare` walks through the document and looks what languages are used. It then loads the necessary patterns.
+    # When all patterns are loaded, it looks for all elements with `class="hyphenate"`.
+    # The function `Hyphenator.hyphenateElement()` further takes care of these elements by extracting their child-Nodes. The child-Nodes are recursively traversed until they are text-Nodes, which contents are replaced with hyphenated texts.
+    
+By applying the `class="hyphenate"` only to a small set of elements you can massively speed up the script. Beside that laoding the patterns take their time depending on bandwith.
+
+=== Running as a Bookmarklet ===
+This mode is used when you start Hyphenator from a Bookmarklet on any arbitray webpage. It's slower end lesser customizable.
+
+The script does his work almost exactly as explained above. But there are some small changes:
+  # By starting the bookmarklet, the script is included in the page and has to be loaded first.
+  # By including the `Hyphenator.js` in your HTML a Hyphenator-Object is automatically created but hyphenation is not executed yet.
+  # On creation the script guesses the main language of the site, and decides if it's running as a bookmarklet or not. If it can't find a hint on the language it displays a user prompt.
+  # When the page is loaded it can start the hyphenation process by calling `Hyphenator.hyphenateDocument();`:
+    # the `Hyphenator.prepare` walks through the document and looks what languages are used. It then loads the necessary patterns.
+    # When all patterns are loaded, it hyphenates the <body>-Element (and all its children).
+    # The function `Hyphenator.hyphenateElement()` further takes care of the <body> by extracting its child-Nodes. The child-Nodes are recursively traversed until they are text-Nodes, which contents are replaced with hyphenated texts.
+
+Because the script has to traverse all elements and hyphenates them all, this mode may take a while to complete (some seconds). Beside that loading the patterns _and the script_ take their time depending on bandwith.
+
+== How it works (the fussy details) ==
+Read the code!
+
+== Getting and using the script ==
+Just [http://code.google.com/p/hyphenator/downloads/list download], unzip and read the [3HowTo how to] use it on your page.
+
+You can use it as a bookmarklet, too. By clicking this bookmarklet you can hyphenate whatever webage you want. To set the bookmarklet just save the following script as a bookmark: 
+{{{
+javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://www.mnn.ch/hyph/v5/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
+}}}

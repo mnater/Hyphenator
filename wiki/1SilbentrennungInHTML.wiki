@@ -1,0 +1,58 @@
+#About hyphenation in HTML
+
+= Hyphenation in HTML =
+[zur deutschen Version]
+
+== Abstract ==
+Dieser Artikel behandelt in diesem ersten Teil das Problem der Silbentrennung in den aktuellen Webbrowsern. Im [http://code.google.com/p/hyphenator/wiki/2AutomaticHypheationByJavascript zweiten Teil] wird als mögliche Lösung ein Javascript vorgestellt, welches die Silbentrennung automatisch durchführt. Dieses Script beruht auf einer Arbeit von Franklin M. Liang und verwendet die Trennmuster aus der LaTeX-Distribution.
+
+Auch mir passieren Fehler. Ich freue mich auf Korrekturen und andere Rückmeldungen.
+
+
+== `text-align:justify; vs. text-align:left;` ==
+Falls nichts anderes eingestellt wird, werden Texte in Webbrowsern linksbündig mit Flattersatz rechts dargestellt. Mit der CSS-Eigenschaft `text-align:justify;` können Texte auch im Blocksatz ausgegeben werden. Da es dabei keine Silbentrennung gibt, entstehen &ndash; vor allem in engen Spalten mit langen Wörtern &ndash; hässliche Wortzwischenräume.
+
+Blocksatz auf Webseiten ist allerdings nicht unumstritten. Linksbündiger Text, zusammen mit einer kurzen Zeilenlänge und grosszügigem Zeilenabstand soll zu einer besseren Lesbarkeit führen, weil so das Auge besser geführt wird und sich beim Sprung auf die nächste Zeile weniger schnell verirrt.
+
+Beim Lesen von Texten auf dem Bildschirm ist der Abstand zwischen Auge und Text viel Grösser, als beim Lesen gedruckter Texte. Ausserdem wird kaum je der Finger als Lesehilfe auf dem Bildschirm verwendet. Um die Lesbarkeit von Bildschirmtexten zu erhöhen, ist es somit besser, diese linksbündig zu setzen. Trotzdem kann es unter bestimmten Umständen angebracht sein (z.B beim Ausdruck von Webseiten), den Text im Blocksatz mit Silbentrennung zu setzen.
+
+Aber auch in linksbündigem Text kann Silbentrennung sinnvoll sein: Um lange Wörter in engen Tabellenzellen umzubrechen oder um den Flattersatz zu «beruhigen».
+
+== Automatische Silbentrennung ==
+In professionellen Layoutprogrammen aus dem Printbereich wird der Silbentrennung grosse Aufmerksamkeit geschenkt. Fragen wie optischer Randausgleich spielen wegen der viel geringeren Auflösung der Darstellung im Web aber kaum eine Rolle. Im Gegenteil: Im Web gibt es keine (oder «noch keine» oder «kaum», mehr dazu später) Silbentrennung!
+
+Die automatische Silbentrennung ist aus verschiedenen Gründen ein schwieriges Kapitel der Informatik.
+Einerseits ist sie stark abhängig von der jeweiligen Sprache. Englisch hat eher kürzere Wörter, während die deutsche Sprache [http://en.wikipedia.org/wiki/Donaudampfschiffahrtselektrizit%C3%A4tenhauptbetriebswerkbauunterbeamtengesellschaft lange Wortkombinationen] zulässt. Ganz anders verhalten sich asiatische Sprachen. So werden zum Beispiel in [http://www.modtrip.com/main.html Thai] nicht einmal Wortzwischenräume gesetzt.
+
+In den meisten Textverarbeitungsprogrammen werden lexikalische Algorithmen eingesetzt, die zu jedem zu trennenden Wort die Trennstellen und Wortbestandteile in einer Wörterliste nachschlagen. Wörter oder Wortbestandteile, die nicht auf der Liste sind, müssen aber vom Benutzer manuell getrennt werden. Der Nachteil dieses Ansatzes ist der hohe Speicherbedarf und der Umstand, dass Komposita nicht immer erkannt werden.
+
+Eine andere Möglichkeit sind musterbasierte Algorithmen, welche versuchen aus einer Wörterliste Muster zu erkennen und davon Trennstellen ableiten. Der bekannteste Algorithmus stammt von Frankling Mark Liang ([http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), wurde 1983 entwickelt und wird seither in vielen Programmen wie LaTeX oder OpenOffice verwendet. Musterbasierte Algorithmen können abhängig von der Länge der Musterliste ca 90% aller Trennstellen finden, wobei es aber auch zu schlechten, weil sinnverzerrenden Trennstellen kommen kann (Beispiel: bein-halten), welche wiederum manuell korrigiert werden müssen.
+
+== Silbentrennung im Web heute ==
+Der [http://edition-w3.de/TR/1999/REC-html401-19991224/struct/text.html#h-9.3.3 HTML401-Standard] besagt folgendes:
+
+_In HTML gibt es zwei Typen von Trennzeichen: den normalen Trennstrich und das weiche Trennzeichen (soft hyphen). Der normale Trennstrich sollte von den Benutzerprogrammen wie jedes andere Zeichen behandelt werden. Das weiche Trennzeichen zeigt dem Benutzerprogramm, wo ein Zeilenumbruch auftreten kann._
+
+_Diejenigen Browser, die weiche Trennzeichen interpretieren, müssen folgende Semantik beachten: Wenn eine Zeile an einem weichen Trennzeichen umgebrochen wird, muss ein Trennstrich am Ende der ersten Zeile stehen. Wenn eine Zeile an einem weichen Trennzeichen nicht umgebrochen wird, darf das Benutzerprogramm keinen Trennstrich ausgeben. Bei Operationen wie Suchen und Sortieren sollte das weiche Trennzeichen immer ignoriert werden._
+
+_In HTML wird der normale Trennstrich durch das '-'-Zeichen (&amp;#45; oder &amp;#x2D;) repräsentiert. Das weiche Trennzeichen wird repräsentiert durch die Zeichen-Entity-Referenz &amp;shy; (soft hyphen, &amp;#173; oder &amp;#xAD;)_
+
+Der HTML-Standard schreibt also nicht vor, dass Browser das &amp;shy;-Zeichen als Trennstelle erkennen müssen. Zur Zeit nehmen aber alle aktuellen Browser (Internet Explorer ab Verion&nbsp;5, Safari&nbsp;2, Opera ab Version&nbsp;7.1) ausser Firefox&nbsp;2.0 Trennungen vor.
+(Update vom 5.7.2007: Die zukünftige Browserengine von Firefox, Gecko 1.9 unterstützt &amp;shy; seit dem [http://www.mozilla.org/projects/firefox/3.0a6/releasenotes/ sechsten Alpha-Release]. Diese Entwicklungen werden in Firefox 3.0 integriert.)
+Die Trennstellen (&amp;shy;) muss der Autor aber manuell einfügen.
+
+Der grosse Nachteil der vorgängigen Trennung mit &amp;shy; ist, dass Wörter, welches dieses Sonderzeichen enthalten, in allen Browsern von Suchfunktionen nicht mehr gefunden werden.
+Ich gehe davon aus, dass auch Suchmaschinen solche Wörter nicht indizieren.
+
+== Silbentrennung im Web morgen ==
+Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS&nbsp;3] (heute ist CSS&nbsp;2.1 aktuell), wird es möglich sein, das Trennungsverhalten von Textabsätzen mittels CSS zu steuern. Aber auch hier wird nicht vorgeschrieben, dass Browser diese Silbentrennung vornehmen müssen.
+
+== Zusammenfassung ==
+Silbentrennung im Web ist nicht so wichtig, da der Blocksatz ohnehin keinen hohen Stellenwert hat. Trotzdem kann sie &ndash; auch im Flattersatz &ndash; bei schmalen Spalten nötig bzw. hilfreich sein. Silbentrennungen müssen zur Zeit vom Autor manuell mit dem Sonderzeichen &amp;shy; vorgenommen werden, welches aber vom Firefox derzeit nicht unterstützt wird. Eine automatische browserseitige Silbentrennung für HTML gibt es bislang nicht.
+
+== Wie weiter? ==
+Mit der kommenden Version&nbsp;3.0 wird auch Firefox &amp;shy; unterstützen. Eine Automatisierung der Silbentrennung wird deshalb immer interessanter. Bis die Browser selbst eine Silbentrennung integriert haben, muss diese entweder beim Schreiben der Texte (durch den Texteditor), vor dem Ausliefern auf dem Server (mittels CGI-Skript) oder im Browser (JavaScript) vorgenommen werden.
+
+Eine Umsetzung in JavaScript hat den Vorteil, dass die Silbentrennung den Text für Suchfunktionen nicht a priori unleserlich macht und vom Benutzer ein- oder ausgeschaltet werden kann.
+
+Der [silbentrennung2.html zweite Teil] dieses Artikels befasst sich mit der Implementierung einer automatischen Silbentrennung in JavaScript.

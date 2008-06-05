@@ -1,0 +1,12 @@
+#labels Featured
+#Silbentrennung in HTML (Inhalte)
+
+= Table of Contents =
+
+  # Silbentrennung in HTML
+  # Automatische Silbentrennung durch Javascript
+  # Gebrauchshinweise zu Hyphenator
+  # Umgang mit Fehltrennungen
+  # Geschwindigkeitsverbesserungen
+  # Zusätzliche Sprachen hinzufügen
+  # Zum Projekt beitragen

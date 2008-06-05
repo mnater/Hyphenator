@@ -1,0 +1,12 @@
+#labels Featured
+#About hyphenation in HTML (TOC)
+
+= Table of Contents =
+
+  # Hyphenation in HTML
+  # Automatic hyphenation by Javascript
+  # How to use hyphenator
+  # Dealing with inaccurate hyphenation
+  # Optimization fo speed
+  # Adding support for further languages
+  # Contributing to the project
