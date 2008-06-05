@@ -1,5 +1,5 @@
 #labels Featured
-#About hyphenation in HTML (TOC)
+#Summary Table of Contents
 
 = Table of Contents =
 
