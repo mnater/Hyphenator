@@ -4,9 +4,9 @@
 = Table of Contents =
 
   # [http://code.google.com/p/hyphenator/wiki/1SilbentrennungInHTML Silbentrennung in HTML]
-  # Automatische Silbentrennung durch Javascript
-  # Gebrauchshinweise zu Hyphenator
-  # Umgang mit Fehltrennungen
-  # Geschwindigkeitsverbesserungen
-  # Zusätzliche Sprachen hinzufügen
-  # Zum Projekt beitragen
+  # [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS Automatische Silbentrennung durch Javascript]
+  # [http://code.google.com/p/hyphenator/wiki/3Anleitung Gebrauchshinweise zu Hyphenator]
+  # [http://code.google.com/p/hyphenator/wiki/4UmgangMitFehlTrennungen Umgang mit Fehltrennungen]
+  # [http://code.google.com/p/hyphenator/wiki/5Geschwindigkeit Geschwindigkeitsverbesserungen]
+  # [http://code.google.com/p/hyphenator/wiki/6AndereSprachenUnterstuetzen Zusätzliche Sprachen hinzufügen]
+  # [http://code.google.com/p/hyphenator/wiki/7ZumProjektBeitragen Zum Projekt beitragen]
