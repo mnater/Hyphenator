@@ -1,4 +1,4 @@
-#About hyphenation in HTML
+#summary Silbentrennung und HTML
 
 = Hyphenation in HTML =
 [http://code.google.com/p/hyphenator/wiki/1HyphenationInHTML go to the englisch version]
