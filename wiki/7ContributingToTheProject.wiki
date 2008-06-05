@@ -1,4 +1,3 @@
-#labels Featured
 #How to contribute
 
 = How to contribute =
