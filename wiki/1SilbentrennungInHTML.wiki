@@ -26,7 +26,7 @@ Einerseits ist sie stark abhängig von der jeweiligen Sprache. Englisch hat eher
 
 In den meisten Textverarbeitungsprogrammen werden lexikalische Algorithmen eingesetzt, die zu jedem zu trennenden Wort die Trennstellen und Wortbestandteile in einer Wörterliste nachschlagen. Wörter oder Wortbestandteile, die nicht auf der Liste sind, müssen aber vom Benutzer manuell getrennt werden. Der Nachteil dieses Ansatzes ist der hohe Speicherbedarf und der Umstand, dass Komposita nicht immer erkannt werden.
 
-Eine andere Möglichkeit sind musterbasierte Algorithmen, welche versuchen aus einer Wörterliste Muster zu erkennen und davon Trennstellen ableiten. Der bekannteste Algorithmus stammt von Frankling Mark Liang ([http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), wurde 1983 entwickelt und wird seither in vielen Programmen wie LaTeX oder OpenOffice verwendet. Musterbasierte Algorithmen können abhängig von der Länge der Musterliste ca 90% aller Trennstellen finden, wobei es aber auch zu schlechten, weil sinnverzerrenden Trennstellen kommen kann (Beispiel: bein-halten), welche wiederum manuell korrigiert werden müssen.
+Eine andere Möglichkeit sind musterbasierte Algorithmen, welche versuchen aus einer Wörterliste Muster zu erkennen und davon Trennstellen ableiten. Der bekannteste Algorithmus stammt von Frankling Mark Liang ([http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), wurde 1983 entwickelt und wird seither in vielen Programmen wie LaTeX oder Openoffice verwendet. Musterbasierte Algorithmen können abhängig von der Länge der Musterliste ca 90% aller Trennstellen finden, wobei es aber auch zu schlechten, weil sinnverzerrenden Trennstellen kommen kann (Beispiel: bein-halten), welche wiederum manuell korrigiert werden müssen.
 
 == Silbentrennung im Web heute ==
 Der [http://edition-w3.de/TR/1999/REC-html401-19991224/struct/text.html#h-9.3.3 HTML401-Standard] besagt folgendes:
@@ -51,8 +51,8 @@ Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS&nbsp;3] (heute ist CSS&nbsp;2
 Silbentrennung im Web ist nicht so wichtig, da der Blocksatz ohnehin keinen hohen Stellenwert hat. Trotzdem kann sie – auch im Flattersatz – bei schmalen Spalten nötig bzw. hilfreich sein. Silbentrennungen müssen zur Zeit vom Autor manuell mit dem Sonderzeichen &shy; vorgenommen werden, welches aber vom Firefox derzeit nicht unterstützt wird. Eine automatische browserseitige Silbentrennung für HTML gibt es bislang nicht.
 
 == Wie weiter? ==
-Mit der kommenden Version&nbsp;3.0 wird auch Firefox &shy; unterstützen. Eine Automatisierung der Silbentrennung wird deshalb immer interessanter. Bis die Browser selbst eine Silbentrennung integriert haben, muss diese entweder beim Schreiben der Texte (durch den Texteditor), vor dem Ausliefern auf dem Server (mittels CGI-Skript) oder im Browser (JavaScript) vorgenommen werden.
+Mit der kommenden Version&nbsp;3.0 wird auch Firefox &shy; unterstützen. Eine Automatisierung der Silbentrennung wird deshalb immer interessanter. Bis die Browser selbst eine Silbentrennung integriert haben, muss diese entweder beim Schreiben der Texte (durch den Texteditor), vor dem Ausliefern auf dem Server (mittels CGI-Skript) oder im Browser (Javascript) vorgenommen werden.
 
-Eine Umsetzung in JavaScript hat den Vorteil, dass die Silbentrennung den Text für Suchfunktionen nicht a priori unleserlich macht und vom Benutzer ein- oder ausgeschaltet werden kann.
+Eine Umsetzung in Javascript hat den Vorteil, dass die Silbentrennung den Text für Suchfunktionen nicht a priori unleserlich macht und vom Benutzer ein- oder ausgeschaltet werden kann.
 
-Der [silbentrennung2.html zweite Teil] dieses Artikels befasst sich mit der Implementierung einer automatischen Silbentrennung in JavaScript.
+Der [silbentrennung2.html zweite Teil] dieses Artikels befasst sich mit der Implementierung einer automatischen Silbentrennung in Javascript.
