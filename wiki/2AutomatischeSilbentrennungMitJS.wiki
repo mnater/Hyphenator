@@ -1,4 +1,4 @@
-#About Automatische Silbentrennung in Javacript
+#summary Automatische Silbentrennung mittels Javacript
 
 = Automatische Silbentrennung im Browser mit !JavaScript =
 
