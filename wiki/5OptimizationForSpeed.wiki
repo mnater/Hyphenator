@@ -1,5 +1,5 @@
 #labels Phase-Deploy
-#There some things you can do to speed up Hyphenator
+#summary There some things you can do to speed up Hyphenator
 
 = How fast is Hyphenator? =
 
@@ -31,7 +31,7 @@ With a Javascript-packer (http://dean.edwards.name/packer/) Hyphenator.js could 
 <script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js" type="text/javascript"></script>
 <script src="http://hyphenator.googlecode.com/svn/trunk/patterns/en.js" type="text/javascript"></script>
 <script type="text/javascript">
-    Hyphenator.hyphenateDocument();
+    Hyphenator.run();
 </script>
 }}}
   Preloaded pattern files won't be loaded again!

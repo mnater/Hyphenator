@@ -1,4 +1,4 @@
-#How to use Hyphenator on your website
+#summary How to use Hyphenator on your website
 
 = Using Hyphenator on your website =
 You can freely use Hyphenator on your website. Send me a notice about it, if you feel like.

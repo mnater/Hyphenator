@@ -1,4 +1,4 @@
-#How to contribute
+#summary How to contribute
 
 = How to contribute =
 

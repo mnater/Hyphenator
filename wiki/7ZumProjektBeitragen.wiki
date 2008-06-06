@@ -1,13 +1,9 @@
 #summary One-sentence summary of this page.
 
-= Introduction =
+= Wie beitragen? =
 
-Add your content here.
+Sie finden Hyphenator cool? – _Verwenden Sie ihn!_ Und senden Sie mir Ihre Erfahrungen.
 
+Sie meinen etwas könnte besser gemacht werden? – _Senden Sie einen Bug/Issue-Report_
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Sie meinen Sie könnten etwas besser machen? – _Senden Sie Ihren Code und Ihre E-Mail-Adresse und Sie werden _Project-Member_

@@ -1,5 +1,5 @@
 #labels Phase-Deploy
-#How to deal with inaccurate hyphenation
+#summary How to deal with inaccurate hyphenation
 
 = Automatic hyphenation is good, but not error-free =
 
