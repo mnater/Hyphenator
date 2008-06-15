@@ -5,25 +5,55 @@
 
 == Übersicht ==
 Dieser Artikel zeigt auf,
+  * was Silbentrennung ist,
   * warum und wann man Silbentrennung braucht,
   * weshalb es keine gute automatische Silbentrennung geben kann,
+  * welche Silbentrennungsalgorithmen es gibt,
   * wie man diese gemäss HTML-Standard manuell durchführen kann,
   * was der CSS 3-Standard für die Zukunft vorsieht,
 und 
   * weshalb eine automatische Silbentrennung trotzdem cool sein kann.
   
-Wie so eine Silbentrennung aussehen kann, die im Browser vorgenommen wird, steht im [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS folgenden Artikel].
+Wie so eine Silbentrennung aussehen kann, die im Browser vorgenommen wird, steht in [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS diesem Artikel].
 
-== `text-align:justify; vs. text-align:left;` ==
-Falls nichts anderes eingestellt wird, werden Texte in Webbrowsern linksbündig mit Flattersatz rechts dargestellt. Mit der CSS-Eigenschaft `text-align:justify;` können Texte auch im Blocksatz ausgegeben werden. Da es dabei keine Silbentrennung gibt, entstehen – vor allem in engen Spalten mit langen Wörtern – hässliche Wortzwischenräume.
+== Begriffserklärung: Worttrennung, Silbentrennung und Hyphenation (engl.) ==
+*Worttrennung* bezeichnet die Art und Weise, wie Wörter – z.B. am Zeilenende – getrennt werden können.
+*Silbentrennung* ist die Aufteilung eines Wortes nach Sprechsilben.
 
-Blocksatz auf Webseiten ist allerdings nicht unumstritten. Linksbündiger Text, zusammen mit einer kurzen Zeilenlänge und grosszügigem Zeilenabstand soll zu einer besseren Lesbarkeit führen, weil so das Auge besser geführt wird und sich beim Sprung auf die nächste Zeile weniger schnell verirrt.
+Bis zur Einführung der Neuen Deutschen Rechtschreibung waren diese beiden Begriffe nicht deckungsgleich, da Fremdwörter nicht nach Silben, sondern nach Wortbestandteilen getrennt wurden.
+Zum Beispiel:
+Alt: He-li-ko-pter (aus _hélikos_ und _pterón_)
+Neu: He-li-ko-p-ter
 
-Beim Lesen von Texten auf dem Bildschirm ist der Abstand zwischen Auge und Text viel Grösser, als beim Lesen gedruckter Texte. Ausserdem wird kaum je der Finger als Lesehilfe auf dem Bildschirm verwendet. Um die Lesbarkeit von Bildschirmtexten zu erhöhen, ist es somit besser, diese linksbündig zu setzen. 
+Heute werden diese Begriffe meist synonym verwendet. Ich habe mich für den Begriff «Silbentrennung» entschieden, weil er das englische Wort “Hyphenation” besser übersetzt.
 
-Trotzdem kann es unter bestimmten Umständen angebracht sein (z.B beim Ausdruck von Webseiten oder wenn es das CD vorschreibt), den Text im Blocksatz mit Silbentrennung zu setzen.
+Der englische Begriff “Hyphenation” steht sowohl für die Trennung eines Wortes nach Silben, als auch für die Kopplung zweier Wörter mittels Bindestrich (“Hyphen”).
 
-Aber auch in linksbündigem Text kann Silbentrennung praktisch sein: Um lange Wörter in engen Tabellenspalten umzubrechen oder um den Flattersatz zu «beruhigen».
+== Blocksatz, Flattersatz und Leserlichkeit ==
+Texte können grundsätzlich im Block- oder im Flattersatz gesetzt werden. Hier eine Übersicht über die verschiedenen (deutschen und englischen) Begriffe:
+  * _linksbündig, Flattersatz rechts:_ align left, ragged right
+  * _rechtsbündig, Flattersatz link:_ align right, ragged left
+  * _Blocksatz:_ justified
+
+Im traditionellen Satz werden kurze Texte wie Titel, Leads, Listen und so weiter normalerweise linksbündig gesetzt, die langen Fliesstexte hingegen im Blocksatz. Rechtsbündiger Satz ist ziemlich selten und wird höchstens als Gestaltungsmittel verwendet (in Sprachen wo von rechts nach links geschrieben wird, dürfte das umgekehrt sein).
+
+Im Hinblick auf die Leserlichkeit lässt sich folgendes sagen:
+Der linksbündige Flattersatz gibt dem Auge einen Halt, wenn es zur nächsten Zeile springen muss. Blocksatz ist deshalb bei längeren Zeilen tendenziell weniger geeignet als Flattersatz.
+Der Blocksatz wirkt aber – jedenfalls für meinen Geschmack – irgendwie edler.
+
+Die Leserlichkeit eines Textes am Bildschirm ist per se schon deutlich geringer als die des selben Textes auf Papier:
+  * Es gibt viele Ablenkungen.
+  * Bildschirmtexte haben eine geringe Auflösung.
+  * Der Abstand zwische Auge und Text ist beim Lesen am Bildschirm grösser und somit auch die Gefahr, dass sich das Auge «verirrt».
+  * Es können keine Hilfsmittel (Zeigefinger) verwendet.
+Deshalb sollte auf weitere Dinge, die der Leserlichkeit hinderlich sind, eher verzichtet werden.
+
+Verglichen mit professionellen Layout- und Design-Programmen erzeugen die Webbrowser einen miserablen Blocksatz: Da sie bis heute keine automatische Silbentrennung vornehmen und keine Möglichkeiten bieten, die Schriftlaufweiten anzupassen, entsteht ein ungleichmässiger, lückenahfter Blocksatz.
+Deshalb sollte auch aus typographischer Sicht auf Blocksatz im Web eher verzichtet werden.
+
+Trotzdem gibt es Gründe, Absätze im Blocksatz auszugeben. Vielleicht schreibt es ein Corporate Design so vor, vielleicht ist man mit dem Blocksatz der Browser zufrieden, vielleicht will man das Aussehen eines Buches oder einer Zeitung nachahmen? In diesem Fall verbessert nur schon die automatische Silbentrennung den Blocksatz erheblich.
+
+Es bleibt noch zu erwähnen, das die Silbentrennung nich nur im Blocksatz benötigt wird. Sie kann auch eingesetzt werden, um den Flattersatz zu «beruhigen» oder – und dies ist wahrscheinlich der wichtigste Anwendungsfall – um lange Wörter in engen Tabellenzellen umzubrechen.
 
 == Automatische Silbentrennung ==
 Die automatische Silbentrennung ist eine Herausforderung für die Informatik. Tatsächlich gibt es heute kein System, dass vollautomatisch *und* fehlerfrei funktioniert. Die voll-automatische Silbentrennung scheitert an mehreren Hindernissen:
@@ -36,7 +66,7 @@ Die automatische Silbentrennung ist eine Herausforderung für die Informatik. Ta
 
 [http://www.mnn.ch/hyph/img/Word_settings.png]
 
-Etwas mehr Kontrolle bieten QuarkXPress und Adobe InDesign.
+Etwas mehr Kontrolle bieten QuarkXPress und Adobe !InDesign.
 
 [http://www.mnn.ch/hyph/img/Quark_settings.png]
 
@@ -53,9 +83,10 @@ Zusammenfassend kann man sagen, dass es keinen perfekten Algorithmus gibt. Der A
 Das folgende Bild zeigt die Resultate verschiedener Programme (bei InDesign ohne und mit optischem Randausgleich und bei LaTeX ohne und mit microtype):
 [http://www.mnn.ch/hyph/img/Overview.png]
 
-In den meisten Textverarbeitungsprogrammen werden lexikalische Algorithmen eingesetzt, die zu jedem zu trennenden Wort die Trennstellen und Wortbestandteile in einer Wörterliste nachschlagen. Wörter oder Wortbestandteile, die nicht auf der Liste sind, müssen aber vom Benutzer manuell getrennt werden. Der Nachteil dieses Ansatzes ist der hohe Speicherbedarf und der Umstand, dass Komposita nicht immer erkannt werden.
+== Silbentrennungsalgorithmen ==
+In den meisten Textverarbeitungsprogrammen werden lexikalische Algorithmen eingesetzt, die zu jedem zu trennenden Wort die Trennstellen und Wortbestandteile in einer Wörterliste nachschlagen. Wörter oder Wortbestandteile, die nicht auf der Liste sind, müssen aber vom Benutzer manuell getrennt werden. Der Nachteil dieses Ansatzes ist der relativ hohe Speicherbedarf und der Umstand, dass Komposita nicht immer erkannt werden.
 
-Eine andere Möglichkeit sind musterbasierte Algorithmen, welche versuchen aus einer Wörterliste Muster zu erkennen und davon Trennstellen ableiten. Der bekannteste Algorithmus stammt von Frankling Mark Liang ([http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), wurde 1983 entwickelt und wird seither in vielen Programmen wie LaTeX oder Openoffice verwendet. Musterbasierte Algorithmen können abhängig von der Länge der Musterliste ca 90% aller Trennstellen finden, wobei es aber auch zu schlechten, weil sinnverzerrenden Trennstellen kommen kann (Beispiel: bein-halten), welche wiederum manuell korrigiert werden müssen.
+Eine andere Möglichkeit sind musterbasierte Algorithmen, die versuchen, aus einer Wörterliste Muster zu berechnen und davon Trennstellen ableiten. Der bekannteste Algorithmus stammt von Frankling Mark Liang ([http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), wurde 1983 entwickelt und wird seither in vielen Programmen wie LaTeX oder !OpenOffice verwendet. Musterbasierte Algorithmen können abhängig von der Länge der Musterliste ca 90% aller Trennstellen finden, wobei es aber auch zu schlechten, weil sinnverzerrenden Trennstellen kommen kann (Beispiel: bein-halten), welche wiederum manuell korrigiert werden müssen.
 
 == Silbentrennung im Web heute ==
 Im Web spielt die Silbentrennung bis heute kaum eine Rolle. Dies hat verschiedene Ursachen: 
@@ -81,6 +112,10 @@ Ich gehe davon aus, dass auch Suchmaschinen solche Wörter nicht indizieren.
 
 == Silbentrennung im Web morgen ==
 Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (heute ist CSS 2.1 aktuell), wird es möglich sein, das Trennungsverhalten von Textabsätzen mittels CSS zu steuern. Aber auch hier wird nicht vorgeschrieben, dass Browser diese Silbentrennung vornehmen müssen.
+*********
+Erst in CSS 3 ist es vorgesehen, dem Autor Kontrolle über das [http://www.w3.org/TR/css3-text/#spacing Spacing] und [http://www.w3.org/TR/css3-text/#hyphenate Silbentrennung] zu geben.
+
+**********
 
 == Zusammenfassung ==
 Silbentrennung im Web ist nicht so wichtig, da der Blocksatz ohnehin keinen hohen Stellenwert hat. Trotzdem kann sie – auch im Flattersatz – bei schmalen Spalten nötig bzw. hilfreich sein. Silbentrennungen müssen zur Zeit vom Autor manuell mit dem Sonderzeichen &shy; vorgenommen werden, welches aber vom Firefox derzeit nicht unterstützt wird. Eine automatische browserseitige Silbentrennung für HTML gibt es bislang nicht.
