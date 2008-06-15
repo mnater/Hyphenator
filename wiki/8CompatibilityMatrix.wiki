@@ -1,0 +1,11 @@
+#summary Support for &shy; in current Browsers
+
+= Support for &shy; in current Browsers =
+
+|| *Browser*          || *Breaking at SHY* || *Ignoring SHY at searching* || *Ignoring SHY at copying* ||
+|| Firefox 2          ||         0         ||              0              ||             0             ||
+|| Firefox 3          ||         0         ||              0              ||             0             ||
+|| InternetExplorer 6 ||         0         ||              0              ||             0             ||
+|| InternetExplorer 7 ||         0         ||              0              ||             0             ||
+|| Opera 9.5          ||         0         ||              0              ||             0             ||
+|| Safari 3           ||         0         ||              0              ||             0             ||
