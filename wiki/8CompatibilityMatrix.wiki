@@ -2,10 +2,15 @@
 
 = Support for &shy; in current Browsers =
 
-|| *Browser*          || *Breaking at SHY* || *Ignoring SHY at searching* || *Ignoring SHY at copying* ||
-|| Firefox 2          ||         0         ||              0              ||             0             ||
-|| Firefox 3          ||         0         ||              0              ||             0             ||
-|| InternetExplorer 6 ||         0         ||              0              ||             0             ||
-|| InternetExplorer 7 ||         0         ||              0              ||             0             ||
-|| Opera 9.5          ||         0         ||              0              ||             0             ||
-|| Safari 3           ||         0         ||              0              ||             0             ||
+|| *Browser*           || *Breaking at SHY* || *Ignoring SHY at searching* || *Ignoring SHY at copying* || *Total* ||
+|| Firefox 2           ||         0         ||              0              ||             0             ||    0    ||
+|| Firefox 3           ||         1 (*^1^)  ||              1              ||             0             ||    2    ||
+|| Internet Explorer 6 ||         1         ||              0              ||             0             ||    1    ||
+|| Internet Explorer 7 ||         1         ||              0              ||             0             ||    1    ||
+|| Opera 9.5           ||         1 (*^2^)  ||              0              ||             1 (*^3^)      ||    2    ||
+|| Safari 3.1          ||         1         ||              0              ||             0             ||    1    ||
+
+
+*^1^: Firefox doesn't break the first word in table-cells (https://bugzilla.mozilla.org/show_bug.cgi?id=418975)
+*^2^: Opera has some glitches in the Mac-version: hyphens aren't displayed until I change the size of the window
+*^3^: Opera doesn't copy invisible SHY's but copies displayed hyphens.
