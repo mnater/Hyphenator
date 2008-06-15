@@ -14,16 +14,18 @@ Dieser Artikel zeigt auf,
 und 
   * weshalb eine automatische Silbentrennung trotzdem cool sein kann.
   
-Wie so eine Silbentrennung aussehen kann, die im Browser vorgenommen wird, steht in [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS diesem Artikel].
+Wie so eine Silbentrennung funktionieren kann, die im Browser vorgenommen wird, steht in [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS diesem Artikel].
 
 == Begriffserklärung: Worttrennung, Silbentrennung und Hyphenation (engl.) ==
 *Worttrennung* bezeichnet die Art und Weise, wie Wörter – z.B. am Zeilenende – getrennt werden können.
+
 *Silbentrennung* ist die Aufteilung eines Wortes nach Sprechsilben.
 
 Bis zur Einführung der Neuen Deutschen Rechtschreibung waren diese beiden Begriffe nicht deckungsgleich, da Fremdwörter nicht nach Silben, sondern nach Wortbestandteilen getrennt wurden.
+
 Zum Beispiel:
-Alt: He-li-ko-pter (aus _hélikos_ und _pterón_)
-Neu: He-li-ko-p-ter
+|| Alt: || He-li-ko-pter (aus _hélikos_ und _pterón_) ||
+|| Neu: || He-li-ko-p-ter ||
 
 Heute werden diese Begriffe meist synonym verwendet. Ich habe mich für den Begriff «Silbentrennung» entschieden, weil er das englische Wort “Hyphenation” besser übersetzt.
 
@@ -48,7 +50,7 @@ Die Leserlichkeit eines Textes am Bildschirm ist per se schon deutlich geringer 
   * Es können keine Hilfsmittel (Zeigefinger) verwendet.
 Deshalb sollte auf weitere Dinge, die der Leserlichkeit hinderlich sind, eher verzichtet werden.
 
-Verglichen mit professionellen Layout- und Design-Programmen erzeugen die Webbrowser einen miserablen Blocksatz: Da sie bis heute keine automatische Silbentrennung vornehmen und keine Möglichkeiten bieten, die Schriftlaufweiten anzupassen, entsteht ein ungleichmässiger, lückenahfter Blocksatz.
+Verglichen mit professionellen Layout- und Design-Programmen erzeugen die Webbrowser einen miserablen Blocksatz: Da sie bis heute keine automatische Silbentrennung vornehmen und keine Möglichkeiten bieten, die Schriftlaufweiten anzupassen, entsteht ein ungleichmässiger, lückenhafter Blocksatz.
 Deshalb sollte auch aus typographischer Sicht auf Blocksatz im Web eher verzichtet werden.
 
 Trotzdem gibt es Gründe, Absätze im Blocksatz auszugeben. Vielleicht schreibt es ein Corporate Design so vor, vielleicht ist man mit dem Blocksatz der Browser zufrieden, vielleicht will man das Aussehen eines Buches oder einer Zeitung nachahmen? In diesem Fall verbessert nur schon die automatische Silbentrennung den Blocksatz erheblich.
@@ -80,13 +82,15 @@ Für *Punkt 3* gibt es bereits [http://www.apm.tuwien.ac.at/research/SiSiSi/ Ans
 
 Zusammenfassend kann man sagen, dass es keinen perfekten Algorithmus gibt. Der Autor muss in jedem Fall das Resultat überprüfen und gegebenenfalls manuell nachbearbeiten.
 
-Das folgende Bild zeigt die Resultate verschiedener Programme (bei InDesign ohne und mit optischem Randausgleich und bei LaTeX ohne und mit microtype):
+Das folgende Bild zeigt die Resultate verschiedener Programme (bei !InDesign ohne und mit optischem Randausgleich und bei LaTeX ohne und mit microtype):
 [http://www.mnn.ch/hyph/img/Overview.png]
 
 == Silbentrennungsalgorithmen ==
 In den meisten Textverarbeitungsprogrammen werden lexikalische Algorithmen eingesetzt, die zu jedem zu trennenden Wort die Trennstellen und Wortbestandteile in einer Wörterliste nachschlagen. Wörter oder Wortbestandteile, die nicht auf der Liste sind, müssen aber vom Benutzer manuell getrennt werden. Der Nachteil dieses Ansatzes ist der relativ hohe Speicherbedarf und der Umstand, dass Komposita nicht immer erkannt werden.
 
-Eine andere Möglichkeit sind musterbasierte Algorithmen, die versuchen, aus einer Wörterliste Muster zu berechnen und davon Trennstellen ableiten. Der bekannteste Algorithmus stammt von Frankling Mark Liang ([http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), wurde 1983 entwickelt und wird seither in vielen Programmen wie LaTeX oder !OpenOffice verwendet. Musterbasierte Algorithmen können abhängig von der Länge der Musterliste ca 90% aller Trennstellen finden, wobei es aber auch zu schlechten, weil sinnverzerrenden Trennstellen kommen kann (Beispiel: bein-halten), welche wiederum manuell korrigiert werden müssen.
+Eine andere Möglichkeit sind musterbasierte Algorithmen, die versuchen, aus einer Wörterliste Muster zu berechnen und davon Trennstellen ableiten. Der bekannteste Algorithmus stammt von Frankling Mark Liang ([http://www.tug.org/docs/liang/liang-thesis.pdf Word Hy-phen-a-tion by Com-put-er]), wurde 1983 entwickelt und wird seither in vielen Programmen wie LaTeX oder !OpenOffice verwendet. Musterbasierte Algorithmen können abhängig von der Länge der Musterliste ca. 90% aller Trennstellen finden, wobei es aber auch zu schlechten, weil sinnverzerrenden Trennstellen kommen kann (Beispiel: bein-halten), welche wiederum manuell korrigiert werden müssen.
+
+In [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS diesem Artikel] wird näher auf Liangs Algorithmus eingegangen.
 
 == Silbentrennung im Web heute ==
 Im Web spielt die Silbentrennung bis heute kaum eine Rolle. Dies hat verschiedene Ursachen: 
@@ -112,17 +116,20 @@ Ich gehe davon aus, dass auch Suchmaschinen solche Wörter nicht indizieren.
 
 == Silbentrennung im Web morgen ==
 Mit [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (heute ist CSS 2.1 aktuell), wird es möglich sein, das Trennungsverhalten von Textabsätzen mittels CSS zu steuern. Aber auch hier wird nicht vorgeschrieben, dass Browser diese Silbentrennung vornehmen müssen.
-*********
-Erst in CSS 3 ist es vorgesehen, dem Autor Kontrolle über das [http://www.w3.org/TR/css3-text/#spacing Spacing] und [http://www.w3.org/TR/css3-text/#hyphenate Silbentrennung] zu geben.
 
-**********
+Ebenso wird dem Autor Kontrolle über das [http://www.w3.org/TR/css3-text/#spacing Spacing] zu geben.
 
 == Zusammenfassung ==
-Silbentrennung im Web ist nicht so wichtig, da der Blocksatz ohnehin keinen hohen Stellenwert hat. Trotzdem kann sie – auch im Flattersatz – bei schmalen Spalten nötig bzw. hilfreich sein. Silbentrennungen müssen zur Zeit vom Autor manuell mit dem Sonderzeichen &shy; vorgenommen werden, welches aber vom Firefox derzeit nicht unterstützt wird. Eine automatische browserseitige Silbentrennung für HTML gibt es bislang nicht.
+Silbentrennung im Web ist nicht so wichtig, da der Blocksatz ohnehin keinen hohen Stellenwert hat. Trotzdem kann sie – auch im Flattersatz – bei schmalen Spalten nötig bzw. hilfreich sein. Silbentrennungen müssen zur Zeit vom Autor manuell mit dem Sonderzeichen &shy; vorgenommen werden, welches aber vom Firefox bis und mit Version 2 gar nicht und von anderen Browsern zum Teil fehlerhaft unterstützt wurde. Eine automatische browserseitige Silbentrennung für HTML gibt es bislang nicht.
 
 == Wie weiter? ==
 Mit der kommenden Version 3.0 wird auch Firefox &shy; unterstützen. Eine Automatisierung der Silbentrennung wird deshalb immer interessanter. Bis die Browser selbst eine Silbentrennung integriert haben, muss diese entweder beim Schreiben der Texte (durch den Texteditor), vor dem Ausliefern auf dem Server (mittels CGI-Skript) oder im Browser (Javascript) vorgenommen werden.
 
-Eine Umsetzung in Javascript hat den Vorteil, dass die Silbentrennung den Text für Suchfunktionen nicht a priori unleserlich macht und vom Benutzer ein- oder ausgeschaltet werden kann.
+Eine Umsetzung in Javascript hat Vor- und Nachteile:
+  * (+) Die Silbentrennung gehört zur Darstellungsebene und findet im Browser statt – Suchmaschinen «sehen» keine Silbentrennung.
+  * (+) Es wird «sauberes», schlankes HTML ausgeliefert.
+  * (+) Die Silbentrennung kann deaktiviert werden.
+  * (-) Die Trennmuster und der Code muss jedes mal übertragen werden.
+  * (-) Für jede Seite werden die Trennstellen neu berechnet.
 
-Der [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS zweite Teil] dieses Artikels befasst sich mit der Implementierung einer automatischen Silbentrennung in Javascript.
+Lesen Sie mehr über die [http://code.google.com/p/hyphenator/wiki/2AutomatischeSilbentrennungMitJS Implementierung der automatischen Silbentrennung in JavaScript].
