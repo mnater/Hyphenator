@@ -462,7 +462,7 @@ var Hyphenator=(function(){
 						values=Hyphenator.patterns[lang][part];
 						var i=s-1;
 						var v;
-						for(var p=0, l=values.length; p<l; p++, i++) {
+						for(var p=0, le=values.length; p<le; p++, i++) {
 							v=parseInt(values.charAt(p));
 							if(v>positions[i]) {
 								positions[i]=v; //set the values, overwriting lower values
