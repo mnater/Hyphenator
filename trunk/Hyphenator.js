@@ -377,6 +377,9 @@ var Hyphenator=(function(){
         // if there is text hyphenate each word
         // if there are other elements, go deeper!
 		// maybe this could be faster, somehow!
+			if(el.className.indexOf("donthyphenate")!=-1) {
+				return;
+			}
 			if(DEBUG)
 				_log("hyphenateElement: "+el.tagName+" id: "+el.id);
 			if(!lang) {
