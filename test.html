@@ -58,9 +58,14 @@ code {
 </style>
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
+	if(window.location.search.indexOf("?shc")!=-1) {
+		var hc=prompt('Please enter hyphenChar (leave empty for &shy;):');		
+	} else {
+		var hc="|";
+	}
 	Hyphenator.setMinWordLength(5);
-	Hyphenator.setHyphenChar('|');
-	Hyphenator.setUrlHyphenChar('|');
+	Hyphenator.setHyphenChar(hc);
+	Hyphenator.setUrlHyphenChar(hc);
 	Hyphenator.addExceptions('Ur-instinkt');
 	Hyphenator.run();
 
