@@ -8,7 +8,7 @@ This article explains what you will have to do and gives you some configuration 
   #Prepare your HTML-documents by
     * Encoding it in UTF-8.
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
-    * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting).
+    * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
   # Include the script by adding the following code to your HTML-document:
 {{{
 <script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js" type="text/javascript">
