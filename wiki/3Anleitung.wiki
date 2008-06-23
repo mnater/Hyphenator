@@ -8,7 +8,7 @@ Diese Seite erklärt, was sie genau machen müssen und gibt ein paar Hinweise zu
   #Bereiten Sie ihre HTML-Documente vor, indem Sie
     * diese in UTF-8 codieren.
     * ein passendes lang-Attribut (z.B. `<html lang="de">`) setzen
-    * jedes Element, dessen Text getrennt werden soll, mit `class="hyphenate"` auszeichnen. Kindelemente erben diese Auszeichnung.
+    * jedes Element, dessen Text getrennt werden soll, mit `class="hyphenate"` auszeichnen. Kindelemente erben diese Auszeichnung. (Die Silbentrennung kann für ein Element wieder aufgehoben werden, indem man es mit `class="hyphenate"` auszeichnet. )
   # das Script wie folgt einbinden:
 {{{
 <script src="http://ihreDomain.com/pfad/Hyphenator.js" type="text/javascript">
