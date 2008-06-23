@@ -4,7 +4,7 @@
 Sie können Hyphenator auf ihrer Website einbinden. Ich freue mich auf Rückmeldungen und Erfahrungen.
 Diese Seite erklärt, was sie genau machen müssen und gibt ein paar Hinweise zur Konfiguration.
 
-== Schrit um Schritt ==
+== Schritt um Schritt ==
   #Bereiten Sie ihre HTML-Documente vor, indem Sie
     * diese in UTF-8 codieren.
     * ein passendes lang-Attribut (z.B. `<html lang="de">`) setzen
