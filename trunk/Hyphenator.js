@@ -45,7 +45,7 @@ var Hyphenator=(function(){
 	var enableRemoteLoading=true;
 	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
 	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy; Change by Hyphenator.setHyphenChar(c);
-	var urlhyphen=String.fromCharCode(8203); // the hyphe for urls, defaults to zerowidthspace; Change by Hyphenator.setUrlHyphenChar(c);
+	var urlhyphen=_createZeroWidthSpace(); // the hyphe for urls, defaults to zerowidthspace; Change by Hyphenator.setUrlHyphenChar(c);
 	var min=6; // only hyphanete words longer then or equal to 'min'. Change by Hyphenator.setMinWordLength(n);
 	var bookmarklet=false;
 	var patternsloaded={}; // this is set when the patterns are loaded
@@ -64,9 +64,8 @@ var Hyphenator=(function(){
 		var ua=navigator.userAgent.toLowerCase();
 		if(ua.indexOf('firefox')!=-1 || ua.indexOf('msie 7')!=-1) {
 			zerowidthspace=String.fromCharCode(8203); //Unicode zero width space
-		} else if(ua.indexOf('msie 6')!=-1) {
-			zerowidthspace='';
 		}
+		return zerowidthspace;
 	}
 	
 	// checks if the script runs as a Bookmarklet
@@ -296,7 +295,7 @@ var Hyphenator=(function(){
             hyphen=str || String.fromCharCode(173);
 		},
 		setUrlHyphenChar: function(str) {
-            urlhyphen=str || String.fromCharCode(8203);
+            urlhyphen=str || _createZeroWidthSpace();
 		},
 		setRemoteLoading: function(bool) {
 			enableRemoteLoading=bool;
