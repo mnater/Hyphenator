@@ -57,6 +57,8 @@ Trotzdem gibt es Gründe, Absätze im Blocksatz auszugeben. Vielleicht schreibt 
 
 Es bleibt noch zu erwähnen, das die Silbentrennung nich nur im Blocksatz benötigt wird. Sie kann auch eingesetzt werden, um den Flattersatz zu «beruhigen» oder – und dies ist wahrscheinlich der wichtigste Anwendungsfall – um lange Wörter in engen Tabellenzellen umzubrechen.
 
+http://www.mnn.ch/hyph/hyph_demo.gif
+
 == Automatische Silbentrennung ==
 Die automatische Silbentrennung ist eine Herausforderung für die Informatik. Tatsächlich gibt es heute kein System, dass vollautomatisch *und* fehlerfrei funktioniert. Die voll-automatische Silbentrennung scheitert an mehreren Hindernissen:
   # Ein perfekter Algorithmus müsste für jede Sprache die passenden Trennregeln beherrschen.
