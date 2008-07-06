@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de">
+<head>
+<title>hyph.js - test</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body {
+	width:50%;
+	max-width:15cm;
+	text-align:left;
+	margin-left:25%;
+	margin-right:25%;
+	font:10pt/14pt Georgia;
+	color:#222222;
+}
+h1 {
+	font:bold 16pt/18pt Georgia;
+}
+h2 {
+	font:16pt/18pt Georgia;
+}
+h3 {
+	font:italic 16pt/18pt Georgia;
+}
+p {
+	text-align:justify;
+	font:10pt/14pt Georgia;
+	}
+blockquote {
+	text-align:left;
+	font:italic 10pt/14pt Georgia;
+	}
+table {
+	width:100%;
+	border: 1px solid #555555;
+	border-collapse:collapse
+}
+th {
+	text-align:left;
+}
+tr {
+	text-align:left;
+	border: 1px solid #555555;
+}
+code {
+	text-align:left;
+	white-space:pre;
+	font:10pt/14pt monospace;
+	color:#000033;
+}
+</style>
+<script src="Trie.js" type="text/javascript"></script>
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.setMinWordLength(5);
+	Hyphenator.setHyphenChar('|');
+	Hyphenator.setUrlHyphenChar('|');
+	Hyphenator.addExceptions('Ur-instinkt');
+	Hyphenator.run();
+</script>
+</head>
+<body>
+<h1>Test of general hyphenation:</h1>
+<h2>Text</h2>
+<p class="hyphenate">Datei</p>
+<pre id="output">
+<script type="text/javascript">
+	/*window.setTimeout(function(){
+		//Hyphenator.patterns['de'].dump();
+		//alert(Hyphenator.patterns['de'].search('nun').leaf.getData());
+	},2000);*/
+</script>
+</pre>
+</body>
+</html>
