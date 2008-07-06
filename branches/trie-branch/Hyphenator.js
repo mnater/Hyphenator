@@ -168,9 +168,6 @@ var Hyphenator=(function(){
 			_log("load patterns "+lang);
 		if(SUPPORTEDLANG[lang] && !patternsloaded[lang]) {
 	        var url=BASEPATH+'patterns/'+lang+'.js';
-	        if(lang=="de") {
-	        	url=BASEPATH+'patterns/newpatterns/de.js';
-	        }
 		} else {
 			return;
 		}
@@ -481,7 +478,7 @@ var Hyphenator=(function(){
 			//finally the core hyphenation algorithm
 			var positions = []; 		//hyphenating points
 			var result = [];			//syllabs
-			var w='_'+word.toLowerCase()+'_';	//mark beginning an end
+			var w='.'+word.toLowerCase()+'.';	//mark beginning an end
 			var wl=w.length;
 			var i=wl-2;
 			do {
@@ -498,7 +495,6 @@ var Hyphenator=(function(){
 						break windowlength;
 					} else if(typeof(values)=='object') {
 						if(values.leaf!=null) {
-							_log('leaf: '+part+':'+values.leaf.getData());
 							var i=s-1;
 							var v;
 							for(var p=0, le=values.leaf.getData().length; p<l; p++, i++) {
@@ -510,7 +506,6 @@ var Hyphenator=(function(){
 						}
 						//continue;
 					} else if(typeof(values)=='string') {
-						_log('string '+part+':'+values);
 						var i=s-1;
 						var v;
 						for(var p=0, l=values.length; p<l; p++, i++) {
