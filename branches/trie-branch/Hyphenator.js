@@ -183,26 +183,30 @@ var Hyphenator=(function(){
 	};
 	
 	function _createTrees() {
-		var start=new Date().getTime();
+		var numbers={'0':true,'1':true,'2':true,'3':true,'4':true,'5':true,'6':true,'7':true,'8':true,'9':true};
 		for(var l in patternsloaded) {
 			if(patternsloaded[l]) {
 				var tmp=Hyphenator.patterns[l].split(' ');
 				Hyphenator.patterns[l]=new Trie();
-				for(var i=0; i<tmp.length; i++) {
+				var tmple=tmp.length;
+				for(var i=0; i<tmple; i++) {
 					var pat=String(tmp[i]);
 					var val='';
 					var key='';
 					var isdigit=null;
-					for(var j=0; j<pat.length; j++) {
-						if(isFinite(pat[j])) {
-							val+=pat[j];
+					var patle=pat.length
+					var currc='';
+					var j=0;
+					while(currc=pat.charAt(j++)) {
+						if(numbers[currc]) {
+							val+=currc;
 							isdigit=true;
 						} else {
 							if(!isdigit) {
 								val+='0';
 							}
 							isdigit=false;
-							key+=pat[j];
+							key+=currc;
 						}
 					}
 					if(!isdigit) {
@@ -212,8 +216,6 @@ var Hyphenator=(function(){
 				}
 			}
 		}
-		var end=new Date().getTime();
-		alert(end-start);
 	}
 
 	/************ hyphenate helper methods ************/

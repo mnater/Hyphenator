@@ -35,9 +35,9 @@ function Trie(par, pos) {
 		} else {
 			var i=key.charAt(this.position);
 			if(this.branches[i] != null) { //there is something in this branch
-				if(this.branches[i] instanceof Trie) {
+				if(this.branches[i] instanceof Trie) { //faster than 'instanceof Trie'
 					this.branches[i].insert(key, data);
-				} else if(this.branches[i] instanceof TrieEntry) {
+				} else if(this.branches[i] instanceof TrieEntry) { //faster than 'instanceof TrieEntry'
 					var down=new Trie(this, (this.position+1));
 					down.insert(this.branches[i].getKey(),this.branches[i].getData());
 					down.insert(key,data);
