@@ -18,18 +18,11 @@
 // Mathias Nater, Zürich, 2007
 // mnater at mac dot com
 /**************** Preamble ****************/
+
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
 	var DEBUG=false; // turn DEBUG mode on:true/off:false
-	var SUPPORTEDLANG={'de':true,'en':true,'fr':true, 'nl':true}; //delete languages that you won't use (for better performance)
-	var LANGUAGEHINT='Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
-	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n'+LANGUAGEHINT,
-						 'en':'The language of this website could not be determined automatically. Please indicate main language: \n\n'+LANGUAGEHINT,
-						 'fr':'La langue de cette site ne pouvait pas %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue: \n\n'+LANGUAGEHINT,
-						 'nl':'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n'+LANGUAGEHINT};
-	
-	/************ don't change! ************/
 	var BASEPATH=function(){
 		var s=document.getElementsByTagName('script'),i=0,p,t;
 		while(t=s[i++].src) {
@@ -40,12 +33,20 @@ var Hyphenator=(function(){
 		}
 		return 'http://hyphenator.googlecode.com/svn/trunk/';
 	}();
+	var SUPPORTEDLANG={'de':true,'en':true,'fr':true, 'nl':true}; //delete languages that you won't use (for better performance)
+	var LANGUAGEHINT='Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
+	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n'+LANGUAGEHINT,
+						 'en':'The language of this website could not be determined automatically. Please indicate main language: \n\n'+LANGUAGEHINT,
+						 'fr':'La langue de cette site ne pouvait pas %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue: \n\n'+LANGUAGEHINT,
+						 'nl':'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n'+LANGUAGEHINT};
+	
+	/************ don't change! ************/
 	var DONTHYPHENATE={'script':true,'code':true,'pre':true,'img':true,'br':true,'samp':true,'kbd':true,'var':true,'abbr':true,'acronym':true,'sub':true,'sup':true,'button':true,'option':true,'label':true};
 	var hyphenation={};
 	var enableRemoteLoading=true;
 	var hyphenateclass='hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class="hyphenate">Text</p>
 	var hyphen=String.fromCharCode(173); // the hyphen, defaults to &shy; Change by Hyphenator.setHyphenChar(c);
-	var urlhyphen=_createZeroWidthSpace(); // the hyphe for urls, defaults to zerowidthspace; Change by Hyphenator.setUrlHyphenChar(c);
+	var urlhyphen=String.fromCharCode(8203); // the hyphe for urls, defaults to zerowidthspace; Change by Hyphenator.setUrlHyphenChar(c);
 	var min=6; // only hyphanete words longer then or equal to 'min'. Change by Hyphenator.setMinWordLength(n);
 	var bookmarklet=false;
 	var patternsloaded={}; // this is set when the patterns are loaded
@@ -64,8 +65,9 @@ var Hyphenator=(function(){
 		var ua=navigator.userAgent.toLowerCase();
 		if(ua.indexOf('firefox')!=-1 || ua.indexOf('msie 7')!=-1) {
 			zerowidthspace=String.fromCharCode(8203); //Unicode zero width space
+		} else if(ua.indexOf('msie 6')!=-1) {
+			zerowidthspace='';
 		}
-		return zerowidthspace;
 	}
 	
 	// checks if the script runs as a Bookmarklet
@@ -182,6 +184,40 @@ var Hyphenator=(function(){
 		if(DEBUG)
 			_log('Loading '+url);
 	};
+	
+	function _createTrees() {
+		var start=new Date().getTime();
+		for(var l in patternsloaded) {
+			if(patternsloaded[l]) {
+				var tmp=Hyphenator.patterns[l].split(' ');
+				Hyphenator.patterns[l]=new Trie();
+				for(var i=0; i<tmp.length; i++) {
+					var pat=String(tmp[i]);
+					var val='';
+					var key='';
+					var isdigit=null;
+					for(var j=0; j<pat.length; j++) {
+						if(isFinite(pat[j])) {
+							val+=pat[j];
+							isdigit=true;
+						} else {
+							if(!isdigit) {
+								val+='0';
+							}
+							isdigit=false;
+							key+=pat[j];
+						}
+					}
+					if(!isdigit) {
+							val+='0';
+					}
+					Hyphenator.patterns[l].insert(key,val);
+				}
+			}
+		}
+		var end=new Date().getTime();
+		alert(end-start);
+	}
 
 	/************ hyphenate helper methods ************/
 	// walk throug the document and do the job
@@ -295,7 +331,7 @@ var Hyphenator=(function(){
             hyphen=str || String.fromCharCode(173);
 		},
 		setUrlHyphenChar: function(str) {
-            urlhyphen=str || _createZeroWidthSpace();
+            urlhyphen=str || String.fromCharCode(8203);
 		},
 		setRemoteLoading: function(bool) {
 			enableRemoteLoading=bool;
@@ -365,6 +401,7 @@ var Hyphenator=(function(){
 				var interval=window.setInterval(function(){
 					if(preparestate==2) {
 						window.clearInterval(interval);
+						_createTrees();
 						_runHyphenation();
 					}
 				},10);
@@ -376,9 +413,6 @@ var Hyphenator=(function(){
         // if there is text hyphenate each word
         // if there are other elements, go deeper!
 		// maybe this could be faster, somehow!
-			if(el.className.indexOf("donthyphenate")!=-1) {
-				return;
-			}
 			if(DEBUG)
 				_log("hyphenateElement: "+el.tagName+" id: "+el.id);
 			if(!lang) {
@@ -457,19 +491,35 @@ var Hyphenator=(function(){
 			do {
 				var maxl=wl-s;
 				var window=w.substring(s);
-				for(var l=Hyphenator.shortestPattern[lang]; l<=maxl && l<=Hyphenator.longestPattern[lang]; l++) {
+				windowlength: for(var l=Hyphenator.shortestPattern[lang]; l<=maxl && l<=Hyphenator.longestPattern[lang]; l++) {
 					var part=window.substring(0,l);	//window from position s with length l
-					var values=null;
-					if(Hyphenator.patterns[lang][part]!==undefined) {
-						values=Hyphenator.patterns[lang][part];
+					var values=Hyphenator.patterns[lang].search(part);
+					if(values==null) {
+						break windowlength;
+					} else if(typeof(values)=='object') {
+						if(values.leaf!=null) {
+							_log('leaf: '+part+':'+values.leaf.getData());
+							var i=s-1;
+							var v;
+							for(var p=0, le=values.leaf.getData().length; p<l; p++, i++) {
+								v=parseInt(values.leaf.getData().charAt(p));
+								if(v>positions[i]) {
+									positions[i]=v; //set the values, overwriting lower values
+								}
+							}
+						}
+						//continue;
+					} else if(typeof(values)=='string') {
+						_log('string '+part+':'+values);
 						var i=s-1;
 						var v;
-						for(var p=0, le=values.length; p<le; p++, i++) {
+						for(var p=0, l=values.length; p<l; p++, i++) {
 							v=parseInt(values.charAt(p));
 							if(v>positions[i]) {
 								positions[i]=v; //set the values, overwriting lower values
 							}
 						}
+						break windowlength;
 					}
 				}
 			} while(s--)
