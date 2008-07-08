@@ -607,7 +607,7 @@ function Trie(par, pos) {
 	
 function TrieEntry(key, data){
 	this.key=key || "";
-	this.data=data || "";
+	this.data=data || "";
 	this.getKey=getKey;
 	this.getData=getData;
 	this.dump=TrieEntryDump;
