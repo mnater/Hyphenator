@@ -21,7 +21,7 @@
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
-	var DEBUG=false; // turn DEBUG mode on:true/off:false
+	var DEBUG=true; // turn DEBUG mode on:true/off:false
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true, 'nl':true}; //delete languages that you won't use (for better performance)
 	var LANGUAGEHINT='Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n'+LANGUAGEHINT,
