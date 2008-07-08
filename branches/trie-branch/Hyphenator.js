@@ -15,7 +15,7 @@
 // Siehe http://creativecommons.org/licenses/by-sa/2.5/ch/
 // Somit sind sie frei, das Script für kommerzielle Zwecke zu nutzen
 //
-// Mathias Nater, Zürich, 2007
+// Mathias Nater, Zürich, 2008
 // mnater at mac dot com
 /**************** Preamble ****************/
 
@@ -31,7 +31,7 @@ var Hyphenator=(function(){
 				return t.substring(0,p);
 			}
 		}
-		return 'http://hyphenator.googlecode.com/svn/trunk/';
+		return 'http://hyphenator.googlecode.com/svn/branches/trie-branch/';
 	}();
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true, 'nl':true}; //delete languages that you won't use (for better performance)
 	var LANGUAGEHINT='Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
