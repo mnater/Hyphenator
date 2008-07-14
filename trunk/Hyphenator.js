@@ -21,7 +21,7 @@
 var Hyphenator=(function(){
 	//private properties
 	/************ may be changed ************/
-	var DEBUG=true; // turn DEBUG mode on:true/off:false
+	var DEBUG=false; // turn DEBUG mode on:true/off:false
 	var SUPPORTEDLANG={'de':true,'en':true,'fr':true, 'nl':true}; //delete languages that you won't use (for better performance)
 	var LANGUAGEHINT='Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
 	var PROMPTERSTRINGS={'de':'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n'+LANGUAGEHINT,
@@ -136,7 +136,8 @@ var Hyphenator=(function(){
 
     // gets the lang for the given Element
     // if not set, use the mainlanguage of the hole site
-	function _getLang(el) {
+	function _getLang(el, nofallback) {
+		
 		if(!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').substring(0,2);
 		}
@@ -150,7 +151,7 @@ var Hyphenator=(function(){
 				return el.getAttribute('xml:lang').substring(0,2);
 			}
 		} catch (ex) {}
-		if(mainlanguage) {
+		if(!nofallback && mainlanguage) {
 			return mainlanguage;
 		}
 		return null;
@@ -390,9 +391,9 @@ var Hyphenator=(function(){
 			} else {
 				if(DEBUG)
 					_log("got lang from parent ("+lang+")");
-				var newlang=_getLang(el);
-				if(newlang!=lang) {
-					var lang=newlang;
+				var elemlang=_getLang(el, true);
+ 				if(elemlang!=null) {
+					var lang=elemlang;
 					if(DEBUG)
 						_log("but element has own lang ("+lang+")");
 				}
