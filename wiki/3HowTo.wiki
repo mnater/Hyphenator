@@ -71,7 +71,7 @@ What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingE
 </html>
 }}}
 
-= Using Hyphentor as a Bookmarklet =
+= Using Hyphenator as a Bookmarklet =
 If you want to hyphenate a foreign website (a website whose webmaster aren't you) you can ”install“ hyphenator as a [http://en.wikipedia.org/wiki/Bookmarklet Bookmarklet] in your browser(s). Simply safe the following Javascript code as a bookmark. When you're on the site to be hyphenated you click on that bookmarklet to start hyphenating the page.
 
 {{{
