@@ -58,12 +58,16 @@ var Hyphenator=(function(){
 	/************ UA related ************/
 	var zerowidthspace='';
 	// The zerowidthspace is inserted after a '-' in compound words
-	// like this, even Firefox and IE will break after '-' if necessary.
+	// like this, even Firefox 2 and IE will break after '-' if necessary.
 	// zerowidthspace is also used to break URLs
+	// MSIE <=6 and 8b2 does NOT support zerowidthspace
 	function _createZeroWidthSpace() {
 		var ua=navigator.userAgent.toLowerCase();
-		if(ua.indexOf('firefox')!=-1 || ua.indexOf('msie 7')!=-1) {
+		alert(ua.indexOf('msie 6'));
+		if(ua.indexOf('msie 6')==-1 && ua.indexOf('msie 8')==-1) {
 			zerowidthspace=String.fromCharCode(8203); //Unicode zero width space
+		} else {
+			zerowidthspace='';
 		}
 		return zerowidthspace;
 	}
