@@ -63,7 +63,6 @@ var Hyphenator=(function(){
 	// MSIE <=6 and 8b2 does NOT support zerowidthspace
 	function _createZeroWidthSpace() {
 		var ua=navigator.userAgent.toLowerCase();
-		alert(ua.indexOf('msie 6'));
 		if(ua.indexOf('msie 6')==-1 && ua.indexOf('msie 8')==-1) {
 			zerowidthspace=String.fromCharCode(8203); //Unicode zero width space
 		} else {
