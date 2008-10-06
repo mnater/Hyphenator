@@ -183,20 +183,21 @@ var Hyphenator=(function(){
 	};
 	
 	function _createTrees() {
+		var start=new Date().getTime();
 		var numbers={'0':true,'1':true,'2':true,'3':true,'4':true,'5':true,'6':true,'7':true,'8':true,'9':true};
-		for(var l in patternsloaded) {
+		var l,tmp,pat,val,key,isdigit,patle,currc,j;
+		for(l in patternsloaded) {
 			if(patternsloaded[l]) {
-				var tmp=Hyphenator.patterns[l].split(' ');
+				var pt1=new Date().getTime();
+				tmp=Hyphenator.patterns[l].split(' ');
+				var pt2=new Date().getTime();
 				Hyphenator.patterns[l]=new Trie();
-				var tmple=tmp.length;
-				for(var i=0; i<tmple; i++) {
-					var pat=String(tmp[i]);
-					var val='';
-					var key='';
-					var isdigit=null;
-					var patle=pat.length
-					var currc='';
-					var j=0;
+				var pt3=new Date().getTime();
+				while(pat=tmp.pop()) {
+					val=key='';
+					isdigit=null;
+					currc='';
+					j=0;
 					while(currc=pat.charAt(j++)) {
 						if(numbers[currc]) {
 							val+=currc;
@@ -214,8 +215,14 @@ var Hyphenator=(function(){
 					}
 					Hyphenator.patterns[l].insert(key,val);
 				}
+				var pt4=new Date().getTime();
 			}
 		}
+		var end=new Date().getTime();
+		/*alert('patternsplitting took:'+(pt2-pt1)+'ms\n'+
+		'Trie instantiation took:'+(pt3-pt2)+'ms\n'+
+		'Pattern walk took:'+(pt4-pt3)+'ms\n'+
+		'Tree creation took totaly:'+(end-start)+'ms');*/
 	}
 
 	/************ hyphenate helper methods ************/
@@ -492,21 +499,37 @@ var Hyphenator=(function(){
 				var window=w.substring(s);
 				windowlength: for(var l=Hyphenator.shortestPattern[lang]; l<=maxl && l<=Hyphenator.longestPattern[lang]; l++) {
 					var part=window.substring(0,l);	//window from position s with length l
-					var values=Hyphenator.patterns[lang].search(part);
-					if(values==null) {
+					var frombranch=frombranch || null;
+					var values=Hyphenator.patterns[lang].search(part,frombranch);
+					if(values===null) {
+						frombranch=null;
 						break windowlength;
-					} else if(typeof(values)=='object') {
+					} else if(typeof(values)=='object' && values instanceof Trie) {
+						frombranch=values;
 						if(values.leaf!=null) {
 							var i=s-1;
 							var v;
-							for(var p=0, le=values.leaf.getData().length; p<l; p++, i++) {
-								v=parseInt(values.leaf.getData().charAt(p));
+							for(var p=0, le=values.leaf.data.length; p<l; p++, i++) {
+								v=parseInt(values.leaf.data.charAt(p));
 								if(v>positions[i]) {
 									positions[i]=v; //set the values, overwriting lower values
 								}
 							}
 						}
-						//continue;
+						//continue with next part;
+					} else if(typeof(values)=='object' && values instanceof TrieEntry) {
+						if(values.key==window) {
+							var i=s-1;
+							var v;
+							for(var p=0, le=values.data.length; p<l; p++, i++) {
+								v=parseInt(values.data.charAt(p));
+								if(v>positions[i]) {
+									positions[i]=v; //set the values, overwriting lower values
+								}
+							}
+							frombranch=null;
+							break windowlength;
+						}
 					} else if(typeof(values)=='string') {
 						var i=s-1;
 						var v;
@@ -542,9 +565,8 @@ if(Hyphenator.isBookmarklet()) {
 
 
 
-function Trie(par, pos) {
+function Trie(pos) {
 	this.position=pos || 0; 	//this trie is at this position
-	this.previous=par || null; 	//reference to the parent trie
 	this.leaf=null;				//holds a TrieEntry, if a string ends here
 	this.branches={};			//holds a child trie
 	this.insert=insert;
@@ -555,33 +577,50 @@ function Trie(par, pos) {
 	function insert(key, data) {
 		if(key.length==this.position) {
 			this.leaf=new TrieEntry(key, data);
-		} else {
-			var i=key.charAt(this.position);
-			if(this.branches[i] != null) { //there is something in this branch
-				if(this.branches[i] instanceof Trie) { //faster than 'instanceof Trie'
-					this.branches[i].insert(key, data);
-				} else if(this.branches[i] instanceof TrieEntry) { //faster than 'instanceof TrieEntry'
-					var down=new Trie(this, (this.position+1));
-					down.insert(this.branches[i].getKey(),this.branches[i].getData());
-					down.insert(key,data);
-					this.branches[i]=down;
-				}
-			} else {
-				this.branches[i]=new TrieEntry(key, data);
-			}
-		}
-	}
-	
-	function search(key) {
-		if(key.length==this.position) {
-			return this;
+			return;
 		}
 		var i=key.charAt(this.position);
-		if(this.branches[i]) {
+		if(this.branches[i] != null) { //there is something in this branch
 			if(this.branches[i].branches) {
-				return this.branches[i].search(key);
-			} else if(this.branches[i].key==key){
-				return this.branches[i].getData();
+				this.branches[i].insert(key, data);
+				return;
+			}
+			if(this.branches[i].key) {
+				var down=new Trie(this.position+1);
+				down.insert(this.branches[i].key,this.branches[i].data);
+				down.insert(key,data);
+				this.branches[i]=down;
+			}
+			return;
+		}
+		this.branches[i]=new TrieEntry(key, data);
+	}
+	
+	/*
+	 * function search(key, frombranch)
+	 *
+	 * returns the subtrie from the current position, if keylength equals the current position
+	 * returns null, if nothing can be found
+	 * returns data string if key equals the TrieEntry.key
+	 * returns TrieEntry-Object if TrieEntry.key begins with key
+	 * makes recursion if there are further branches
+	 *
+	 * To-Do: optimize
+	 *
+	 */
+	function search(key, frombranch) {
+		var frombranch=frombranch || this;
+		if(key.length==frombranch.position) {
+			return frombranch;
+		}
+		var c=key.charAt(frombranch.position);
+		if(frombranch.branches[c]) {
+			if(frombranch.branches[c].branches) { //es gibt subtries
+				return frombranch.branches[c].search(key); //recursion
+			} else if(frombranch.branches[c].key==key){ // es gibt einen TrieEntry für key
+				return frombranch.branches[c].data; //returns string
+			} else if(frombranch.branches[c].key.indexOf(key)!=-1) { //es gibt einen TrieEntry für einen Schlüssel, der mit key beginnt
+				return frombranch.branches[c]; //returns object
 			}
 		} else {
 			return null;
@@ -589,18 +628,21 @@ function Trie(par, pos) {
 		
 	}
 	
-	function dump(indent) {
+	function dump() {
 		var elem=document.getElementById("output");
-		var indent=indent || "";
+		var indent="";
+		for(var i=0; i<this.position; i++) {
+			indent+="\t";
+		}
 		if(this.leaf != null) {
-			elem.lastChild.data+=indent+"leaf:"+this.leaf.dump()+"\n";
+			elem.lastChild.data+=this.position+' | '+indent+"leaf:"+this.leaf.dump()+"\n";
 		}
 		for(var val in this.branches) {
 			if(this.branches[val] instanceof Trie) {
-				elem.lastChild.data+=indent+val+" Trie:\n";
-				this.branches[val].dump(indent+"\t");
+				elem.lastChild.data+=this.position+' | '+indent+val+" Trie:\n";
+				this.branches[val].dump();
 			} else if(this.branches[val] instanceof TrieEntry) {
-				elem.lastChild.data+=indent+"TrieEntry: "+this.branches[val].dump()+"\n";
+				elem.lastChild.data+=this.position+' | '+indent+"TrieEntry: "+this.branches[val].dump()+"\n";
 			}
 		}
 	}
@@ -608,18 +650,9 @@ function Trie(par, pos) {
 function TrieEntry(key, data){
 	this.key=key || "";
 	this.data=data || "";
-	this.getKey=getKey;
-	this.getData=getData;
 	this.dump=TrieEntryDump;
 }
-	function getKey() {
-		return this.key;
-	}
-	
-	function getData() {
-		return this.data;
-	}
 	
 	function TrieEntryDump() {
-		return "key: "+this.getKey()+", data: "+this.getData();
+		return "key: "+this.key+", data: "+this.data;
 	}
