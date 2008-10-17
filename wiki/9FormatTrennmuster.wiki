@@ -220,19 +220,14 @@ Als Übertragungsgeschwindigkeit nehme ich für heutige Verhältnisse niedrige 2
 === Interpretation der Zahlen ===
 Die Zeit für die Übertragung der Daten sind theoretisch berechnet. Trotzdem lassen sich einige Schlüsse ziehen.
 
-  # Die JSON-Daten lassen sich sehr effizient komprimieren, dank der vielen gleichen Zeichen kann die Datei auf nahezu 25% ihrer Grösse komprimiert werden. Die LaTeX-Daten weisen schon eine hohe Dichte auf und lassen sich auf 50% komprimieren. Letztendlich beträgt der Unterschied noch ca. 10'920 Bit.
-  Die Daten sollten auf jeden Fall komprimiert übertragen werden.
+  # Die JSON-Daten lassen sich sehr effizient komprimieren, dank der vielen gleichen Zeichen kann die Datei auf nahezu 25% ihrer Grösse komprimiert werden. Die LaTeX-Daten weisen schon eine hohe Dichte auf und lassen sich auf 50% komprimieren. Letztendlich beträgt der Unterschied noch ca. 10'920 Bit. Die Daten sollten auf jeden Fall komprimiert übertragen werden.
   # Die Konvertierung der LaTeX-Daten in ein Objekt braucht im schlimmsten Fall &ndash; im Internet Explorer und somit im häufigsten Fall &ndash; etwa eine halbe Sekunde.
   # Die Abbildung auf einen Trie und der Zugriff auf den Trie ist auf allen Systemen relativ langsam &ndash; im Internet Explorer sogar unbrauchbar.
   # Bei unkomprimierten Daten sind die LaTeX-Daten klar im Vorteil; werden die Daten komprimiert, ist der Unterschied aber vernachlässigbar klein. Der Vorteil schwindet, je grösser die Bandbreite ist. Schon bei 300kBit/s ist  die Übertragung der (unkomprimierten!) Daten im JSON-Format gleich schnell, wie die Übertragung der (komprimierten!) Daten im LaTeX-Format plus derer Konvertierung im IE7.
   
 == Fazit ==
 Wie die obigen Tabellen zeigen, ist die Übertragung der *komprimierten* Trennmuster in der *JSON-Notation* durchs Band die schnellste Option.
-
 Nur wenn die Daten nicht komprimiert übertragen werden (können), ist die LaTeX-Notation performanter. Der Trie kann ganz ausgeschlossen werden.
-
 Konsequenterweise werde ich den Trie-Branch aussterben lassen müssen und stattdessen einen Branch für die LaTeX-Notation unterhalten.
-
-
 
 
