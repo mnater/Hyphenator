@@ -10,3 +10,4 @@
   # [http://code.google.com/p/hyphenator/wiki/5Geschwindigkeit Geschwindigkeitsverbesserungen]
   # [http://code.google.com/p/hyphenator/wiki/6AndereSprachenUnterstuetzen Zusätzliche Sprachen hinzufügen]
   # [http://code.google.com/p/hyphenator/wiki/7ZumProjektBeitragen Zum Projekt beitragen]
+  # [http://code.google.com/p/hyphenator/wiki/8CompatibilityMatrix Kompatibilitätsmatrix]
