@@ -14,7 +14,7 @@ Diese Seite erklärt, was sie genau machen müssen und gibt ein paar Hinweise zu
 <script src="http://ihreDomain.com/pfad/Hyphenator.js" type="text/javascript">
 </script>
 }}} 
-    Das Script können Sie auf [http://code.google.com/p/hyphenator/downloads/list] herunterladen.
+    Aus Sicherheitsgründen sollten Sie das Script auf [http://code.google.com/p/hyphenator/downloads/list] herunterladen und auf ihrem Server installieren. Es erkennt automatisch woher es kommt und lädt auch die Trennmusterdateien von Ihrem Server.
   # das Script ausführen:
 {{{
 <script type="text/javascript">
