@@ -147,16 +147,16 @@ var Hyphenator=(function(){
 				elements[i].style.visibility='hidden';
 			}
 		} else {
+		var body=document.getElementsByTagName('body')[0];
 			var elements=body.getElementsByTagName('*');
 			for(var i=0, l=elements.length; i<l; i++)
 			{
-				if(elements[i].className.indexOf(hyphenateclass)!=-1) {
+				if(elements[i].className.indexOf(hyphenateclass)!=-1 && elements[i].className.indexOf('donthyphenate')==-1) {
 					elements[i].style.visibility='hidden';
 				}
 			}
 		}
-
-	}
+	};
 
     // gets the lang for the given Element
     // if not set, use the mainlanguage of the hole site
