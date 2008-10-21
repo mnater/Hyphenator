@@ -136,6 +136,27 @@ var Hyphenator=(function(){
 			}
 		}
 	};
+	//hides the elements with class .hyphenateclass (typically "hyphenate") to
+	//prevent an fouhc (flash of un-hyphenated content)
+	//visibility is set back to visible in Hyphenator.hyphenateElement()
+	function _hideInside() {
+		if(document.getElementsByClassName) {
+			var elements=document.getElementsByClassName(hyphenateclass);
+			for(var i=0, l=elements.length; i<l; i++)
+			{
+				elements[i].style.visibility='hidden';
+			}
+		} else {
+			var elements=body.getElementsByTagName('*');
+			for(var i=0, l=elements.length; i<l; i++)
+			{
+				if(elements[i].className.indexOf(hyphenateclass)!=-1) {
+					elements[i].style.visibility='hidden';
+				}
+			}
+		}
+
+	}
 
     // gets the lang for the given Element
     // if not set, use the mainlanguage of the hole site
@@ -253,7 +274,10 @@ var Hyphenator=(function(){
 			} else {
 				window.onload=i;
 			}
-		})(Hyphenator.hyphenateDocument);
+		})(function(){
+			_hideInside();
+			Hyphenator.hyphenateDocument();
+		});
 	};
 
 
@@ -424,7 +448,9 @@ var Hyphenator=(function(){
                     Hyphenator.hyphenateElement(n,lang);
                 }
             }
-            el.style.visibility='visible';
+            if(el.className.indexOf(hyphenateclass)!=-1) {
+	            el.style.visibility='visible';
+	        }
         },
 		hyphenateWord    : function(lang,word) {
 			if(word=='') {
