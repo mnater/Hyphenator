@@ -69,25 +69,23 @@ code {
 
 
 <h2>Version</h2>
-<p class="hyphenate">Diese Datei bezieht sich auf Version 5 des Skripts. Siehe auch die <a href="http://www.mnn.ch/hyph/versionhist.html">Änderungsliste der jeweiligen Versionen</a> für eventuell neuere Versionen. Diese Version kann auf deutsch-, französisch- und englischsprachigen Webseiten eingesetzt werden.</p>
+<p class="hyphenate">Diese Datei bezieht sich auf Version 9 des Skripts. Siehe auch die <a href="http://www.mnn.ch/hyph/versionhist.html">Änderungsliste der jeweiligen Versionen</a> für eventuell neuere Versionen. Diese Version kann auf deutsch-, französisch- und englischsprachigen Webseiten eingesetzt werden.</p>
 
 <h2>Verwendung auf einer Webseite</h2>
 <p>Das Skript wird im &lt;head&gt;-Block einer HTML-Datei eingebunden:<br />
-<code>&lt;script src="http://www.mnn.ch/hyph/v5/Hyphenator.js"
+<code>&lt;script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js"
         type="text/javascript"&gt;
 &lt;/script&gt;</code><br />
 Durch das Einbinden dieses Script wird automatisch das Objekt <code>Hyphenator</code> erstellt.</p>
-<p>Anschliessend muss die Methode <code>Hyphenator.hyphenateDocument()</code> ausgeführt werden, sobald die gesammte Datei geladen ist:<br />
+<p>Anschliessend muss die Methode <code>Hyphenator.run()</code> ausgeführt werden. Das Script wartet automatisch, bis die gesammte Datei geladen ist.<br />
 <code>&lt;script type="text/javascript"&gt;
-window.onload=function() {
-	Hyphenator.hyphenateDocument(6,'&shy;');
-}
+&nbsp;&nbsp;&nbsp;&nbsp;Hyphenator.run();
 &lt;/script&gt;</code></p>
-<p class="hyphenate" id="eins">Das Script sucht automatisch alle Elemente mit der Klasse "hyphenate" (z.B. <code>&lt;p class="hyphenate"&gt;</code>) und nimmt die Silbentrennung in diesen Elementen und ihren Kind-Elementen vor. Zur Angabe der Sprache muss das Attribut <a href="http://edition-w3.de/TR/1999/REC-html401-19991224/struct/dirlang.html#h-8.1">lang</a> oder <a href="http://www.w3.org/TR/xhtml1/#C_7">xml:lang</a> in mindestens einem übergeordneten Element-Tag stehen.</p>
+<p class="hyphenate" id="eins">Das Script sucht automatisch alle Elemente mit der Klasse "hyphenate" (z.B. <code>&lt;p class="hyphenate"&gt;</code>) und nimmt die Silbentrennung in diesen Elementen und ihren Kind-Elementen vor. Zur Angabe der Sprache muss das Attribut <a href="http://edition-w3.de/TR/1999/REC-html401-19991224/struct/dirlang.html#h-8.1">lang</a> in mindestens einem übergeordneten Element-Tag stehen.</p>
 
 
 <h2>Verwendung als Bookmarklet</h2>
-<p class="hyphenate" id="zwei">Um die Silbentrennung auf "fremden" Seiten durchzuführen (z.B. vor dem Druck der Seite) kann man im Browser das folgende <a href="http://de.wikipedia.org/wiki/Bookmarklet">Bookmarklet</a> definieren, welches das Script lädt und die Trennung <em>in allen Elementen</em> durchführt:</p>
+<p class="hyphenate" id="zwei">Um die Silbentrennung auf &laquo;fremden&raquo; Seiten durchzuführen (z.B. vor dem Druck der Seite) kann man im Browser das folgende <a href="http://de.wikipedia.org/wiki/Bookmarklet">Bookmarklet</a> definieren, welches das Script lädt und die Trennung <em>in allen Elementen</em> durchführt:</p>
 <p style="text-align:left;"><a href="javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://www.mnn.ch/hyph/v5/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}">javascript: if (document.createElement) { void(head=document.getElementsByTagName('head').item(0)); void(script=document.createElement('script')); void(script.src='http://www.mnn.ch/hyph/v5/Hyphenator.js?bm=true'); void(script.type='text/javascript'); void(head.appendChild(script));}
 </a><br />
 (diesen Link als Lesezeichen speichern).</p>
