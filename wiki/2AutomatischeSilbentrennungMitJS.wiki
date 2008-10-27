@@ -44,9 +44,11 @@ Dank des geringen Speicherbedarfs und seiner Einfachheit eignet sich Liangs Algo
 === Aufbereitung der Trennmusters ===
 Zuerst habe ich versucht, die Trennmuster direkt, also in der Form `n1tr` zu übernehmen. In dieser Form ist auch der sprachenspezifische Ersatz der Trennmuster denkbar. Das Skript brauchte so nur etwa 40KB, dafür aber zwei Sekunden, um diese Trennmuster einzulesen.
 
-Deshalb habe ich die Muster auch in JSON notiert (`{"ntr":"0100"}`), wodurch der Speicherbedarf auf 92KB aufgebläht wurde. Das Einlesen der Muster gelang so aber in 30ms.</p>
+Deshalb habe ich die Muster direkt in JSON notiert (`{"ntr":"0100"}`), wodurch der Speicherbedarf auf 92KB aufgebläht wurde. Das Einlesen der Muster gelang so aber in 30ms.</p>
 
-Für die Implementierung eines Tries, wie sie Liang vorschlägt, ist JavaScript allerding zu langsam (vorausgesetzt, ich habe alles richtig gemacht). Mit einem Trie könnten zwar viele Suchläufe nach Mustern vermieden werden; das Suchen im Trie war in meinen Tests aber soviel langsamer als das Suchen im Objekt, dass diese Ersparnis mehr als zunichte gemacht wurde. Wirklich schneller wäre ein Trie nur, wenn er von der JavaScript-Core zur Verfügung gestellt würde.
+Für die Implementierung eines Tries, wie sie Liang vorschlägt, ist JavaScript allerding zu langsam (vorausgesetzt, ich habe alles richtig gemacht). Mit einem Trie könnten zwar viele Suchläufe nach Mustern vermieden werden; das Suchen im Trie war in meinen Tests aber viel zu langsam. Wirklich schneller wäre ein Trie nur, wenn er von der JavaScript-Core zur Verfügung gestellt würde.
+
+Es dauerte eine Weile, bis ich die aktuelle Lösung (seit Version 9) gefunden habe. Die Muster werden jetzt in ihrer ursprünglichen Form `n1tr` übertragen und dann in ein Objekt `{"ntr":"n1tr"}` gefüllt. Die Konvertierung dauert nur ca. 200ms auf dem IE (andere Browser sind viel schneller) und es müssen viel weniger Daten übertragen werden.
 
 == Wie es funktioniert (Übersicht) ==
 Es gibt zwei Modi:
