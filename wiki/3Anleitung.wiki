@@ -5,7 +5,7 @@ Sie können Hyphenator auf ihrer Website einbinden. Ich freue mich auf Rückmeld
 Diese Seite erklärt, was sie genau machen müssen und gibt ein paar Hinweise zur Konfiguration.
 
 == Schritt um Schritt ==
-  #Bereiten Sie ihre HTML-Documente vor, indem Sie
+  # Bereiten Sie ihre HTML-Documente vor, indem Sie
     * diese in UTF-8 codieren.
     * ein passendes lang-Attribut (z.B. `<html lang="de">`) setzen
     * jedes Element, dessen Text getrennt werden soll, mit `class="hyphenate"` auszeichnen. Kindelemente erben diese Auszeichnung. (Die Silbentrennung kann für ein Element wieder aufgehoben werden, indem man es mit `class="donthyphenate"` auszeichnet. )
