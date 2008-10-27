@@ -62,8 +62,9 @@ but is read in less than 30ms.
 
 Liang proposes to use a trie as basic data structure for the patterns. I did it, too. But it 
 was too slow (assumed I did everything right!): With a trie many searches for patterns could be avoided, but 
-traversing the trie was so slow, that looking up for all possible patterns in a simple Javascript-Object won the 
-game.
+traversing the trie was so slow.
+
+It took quite a while for me to find the current solution as of version 9. Patterns are now transmitted in their native form (`n1tr`) and on the fly filled in to an object `{"ntr":"n1tr"}`. The conversion takes about 200ms on IE and, thus, is fast enough.
 
 == How it works (just an overview) ==
 There are two modes:
