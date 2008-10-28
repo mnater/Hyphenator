@@ -9,7 +9,7 @@ English's not my first language. Please send in corrections. Thank you.
 
 
 == Liangs Thesis ==
-1983 Franklin Mark Liang worked within the scope of his dissertation on an algorithm for the automatic hyphenation in the text setting system (La)TeX. At this time it was important the an application used as less memory as possible — a long list with all words and their hyphen points was out of question.
+1983 Franklin Mark Liang worked within the scope of his dissertation on an algorithm for the automatic hyphenation in the text setting system (La)TeX. At this time it was important that an application used as less memory as possible — a long list with all words and their hyphen points was out of question.
 
 Liangs advisor and creator of (La)TeX, Donald Knuth, had already developped an algorithm able to hyphenate english words by cutting off pre- and suffixes. Liang went further.
 
@@ -48,9 +48,7 @@ like Openoffice and LaTeX.
 Patterns are available online at [http://www.ctan.org/tex-archive/language/hyphenation/" CTAN] under the LaTeX Project Public License.
 
 == Implementation in Javascript ==
-Due to its low memory usage and its simplicity Liangs algorithm suits very well for usage on 
-webpages. As you will see, the entire script including one pattern library isn't bigger then 100KB and fast 
-enough.
+Due to its low memory usage and its simplicity Liangs algorithm suits very well for usage on webpages. As you will see, the entire script including one pattern library isn't bigger then 100KB and fast enough.
 (First benchmarks have been taken on an older Powermac G4/933MHz and Safari 2.0.4. Current machines will be much faster.)
 
 === Preparing the patterns ===

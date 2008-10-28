@@ -7,7 +7,7 @@ There is no answer to this question despite of: “it depends on a lot of parame
 For most tasks Hyphenator is fast enough, but speed is cool and there things you can do to make Hyphenator faster and thus even cooler ;-)
 
 == Execution speed ==
-I'm permanently tweaking the code for execution speed. If there's a nanosecond to save, I want to save it!
+I'm permanently tweaking the code for execution speed. If there's a millisecond to save, I want to save it!
 Nevertheless there are differences in execution speed depending on the browser you use. In general a more recent version is faster.
 
 *What an webauthor can do:*
@@ -16,7 +16,7 @@ The depth of the DOM-Tree has a big impact on the speed of Hyphenator. It takes 
 Conclusion: Write clean standard-conform code and set class="hyphenate" to the leaves instead to the roots or branches.
 
 == Loading speed ==
-The script itself isn't that big (Hyphenator.js: ca. 16KB). What really takes time to load are the pattern files (192Kb for the new german patterns, 68 KB for english).
+The script itself isn't that big (Hyphenator.js: ca. 16KB). But the pattern files take some time to load (84KB for the german patterns, 24 KB for english).
 
 With a Javascript-packer (http://dean.edwards.name/packer/) Hyphenator.js could be cut down to 50% of its size. But the data structure of the patterns is already highly optimized for space (and speed). There's almost nothing to save.
 

@@ -1,4 +1,4 @@
-#summary Inhaltsverzeichnis
+#Inhaltsverzeichnis
 #labels Featured
 
 = Table of Contents =
@@ -11,4 +11,3 @@
   # [http://code.google.com/p/hyphenator/wiki/6AndereSprachenUnterstuetzen Zusätzliche Sprachen hinzufügen]
   # [http://code.google.com/p/hyphenator/wiki/7ZumProjektBeitragen Zum Projekt beitragen]
   # [http://code.google.com/p/hyphenator/wiki/8CompatibilityMatrix Kompatibilitätsmatrix]
-  # [http://code.google.com/p/hyphenator/wiki/9FormatTrennmuster Trennmusterformate]

@@ -1,7 +1,7 @@
 #summary How to use Hyphenator on your website
 
 = Using Hyphenator on your website =
-You can freely use Hyphenator on your website. Send me a notice about it, if you feel like.
+You can freely use Hyphenator on your website. Send me a notice about it, if you feel alike.
 This article explains what you will have to do and gives you some configuration hints.
 
 == Step by Step ==
@@ -11,7 +11,7 @@ This article explains what you will have to do and gives you some configuration 
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
   # Include the script by adding the following code to your HTML-document:
 {{{
-<script src="http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js" type="text/javascript">
+<script src="http://ihreDomain.com/pfad/Hyphenator.js" type="text/javascript">
 </script>
 }}} 
     For security issues you may prefer to [http://code.google.com/p/hyphenator/downloads/list download it] and load it from your server.
@@ -27,11 +27,26 @@ This article explains what you will have to do and gives you some configuration 
 {{{
 Hyphenator.setMinWordLength(4);
 }}}
-	To change the hyphen character (defaults to &amp;shy;):
+	To change the hyphen character for word-hyphenation (defaults to &amp;shy;):
 {{{
 Hyphenator.setHyphenChar('|');
 }}}
-	Other settings are hardcoded in the script. Read it, and change them!
+	To change the hyphen character for web- and mail-adress-hyphenation (defautls to ZeroWidthSpace except for IE6 and IE8b2).
+{{{
+Hyphenator.setUrlHyphenChar('|');
+}}}
+	To change the name of the hyphenate-class (defaults to `hyphenate`:
+{{{
+Hyphenator.setClassName('classname');
+}}}
+	To display an on/off-switch in the upper right corner of the screen:
+{{{
+Hyphenator.setDisplayToggleBox(true oder false);
+}}}
+	To turn off remote loading of pattern files (they have to be loaded manually instead):
+{{{
+Hyphenator.setRemoteLoading(true oder false);
+}}}
 
 When the function `Hyphenator.hyphenateDocument()` is called, the script hyphenates all text of elements having the attribute `class="hyphenate"` — even the text of their child-elements.
 

@@ -8,20 +8,19 @@ Momentan werden folgende Sprachen unterstützt:
   * Französisch
   * Niederländisch
 
-Hyphenator ist aber so programmiert, dass es relativ einfach ist, weitere Sprachen hinzuzufügen.
+Hyphenator ist aber so programmiert, dass es relativ einfach ist, dir Unterstützung für weitere Sprachen hinzuzufügen.
 
 = Was Sie tun können =
 
 Um weitere Sprachen hinzuzufügen, werden Trennmuster benötigt. Falls Sie über eine (komplette) Liste mit getrennten Wörtern verfügen, können Sie die Trennmuster selbst berechnen (if you can, you know how). Wenn nicht, können sie auf [http://www.ctan.org] die LaTeX-Trennmuster für Ihre Sprache suchen.
 
 Danach müssen Sie folgende Schritte durchführen:
-  # Trennmuster konvertieren
+  # Trennmuster aufbereiten
   # Hyphenator.js anpassen
-  # Änderungen und Trennmuster mir senden, wenn Sie Lust haben (Sie werden dann Supporter für diese Sprache)
+  # Änderungen und Trennmuster mir einsenden, wenn Sie Lust haben (Sie werden dann Supporter für diese Sprache)
 
 == Trennmuster konvertieren ==
-  * LaTeX-Trennmuster kommen in der Form `.ab3s2`, Hyphenator braucht aber `"_abs":"0032"`.
-  Sie können ein kleines Script in Ihrer bevorzugen Sprache schreiben und die Konversion durchführen lassen (mein eigenes Script ist nicht bereit, veröffentlicht zu werden ;-)
+  * Trennmuster haben Form `.ab3s2`. Zur Unterscheidung verwende ich in Hyphenator statt des Punktes einen Unterstrich, um den Begin oder das Ende eines Wortes zu markieren. Durch einfaches Suchen&amp;Ersetzen können Sie alle Punkte in den Trennmustern durch Unterstriche ersetzen: `_ab3s2`
   * Alle Trennmuster-Dateien sollten mit *UTF-8 (with BOM)* codiert sein.
   * Duplizieren Sie eine andere Trennmusterdateien und ersetzen Sie die Muster.
   * Die anderen Variablen müssen gemäss den Rechtschreiberegeln der jeweiligen Sprache angepasst werden:

@@ -24,3 +24,16 @@ There two possible ways:
   }}}
 Now, Hyphenator knows how to hyphenate "Urinstinkt" and that "Fortran" hasn't to be hyphenated at all.
 _The values have to be in a comma-separated string with no spaces._
+
+== How to check hyphenation-quality ==
+If a high quality of hyphenation is demanded I recommend to check hyphenation as described below:
+  # Use a visible hyphenation char and run a test:
+{{{
+	Hyphenator.setHyphenChar('·');
+}}}
+  # Look for misshyphenated words and put them in the exception list.
+  # Turn of the visible hyphenation char:
+{{{
+	//Hyphenator.setHyphenChar('·');
+}}}
+

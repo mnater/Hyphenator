@@ -1,6 +1,6 @@
-#summary One-sentence summary of this page.
+#Wie man zum Projekt Hyphenator.js beitragen kann
 
-= Wie beitragen? =
+= Was können Sie beitragen? =
 
 Sie finden Hyphenator cool? – _Verwenden Sie ihn!_ Und senden Sie mir Ihre Erfahrungen.
 
