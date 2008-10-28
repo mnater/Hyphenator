@@ -7,7 +7,7 @@ Es gibt nur eine Antwort:«Das hängt von vielen Parametern ab!»
 Für die meisten Aufgaben ist Hyphenator schnell genug. Aber Speed ist cool und es gibt einige Dinge, die Hyphenator schneller und somit noch cooler machen ;-)
 
 == Ausführungsgeschwindigkeit ==
-Ich arbeite ständig an der Ausführungsgeschwindigkeit. Wenn es eine Nanosekunde zu sparen gibt, dann will ich diese spre!
+Ich arbeite ständig an der Ausführungsgeschwindigkeit. Wenn es eine Millisekunde zu sparen gibt, dann will ich diese sparen!
 Trotzdem gibt es je nach Browser Unterschiede in der Ausführungsgeschwindigkeit. Allgemein gesagt ist ein modernerer Browser auch schneller.
 
 *Was ein Webmaster tun kann:*
@@ -16,9 +16,9 @@ Die Tiefe des DOM-Baums hat einen grossen Einfluss auf die Geschwindigkeit von H
 Fazit: Schreiben Sie sauberen, standardkonformen Code und verwenden sie `class="hyphenate"` in den äussersten «Blättern» des Baumes und nicht in den «Wurzeln».
 
 == Ladegeschwindigkeit ==
-Das Script an sich ist nicht so gross (gepacktes Hyphenator.js: ca. 16Kb). Was wirklich Zeit braucht, ist das Laden der Trennmuster (192Kb für die neuen deutschen Trennmuster, 68Kb für englische).
+Das Script an sich ist nicht so gross (gepacktes Hyphenator.js: ca. 16Kb). Was etwas mehr Zeit braucht, ist das Laden der Trennmuster (84KB für die deutschen Trennmuster, 28KB für englische).
 
-Mit einem Javascript-Packer ([http://dean.edwards.name/packer/]) Hyphenator.js kann auf 50% seiner grössen komprimiert werden. Die Datenstruktur der Trennmuster ist dagegen bereits hochoptimiert im Speicherbedarf (und Geschwindigkeit). Hier kann fast nichts eingespart werden.
+Mit einem Javascript-Packer ([http://dean.edwards.name/packer/]) kann Hyphenator.js auf 50% seiner Grösse komprimiert werden. Die Datenstruktur der Trennmuster ist dagegen bereits hochoptimiert im Speicherbedarf (und Geschwindigkeit). Hier kann fast nichts eingespart werden.
 
 *Was ein Webmaster tun kann:*
   * *Dateien gezippt ausliefern:* Abhängig vom Server können Sie die Dateien gezippt ausliefern. Aktuelle Browser kommen ohne Probleme zurecht mit gezippten Inhalten. Zippen spart typischerweise 50% ein.

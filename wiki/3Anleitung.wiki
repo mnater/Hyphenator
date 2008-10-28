@@ -9,12 +9,12 @@ Diese Seite erklärt, was sie genau machen müssen und gibt ein paar Hinweise zu
     * diese in UTF-8 codieren.
     * ein passendes lang-Attribut (z.B. `<html lang="de">`) setzen
     * jedes Element, dessen Text getrennt werden soll, mit `class="hyphenate"` auszeichnen. Kindelemente erben diese Auszeichnung. (Die Silbentrennung kann für ein Element wieder aufgehoben werden, indem man es mit `class="donthyphenate"` auszeichnet. )
-  # das Script wie folgt einbinden:
+  # Binden Sie Script wie folgt ein:
 {{{
 <script src="http://ihreDomain.com/pfad/Hyphenator.js" type="text/javascript">
 </script>
 }}} 
-    Aus Sicherheitsgründen sollten Sie das Script auf [http://code.google.com/p/hyphenator/downloads/list] herunterladen und auf ihrem Server installieren. Es erkennt automatisch woher es kommt und lädt auch die Trennmusterdateien von Ihrem Server.
+    Aus Sicherheitsgründen sollten Sie das Script von [http://code.google.com/p/hyphenator/downloads/list] herunterladen und auf ihrem Server installieren. Es erkennt automatisch woher es kommt und lädt auch die Trennmusterdateien von Ihrem Server.
   # das Script ausführen:
 {{{
 <script type="text/javascript">
@@ -27,13 +27,29 @@ Diese Seite erklärt, was sie genau machen müssen und gibt ein paar Hinweise zu
 {{{
 Hyphenator.setMinWordLength(4);
 }}}
-	Um das Trennzeichen zu ändern (Voreinstellung &shy;):
+	Um das Trennzeichen für Worttrennungen zu ändern (Voreinstellung &shy;):
 {{{
-Hyphenator.setHyphenChar('|');
+Hyphenator.setHyphenChar('zeichen');
 }}}
-	Andere Einstellungen sind zum Teil direkt im Script vorzunehmen.
+	Um das Trennzeichen für Link- und Mailadresstrennungen zu ändern (Voreinstellung je nach Browser: ZeroWidthSpace für alle ausser IE 6 und 8b2):
+{{{
+Hyphenator.setUrlHyphenChar('zeichen');
+}}}
 
-Wenn die Funktion `Hyphenator.hyphenateDocument()` aufgerufen wird, trennt das Script sämtliche Texte der Elemente mit `class="hyphenate"` — sogar die Texte der Kindelemente.
+	Um den Namen der Klasse (Voreinstellung='hyphenate') zu ändern:
+{{{
+Hyphenator.setClassName('klassenname');
+}}}
+	Um einen kleinen Schalter oben links einzublenden, der die Trennung aus-/einschaltet:
+{{{
+Hyphenator.setDisplayToggleBox(true oder false);
+}}}
+	Um automatisch laden von Patterndateien auszuschalten (müssen manuell geladen werden):
+{{{
+Hyphenator.setRemoteLoading(true oder false);
+}}}
+	
+Wir Hyphenator mit run() gestartet, trennt das Script sämtliche Texte der Elemente mit `class="hyphenate"` — sogar die Texte der Kindelemente.
 
 == Das Beispiel ==
 Was könnte besser sein als ein  [http://hyphenator.googlecode.com/svn/trunk/WorkingExample.html funktionierendes Beispiel]?

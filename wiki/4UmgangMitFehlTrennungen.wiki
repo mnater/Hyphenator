@@ -4,7 +4,7 @@
 
 Es gibt drei Fehlertypen:
   * *der Algorithmus findet eine Trennstelle nicht:* nicht weiter schlimm, aber auch nicht besonders schön.
-  * *Der Algorithmus findes zuviele Trennstellen:* gar nicht gut!
+  * *Der Algorithmus findet zu viel Trennstellen:* gar nicht gut!
   * *Der Algorithmus findet Trennstellen, die grammatikalisch in Ordnung sind, aber sinnentstellend:* z.B. Urin-stinkt oder bein-halten.
 
 Für einen Algorithmus ist es so gut wie unmöglich, basierend auf dem Kontext zu entscheiden, wie ein Wort getrennt werden muss.
@@ -25,3 +25,16 @@ Es gibt zwei Möglichkeiten:
   }}}
 Jetzt «weiss» Hyphenator, wie Urinstinkt getrennt werden muss und dass Fortran nicht getrennt werden soll.
 _Die Werte müssen in einem Komma-separierten String ohne Zwischenräume stehen._
+
+== Silbentrennung überprüfen ==
+Wenn Sie einen hohen Anspruch an die Korrektheit der Silbentrennung auf Ihrer Webseite stellen, empfehle ich folgendes Vorgehen:
+  # Schalten Sie beim Test auf ein sichtbares Trennzeichen um, es werden dann alle potentiellen Trennzeichen angezeigt:
+{{{
+	Hyphenator.setHyphenChar('·');
+}}}
+  # Suchen Sie allfällige Fehler und tragen Sie kritische Wörter in die Ausnahmeliste (s. o.) ein. Fehlgetrennte Wörter nehme ich gerne entgegen und leite sie an die Gruppe weiter, die sich um die Erstellung der deutschen Trennmuster kümmert.
+  # Schalten Sie das sichtbare Trennzeichen wieder aus:
+{{{
+	//Hyphenator.setHyphenChar('·');
+}}}
+

@@ -2,17 +2,17 @@
 
 = Was haben wir jetzt =
 
-Momentan werden folgende Sprachen unterstützt:for
-  * english
-  * german
-  * french
-  * dutch
+Momentan werden folgende Sprachen unterstützt:
+  * Englisch
+  * Deutsch
+  * Französisch
+  * Niederländisch
 
 Hyphenator ist aber so programmiert, dass es relativ einfach ist, weitere Sprachen hinzuzufügen.
 
 = Was Sie tun können =
 
-Um weitere Sprachen hinzuzufügen, werden Trennmuster benötigt. Falls Sie über einer (komplette) Liste mit getrennten Wörtern verfügen, können Sie die Trennmuster selbst berechnen (if you can, you know how). Wenn nicht, können sie auf [http://www.ctan.org] die LaTeX-Trennmuster für Ihre Sprache suchen.
+Um weitere Sprachen hinzuzufügen, werden Trennmuster benötigt. Falls Sie über eine (komplette) Liste mit getrennten Wörtern verfügen, können Sie die Trennmuster selbst berechnen (if you can, you know how). Wenn nicht, können sie auf [http://www.ctan.org] die LaTeX-Trennmuster für Ihre Sprache suchen.
 
 Danach müssen Sie folgende Schritte durchführen:
   # Trennmuster konvertieren
