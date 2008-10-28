@@ -1,4 +1,4 @@
-#Wie man zum Projekt Hyphenator.js beitragen kann
+#summary Wie man zum Projekt Hyphenator.js beitragen kann
 
 = Was können Sie beitragen? =
 
