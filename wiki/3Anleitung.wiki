@@ -49,7 +49,7 @@ Hyphenator.setDisplayToggleBox(true oder false);
 Hyphenator.setRemoteLoading(true oder false);
 }}}
 	
-Wir Hyphenator mit run() gestartet, trennt das Script sämtliche Texte der Elemente mit `class="hyphenate"` — sogar die Texte der Kindelemente.
+Wird Hyphenator mit run() gestartet, trennt das Script sämtliche Texte der Elemente mit `class="hyphenate"` — sogar die Texte der Kindelemente.
 
 == Das Beispiel ==
 Was könnte besser sein als ein  [http://hyphenator.googlecode.com/svn/trunk/WorkingExample.html funktionierendes Beispiel]?
