@@ -1,5 +1,5 @@
-#labels Phase-Deploy
 #summary There some things you can do to speed up Hyphenator
+#labels Phase-Deploy
 
 = How fast is Hyphenator? =
 
@@ -11,7 +11,7 @@ I'm permanently tweaking the code for execution speed. If there's a millisecond 
 Nevertheless there are differences in execution speed depending on the browser you use. In general a more recent version is faster.
 
 *What an webauthor can do:*
-The depth of the DOM-Tree has a big impact on the speed of Hyphenator. It takes a quite bit of time hyphenate a document with <body class="hyphenate"> and highly nested code (layout tables, lots of divs in divs in divs...). But its quite fast to just hyphenate all p-Elements.
+The depth of the DOM-Tree has a big impact on the speed of Hyphenator. It takes a quite bit of time hyphenate a document with `<body class="hyphenate">` and highly nested code (layout tables, lots of divs in divs in divs...). But its quite fast to just hyphenate all p-Elements.
 
 Conclusion: Write clean standard-conform code and set class="hyphenate" to the leaves instead to the roots or branches.
 
