@@ -1,5 +1,5 @@
-#Inhaltsverzeichnis
-#Featured
+#summary Inhaltsverzeichnis
+#labels Featured
 
 = Table of Contents =
 
