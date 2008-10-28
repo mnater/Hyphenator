@@ -5,7 +5,7 @@ You can freely use Hyphenator on your website. Send me a notice about it, if you
 This article explains what you will have to do and gives you some configuration hints.
 
 == Step by Step ==
-  #Prepare your HTML-documents by
+  # Prepare your HTML-documents by
     * Encoding it in UTF-8.
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
