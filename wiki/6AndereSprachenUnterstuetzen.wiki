@@ -1,4 +1,5 @@
 #summary Weitere Sprachen hinzufügen
+#sidebar 0Inhalte
 
 = Was haben wir jetzt =
 
