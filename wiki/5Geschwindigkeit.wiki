@@ -1,5 +1,6 @@
-#labels Phase-Deploy
 #summary Hinweise um Hyphenator zu beschleunigen
+#labels Phase-Deploy
+#sidebar 0Inhalte
 
 =Wie schnell ist Hyphenator? =
 
