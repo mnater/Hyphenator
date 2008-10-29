@@ -1,4 +1,5 @@
 #summary Wie man zum Projekt Hyphenator.js beitragen kann
+#sidebar 0Inhalte
 
 = Was können Sie beitragen? =
 
