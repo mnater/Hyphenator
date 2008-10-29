@@ -1,5 +1,5 @@
 #summary Silbentrennung und HTML
-#sidebar 0Inhaltsverzeichnis
+#sidebar 0Inhalte
 
 = Silbentrennung und HTML =
 [http://code.google.com/p/hyphenator/wiki/1HyphenationInHTML Englisch version available]
