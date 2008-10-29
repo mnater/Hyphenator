@@ -1,4 +1,5 @@
 #summary Automatische Silbentrennung mittels Javacript
+#sidebar 0Inhalte
 
 = Automatische Silbentrennung im Browser mit !JavaScript =
 
