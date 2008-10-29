@@ -1,4 +1,5 @@
 #summary Umgang mit Fehltrennungen
+#sidebar 0Inhalte
 
 = Automatische Silbentrennung ist gut, aber nicht fehlerfrei =
 
@@ -37,4 +38,3 @@ Wenn Sie einen hohen Anspruch an die Korrektheit der Silbentrennung auf Ihrer We
 {{{
 	//Hyphenator.setHyphenChar('·');
 }}}
-
