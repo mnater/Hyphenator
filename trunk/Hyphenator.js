@@ -1271,7 +1271,6 @@ var Hyphenator = function () {
 		}
 	};
 }();
-alert(Hyphenator.isBookmarklet());
 if (Hyphenator.isBookmarklet()) {
 	Hyphenator.hyphenateDocument();
 }
