@@ -738,6 +738,58 @@ var Hyphenator = function () {
 	}
 	/* end ContentLoaded.js */
 
+	/**
+	 * @name Hyphenator-prepare
+	 * @methodOf Hyphenator
+	 * @description
+	 * This funtion prepares the Hyphenator-Object. First, it looks for languages that are used
+	 * in the document. Then it loads the patterns calling {@link Hyphenator-loadPatterns}.
+	 * Finally it 'waits' until all patterns are loaded by repeatedly calling {@link Hyphenator-patternsloaded}
+	 * for all languages.
+	 * When all patterns are loaded the function sets {@link Hyphenator-preparestate} to 2 and returns.
+	 * Currently there's no message if the patterns aren't found/loaded.
+	 * @private
+	 */
+	function prepare () {
+	// get all languages that are used and preload the patterns
+		preparestate = 1;
+		var doclanguages = {};
+		doclanguages[mainlanguage] = true;
+		var elements = document.getElementsByTagName('body')[0].getElementsByTagName('*');
+		var lang = null;
+		var i, l;
+		for (i = 0, l = elements.length; i < l; i++) {
+			if (!!(lang = getLang(elements[i]))) {
+				if (SUPPORTEDLANG[lang]) {
+					doclanguages[lang] = true;
+				} else {
+					//alert('Language '+lang+' is not yet supported.');
+				}
+			}
+		}
+		for (lang in doclanguages) {
+			if (doclanguages.hasOwnProperty(lang)) {
+				loadPatterns(lang);
+			}
+		}
+		// wait until they are loaded
+		var interval = window.setInterval(function () {
+			var finishedLoading = false;
+			for (lang in doclanguages) {
+				if (!patternsloaded[lang]) {
+					finishedLoading = false;
+					break;
+				} else {
+					finishedLoading = true;
+				}
+			}
+			if (finishedLoading) {
+				window.clearInterval(interval);
+				preparestate = 2;
+			}
+		}, 100);
+	}
+
 
 	/**
 	 * @name Hyphenator-autoinit
@@ -1007,59 +1059,6 @@ var Hyphenator = function () {
 		},
 
 		/**
-		 * @name Hyphenator.prepare
-		 * @methodOf Hyphenator
-		 * @description
-		 * This funtion prepares the Hyphenator-Object. First, it looks for languages that are used
-		 * in the document. Then it loads the patterns calling {@link Hyphenator-loadPatterns}.
-		 * Finally it 'waits' until all patterns are loaded by repeatedly calling {@link Hyphenator-patternsloaded}
-		 * for all languages.
-		 * When all patterns are loaded the function sets {@link Hyphenator-preparestate} to 2 and returns.
-		 * Currently there's no message if the patterns aren't found/loaded.
-		 * @public
-         */
-		prepare: function () {
-        // get all languages that are used and preload the patterns
-			preparestate = 1;
-			var doclanguages = {};
-			doclanguages[mainlanguage] = true;
-			var elements = document.getElementsByTagName('body')[0].getElementsByTagName('*');
-			var lang = null;
-			var i, l;
-			for (i = 0, l = elements.length; i < l; i++) {
-				if (!!(lang = getLang(elements[i]))) {
-					if (SUPPORTEDLANG[lang]) {
-						doclanguages[lang] = true;
-					} else {
-						//alert('Language '+lang+' is not yet supported.');
-					}
-				}
-			}
-			for (lang in doclanguages) {
-				if (doclanguages.hasOwnProperty(lang)) {
-					loadPatterns(lang);
-				}
-			}
-			// wait until they are loaded
-			var interval = window.setInterval(function () {
-				var finishedLoading = false;
-				for (lang in doclanguages) {
-					if (!patternsloaded[lang]) {
-						finishedLoading = false;
-						break;
-					} else {
-						finishedLoading = true;
-					}
-				}
-				if (finishedLoading) {
-					window.clearInterval(interval);
-					preparestate = 2;
-				}
-			}, 100);
-
-		},
-
-		/**
 		 * @name Hyphenator.hyphenateDocument
 		 * @methodOf Hyphenator
 		 * @description
@@ -1069,7 +1068,7 @@ var Hyphenator = function () {
 		hyphenateDocument: function () {
 			if (preparestate !== 2 && enableRemoteLoading) {
 				if (preparestate === 0) {
-					Hyphenator.prepare();               // load all language patterns that are used
+					prepare();               // load all language patterns that are used
 				}
 				var interval = window.setInterval(function () {
 					if (preparestate === 2) {
