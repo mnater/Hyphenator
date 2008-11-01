@@ -655,7 +655,7 @@ var Hyphenator = function () {
 			// user agent, version
 			u = w.navigator.userAgent.toLowerCase(),
 			v = parseFloat(u.match(/.+(?:rv|it|ml|ra|ie)[\/: ]([\d.]+)/)[1]);
-	
+				
 		function init(e) {
 			if (!document.loaded) {
 				document.loaded = true;
@@ -693,7 +693,7 @@ var Hyphenator = function () {
 					}
 				}
 			);
-			if (w === top) {
+			if (w == top) {
 				(function () {
 					try {
 						d.documentElement.doScroll('left');
