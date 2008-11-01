@@ -340,7 +340,7 @@ var Hyphenator = function () {
 			}
 			if (!loc) {
 				continue;
-			} else if (loc.indexOf('Hyphenator.js?bm = true') !== -1) {
+			} else if (loc.indexOf('Hyphenator.js?bm=true') !== -1) {
 				bookmarklet = true;
 			}
 		}
@@ -1271,6 +1271,7 @@ var Hyphenator = function () {
 		}
 	};
 }();
+alert(Hyphenator.isBookmarklet());
 if (Hyphenator.isBookmarklet()) {
 	Hyphenator.hyphenateDocument();
 }
