@@ -20,7 +20,7 @@ Generally the distance between text and eye is much bigger when reading texts on
 Last but not least hyphenation may also be useful in ragged-left text. Not only to break long words in narrow table-columns, but also to “calm” the text.
 
 == Automatic Hyphenation ==
-Hyphenation is a big issue for professional applications in print business. But things like optical margin alignment isn't very important in webdesign because of the much lower resolution of screens. Far from it! There is no|yet no hyphenation on webpages!
+Hyphenation is a big issue for professional applications in print business. But things like optical margin alignment isn't very important in webdesign because of the much lower resolution of screens. Far from it! There is no hyphenation on webpages (yet)!
 
 Automatic hyphenation is quite complex: It depends fairly on the particular language. English words are shorter on average then e.g. german words. Other languages behave completly different. In Thai aren't any spaces between words.
 
@@ -43,16 +43,16 @@ Still, its up to the author to put `&shy;` inside every word.
 The disadvantage of using `&shy;` is that hyphenated words won't be found by the browsers Search-Function.
 I also assume that search engines don't index hyphenated words.
 
-== Hyphenation in tomorrows web ==
+== Hyphenation in tomorrow's web ==
 
-With [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (today only CSS 2.1 ist actually usable) it will be possible to control how texts should be hyphenated. But consider that even CSS 3 doesn't say that browsers _have to_ support it.
+With [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (today only CSS 2.1 ist actually usable) it will be possible to control how texts are hyphenated. Still, it is important to note that CSS 3 do not explicitly specify that browsers will have to support hyphenation.
 
 == Conclusion ==
 Although hyphenation isn't very important on webpages, it may lead to nicer layouts. Currently hyphenation has to be done by the author manually by putting `&shy;` at the right places. There is no clientside automatic hyphenation.
 
 
 == And now? ==
-With its comming version 3.0 even Firefox will support `&shy;`. An automated hyphenation is going to be more and more interesting. Until browsers have there own hyphenation-mechanism, hyphenation has to be done either during the authoring of the text (by the editor) or just before the page is delivered (by a script on the server) or in the users browser (by Javascript).
+All major browsers do support &shy; (since version 3, even Firefox does). Therefore, an automated hyphenation is going to be more and more interesting. Until browsers have their own hyphenation-mechanism, hyphenation can only be achieved in three way. Firstly, during the authoring of the text (by the editor). Secondly, before the delivery of the page (by a server-side script). Thirdly, by the browser of the user (with a client-side scripting language like Javascript).
 
 Using Javascript on the clientside has the big advantages that hyphenation can be turned on and off by the user and isn't seen by search bots.
 
