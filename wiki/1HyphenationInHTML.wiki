@@ -45,7 +45,7 @@ I also assume that search engines don't index hyphenated words.
 
 == Hyphenation in tomorrow's web ==
 
-With [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (today only CSS 2.1 ist actually usable) it will be possible to control how texts are hyphenated. Still, it is important to note that CSS 3 do not explicitly specify that browsers will have to support hyphenation.
+With [http://www.w3.org/TR/css3-text/#hyphenate CSS 3] (today only CSS 2.1 is actually usable) it will be possible to control how texts are hyphenated. Still, it is important to note that CSS 3 do not explicitly specify that browsers will have to support hyphenation.
 
 == Conclusion ==
 Although hyphenation isn't very important on webpages, it may lead to nicer layouts. Currently hyphenation has to be done by the author manually by putting `&shy;` at the right places. There is no clientside automatic hyphenation.
