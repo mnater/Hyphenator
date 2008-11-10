@@ -767,9 +767,11 @@ var Hyphenator = function () {
 				}
 			}
 		}
-		for (lang in doclanguages) {
-			if (doclanguages.hasOwnProperty(lang)) {
-				loadPatterns(lang);
+		if (enableRemoteLoading) {
+			for (lang in doclanguages) {
+				if (doclanguages.hasOwnProperty(lang)) {
+					loadPatterns(lang);
+				}
 			}
 		}
 		// wait until they are loaded
@@ -1066,7 +1068,7 @@ var Hyphenator = function () {
 		 * @public
          */
 		hyphenateDocument: function () {
-			if (preparestate !== 2 && enableRemoteLoading) {
+			if (preparestate !== 2) {
 				if (preparestate === 0) {
 					prepare();               // load all language patterns that are used
 				}
@@ -1077,8 +1079,6 @@ var Hyphenator = function () {
 						runHyphenation();
 					}
 				}, 10);
-			} else {
-				runHyphenation();
 			}
 		},
 
@@ -1229,7 +1229,7 @@ var Hyphenator = function () {
 				}
 			}
 			var inserted = 0;
-			for (i = Hyphenator.leftmin[lang]; i < (hypos.length - Hyphenator.rightmin[lang]); i++) {
+			for (i = Hyphenator.leftmin[lang]; i <= (hypos.length - Hyphenator.rightmin[lang]); i++) {
 				if (!!(hypos[i] & 1)) {
 					s.splice(i + inserted + 1, 0, hyphen);
 					inserted++;
