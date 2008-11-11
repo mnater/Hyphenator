@@ -357,7 +357,6 @@ var Hyphenator = function () {
 	 * @private
 	 */		
 	function getLang(el, nofallback) {
-		
 		if (!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').substring(0, 2);
 		}
@@ -371,6 +370,9 @@ var Hyphenator = function () {
 				return el.getAttribute('xml:lang').substring(0, 2);
 			}
 		} catch (ex) {}
+		if (el.tagName != 'HTML' && nofallback) {
+			return getLang(el.parentNode);
+		}
 		if (!nofallback && mainlanguage) {
 			return mainlanguage;
 		}
@@ -759,7 +761,7 @@ var Hyphenator = function () {
 		var lang = null;
 		var i, l;
 		for (i = 0, l = elements.length; i < l; i++) {
-			if (!!(lang = getLang(elements[i]))) {
+			if (!!(lang = getLang(elements[i]), true)) {
 				if (SUPPORTEDLANG[lang]) {
 					doclanguages[lang] = true;
 				} else {
