@@ -78,7 +78,7 @@ var Hyphenator = function () {
 	 */	
 	var PROMPTERSTRINGS = {'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n' + LANGUAGEHINT,
 						 'en': 'The language of this website could not be determined automatically. Please indicate main language: \n\n' + LANGUAGEHINT,
-						 'fr': 'La langue de cette site ne pouvait pas %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue: \n\n' + LANGUAGEHINT,
+						 'fr': 'La langue de ce site n’a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue%A0: \n\n' + LANGUAGEHINT,
 						 'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n' + LANGUAGEHINT};
 	
 	/**
@@ -401,12 +401,12 @@ var Hyphenator = function () {
 		if (!mainlanguage) {
 			var m = document.getElementsByTagName('meta');
 			for (var i = 0; i < m.length; i++) {
-				//<meta http-equiv = "content-language" content = "xy">	
+				//<meta http-equiv = "content-language" content="xy">	
 				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
 					mainlanguage = m[i].getAttribute('content').substring(0, 2);
 				}
-				//<meta name = "DC.Language" content = "xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.Language')) {
+				//<meta name = "DC.Language" content="xy">
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
 					mainlanguage = m[i].getAttribute('content').substring(0, 2);
 				}			
 				//<meta name = "language" content = "xy">
@@ -777,7 +777,6 @@ var Hyphenator = function () {
 			}
 		}
 		// wait until they are loaded
-		i=0;
 		var interval = window.setInterval(function () {
 			var finishedLoading = false;
 			for (lang in doclanguages) {
@@ -790,11 +789,6 @@ var Hyphenator = function () {
 			}
 			if (finishedLoading) {
 				window.clearInterval(interval);
-				preparestate = 2;
-			}
-			if(i++ > 100) {
-				window.clearInterval(interval);
-				alert('Error');
 				preparestate = 2;
 			}
 		}, 100);
