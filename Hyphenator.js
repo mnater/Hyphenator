@@ -777,6 +777,7 @@ var Hyphenator = function () {
 			}
 		}
 		// wait until they are loaded
+		i=0;
 		var interval = window.setInterval(function () {
 			var finishedLoading = false;
 			for (lang in doclanguages) {
@@ -789,6 +790,11 @@ var Hyphenator = function () {
 			}
 			if (finishedLoading) {
 				window.clearInterval(interval);
+				preparestate = 2;
+			}
+			if(i++ > 100) {
+				window.clearInterval(interval);
+				alert('Error');
 				preparestate = 2;
 			}
 		}, 100);
@@ -1231,7 +1237,7 @@ var Hyphenator = function () {
 				}
 			}
 			var inserted = 0;
-			for (i = Hyphenator.leftmin[lang]; i <= (hypos.length - Hyphenator.rightmin[lang]); i++) {
+			for (i = Hyphenator.leftmin[lang]; i <= (word.length - Hyphenator.rightmin[lang]); i++) {
 				if (!!(hypos[i] & 1)) {
 					s.splice(i + inserted + 1, 0, hyphen);
 					inserted++;
