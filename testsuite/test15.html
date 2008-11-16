@@ -26,7 +26,6 @@
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
                 Hyphenator.setHyphenChar('|');
-                Hyphenator.setUrlHyphenChar('|');
                 Hyphenator.run();
 
 				window.onload=function(){
@@ -36,9 +35,9 @@
 				function SpeedTests() {
 					var out=document.getElementById('output').firstChild;
 					var res,start,end;
-
+					var te=document.getElementById('testelement');
 					start=new Date().getTime();
-						Hyphenator.hyphenateElement(document.getElementById('testelement'),'de');
+						Hyphenator.hyphenateElement(te,'de');
 					end=new Date().getTime();
 					out.data="hyphenateElement(te,'de') :: "+(end-start)+"ms";
 				}
@@ -48,7 +47,7 @@
         <h1>Test 15</h1>
         <p>Measuring time to hyphenate an element. (If we're on Windows a resulting time of 0ms says that the script took less than 15ms to execute. See <a href="http://ejohn.org/blog/accuracy-of-javascript-time/">http://ejohn.org/blog/accuracy-of-javascript-time/</a> for more info on this issue.)</p>
 		<p><a href="test14.html">&lt;- Prev</a> | <a href="test16.html">Next -&gt;</a></p>
-        <pre>Hyphenator.setUrlHyphenChar('|');
+        <pre>
 Hyphenator.setHyphenChar('|');
 Hyphenator.run();</pre>
 
@@ -56,15 +55,43 @@ Hyphenator.run();</pre>
 
  		<p class="ref">hyphenateElement(te,'de') :: _ms</p>
  		
- 		<div id="testelement">
- 			<h2>This is a title</h2>
- 			<p>This is a paragraph cotaining some text and a <a href="#">http://example.com/a/very/long/pathname/to/a/file.html</a>.</p>
- 			<ul>
- 			<li>Silbentrennung</li>
- 			<li>Worttrennung</li>
- 			<li>...</li>
- 			</ul>
- 		</div>
+ 		<div id="testelement"><p>In recording from time to time some of the curious experiences and
+interesting recollections which I associate with my long and intimate
+friendship with Mr. Sherlock Holmes, I have continually been faced by
+difficulties caused by his own aversion to publicity.  To his sombre
+and cynical spirit all popular applause was always abhorrent, and
+nothing amused him more at the end of a successful case than to hand
+over the actual exposure to some orthodox official, and to listen with
+a mocking smile to the general chorus of misplaced congratulation.  It
+was indeed this attitude upon the part of my friend and certainly not
+any lack of interesting material which has caused me of late years to
+lay very few of my records before the public.  My participation in some
+if his adventures was always a privilege which entailed discretion and
+reticence upon me.</p>
+<p>It was, then, with considerable surprise that I received a telegram
+from Homes last Tuesday--he has never been known to write where a
+telegram would serve--in the following terms:</p>
+<p>Why not tell them of the Cornish horror--strangest case I have handled.</p>
+<p>I have no idea what backward sweep of memory had brought the matter
+fresh to his mind, or what freak had caused him to desire that I should
+recount it; but I hasten, before another cancelling telegram may
+arrive, to hunt out the notes which give me the exact details of the
+case and to lay the narrative before my readers.</p>
+<p>It was, then, in the spring of the year 1897 that Holmes's iron
+constitution showed some symptoms of giving way in the face of constant
+hard work of a most exacting kind, aggravated, perhaps, by occasional
+indiscretions of his own.  In March of that year Dr. Moore Agar, of
+Harley Street, whose dramatic introduction to Holmes I may some day
+recount, gave positive injunctions that the famous private agent lay
+aside all his cases and surrender himself to complete rest if he wished
+to avert an absolute breakdown.  The state of his health was not a
+matter in which he himself took the faintest interest, for his mental
+detachment was absolute, but he was induced at last, on the threat of
+being permanently disqualified from work, to give himself a complete
+change of scene and air.  Thus it was that in the early spring of that
+year we found ourselves together in a small cottage near Poldhu Bay, at
+the further extremity of the Cornish peninsula.</p>
+</div>
 
      </body>
 </html>
