@@ -78,7 +78,7 @@ var Hyphenator = function () {
 	 */	
 	var PROMPTERSTRINGS = {'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n' + LANGUAGEHINT,
 						 'en': 'The language of this website could not be determined automatically. Please indicate main language: \n\n' + LANGUAGEHINT,
-						 'fr': 'La langue de ce site n’a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue%A0: \n\n' + LANGUAGEHINT,
+						 'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue%A0: \n\n' + LANGUAGEHINT,
 						 'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n' + LANGUAGEHINT};
 	
 	/**
