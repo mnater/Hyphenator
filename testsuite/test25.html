@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+    <head>
+        <title>Hyphenator.js &ndash; Test 25</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            .text {
+                text-align:justify;
+            }
+            .test {
+            	background-color: #ffd6d6;
+            }
+            .ref {
+            	background-color: #d6ffd6;
+            }
+            pre {
+            	border: 1px dotted grey;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			Hyphenator.init({classname: 'hyph', minwordlength: 4, hyphenchar: '|'});
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <h1>Test 25</h1>
+        <p>Test the Hyphenator.init()-Method</p>
+		<p><a href="test24.html">&lt;- Prev</a> | <a href="test26.html">Next -&gt;</a></p>
+		<pre>Hyphenator.init({classname: 'hyph', minwordlength: 4, hyphenchar: '|'});
+Hyphenator.run();</pre>
+        <p class="hyph test" lang="en">letters</p>
+        <p class="ref">let|ters</p>
+        <p class="hyph test" lang="de">Affe</p>
+        <p class="ref">Af|fe</p>
+    </body>
+</html>
