@@ -877,6 +877,49 @@ var Hyphenator = function () {
          */		
 		patterns: {}, // patterns are stored in here, when they have finished loading
 		
+
+		/**
+		 * @name Hyphenator.init
+		 * @methodOf Hyphenator
+		 * @description
+		 * Init function that takes an onject as an argument. The object contains key-value-pairs
+		 * containig Hyphenator-settings. This is a shortcut for calling Hyphenator.set...-Methods.
+		 * @param object <table>
+		 * <tr><th>key</th><th>values</th><th>default</th></tr>
+		 * <tr><td>classname</td><td>string</td><td>'hyphenate'</td></tr>
+		 * <tr><td>minwordlength</td><td>integer</td><td>6</td></tr>
+		 * <tr><td>hyphenchar</td><td>string</td><td>'&amp;shy;'</td></tr>
+		 * <tr><td>togglebox</td><td>boolean</td><td>false</td></tr>
+		 * <tr><td>urlhyphenchar</td><td>string</td><td>'zero with space'</td></tr>
+		 * <tr><td>remoteloading</td><td>boolean</td><td>true</td></tr>
+		 * </table>
+		 * @public
+		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
+         * &lt;script type = "text/javascript"&gt;
+         *   Hyphenator.run();
+         * &lt;/script&gt;
+         */
+		init: function (obj) {
+			if(obj.classname) {
+				Hyphenator.setClassName(obj.classname);
+			}
+			if(obj.minwordlength) {
+				Hyphenator.setMinWordLength(obj.minwordlength);
+			}
+			if(obj.hyphenchar) {
+				Hyphenator.setHyphenChar(obj.hyphenchar);
+			}
+			if(obj.togglebox) {
+				Hyphenator.setDisplayToggleBox(obj.togglebox);
+			}
+			if(obj.urlhyphenchar) {
+				Hyphenator.setUrlHyphenChar(obj.urlhyphenchar);
+			}
+			if(obj.remoteloading) {
+				Hyphenator.setRemoteLoading(obj.remoteloading);
+			}
+		},
+
 		/**
 		 * @name Hyphenator.run
 		 * @methodOf Hyphenator
@@ -1185,7 +1228,7 @@ var Hyphenator = function () {
 				//word already contains shy; -> leave at it is!
 				return word;
 			}
-			if (exceptions[word]) { //the word is in the exceptions list
+			if (exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
 				return exceptions[word].replace(/-/g, hyphen);
 			}
 			if (word.indexOf('-') !== -1) {
@@ -1202,12 +1245,14 @@ var Hyphenator = function () {
 			var s = w.split('');
 			w = w.toLowerCase();
 			var hypos = [];
-			var p, maxwins, win, pat, patl, c, digits, z;
+			var p, maxwins, win, pat = false, patl, c, digits, z;
 			var numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
 			for (p = 0; p <= (wl - Hyphenator.shortestPattern[lang]); p++) {
 				maxwins = Math.min((wl - p), Hyphenator.longestPattern[lang]);
 				for (win = Hyphenator.shortestPattern[lang]; win <= maxwins; win++) {
-					if (!!(pat = Hyphenator.patterns[lang][w.substr(p, win)])) {
+					//a simple check if Hyphenator.patterns[lang][w.substr(p, win)] exists isn't enough: FF gets an error if we're looking for watch e.g. (gets function watch())
+					Hyphenator.patterns[lang].hasOwnProperty(w.substr(p, win)) ? pat = Hyphenator.patterns[lang][w.substr(p, win)] : pat = false;
+					if (!!pat) {
 						digits = 1;
 						patl = pat.length;
 						for (i = 0; i < patl; i++) {
