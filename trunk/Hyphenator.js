@@ -52,7 +52,7 @@ var Hyphenator = function () {
 	 * Check if language lang is supported:
 	 * if (SUPPORTEDLANG[lang])
 	 */
-	var SUPPORTEDLANG = {'de': true, 'en': true, 'fr': true, 'nl': true}; //delete languages that you won't use (for better performance)
+	var SUPPORTEDLANG = {'de': true, 'en': true, 'es': true, 'fr': true, 'nl': true}; //delete languages that you won't use (for better performance)
 
 	/**
 	 * @name Hyphenator-LANGUAGEHINT
@@ -64,7 +64,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tFran%E7ais: fr\tNederlands: nl';
+	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl';
 
 	/**
 	 * @name Hyphenator-PROMPTERSTRINGS
@@ -78,6 +78,7 @@ var Hyphenator = function () {
 	 */	
 	var PROMPTERSTRINGS = {'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n' + LANGUAGEHINT,
 						 'en': 'The language of this website could not be determined automatically. Please indicate main language: \n\n' + LANGUAGEHINT,
+                         'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal: \n\n'+LANGUAGEHINT,
 						 'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue%A0: \n\n' + LANGUAGEHINT,
 						 'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n' + LANGUAGEHINT};
 	
