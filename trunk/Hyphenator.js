@@ -450,8 +450,7 @@ var Hyphenator = function () {
 				elements[i].style.visibility = 'hidden';
 			}
 		} else {
-			body = document.getElementsByTagName('body')[0];
-			elements = body.getElementsByTagName('*');
+			elements = document.getElementsByTagName('*');
 			for (i = 0, l = elements.length; i < l; i++)
 			{
 				if (elements[i].className.indexOf(hyphenateclass) !== -1 && elements[i].className.indexOf('donthyphenate') === -1) {
@@ -575,7 +574,7 @@ var Hyphenator = function () {
 					Hyphenator.hyphenateElement(elements[i]);
 				}
 			} else {
-				elements = body.getElementsByTagName('*');
+				elements = document.getElementsByTagName('*');
 				for (i = 0, l = elements.length; i < l; i++)
 				{
 					if (elements[i].className.indexOf(hyphenateclass) !== -1) {
