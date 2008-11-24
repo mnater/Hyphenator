@@ -86,7 +86,7 @@ var Hyphenator = function () {
                          'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal: \n\n'+LANGUAGEHINT,
 						 'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue%A0: \n\n' + LANGUAGEHINT,
 						 'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n' + LANGUAGEHINT,
-						 'sv': 'Språket på den här webbplatsen kunde inte avgöras automatiskt. Vänligen ange: \n\n' + LANGUAGEHINT};
+						 'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange: \n\n' + LANGUAGEHINT};
 	
 	/**
 	 * @name Hyphenator-BASEPATH
