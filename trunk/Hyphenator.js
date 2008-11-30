@@ -1254,34 +1254,33 @@ var Hyphenator = function () {
 			var hypos = [];
 			var p, maxwins, win, pat = false, patl, c, digits, z;
 			var numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
-			for (p = 0; p <= (wl - Hyphenator.shortestPattern[lang]); p++) {
+			var n = wl - Hyphenator.shortestPattern[lang];
+			for (p = 0; p <= n; p++) {
 				maxwins = Math.min((wl - p), Hyphenator.longestPattern[lang]);
 				for (win = Hyphenator.shortestPattern[lang]; win <= maxwins; win++) {
 					//a simple check if Hyphenator.patterns[lang][w.substr(p, win)] exists isn't enough: FF gets an error if we're looking for watch e.g. (gets function watch())
 					if (Hyphenator.patterns[lang].hasOwnProperty(w.substr(p, win))) {
 						pat = Hyphenator.patterns[lang][w.substr(p, win)];
 					} else {
-						pat = false;
+						continue;
 					}
-					if (!!pat) {
-						digits = 1;
-						patl = pat.length;
-						for (i = 0; i < patl; i++) {
-							c = pat.charAt(i);
-							if (numb3rs[c]) {
-								if (i === 0) {
-									z = p - 1;
-									if (!hypos[z] || hypos[z] < c) {
-										hypos[z] = c;
-									}
-								} else {
-									z = p + i - digits;
-									if (!hypos[z] || hypos[z] < c) {
-										hypos[z] = c;
-									}
+					digits = 1;
+					patl = pat.length;
+					for (i = 0; i < patl; i++) {
+						c = pat.charAt(i);
+						if (numb3rs[c]) {
+							if (i === 0) {
+								z = p - 1;
+								if (!hypos[z] || hypos[z] < c) {
+									hypos[z] = c;
 								}
-								digits++;								
+							} else {
+								z = p + i - digits;
+								if (!hypos[z] || hypos[z] < c) {
+									hypos[z] = c;
+								}
 							}
+							digits++;								
 						}
 					}
 				}
