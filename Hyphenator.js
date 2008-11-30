@@ -4,19 +4,20 @@
 // You are free to share and to remix this work under the 
 // following conditions: Attribution and Share-Alike
 // See http://creativecommons.org/licenses/by-sa/2.5/ch/deed.en
-// Thus you are free to use it  commercial purposes.
+// Thus you are free to use it for commercial purposes.
 //
 // Dieses Script steht unter der Creative Commons-Lizenz
 // Attribution-Share Alike 2.5 Switzerland
-// Sie dürfen das Werk vervielfältigen, verbreiten und öffentlich zugänglich machen,
+// Sie dürfen das Werk vervielfältigen, verbreiten und
+// öffentlich zugänglich machen,
 // sowie Bearbeitungen des Werkes anfertigen
 // Zu den folgenden Bedingungen:
 // Namensnennung und Weitergabe unter gleichen Bedingungen.
 // Siehe http://creativecommons.org/licenses/by-sa/2.5/ch/
-// Somit sind sie frei, das Script für kommerzielle Zwecke zu nutzen
+// Somit sind Sie frei, das Script für kommerzielle Zwecke zu nutzen.
 //
 // Mathias Nater, Zürich, 2008
-// mnater at mac dot com
+// mathias at mnn dot ch
 //
 // Comments are jsdoctoolkit formatted. See jsdoctoolkit.org
 /**************** Preamble ****************/
@@ -767,7 +768,7 @@ var Hyphenator = function () {
 		var lang = null;
 		var i, l;
 		for (i = 0, l = elements.length; i < l; i++) {
-			if (!!(lang = getLang(elements[i]), true)) {
+			if (!!(lang = getLang(elements[i], true))) {
 				if (SUPPORTEDLANG[lang]) {
 					doclanguages[lang] = true;
 				} else {
@@ -1257,7 +1258,11 @@ var Hyphenator = function () {
 				maxwins = Math.min((wl - p), Hyphenator.longestPattern[lang]);
 				for (win = Hyphenator.shortestPattern[lang]; win <= maxwins; win++) {
 					//a simple check if Hyphenator.patterns[lang][w.substr(p, win)] exists isn't enough: FF gets an error if we're looking for watch e.g. (gets function watch())
-					Hyphenator.patterns[lang].hasOwnProperty(w.substr(p, win)) ? pat = Hyphenator.patterns[lang][w.substr(p, win)] : pat = false;
+					if (Hyphenator.patterns[lang].hasOwnProperty(w.substr(p, win))) {
+						pat = Hyphenator.patterns[lang][w.substr(p, win)];
+					} else {
+						pat = false;
+					}
 					if (!!pat) {
 						digits = 1;
 						patl = pat.length;
