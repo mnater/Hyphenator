@@ -578,16 +578,16 @@ var Hyphenator = function () {
 				elements = document.getElementsByClassName(hyphenateclass);
 				for (i = 0, l = elements.length; i < l; i++)
 				{
-					//Hyphenator.hyphenateElement(elements[i]);
-					window.setTimeout(Hyphenator.hyphenateElement, 1, elements[i]);
+					Hyphenator.hyphenateElement(elements[i]);
+					//window.setTimeout(Hyphenator.hyphenateElement, 1, elements[i]);
 				}
 			} else {
 				elements = document.getElementsByTagName('*');
 				for (i = 0, l = elements.length; i < l; i++)
 				{
 					if (elements[i].className.indexOf(hyphenateclass) !== -1) {
-						//Hyphenator.hyphenateElement(elements[i]);
-						window.setTimeout(Hyphenator.hyphenateElement, 1, elements[i]);
+						Hyphenator.hyphenateElement(elements[i]);
+						//window.setTimeout(Hyphenator.hyphenateElement, 1, elements[i]);
 					}
 				}
 			}
