@@ -762,7 +762,11 @@ var Hyphenator = function () {
 	 * @private
 	 */
 	function prepare () {
-	// get all languages that are used and preload the patterns
+		if (!enableRemoteLoading) {
+			preparestate = 2;
+			return;
+		}
+		// get all languages that are used and preload the patterns
 		preparestate = 1;
 		var doclanguages = {};
 		doclanguages[mainlanguage] = true;
@@ -778,11 +782,9 @@ var Hyphenator = function () {
 				}
 			}
 		}
-		if (enableRemoteLoading) {
-			for (lang in doclanguages) {
-				if (doclanguages.hasOwnProperty(lang)) {
-					loadPatterns(lang);
-				}
+		for (lang in doclanguages) {
+			if (doclanguages.hasOwnProperty(lang)) {
+				loadPatterns(lang);
 			}
 		}
 		// wait until they are loaded
