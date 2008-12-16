@@ -660,7 +660,10 @@ var Hyphenator = function () {
 	 * @private
  	 */		
 	function runOnContentLoaded(w, f) {
-	
+		if (Prototype) {
+			w.document.observe("dom:loaded", f);
+			return;
+		}
 		var	d = w.document,
 			D = 'DOMContentLoaded',
 			// user agent, version
