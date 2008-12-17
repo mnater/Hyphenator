@@ -22,7 +22,7 @@ Next steps you will have to do:
   # send-in changings and patterns if you feel like (I'll take you as a supporter for this language, you'll get full attribution)
 
 == Converting the patterns ==
-  * LaTeX patterns are coming in this form: `.ab3s2`. To see the difference I use underline instead of point. A simple search&amp;replace will do the trick: `_ab3s2`
+  * LaTeX patterns are coming in this form: `.ab3s2`. To see the difference I use underline instead of point. A simple search&replace will do the trick: `_ab3s2`
   * All pattern files should be encoded with *UTF-8 (with BOM)*.
   * Copy an other pattern file and replace the patterns.
   * Adjust the other variables as following:
