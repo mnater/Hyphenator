@@ -58,6 +58,15 @@ var Hyphenator = function () {
 						'es': true,
 						'fr': true,
 						'nl': true,
+						'ml': true,
+						'hi': true,
+						'bn': true,
+						'gu': true,
+						'ta': true,
+						'ka': true,
+						'te': true,
+						'or': true,
+						'pa': true,
 						'sv': true}; //delete languages that you won't use (for better performance)
 
 	/**
@@ -70,7 +79,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl\tSvenska: sv';
+	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl\tSvenska: sv\tMalayalam: ml\tHindi: hi\tBengali: bn\tGujarati : gu\tTamil: ta\tOriya: or\tPanjabi: pa\tTelugu: te\tKannada: kn';
 
 	/**
 	 * @name Hyphenator-PROMPTERSTRINGS
@@ -87,7 +96,8 @@ var Hyphenator = function () {
                          'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal: \n\n'+LANGUAGEHINT,
 						 'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue%A0: \n\n' + LANGUAGEHINT,
 						 'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n' + LANGUAGEHINT,
-						 'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange: \n\n' + LANGUAGEHINT};
+						 'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange: \n\n' + LANGUAGEHINT,
+						 'ml': 'ഈ വെബ്‌സൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാന്‍ കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക: \n\n' + LANGUAGEHINT};
 	
 	/**
 	 * @name Hyphenator-BASEPATH
