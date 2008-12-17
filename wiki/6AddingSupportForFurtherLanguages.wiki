@@ -2,11 +2,13 @@
 
 = What we have now =
 
-Currently, there's only support for
+Currently, there's support for
   * english
   * german
   * french
   * dutch
+  * swedish
+  * spanish
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
