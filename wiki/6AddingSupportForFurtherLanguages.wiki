@@ -6,9 +6,10 @@ Currently, there's support for
   * english
   * german
   * french
-  * dutch
-  * swedish
-  * spanish
+  * dutch (thanks to Remco Bloemen)
+  * swedish (thanks to Andreas Johansson)
+  * spanish (thanks to Luis Pabón)
+  * Malayalam, Tamil, Hindi, Oriya, Kannda, Telugu, Bengali, Gujarati and Panjabi (thanks to Santhosh Thottingal)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
