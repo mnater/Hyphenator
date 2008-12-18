@@ -1,6 +1,6 @@
 #summary How to add support for further languages
 
-= What we have now =
+= What do we have now =
 
 Currently, there's support for
   * english
