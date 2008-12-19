@@ -459,7 +459,7 @@ var Hyphenator = function () {
 	 * @private
 	 */		
 	function hideInside() {
-		var elements, body, i, l;
+		var elements, i, l;
 		if (document.getElementsByClassName) {
 			elements = document.getElementsByClassName(hyphenateclass);
 			for (i = 0, l = elements.length; i < l; i++)
@@ -670,26 +670,23 @@ var Hyphenator = function () {
 	 * @private
  	 */		
 	function runOnContentLoaded(w, f) {
-		if (window.Prototype) {
-			w.document.observe("dom:loaded", f);
-			return;
-		}
 		var	d = w.document,
 			D = 'DOMContentLoaded',
 			// user agent, version
 			u = w.navigator.userAgent.toLowerCase(),
-			v = parseFloat(u.match(/.+(?:rv|it|ml|ra|ie)[\/: ]([\d.]+)/)[1]);
+			v = parseFloat(u.match(/.+(?:rv|it|ml|ra|ie)[\/: ]([\d.]+)/)[1]),
+			documentloaded = false;
 				
 		function init(e) {
-			if (!document.loaded) {
-				document.loaded = true;
+			if (!documentloaded) {
+				documentloaded = true;
 				// pass a fake event if needed
 				f((e.type && e.type === D) ? e : {
 					type: D,
 					target: d,
 					eventPhase: 0,
 					currentTarget: d,
-					timeStamp: +new Date,
+					timeStamp: new Date().getTime(),
 					eventType: e.type || e
 				});
 			}
