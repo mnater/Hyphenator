@@ -1164,7 +1164,7 @@ var Hyphenator = function () {
 				return;
 			}
 			if (!lang) {
-				lang = getLang(el);
+				lang = getLang(el, true);
 			} else {
 				var elemlang = getLang(el, true);
 				if (elemlang !== null) {
