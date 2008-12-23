@@ -574,11 +574,18 @@ var Hyphenator = function () {
 	 * @methodOf Hyphenator
 	 * @description
 	 * Walks trough the DOM gathering elements and calls {@link Hyphenator.hyphenateElement}.
+	 * This is done through a setTimeout to prevent a Slow-Script-Warning when hyphenating vey big files.
 	 * If the client supports <code>document.getElementsByClassName</code> this is used to find
 	 * the elements with class = "hyphenate". If not we have to run through the whole tree.
 	 * @private
 	 */		
 	function runHyphenation() {
+		function bind(obj, fun, args) {
+			return function() {
+				var f = obj[fun];
+				return f.call(obj, args);
+			};
+		}
 		var body = document.getElementsByTagName('body')[0];
 		var i, elements, l;
 		if (Hyphenator.isBookmarklet()) {
@@ -588,22 +595,20 @@ var Hyphenator = function () {
 				elements = document.getElementsByClassName(hyphenateclass);
 				for (i = 0, l = elements.length; i < l; i++)
 				{
-					Hyphenator.hyphenateElement(elements[i]);
-					//window.setTimeout(Hyphenator.hyphenateElement, 1, elements[i]);
+					window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
 				}
 			} else {
 				elements = document.getElementsByTagName('*');
 				for (i = 0, l = elements.length; i < l; i++)
 				{
 					if (elements[i].className.indexOf(hyphenateclass) !== -1) {
-						Hyphenator.hyphenateElement(elements[i]);
-						//window.setTimeout(Hyphenator.hyphenateElement, 1, elements[i]);
+						window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * @name Hyphenator-removeHyphenation
 	 * @methodOf Hyphenator
@@ -771,9 +776,10 @@ var Hyphenator = function () {
 	 * Currently there's no message if the patterns aren't found/loaded.
 	 * @private
 	 */
-	function prepare () {
+	function prepare (callback) {
 		if (!enableRemoteLoading) {
 			preparestate = 2;
+			callback();
 			return;
 		}
 		// get all languages that are used and preload the patterns
@@ -811,6 +817,7 @@ var Hyphenator = function () {
 			if (finishedLoading) {
 				window.clearInterval(interval);
 				preparestate = 2;
+				callback();
 			}
 		}, 100);
 	}
@@ -1134,17 +1141,14 @@ var Hyphenator = function () {
 		 * @public
          */
 		hyphenateDocument: function () {
+			function callback() {
+				convertPatternsToObject();
+				runHyphenation();
+			}
 			if (preparestate !== 2) {
 				if (preparestate === 0) {
-					prepare();               // load all language patterns that are used
+					prepare(callback);               // load all language patterns that are used
 				}
-				var interval = window.setInterval(function () {
-					if (preparestate === 2) {
-						window.clearInterval(interval);
-						convertPatternsToObject();
-						runHyphenation();
-					}
-				}, 10);
 			}
 		},
 
