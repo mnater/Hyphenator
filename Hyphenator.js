@@ -148,6 +148,41 @@ var Hyphenator = function () {
 	var exceptions = {};
 	
 	/**
+	 * @name Hyphenator-enableCache
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A variable to set if caching is enabled or not
+	 * @type boolean
+	 * @default true
+	 * @private
+	 * @see Hyphenator.setEnableCache
+	 * @see Hyphenator.hyphenateWord
+	 */
+	var enableCache = true;
+
+	/**
+	 * @name Hyphenator-cache
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A key-value object containing already hyphenated words
+	 * @type object
+	 * @private
+	 * @see Hyphenator.hyphenateWord
+	 */
+	var cache = function () {
+		if (!enableCache) {
+			return undefined;
+		}
+		var r = {}, l;
+		for (l in SUPPORTEDLANG) {
+			if (SUPPORTEDLANG.hasOwnProperty(l)) {
+				r[l] = {};
+			}
+		}
+		return r;
+	}();
+	
+	/**
 	 * @name Hyphenator-enableRemoteLoading
 	 * @fieldOf Hyphenator
 	 * @description
@@ -1110,6 +1145,25 @@ var Hyphenator = function () {
 		},
 
 		/**
+		 * @name Hyphenator.setEnableCache
+		 * @methodOf Hyphenator
+		 * @description
+		 * Sets {@link Hyphenator-enableCache}.
+		 * If cache is enabled, hyphenated words are stored in a cache for later reuse.
+		 * This is good for longer texts.
+		 * @param boolean True enables cache
+		 * @public
+		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
+         * &lt;script type = "text/javascript"&gt;
+         *   Hyphenator.setEnableCache(true);
+         *   Hyphenator.run();
+         * &lt;/script&gt;
+         */
+		setEnableCache: function (bool) {
+			enableCache = bool;
+		},
+
+		/**
 		 * @name Hyphenator.updatePatternsLoadState
 		 * @methodOf Hyphenator
 		 * @description
@@ -1153,7 +1207,7 @@ var Hyphenator = function () {
 				}
 			}
 		},
-
+		
 		/**
 		 * @name Hyphenator.hyphenateElement
 		 * @methodOf Hyphenator
@@ -1197,7 +1251,7 @@ var Hyphenator = function () {
             if (el.className.indexOf(hyphenateclass) !== -1) {
 	            el.style.visibility = 'visible';
 	        }
-        },
+       },
 
 		/**
 		 * @name Hyphenator.deleteHyphenationInElement
@@ -1258,6 +1312,9 @@ var Hyphenator = function () {
 			if (exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
 				return exceptions[word].replace(/-/g, hyphen);
 			}
+			if (enableCache && cache.hasOwnProperty(lang) && cache[lang].hasOwnProperty(word)) { //the word is in the cache
+				return cache[lang][word];
+			}
 			if (word.indexOf('-') !== -1) {
 				//word contains '-' -> put a zerowidthspace after it and hyphenate the parts separated with '-'
 				var parts = word.split('-');
@@ -1312,7 +1369,11 @@ var Hyphenator = function () {
 					inserted++;
 				}
 			}
-			return s.slice(1, -1).join('');
+			var hyphenatedword = s.slice(1, -1).join('');
+			if(enableCache) {
+				cache[lang][word] = hyphenatedword;
+			}
+			return hyphenatedword;
 		},
 
 		/**
