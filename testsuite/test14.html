@@ -26,6 +26,7 @@
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
                 Hyphenator.setHyphenChar('|');
+                Hyphenator.setEnableCache(false);
                 Hyphenator.run();
 
 				window.onload=function(){
@@ -51,6 +52,7 @@
         <p>Measuring time to hyphenate a word.</p>
 		<p><a href="test13.html">&lt;- Prev</a> | <a href="test15.html">Next -&gt;</a></p>
         <pre>Hyphenator.setUrlHyphenChar('|');
+Hyphenator.setEnableCache(false);
 Hyphenator.run();</pre>
 
 		<p id="output" class="test">Wait 3 seconds...</p>
