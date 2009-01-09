@@ -534,9 +534,12 @@ var Hyphenator = function () {
 			myBox = document.createElement('div');
 			myIdAttribute = document.createAttribute('id');
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
+			myClassAttribute = document.createAttribute('class');
+			myClassAttribute.nodeValue = 'donthyphenate';
 			myTextNode = document.createTextNode('Hy-phe-na-ti-on');
 			myBox.appendChild(myTextNode);
 			myBox.setAttributeNode(myIdAttribute);
+			myBox.setAttributeNode(myClassAttribute);
 			myBox.onclick = Hyphenator.toggleHyphenation;
 			myBox.style.position = 'absolute';
 			myBox.style.top = '0px';
@@ -668,7 +671,7 @@ var Hyphenator = function () {
 					Hyphenator.deleteHyphenationInElement(elements[i]);
 				}
 			} else {
-				elements = body.getElementsByTagName('*');
+				elements = document.getElementsByTagName('*');
 				for (i = 0, l = elements.length; i < l; i++)
 				{
 					if (elements[i].className.indexOf(hyphenateclass) !== -1) {
@@ -1103,7 +1106,10 @@ var Hyphenator = function () {
          * @default true
          */
 		setDisplayToggleBox: function (bool) {
-            displayToggleBox = bool || true;
+			if (bool===undefined) {
+				var bool = true;
+			}
+            displayToggleBox = bool;
 		},
 
 		/**
