@@ -571,17 +571,40 @@ var Hyphenator = function () {
 	 * @param string The language to load the patterns for
 	 * @private
 	 * @see Hyphenator-BASEPATH
-	 */		
+	 */
 	function loadPatterns(lang) {
 		if (SUPPORTEDLANG[lang] && !patternsloaded[lang]) {
 	        var url = BASEPATH + 'patterns/' + lang + '.js';
 		} else {
 			return;
 		}
+		//check if 'url' is available
+		/*var xhr = new XMLHttpRequest();
+		if (!xhr) {
+		    try {
+        		xmlHttp  = new ActiveXObject("Msxml2.XMLHTTP");
+    		} catch(e) {
+        		try {
+          			xmlHttp  = new ActiveXObject("Microsoft.XMLHTTP");
+       			} catch(e) {
+           			 xmlHttp  = null;
+        		}
+    		}
+		}
+		if (xhr) {
+			xhr.open('HEAD', url, false);
+			xhr.send(null);
+			if(xhr.status == 404) {
+				alert('Hyphenator.js Error:\nCould not load\n'+url);
+				patternsloaded[lang] = true;
+				return;
+			}
+		}*/
 		if (document.createElement) {
 			var head = document.getElementsByTagName('head').item(0);
 			var script = document.createElement('script');
 			script.src = url;
+			script.id = lang;
 			script.type = 'text/javascript';
 			head.appendChild(script);
 		}
