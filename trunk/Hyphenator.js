@@ -16,7 +16,7 @@
 // Siehe http://creativecommons.org/licenses/by-sa/2.5/ch/
 // Somit sind Sie frei, das Script für kommerzielle Zwecke zu nutzen.
 //
-// Mathias Nater, Zürich, 2008
+// Mathias Nater, Zürich, 2009
 // mathias at mnn dot ch
 //
 // Comments are jsdoctoolkit formatted. See jsdoctoolkit.org
@@ -26,7 +26,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version Beta9
+ * @version Beta11
  */
 
 /**
