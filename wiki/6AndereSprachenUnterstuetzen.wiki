@@ -14,7 +14,7 @@ Momentan werden folgende Sprachen unterstützt:
   * Italienisch
 
 
-Hyphenator ist aber so programmiert, dass es relativ einfach ist, dir Unterstützung für weitere Sprachen hinzuzufügen.
+Hyphenator ist aber so programmiert, dass es relativ einfach ist, die Unterstützung weiterer Sprachen hinzuzufügen.
 
 = Was Sie tun können =
 
