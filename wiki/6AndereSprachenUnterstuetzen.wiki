@@ -8,6 +8,11 @@ Momentan werden folgende Sprachen unterstützt:
   * Deutsch
   * Französisch
   * Niederländisch
+  * Schwedisch
+  * Spanisch
+  * Malayalam, Tamil, Hindi, Oriya, Kannda, Telugu, Bengali, Gujarati und Panjabi
+  * Italienisch
+
 
 Hyphenator ist aber so programmiert, dass es relativ einfach ist, dir Unterstützung für weitere Sprachen hinzuzufügen.
 
