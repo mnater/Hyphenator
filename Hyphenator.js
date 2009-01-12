@@ -26,7 +26,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version Beta11
+ * @version Beta12
  */
 
 /**
@@ -68,7 +68,7 @@ var Hyphenator = function () {
 						'or': true,
 						'pa': true,
 						'sv': true,
-						'it': true}; //delete languages that you won't use (for better performance)
+						'it': true}; //you may delete languages that you won't use (for better performance)
 
 	/**
 	 * @name Hyphenator-LANGUAGEHINT
@@ -80,7 +80,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl\tSvenska: sv\tMalayalam: ml\tHindi: hi\tBengali: bn\tGujarati : gu\tTamil: ta\tOriya: or\tPanjabi: pa\tTelugu: te\tKannada: kn';
+	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl\tSvenska: sv\tMalayalam: ml\tHindi: hi\tBengali: bn\tGujarati : gu\tTamil: ta\tOriya: or\tPanjabi: pa\tTelugu: te\tKannada: kn\tItaliano: it';
 
 	/**
 	 * @name Hyphenator-PROMPTERSTRINGS
@@ -164,7 +164,7 @@ var Hyphenator = function () {
 	 * @name Hyphenator-cache
 	 * @fieldOf Hyphenator
 	 * @description
-	 * A key-value object containing already hyphenated words
+	 * A key-value object containing key-value objects of already hyphenated words for each language
 	 * @type object
 	 * @private
 	 * @see Hyphenator.hyphenateWord
@@ -578,7 +578,9 @@ var Hyphenator = function () {
 		} else {
 			return;
 		}
-		//check if 'url' is available
+		//check if 'url' is available:
+		//Still commented out, because it's not yet fully tested!
+		//TBD: Where to catch errors?
 		/*var xhr = null;
 		if (typeof XMLHttpRequest != 'undefined') {
 			xhr = new XMLHttpRequest();
@@ -636,7 +638,7 @@ var Hyphenator = function () {
 	 * @methodOf Hyphenator
 	 * @description
 	 * Walks trough the DOM gathering elements and calls {@link Hyphenator.hyphenateElement}.
-	 * This is done through a setTimeout to prevent a Slow-Script-Warning when hyphenating vey big files.
+	 * This is done through a setTimeout to prevent a Slow-Script-Warning when hyphenating very big files.
 	 * If the client supports <code>document.getElementsByClassName</code> this is used to find
 	 * the elements with class = "hyphenate". If not we have to run through the whole tree.
 	 * @private
@@ -733,7 +735,7 @@ var Hyphenator = function () {
 	 * @author Diego Perini (diego.perini at gmail.com)
 	 * <a href = "http://javascript.nwbox.com/ContentLoaded/">http://javascript.nwbox.com/ContentLoaded/</a>
 	 * @param object the window-object
-	 * @param function-object the function to call DOMContentLoaded
+	 * @param function-object the function to call onDOMContentLoaded
 	 * @private
  	 */		
 	function runOnContentLoaded(w, f) {
@@ -834,8 +836,9 @@ var Hyphenator = function () {
 	 * in the document. Then it loads the patterns calling {@link Hyphenator-loadPatterns}.
 	 * Finally it 'waits' until all patterns are loaded by repeatedly calling {@link Hyphenator-patternsloaded}
 	 * for all languages.
-	 * When all patterns are loaded the function sets {@link Hyphenator-preparestate} to 2 and returns.
+	 * When all patterns are loaded the function sets {@link Hyphenator-preparestate} to 2 and calls the callback.
 	 * Currently there's no message if the patterns aren't found/loaded.
+	 * @param function-object callback to call, when all patterns are loaded
 	 * @private
 	 */
 	function prepare (callback) {
@@ -1363,7 +1366,7 @@ var Hyphenator = function () {
 			for (p = 0; p <= n; p++) {
 				maxwins = Math.min((wl - p), Hyphenator.longestPattern[lang]);
 				for (win = Hyphenator.shortestPattern[lang]; win <= maxwins; win++) {
-					//a simple check if Hyphenator.patterns[lang][w.substr(p, win)] exists isn't enough: FF gets an error if we're looking for watch e.g. (gets function watch())
+					//a simple check if Hyphenator.patterns[lang][w.substr(p, win)] exists isn't enough: FF gets an error if we're looking for 'watch' e.g. (gets function watch())
 					if (Hyphenator.patterns[lang].hasOwnProperty(w.substr(p, win))) {
 						pat = Hyphenator.patterns[lang][w.substr(p, win)];
 					} else {
