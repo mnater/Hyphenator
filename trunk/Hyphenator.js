@@ -579,16 +579,15 @@ var Hyphenator = function () {
 			return;
 		}
 		//check if 'url' is available
-		/*var xhr = new XMLHttpRequest();
+		/*var xhr = null;
+		if (typeof XMLHttpRequest != 'undefined') {
+			xhr = new XMLHttpRequest();
+		}
 		if (!xhr) {
 		    try {
-        		xmlHttp  = new ActiveXObject("Msxml2.XMLHTTP");
+        		xhr  = new ActiveXObject("Msxml2.XMLHTTP");
     		} catch(e) {
-        		try {
-          			xmlHttp  = new ActiveXObject("Microsoft.XMLHTTP");
-       			} catch(e) {
-           			 xmlHttp  = null;
-        		}
+				xhr  = null;
     		}
 		}
 		if (xhr) {
