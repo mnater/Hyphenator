@@ -26,7 +26,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version Beta12
+ * @version BetaXX
  */
 
 /**
@@ -136,18 +136,6 @@ var Hyphenator = function () {
 	var DONTHYPHENATE = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true};
 
 	/**
-	 * @name Hyphenator-exceptions
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A key-value object containing manually added exceptions
-	 * @type object
-	 * @private
-	 * @see Hyphenator.addExceptions
-	 * @see Hyphenator.hyphenateWord
-	 */
-	var exceptions = {};
-	
-	/**
 	 * @name Hyphenator-enableCache
 	 * @fieldOf Hyphenator
 	 * @description
@@ -159,28 +147,6 @@ var Hyphenator = function () {
 	 * @see Hyphenator.hyphenateWord
 	 */
 	var enableCache = true;
-
-	/**
-	 * @name Hyphenator-cache
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A key-value object containing key-value objects of already hyphenated words for each language
-	 * @type object
-	 * @private
-	 * @see Hyphenator.hyphenateWord
-	 */
-	var cache = function () {
-		if (!enableCache) {
-			return undefined;
-		}
-		var r = {}, l;
-		for (l in SUPPORTEDLANG) {
-			if (SUPPORTEDLANG.hasOwnProperty(l)) {
-				r[l] = {};
-			}
-		}
-		return r;
-	}();
 	
 	/**
 	 * @name Hyphenator-enableRemoteLoading
@@ -267,17 +233,6 @@ var Hyphenator = function () {
 	 * @private
 	 */	
 	var bookmarklet = false;
-
-	/**
-	 * @name Hyphenator-patternsloaded
-	 * @fieldOf Hyphenator
-	 * @description
-	 * An object of key-value pairs, where key is the language and value a boolean.
-	 * Members are set by the external pattern files to indicate that they finished loading.
-	 * @type object
-	 * @private
-	 */	
-	var patternsloaded = {}; // this is set when the patterns are loaded
 
 	/**
 	 * @name Hyphenator-preparestate
@@ -573,7 +528,7 @@ var Hyphenator = function () {
 	 * @see Hyphenator-BASEPATH
 	 */
 	function loadPatterns(lang) {
-		if (SUPPORTEDLANG[lang] && !patternsloaded[lang]) {
+		if (SUPPORTEDLANG[lang] && !Hyphenator.languages[lang]) {
 	        var url = BASEPATH + 'patterns/' + lang + '.js';
 		} else {
 			return;
@@ -597,7 +552,6 @@ var Hyphenator = function () {
 			xhr.send(null);
 			if(xhr.status == 404) {
 				alert('Hyphenator.js Error:\nCould not load\n'+url);
-				patternsloaded[lang] = true;
 				return;
 			}
 		}*/
@@ -620,17 +574,42 @@ var Hyphenator = function () {
 	 * @private
 	 */		
 	function convertPatternsToObject() {
-		for (var lang in Hyphenator.patterns) {
-			if (Hyphenator.patterns.hasOwnProperty(lang)) {
-				var sa = Hyphenator.patterns[lang].split(' ');
-				Hyphenator.patterns[lang] = {};
+		for (var lang in Hyphenator.languages) {
+			if (Hyphenator.languages.hasOwnProperty(lang)) {
+				var sa = Hyphenator.languages[lang].patterns.split(' ');
+				Hyphenator.languages[lang].patterns = {};
 				var pat, key, i = 0;
 				while (!!(pat = sa[i++])) {
 					key = pat.replace(/\d/g, '');
-					Hyphenator.patterns[lang][key] = pat;
+					Hyphenator.languages[lang].patterns[key] = pat;
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @name Hyphenator-prepareLanguagesObj
+	 * @methodOf Hyphenator
+	 * @description
+	 * Adds a cache to each language and converts the exceptions-list to an object.
+	 * @private
+	 */		
+	function prepareLanguagesObj() {
+		for (var lang in Hyphenator.languages) {
+			if (Hyphenator.languages.hasOwnProperty(lang)) {
+				if (enableCache) {
+					Hyphenator.languages[lang].cache = {};
+				}
+				if (Hyphenator.languages[lang].hasOwnProperty('exceptions')) {
+					var tmp = Hyphenator.languages[lang].exceptions;
+					Hyphenator.languages[lang].exceptions = {};
+					Hyphenator.addExceptions(lang, tmp);
+				} else {
+					Hyphenator.languages[lang].exceptions = {};
+				}
+			}
+		}
+		
 	}
 
 	/**
@@ -834,7 +813,7 @@ var Hyphenator = function () {
 	 * @description
 	 * This funtion prepares the Hyphenator-Object. First, it looks for languages that are used
 	 * in the document. Then it loads the patterns calling {@link Hyphenator-loadPatterns}.
-	 * Finally it 'waits' until all patterns are loaded by repeatedly calling {@link Hyphenator-patternsloaded}
+	 * Finally it 'waits' until all patterns are loaded by repeatedly checking languages
 	 * for all languages.
 	 * When all patterns are loaded the function sets {@link Hyphenator-preparestate} to 2 and calls the callback.
 	 * Currently there's no message if the patterns aren't found/loaded.
@@ -872,7 +851,7 @@ var Hyphenator = function () {
 		var interval = window.setInterval(function () {
 			var finishedLoading = false;
 			for (lang in doclanguages) {
-				if (!patternsloaded[lang]) {
+				if (!Hyphenator.languages[lang]) {
 					finishedLoading = false;
 					break;
 				} else {
@@ -896,11 +875,6 @@ var Hyphenator = function () {
 	 * @private
 	 */		
 	function autoinit() {
-		for (var lang in SUPPORTEDLANG) {
-			if (SUPPORTEDLANG.hasOwnProperty(lang)) {
-				patternsloaded[lang] = false;
-			}
-		}
 		autoSetMainLanguage();
 		urlhyphen = createZeroWidthSpace();
 		checkIfBookmarklet();
@@ -915,60 +889,7 @@ var Hyphenator = function () {
 		 * This is set by the patternfile.
 		 * @public
          */		
-	    leftmin: {},  // How many chars can be on the old line at minimum. This is set by the patternfile
-
-		/**
-		 * @name Hyphenator.rightmin
-		 * @memberOf Hyphenator
-		 * @description
-		 * Objects that holds a key-value pairs, where key is the language and value the number of chars that can be at minimum on the new line
-		 * This is set by the patternfile.
-		 * @public
-         */		
-        rightmin: {}, // How many chars can be on the new line at minimum. This is set by the patternfile
-
-		/**
-		 * @name Hyphenator.shortestPattern
-		 * @memberOf Hyphenator
-		 * @description
-		 * Objects that holds a key-value pairs, where key is the language and value the number of chars in the shortest pattern.
-		 * This is usefull because whe don't have to search for shorter patterns.
-		 * This is set by the patternfile.
-		 * @public
-         */		
-        shortestPattern: {}, // this is set by the patternfile
-
-		/**
-		 * @name Hyphenator.longestPattern
-		 * @memberOf Hyphenator
-		 * @description
-		 * Objects that holds a key-value pairs, where key is the language and value the number of chars in the longest pattern.
-		 * This is usefull because whe don't have to search for longer patterns.
-		 * This is set by the patternfile.
-		 * @public
-         */		
-        longestPattern: {}, // this is set by the patternfile
-
-		/**
-		 * @name Hyphenator.specialChars
-		 * @memberOf Hyphenator
-		 * @description
-		 * Objects that holds a key-value pairs, where key is the language and value a string of language specific special chars
-		 * such as éàâç etc.
-		 * This is set by the patternfile.
-		 * @public
-         */		
-        specialChars: {}, // Language specific chars such as éàâç etc. This is set by the patternfile
-
-		/**
-		 * @name Hyphenator.patterns
-		 * @memberOf Hyphenator
-		 * @description
-		 * Objects that holds a key-value pairs, where key is the language and value a patterns-object
-		 * created by {@link Hyphenator-convertPatternsToObject}.
-		 * @public
-         */		
-		patterns: {}, // patterns are stored in here, when they have finished loading
+		languages: {}, // patterns are stored in here, when they have finished loading
 		
 
 		/**
@@ -1035,24 +956,26 @@ var Hyphenator = function () {
 		},
 		
 		/**
-		 * @name Hyphenator.addExceptions
+		 * @name Hyphenator.adds
 		 * @methodOf Hyphenator
 		 * @description
-		 * Adds the exceptions from the string to the {@link Hyphenator-exceptions}-object
+		 * Adds the exceptions from the string to the appropriate language in the 
+		 * {@link Hyphenator-languages}-object
+		 * @param string The language
 		 * @param string A comma separated string of hyphenated words WITHOUT spaces.
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
          * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.addExceptions('ziem-lich,Wach-stube');
+         *   Hyphenator.addExceptions('de','ziem-lich,Wach-stube');
          *   Hyphenator.run();
          * &lt;/script&gt;
          */
-		addExceptions: function (words) { //words is a comma separated string of words
+		addExceptions: function (lang, words) { //words is a comma separated string of words
 			var w = words.split(',');
 			for (var i = 0, l = w.length; i < l; i++) {
 				var key = w[i].replace(/-/g, '');
-				if (!exceptions[key]) {
-					exceptions[key] = w[i];
+				if (!Hyphenator.languages[lang].exceptions.hasOwnProperty(key)) {
+					Hyphenator.languages[lang].exceptions[key] = w[i];
 				}
 			}
 		},	
@@ -1195,20 +1118,6 @@ var Hyphenator = function () {
 		},
 
 		/**
-		 * @name Hyphenator.updatePatternsLoadState
-		 * @methodOf Hyphenator
-		 * @description
-		 * Changes {@link Hyphenator-patternsloaded}. This method is called at the end of the pattern file
-		 * to tell that it is loaded.
-		 * @param string The language
-		 * @param boolean true for loaded
-		 * @public
-         */
-		updatePatternsLoadState: function (lang, bool) {
-			patternsloaded[lang] = bool;
-		},
-
-		/**
 		 * @name Hyphenator.isBookmarklet
 		 * @methodOf Hyphenator
 		 * @description
@@ -1230,6 +1139,7 @@ var Hyphenator = function () {
 		hyphenateDocument: function () {
 			function callback() {
 				convertPatternsToObject();
+				prepareLanguagesObj();
 				runHyphenation();
 			}
 			if (preparestate !== 2) {
@@ -1262,23 +1172,25 @@ var Hyphenator = function () {
 					lang = elemlang;
 				}
 			}
-			var wrd = '[\\w' + Hyphenator.specialChars[lang] + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
-			function hyphenate(word) {
-				if (urlRE.test(word) || mailRE.test(word)) {
-					return Hyphenator.hyphenateURL(word);
-				} else {
-					return Hyphenator.hyphenateWord(lang, word);
+			if (Hyphenator.languages.hasOwnProperty(lang)) {
+				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+				function hyphenate(word) {
+					if (urlRE.test(word) || mailRE.test(word)) {
+						return Hyphenator.hyphenateURL(word);
+					} else {
+						return Hyphenator.hyphenateWord(lang, word);
+					}
+				}
+				var genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
+				var n, i;
+				for (i = 0; (n = el.childNodes[i]); i++) {
+					if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
+						n.data = n.data.replace(genRegExp, hyphenate);
+					} else if (n.nodeType === 1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1 = element node -> recursion
+						Hyphenator.hyphenateElement(n, lang);
+					}
 				}
 			}
-			var genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
-			var n, i;
-            for (i = 0; (n = el.childNodes[i]); i++) {
-				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-                    n.data = n.data.replace(genRegExp, hyphenate);
-                } else if (n.nodeType === 1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1 = element node -> recursion
-                    Hyphenator.hyphenateElement(n, lang);
-                }
-            }
             if (el.className.indexOf(hyphenateclass) !== -1) {
 	            el.style.visibility = 'visible';
 	        }
@@ -1340,11 +1252,11 @@ var Hyphenator = function () {
 				//word already contains shy; -> leave at it is!
 				return word;
 			}
-			if (exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
-				return exceptions[word].replace(/-/g, hyphen);
+			if (Hyphenator.languages[lang].exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
+				return Hyphenator.languages[lang].exceptions[word].replace(/-/g, hyphen);
 			}
-			if (enableCache && cache.hasOwnProperty(lang) && cache[lang].hasOwnProperty(word)) { //the word is in the cache
-				return cache[lang][word];
+			if (enableCache && Hyphenator.languages[lang].cache.hasOwnProperty(word)) { //the word is in the cache
+				return Hyphenator.languages[lang].cache[word];
 			}
 			if (word.indexOf('-') !== -1) {
 				//word contains '-' -> put a zerowidthspace after it and hyphenate the parts separated with '-'
@@ -1362,13 +1274,12 @@ var Hyphenator = function () {
 			var hypos = [];
 			var p, maxwins, win, pat = false, patl, c, digits, z;
 			var numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
-			var n = wl - Hyphenator.shortestPattern[lang];
+			var n = wl - Hyphenator.languages[lang].shortestPattern;
 			for (p = 0; p <= n; p++) {
-				maxwins = Math.min((wl - p), Hyphenator.longestPattern[lang]);
-				for (win = Hyphenator.shortestPattern[lang]; win <= maxwins; win++) {
-					//a simple check if Hyphenator.patterns[lang][w.substr(p, win)] exists isn't enough: FF gets an error if we're looking for 'watch' e.g. (gets function watch())
-					if (Hyphenator.patterns[lang].hasOwnProperty(w.substr(p, win))) {
-						pat = Hyphenator.patterns[lang][w.substr(p, win)];
+				maxwins = Math.min((wl - p), Hyphenator.languages[lang].longestPattern);
+				for (win = Hyphenator.languages[lang].shortestPattern; win <= maxwins; win++) {
+					if (Hyphenator.languages[lang].patterns.hasOwnProperty(w.substr(p, win))) {
+						pat = Hyphenator.languages[lang].patterns[w.substr(p, win)];
 					} else {
 						continue;
 					}
@@ -1394,7 +1305,7 @@ var Hyphenator = function () {
 				}
 			}
 			var inserted = 0;
-			for (i = Hyphenator.leftmin[lang]; i <= (word.length - Hyphenator.rightmin[lang]); i++) {
+			for (i = Hyphenator.languages[lang].leftmin; i <= (word.length - Hyphenator.languages[lang].rightmin); i++) {
 				if (!!(hypos[i] & 1)) {
 					s.splice(i + inserted + 1, 0, hyphen);
 					inserted++;
@@ -1402,7 +1313,7 @@ var Hyphenator = function () {
 			}
 			var hyphenatedword = s.slice(1, -1).join('');
 			if(enableCache) {
-				cache[lang][word] = hyphenatedword;
+				Hyphenator.languages[lang].cache[word] = hyphenatedword;
 			}
 			return hyphenatedword;
 		},
