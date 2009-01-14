@@ -121,7 +121,7 @@ var Hyphenator = function () {
 				return t.substring(0, p);
 			}
 		}
-		return 'http://hyphenator.googlecode.com/svn/trunk/';
+		return 'http://hyphenator.googlecode.com/svn/branches/refact/';
 	}();
 	
 	/**
@@ -188,31 +188,6 @@ var Hyphenator = function () {
 	var hyphenateclass = 'hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class = "hyphenate">Text</p>
 	
 	/**
-	 * @name Hyphenator-hyphen
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A string containing the character for in-word-hyphenation
-	 * @type string
-	 * @default the soft hyphen
-	 * @private
-	 * @see Hyphenator.setHyphenChar
-	 */
-	var hyphen = String.fromCharCode(173);
-	
-	/**
-	 * @name Hyphenator-urlhyphen
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A string containing the character for url/mail-hyphenation
-	 * @type string
-	 * @default the zero width space
-	 * @private
-	 * @see Hyphenator.setUrlHyphenChar
-	 * @see Hyphenator-createZeroWidthSpace
-	 */
-	var urlhyphen = '';
-	
-	/**
 	 * @name Hyphenator-min
 	 * @fieldOf Hyphenator
 	 * @description
@@ -235,6 +210,29 @@ var Hyphenator = function () {
 	var bookmarklet = false;
 
 	/**
+	 * @name Hyphenator-elements
+	 * @fieldOf Hyphenator
+	 * @description
+	 * An array holding all elements that have to be hyphenated. This var is filled by
+	 * {@link Hyphenator-gatherElements}
+	 * @type array
+	 * @private
+	 */	
+	var elements = [];
+
+	/**
+	 * @name Hyphenator-doclanguages
+	 * @fieldOf Hyphenator
+	 * @description
+	 * An object holding all languages used in the document. This is filled by
+	 * {@link Hyphenator-gatherElements}
+	 * @type array
+	 * @private
+	 */	
+	var doclanguages = {};
+
+
+	/**
 	 * @name Hyphenator-preparestate
 	 * @fieldOf Hyphenator
 	 * @description
@@ -245,7 +243,7 @@ var Hyphenator = function () {
 	 * @type number
 	 * @private
 	 */	
-	var preparestate = 0; //0: not initialized, 1: loading patterns, 2: ready
+	var preparestate = 0;
 
 	/**
 	 * @name Hyphenator-mainlanguage
@@ -307,22 +305,10 @@ var Hyphenator = function () {
 	 * The zerowidthspace is inserted after a '-' in compound words, so even FF and IE
 	 * will break after a '-' if necessary.
 	 * zerowidthspace is also used to break URLs
-	 * @see Hyphenator-createZeroWidthSpace
 	 * @type string
 	 * @private
 	 */		
-	var zerowidthspace = '';
-
-	/**
-	 * @name Hyphenator-createZeroWidthSpace
-	 * @methodOf Hyphenator
-	 * @description
-	 * Sets the variable {@link Hyphenator-zerowidthspace} depending on the browser version
-	 * MSIE <= 6 and 8b2 does NOT support zerowidthspace
-	 * @private
-	 * @returns string A string containing zerowidthspace or an empty string.
-	 */		
-	function createZeroWidthSpace() {
+	var zerowidthspace = function() {
 		var ua = navigator.userAgent.toLowerCase();
 		if (ua.indexOf('msie 6') === -1 && ua.indexOf('msie 8') === -1) {
 			zerowidthspace = String.fromCharCode(8203); //Unicode zero width space
@@ -330,7 +316,32 @@ var Hyphenator = function () {
 			zerowidthspace = '';
 		}
 		return zerowidthspace;
-	}
+	}();
+	
+	/**
+	 * @name Hyphenator-hyphen
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A string containing the character for in-word-hyphenation
+	 * @type string
+	 * @default the soft hyphen
+	 * @private
+	 * @see Hyphenator.setHyphenChar
+	 */
+	var hyphen = String.fromCharCode(173);
+	
+	/**
+	 * @name Hyphenator-urlhyphen
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A string containing the character for url/mail-hyphenation
+	 * @type string
+	 * @default the zero width space
+	 * @private
+	 * @see Hyphenator.setUrlHyphenChar
+	 * @see Hyphenator-zerowidthspace
+	 */
+	var urlhyphen = zerowidthspace;
 	
 	/**
 	 * @name Hyphenator-checkIfBookmarklet
@@ -367,6 +378,9 @@ var Hyphenator = function () {
 	 * @private
 	 */		
 	function getLang(el, nofallback) {
+		if (!!el.lang) {
+			return el.lang.substring(0,2);
+		}
 		if (!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').substring(0, 2);
 		}
@@ -441,34 +455,44 @@ var Hyphenator = function () {
 		}
 	}
 
+	
 	/**
-	 * @name Hyphenator-hideInside
-	 * @methodOf Hyphenator
-	 * @description
-	 * Hides the elements with class {@link Hyphenator-hyphenateclass} to prevent a
-	 * flash of unstyled/unhyphenated content (aka fouc).
-	 * The elements are set back to visible in {@link Hyphenator.hyphenateElement}.
-	 * @private
-	 */		
-	function hideInside() {
-		var elements, i, l;
+	 *
+	 *
+	 *
+	 */
+	function gatherDocumentInfos() {
+		var el, i, l;
+		var process = function(el) {
+			var idx, lang;
+			idx = elements.push(el) - 1;
+			elements[idx].style.visibility = 'hidden';
+			if (!!(lang = getLang(el, true))) {
+				if (SUPPORTEDLANG[lang]) {
+					doclanguages[lang] = true;
+				} else {
+					//alert('Language '+lang+' is not yet supported.');
+				}
+			}
+			elements[idx].lang = lang;
+		};
 		if (document.getElementsByClassName) {
-			elements = document.getElementsByClassName(hyphenateclass);
-			for (i = 0, l = elements.length; i < l; i++)
+			el = document.getElementsByClassName(hyphenateclass);
+			for (i = 0, l = el.length; i < l; i++)
 			{
-				elements[i].style.visibility = 'hidden';
+				process(el[i]);
 			}
 		} else {
-			elements = document.getElementsByTagName('*');
-			for (i = 0, l = elements.length; i < l; i++)
+			el = document.getElementsByTagName('*');
+			for (i = 0, l = el.length; i < l; i++)
 			{
-				if (elements[i].className.indexOf(hyphenateclass) !== -1 && elements[i].className.indexOf('donthyphenate') === -1) {
-					elements[i].style.visibility = 'hidden';
+				if (el[i].className.indexOf(hyphenateclass) !== -1 && el[i].className.indexOf('donthyphenate') === -1) {
+					process(el[i]);
 				}
 			}
 		}
 	}
-	
+	 
 	/**
 	 * @name Hyphenator-switchToggleBox
 	 * @methodOf Hyphenator
@@ -483,13 +507,12 @@ var Hyphenator = function () {
 	 * @private
 	 */		
 	function switchToggleBox(s) {
-		var myBox, bdy, myIdAttribute, myTextNode;
+		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute;
 		if (s) {
 			bdy = document.getElementsByTagName('body')[0];
 			myBox = document.createElement('div');
 			myIdAttribute = document.createAttribute('id');
-			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
-			myClassAttribute = document.createAttribute('class');
+			myIdAttribute.nodeValue = 'HyphenatorToggleBox';			myClassAttribute = document.createAttribute('class');
 			myClassAttribute.nodeValue = 'donthyphenate';
 			myTextNode = document.createTextNode('Hy-phe-na-ti-on');
 			myBox.appendChild(myTextNode);
@@ -573,17 +596,13 @@ var Hyphenator = function () {
 	 * The result is stored in the {@link Hyphenator-patterns}-object.
 	 * @private
 	 */		
-	function convertPatternsToObject() {
-		for (var lang in Hyphenator.languages) {
-			if (Hyphenator.languages.hasOwnProperty(lang)) {
-				var sa = Hyphenator.languages[lang].patterns.split(' ');
-				Hyphenator.languages[lang].patterns = {};
-				var pat, key, i = 0;
-				while (!!(pat = sa[i++])) {
-					key = pat.replace(/\d/g, '');
-					Hyphenator.languages[lang].patterns[key] = pat;
-				}
-			}
+	function convertPatternsToObject(lang) {
+		var sa = Hyphenator.languages[lang].patterns.split(' ');
+		Hyphenator.languages[lang].patterns = {};
+		var pat, key, i = 0;
+		while (!!(pat = sa[i++])) {
+			key = pat.replace(/\d/g, '');
+			Hyphenator.languages[lang].patterns[key] = pat;
 		}
 	}
 	
@@ -594,22 +613,17 @@ var Hyphenator = function () {
 	 * Adds a cache to each language and converts the exceptions-list to an object.
 	 * @private
 	 */		
-	function prepareLanguagesObj() {
-		for (var lang in Hyphenator.languages) {
-			if (Hyphenator.languages.hasOwnProperty(lang)) {
-				if (enableCache) {
-					Hyphenator.languages[lang].cache = {};
-				}
-				if (Hyphenator.languages[lang].hasOwnProperty('exceptions')) {
-					var tmp = Hyphenator.languages[lang].exceptions;
-					Hyphenator.languages[lang].exceptions = {};
-					Hyphenator.addExceptions(lang, tmp);
-				} else {
-					Hyphenator.languages[lang].exceptions = {};
-				}
-			}
+	function prepareLanguagesObj(lang) {
+		if (enableCache) {
+			Hyphenator.languages[lang].cache = {};
 		}
-		
+		if (Hyphenator.languages[lang].hasOwnProperty('exceptions')) {
+			var tmp = Hyphenator.languages[lang].exceptions;
+			Hyphenator.languages[lang].exceptions = {};
+			Hyphenator.addExceptions(lang, tmp);
+		} else {
+			Hyphenator.languages[lang].exceptions = {};
+		}
 	}
 
 	/**
@@ -822,27 +836,18 @@ var Hyphenator = function () {
 	 */
 	function prepare (callback) {
 		if (!enableRemoteLoading) {
+			for (var lang in Hyphenator.languages) {
+				convertPatternsToObject(lang);
+				prepareLanguagesObj(lang);
+			}
 			preparestate = 2;
 			callback();
 			return;
 		}
 		// get all languages that are used and preload the patterns
 		preparestate = 1;
-		var doclanguages = {};
 		doclanguages[mainlanguage] = true;
-		var elements = document.getElementsByTagName('body')[0].getElementsByTagName('*');
-		var lang = null;
-		var i, l;
-		for (i = 0, l = elements.length; i < l; i++) {
-			if (!!(lang = getLang(elements[i], true))) {
-				if (SUPPORTEDLANG[lang]) {
-					doclanguages[lang] = true;
-				} else {
-					//alert('Language '+lang+' is not yet supported.');
-				}
-			}
-		}
-		for (lang in doclanguages) {
+		for (var lang in doclanguages) {
 			if (doclanguages.hasOwnProperty(lang)) {
 				loadPatterns(lang);
 			}
@@ -850,12 +855,15 @@ var Hyphenator = function () {
 		// wait until they are loaded
 		var interval = window.setInterval(function () {
 			var finishedLoading = false;
-			for (lang in doclanguages) {
+			for (var lang in doclanguages) {
 				if (!Hyphenator.languages[lang]) {
 					finishedLoading = false;
 					break;
 				} else {
 					finishedLoading = true;
+					//do conversion while other patterns are loading:
+					convertPatternsToObject(lang);
+					prepareLanguagesObj(lang);			
 				}
 			}
 			if (finishedLoading) {
@@ -876,7 +884,6 @@ var Hyphenator = function () {
 	 */		
 	function autoinit() {
 		autoSetMainLanguage();
-		urlhyphen = createZeroWidthSpace();
 		checkIfBookmarklet();
 	}
 	autoinit();
@@ -946,13 +953,17 @@ var Hyphenator = function () {
          * &lt;/script&gt;
          */
 		run: function () {
-			runOnContentLoaded(window, function () {
-				hideInside();
-				Hyphenator.hyphenateDocument();
+			var process = function () {
+				gatherDocumentInfos();
+				prepare(Hyphenator.hyphenateDocument);
 				if (displayToggleBox) {
 					switchToggleBox(true);
 				}
-			});
+			};
+			runOnContentLoaded(window, process);
+			if (Hyphenator.isBookmarklet()) {
+				process();
+			}
 		},
 		
 		/**
@@ -1055,7 +1066,7 @@ var Hyphenator = function () {
          */
 		setDisplayToggleBox: function (bool) {
 			if (bool===undefined) {
-				var bool = true;
+				bool = true;
 			}
             displayToggleBox = bool;
 		},
@@ -1076,7 +1087,7 @@ var Hyphenator = function () {
          * @default Zero Width Space or empty string (in IE 6).
          */
 		setUrlHyphenChar: function (str) {
-            urlhyphen = str || createZeroWidthSpace();
+            urlhyphen = str || zerowidthspace;
 		},
 
 		/**
@@ -1137,14 +1148,19 @@ var Hyphenator = function () {
 		 * @public
          */
 		hyphenateDocument: function () {
-			function callback() {
-				convertPatternsToObject();
-				prepareLanguagesObj();
-				runHyphenation();
+			function bind(obj, fun, args) {
+				return function() {
+					var f = obj[fun];
+					return f.call(obj, args);
+				};
 			}
-			if (preparestate !== 2) {
-				if (preparestate === 0) {
-					prepare(callback);               // load all language patterns that are used
+			var i, l;
+			if (Hyphenator.isBookmarklet()) {
+				Hyphenator.hyphenateElement(document.getElementsByTagName('body')[0]);
+			} else {
+				for (i = 0, l = elements.length; i < l; i++)
+				{
+					window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
 				}
 			}
 		},
@@ -1174,7 +1190,7 @@ var Hyphenator = function () {
 			}
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
-				function hyphenate(word) {
+				var hyphenate = function (word) {
 					if (urlRE.test(word) || mailRE.test(word)) {
 						return Hyphenator.hyphenateURL(word);
 					} else {
@@ -1352,5 +1368,5 @@ var Hyphenator = function () {
 	};
 }();
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.hyphenateDocument();
+	Hyphenator.run();
 }
