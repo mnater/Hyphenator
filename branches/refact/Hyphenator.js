@@ -208,7 +208,7 @@ var Hyphenator = function () {
 	 * @private
 	 */	
 	var bookmarklet = function() {
-		var loc = null, re = false
+		var loc = null, re = false;
 		var jsArray = document.getElementsByTagName('script');
 		for (var i = 0, l = jsArray.length; i < l; i++) {
 			if (!!jsArray[i].getAttribute('src')) {
@@ -477,6 +477,42 @@ var Hyphenator = function () {
 		}
 	}
 	/* end ContentLoaded.js */
+
+	/**
+	 * @name Hyphenator-getLang
+	 * @methodOf Hyphenator
+	 * @description
+	 * Gets the language of an element. If no language is set, it may use the {@link Hyphenator-mainlanguage}.
+	 * @param object The first parameter is an DOM-Element-Object
+	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainlanguage}
+	 * if there's no language found for the element.
+	 * @private
+	 */		
+	function getLang(el, nofallback) {
+		if (!!el.lang) {
+			return el.lang.substring(0,2);
+		}
+		if (!!el.getAttribute('lang')) {
+			return el.getAttribute('lang').substring(0, 2);
+		}
+		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
+		/*if (!!el.getAttribute('xml:lang')) {
+			return el.getAttribute('xml:lang').substring(0, 2);
+		}*/
+		//instead, we have to do this (thanks to borgzor):
+		try {
+			if (!!el.getAttribute('xml:lang')) {
+				return el.getAttribute('xml:lang').substring(0, 2);
+			}
+		} catch (ex) {}
+		if (el.tagName != 'HTML' && nofallback) {
+			return getLang(el.parentNode);
+		}
+		if (!nofallback && mainlanguage) {
+			return mainlanguage;
+		}
+		return null;
+	}	
 	
 	/**
 	 * @name Hyphenator-autoSetMainLanguage
@@ -580,92 +616,21 @@ var Hyphenator = function () {
 	}
 	 
 	/**
-	 * @name Hyphenator-getLang
+	 * @name Hyphenator-convertPatternsToObject
 	 * @methodOf Hyphenator
 	 * @description
-	 * Gets the language of an element. If no language is set, it may use the {@link Hyphenator-mainlanguage}.
-	 * @param object The first parameter is an DOM-Element-Object
-	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainlanguage}
-	 * if there's no language found for the element.
+	 * Converts the patterns from string '_a6' to object '_a':'_a6'.
+	 * The result is stored in the {@link Hyphenator-patterns}-object.
 	 * @private
 	 */		
-	function getLang(el, nofallback) {
-		if (!!el.lang) {
-			return el.lang.substring(0,2);
+	function convertPatternsToObject(lang) {
+		var sa = Hyphenator.languages[lang].patterns.split(' ');
+		Hyphenator.languages[lang].patterns = {};
+		var pat, key, i = 0;
+		while (!!(pat = sa[i++])) {
+			key = pat.replace(/\d/g, '');
+			Hyphenator.languages[lang].patterns[key] = pat;
 		}
-		if (!!el.getAttribute('lang')) {
-			return el.getAttribute('lang').substring(0, 2);
-		}
-		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
-		/*if (!!el.getAttribute('xml:lang')) {
-			return el.getAttribute('xml:lang').substring(0, 2);
-		}*/
-		//instead, we have to do this (thanks to borgzor):
-		try {
-			if (!!el.getAttribute('xml:lang')) {
-				return el.getAttribute('xml:lang').substring(0, 2);
-			}
-		} catch (ex) {}
-		if (el.tagName != 'HTML' && nofallback) {
-			return getLang(el.parentNode);
-		}
-		if (!nofallback && mainlanguage) {
-			return mainlanguage;
-		}
-		return null;
-	}
-
-	/**
-	 * @name Hyphenator-prepare
-	 * @methodOf Hyphenator
-	 * @description
-	 * This funtion prepares the Hyphenator-Object. First, it looks for languages that are used
-	 * in the document. Then it loads the patterns calling {@link Hyphenator-loadPatterns}.
-	 * Finally it 'waits' until all patterns are loaded by repeatedly checking languages
-	 * for all languages.
-	 * When all patterns are loaded the function sets {@link Hyphenator-preparestate} to 2 and calls the callback.
-	 * Currently there's no message if the patterns aren't found/loaded.
-	 * @param function-object callback to call, when all patterns are loaded
-	 * @private
-	 */
-	function prepare (callback) {
-		if (!enableRemoteLoading) {
-			for (var lang in Hyphenator.languages) {
-				convertPatternsToObject(lang);
-				prepareLanguagesObj(lang);
-			}
-			preparestate = 2;
-			callback();
-			return;
-		}
-		// get all languages that are used and preload the patterns
-		preparestate = 1;
-		doclanguages[mainlanguage] = true;
-		for (var lang in doclanguages) {
-			if (doclanguages.hasOwnProperty(lang)) {
-				loadPatterns(lang);
-			}
-		}
-		// wait until they are loaded
-		var interval = window.setInterval(function () {
-			var finishedLoading = false;
-			for (var lang in doclanguages) {
-				if (!Hyphenator.languages[lang]) {
-					finishedLoading = false;
-					break;
-				} else {
-					finishedLoading = true;
-					//do conversion while other patterns are loading:
-					convertPatternsToObject(lang);
-					prepareLanguagesObj(lang);			
-				}
-			}
-			if (finishedLoading) {
-				window.clearInterval(interval);
-				preparestate = 2;
-				callback();
-			}
-		}, 100);
 	}
 
 	/**
@@ -719,24 +684,6 @@ var Hyphenator = function () {
 	}
 	
 	/**
-	 * @name Hyphenator-convertPatternsToObject
-	 * @methodOf Hyphenator
-	 * @description
-	 * Converts the patterns from string '_a6' to object '_a':'_a6'.
-	 * The result is stored in the {@link Hyphenator-patterns}-object.
-	 * @private
-	 */		
-	function convertPatternsToObject(lang) {
-		var sa = Hyphenator.languages[lang].patterns.split(' ');
-		Hyphenator.languages[lang].patterns = {};
-		var pat, key, i = 0;
-		while (!!(pat = sa[i++])) {
-			key = pat.replace(/\d/g, '');
-			Hyphenator.languages[lang].patterns[key] = pat;
-		}
-	}
-	
-	/**
 	 * @name Hyphenator-prepareLanguagesObj
 	 * @methodOf Hyphenator
 	 * @description
@@ -756,6 +703,62 @@ var Hyphenator = function () {
 		}
 	}
 	
+	/**
+	 * @name Hyphenator-prepare
+	 * @methodOf Hyphenator
+	 * @description
+	 * This funtion prepares the Hyphenator-Object. First, it looks for languages that are used
+	 * in the document. Then it loads the patterns calling {@link Hyphenator-loadPatterns}.
+	 * Finally it 'waits' until all patterns are loaded by repeatedly checking languages
+	 * for all languages.
+	 * When all patterns are loaded the function sets {@link Hyphenator-preparestate} to 2 and calls the callback.
+	 * Currently there's no message if the patterns aren't found/loaded.
+	 * @param function-object callback to call, when all patterns are loaded
+	 * @private
+	 */
+	function prepare (callback) {
+		var lang;
+		if (!enableRemoteLoading) {
+			for (lang in Hyphenator.languages) {
+				if (Hyphenator.languages.hasOwnProperty(lang)) {
+					convertPatternsToObject(lang);
+					prepareLanguagesObj(lang);
+				}
+			}
+			preparestate = 2;
+			callback();
+			return;
+		}
+		// get all languages that are used and preload the patterns
+		preparestate = 1;
+		doclanguages[mainlanguage] = true;
+		for (lang in doclanguages) {
+			if (doclanguages.hasOwnProperty(lang)) {
+				loadPatterns(lang);
+			}
+		}
+		// wait until they are loaded
+		var interval = window.setInterval(function () {
+			var finishedLoading = false;
+			for (var lang in doclanguages) {
+				if (!Hyphenator.languages[lang]) {
+					finishedLoading = false;
+					break;
+				} else {
+					finishedLoading = true;
+					//do conversion while other patterns are loading:
+					convertPatternsToObject(lang);
+					prepareLanguagesObj(lang);			
+				}
+			}
+			if (finishedLoading) {
+				window.clearInterval(interval);
+				preparestate = 2;
+				callback();
+			}
+		}, 100);
+	}
+
 	/**
 	 * @name Hyphenator-switchToggleBox
 	 * @methodOf Hyphenator
@@ -799,56 +802,6 @@ var Hyphenator = function () {
 		} else {
 			myBox = document.getElementById('HyphenatorToggleBox');
 			myBox.style.visibility = 'hidden';
-		}
-	}
-
-	/**
-	 * @name Hyphenator-loadPatterns
-	 * @methodOf Hyphenator
-	 * @description
-	 * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
-	 * If the iven language is not in the {@link Hyphenator-SUPPORTEDLANG}-Object it returns.
-	 * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
-	 * has a same-origin-policy. The makes the bookmarklet-functionality impossible.
-	 * @param string The language to load the patterns for
-	 * @private
-	 * @see Hyphenator-BASEPATH
-	 */
-	function loadPatterns(lang) {
-		if (SUPPORTEDLANG[lang] && !Hyphenator.languages[lang]) {
-	        var url = BASEPATH + 'patterns/' + lang + '.js';
-		} else {
-			return;
-		}
-		//check if 'url' is available:
-		//Still commented out, because it's not yet fully tested!
-		//TBD: Where to catch errors?
-		/*var xhr = null;
-		if (typeof XMLHttpRequest != 'undefined') {
-			xhr = new XMLHttpRequest();
-		}
-		if (!xhr) {
-		    try {
-        		xhr  = new ActiveXObject("Msxml2.XMLHTTP");
-    		} catch(e) {
-				xhr  = null;
-    		}
-		}
-		if (xhr) {
-			xhr.open('HEAD', url, false);
-			xhr.send(null);
-			if(xhr.status == 404) {
-				alert('Hyphenator.js Error:\nCould not load\n'+url);
-				return;
-			}
-		}*/
-		if (document.createElement) {
-			var head = document.getElementsByTagName('head').item(0);
-			var script = document.createElement('script');
-			script.src = url;
-			script.id = lang;
-			script.type = 'text/javascript';
-			head.appendChild(script);
 		}
 	}
 
@@ -1181,7 +1134,7 @@ var Hyphenator = function () {
 					} else {
 						return Hyphenator.hyphenateWord(lang, word);
 					}
-				}
+				};
 				var genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 				var n, i;
 				for (i = 0; (n = el.childNodes[i]); i++) {
