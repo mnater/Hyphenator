@@ -207,7 +207,32 @@ var Hyphenator = function () {
 	 * @default false
 	 * @private
 	 */	
-	var bookmarklet = false;
+	var bookmarklet = function() {
+		var loc = null, re = false
+		var jsArray = document.getElementsByTagName('script');
+		for (var i = 0, l = jsArray.length; i < l; i++) {
+			if (!!jsArray[i].getAttribute('src')) {
+				loc = jsArray[i].getAttribute('src');
+			}
+			if (!loc) {
+				continue;
+			} else if (loc.indexOf('Hyphenator.js?bm=true') !== -1) {
+				re = true;
+			}
+		}
+		return re;
+	}();
+
+	/**
+	 * @name Hyphenator-mainlanguage
+	 * @fieldOf Hyphenator
+	 * @description
+	 * The general language of the document
+	 * @type number
+	 * @private
+	 * @see Hyphenator-autoSetMainLanguage
+	 */	
+	var mainlanguage = null;
 
 	/**
 	 * @name Hyphenator-elements
@@ -244,17 +269,6 @@ var Hyphenator = function () {
 	 * @private
 	 */	
 	var preparestate = 0;
-
-	/**
-	 * @name Hyphenator-mainlanguage
-	 * @fieldOf Hyphenator
-	 * @description
-	 * The general language of the document
-	 * @type number
-	 * @private
-	 * @see Hyphenator-_setMainLanguage
-	 */	
-	var mainlanguage = null;
 
 	/**
 	 * @name Hyphenator-url
@@ -342,363 +356,6 @@ var Hyphenator = function () {
 	 * @see Hyphenator-zerowidthspace
 	 */
 	var urlhyphen = zerowidthspace;
-	
-	/**
-	 * @name Hyphenator-checkIfBookmarklet
-	 * @methodOf Hyphenator
-	 * @description
-	 * Checks if Hyphenator is run as bookmarklet.
-	 * When using the bookmarklet there's a query-string appended to the url.
-	 * The function sets {@link Hyphenator-bookmarklet}
-	 * @private
-	 */		
-	function checkIfBookmarklet() {
-		var loc = null;
-		var jsArray = document.getElementsByTagName('script');
-		for (var i = 0, l = jsArray.length; i < l; i++) {
-			if (!!jsArray[i].getAttribute('src')) {
-				loc = jsArray[i].getAttribute('src');
-			}
-			if (!loc) {
-				continue;
-			} else if (loc.indexOf('Hyphenator.js?bm=true') !== -1) {
-				bookmarklet = true;
-			}
-		}
-	}
-    
-	/**
-	 * @name Hyphenator-getLang
-	 * @methodOf Hyphenator
-	 * @description
-	 * Gets the language of an element. If no language is set, it may use the {@link Hyphenator-mainlanguage}.
-	 * @param object The first parameter is an DOM-Element-Object
-	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainlanguage}
-	 * if there's no language found for the element.
-	 * @private
-	 */		
-	function getLang(el, nofallback) {
-		if (!!el.lang) {
-			return el.lang.substring(0,2);
-		}
-		if (!!el.getAttribute('lang')) {
-			return el.getAttribute('lang').substring(0, 2);
-		}
-		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
-		/*if (!!el.getAttribute('xml:lang')) {
-			return el.getAttribute('xml:lang').substring(0, 2);
-		}*/
-		//instead, we have to do this (thanks to borgzor):
-		try {
-			if (!!el.getAttribute('xml:lang')) {
-				return el.getAttribute('xml:lang').substring(0, 2);
-			}
-		} catch (ex) {}
-		if (el.tagName != 'HTML' && nofallback) {
-			return getLang(el.parentNode);
-		}
-		if (!nofallback && mainlanguage) {
-			return mainlanguage;
-		}
-		return null;
-	}
-
-	/**
-	 * @name Hyphenator-autoSetMainLanguage
-	 * @methodOf Hyphenator
-	 * @description
-	 * Retrieves the language of the document from the DOM.
-	 * The function looks in the following places:
-	 * <ul>
-	 * <li>lang-attribute in the html-tag</li>
-	 * <li>&lt;meta http-equiv = "content-language" content = "xy" /&gt;</li>
-	 * <li>&lt;meta name = "DC.Language" content = "xy" /&gt;</li>
-	 * <li>&lt;meta name = "language" content = "xy" /&gt;</li>
-	 * </li>
-	 * If nothing can be found a prompt using {@link Hyphenator-LANGUAGEHINT} and {@link Hyphenator-PROMPTERSTRINGS} is displayed.
-	 * If the retrieved language is in the object {@link Hyphenator-SUPPORTEDLANG} it is copied to {@link Hyphenator-mainlanguage}
-	 * @private
-	 */		
-	function autoSetMainLanguage() {
-		var el = document.getElementsByTagName('html')[0];
-		mainlanguage = getLang(el);
-		if (!mainlanguage) {
-			var m = document.getElementsByTagName('meta');
-			for (var i = 0; i < m.length; i++) {
-				//<meta http-equiv = "content-language" content="xy">	
-				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
-					mainlanguage = m[i].getAttribute('content').substring(0, 2);
-				}
-				//<meta name = "DC.Language" content="xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
-					mainlanguage = m[i].getAttribute('content').substring(0, 2);
-				}			
-				//<meta name = "language" content = "xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
-					mainlanguage = m[i].getAttribute('content').substring(0, 2);
-				}
-			}
-		}
-		if (!mainlanguage) {
-			var text = '';
-			var ul = navigator.language ? navigator.language : navigator.userLanguage;
-			ul = ul.substring(0, 2);
-			if (SUPPORTEDLANG[ul]) {
-				text = PROMPTERSTRINGS[ul];
-			} else {
-				text = PROMPTERSTRINGS.en;
-			}
-			var lang = window.prompt(unescape(text), ul);
-			if (SUPPORTEDLANG[lang]) {
-				mainlanguage = lang;
-			}
-		}
-	}
-
-	
-	/**
-	 *
-	 *
-	 *
-	 */
-	function gatherDocumentInfos() {
-		var el, i, l;
-		var process = function(el) {
-			var idx, lang;
-			idx = elements.push(el) - 1;
-			elements[idx].style.visibility = 'hidden';
-			if (!!(lang = getLang(el, true))) {
-				if (SUPPORTEDLANG[lang]) {
-					doclanguages[lang] = true;
-				} else {
-					//alert('Language '+lang+' is not yet supported.');
-				}
-			}
-			elements[idx].lang = lang;
-		};
-		if (document.getElementsByClassName) {
-			el = document.getElementsByClassName(hyphenateclass);
-			for (i = 0, l = el.length; i < l; i++)
-			{
-				process(el[i]);
-			}
-		} else {
-			el = document.getElementsByTagName('*');
-			for (i = 0, l = el.length; i < l; i++)
-			{
-				if (el[i].className.indexOf(hyphenateclass) !== -1 && el[i].className.indexOf('donthyphenate') === -1) {
-					process(el[i]);
-				}
-			}
-		}
-	}
-	 
-	/**
-	 * @name Hyphenator-switchToggleBox
-	 * @methodOf Hyphenator
-	 * @description
-	 * Creates or hides the toggleBox: a small button to turn off/on hyphenation on a page.
-	 * <strong>Todo:</strong>
-	 * <ul>
-	 * <li>Remove the toggle box from the DOM instead of hiding it</li>
-	 * <li>implement a possibility to style the box</li>
-	 * </ul>
-	 * @param boolean True to create the toggleBox, false to hide it
-	 * @private
-	 */		
-	function switchToggleBox(s) {
-		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute;
-		if (s) {
-			bdy = document.getElementsByTagName('body')[0];
-			myBox = document.createElement('div');
-			myIdAttribute = document.createAttribute('id');
-			myIdAttribute.nodeValue = 'HyphenatorToggleBox';			myClassAttribute = document.createAttribute('class');
-			myClassAttribute.nodeValue = 'donthyphenate';
-			myTextNode = document.createTextNode('Hy-phe-na-ti-on');
-			myBox.appendChild(myTextNode);
-			myBox.setAttributeNode(myIdAttribute);
-			myBox.setAttributeNode(myClassAttribute);
-			myBox.onclick = Hyphenator.toggleHyphenation;
-			myBox.style.position = 'absolute';
-			myBox.style.top = '0px';
-			myBox.style.right = '0px';
-			myBox.style.margin = '0';
-			myBox.style.backgroundColor = '#AAAAAA';
-			myBox.style.color = '#FFFFFF';
-			myBox.style.font = '6pt Arial';
-			myBox.style.letterSpacing = '0.2em';
-			myBox.style.padding = '3px';
-			myBox.style.cursor = 'pointer';
-			myBox.style.WebkitBorderBottomLeftRadius = '4px';
-			myBox.style.MozBorderRadiusBottomleft = '4px';
-			bdy.appendChild(myBox);
-		} else {
-			myBox = document.getElementById('HyphenatorToggleBox');
-			myBox.style.visibility = 'hidden';
-		}
-	}
-
-	/**
-	 * @name Hyphenator-loadPatterns
-	 * @methodOf Hyphenator
-	 * @description
-	 * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
-	 * If the iven language is not in the {@link Hyphenator-SUPPORTEDLANG}-Object it returns.
-	 * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
-	 * has a same-origin-policy. The makes the bookmarklet-functionality impossible.
-	 * @param string The language to load the patterns for
-	 * @private
-	 * @see Hyphenator-BASEPATH
-	 */
-	function loadPatterns(lang) {
-		if (SUPPORTEDLANG[lang] && !Hyphenator.languages[lang]) {
-	        var url = BASEPATH + 'patterns/' + lang + '.js';
-		} else {
-			return;
-		}
-		//check if 'url' is available:
-		//Still commented out, because it's not yet fully tested!
-		//TBD: Where to catch errors?
-		/*var xhr = null;
-		if (typeof XMLHttpRequest != 'undefined') {
-			xhr = new XMLHttpRequest();
-		}
-		if (!xhr) {
-		    try {
-        		xhr  = new ActiveXObject("Msxml2.XMLHTTP");
-    		} catch(e) {
-				xhr  = null;
-    		}
-		}
-		if (xhr) {
-			xhr.open('HEAD', url, false);
-			xhr.send(null);
-			if(xhr.status == 404) {
-				alert('Hyphenator.js Error:\nCould not load\n'+url);
-				return;
-			}
-		}*/
-		if (document.createElement) {
-			var head = document.getElementsByTagName('head').item(0);
-			var script = document.createElement('script');
-			script.src = url;
-			script.id = lang;
-			script.type = 'text/javascript';
-			head.appendChild(script);
-		}
-	}
-	
-	/**
-	 * @name Hyphenator-convertPatternsToObject
-	 * @methodOf Hyphenator
-	 * @description
-	 * Converts the patterns from string '_a6' to object '_a':'_a6'.
-	 * The result is stored in the {@link Hyphenator-patterns}-object.
-	 * @private
-	 */		
-	function convertPatternsToObject(lang) {
-		var sa = Hyphenator.languages[lang].patterns.split(' ');
-		Hyphenator.languages[lang].patterns = {};
-		var pat, key, i = 0;
-		while (!!(pat = sa[i++])) {
-			key = pat.replace(/\d/g, '');
-			Hyphenator.languages[lang].patterns[key] = pat;
-		}
-	}
-	
-	/**
-	 * @name Hyphenator-prepareLanguagesObj
-	 * @methodOf Hyphenator
-	 * @description
-	 * Adds a cache to each language and converts the exceptions-list to an object.
-	 * @private
-	 */		
-	function prepareLanguagesObj(lang) {
-		if (enableCache) {
-			Hyphenator.languages[lang].cache = {};
-		}
-		if (Hyphenator.languages[lang].hasOwnProperty('exceptions')) {
-			var tmp = Hyphenator.languages[lang].exceptions;
-			Hyphenator.languages[lang].exceptions = {};
-			Hyphenator.addExceptions(lang, tmp);
-		} else {
-			Hyphenator.languages[lang].exceptions = {};
-		}
-	}
-
-	/**
-	 * @name Hyphenator-runHyphenation
-	 * @methodOf Hyphenator
-	 * @description
-	 * Walks trough the DOM gathering elements and calls {@link Hyphenator.hyphenateElement}.
-	 * This is done through a setTimeout to prevent a Slow-Script-Warning when hyphenating very big files.
-	 * If the client supports <code>document.getElementsByClassName</code> this is used to find
-	 * the elements with class = "hyphenate". If not we have to run through the whole tree.
-	 * @private
-	 */		
-	function runHyphenation() {
-		function bind(obj, fun, args) {
-			return function() {
-				var f = obj[fun];
-				return f.call(obj, args);
-			};
-		}
-		var body = document.getElementsByTagName('body')[0];
-		var i, elements, l;
-		if (Hyphenator.isBookmarklet()) {
-			Hyphenator.hyphenateElement(body);
-		} else {
-			if (document.getElementsByClassName) {
-				elements = document.getElementsByClassName(hyphenateclass);
-				for (i = 0, l = elements.length; i < l; i++)
-				{
-					window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
-				}
-			} else {
-				elements = document.getElementsByTagName('*');
-				for (i = 0, l = elements.length; i < l; i++)
-				{
-					if (elements[i].className.indexOf(hyphenateclass) !== -1) {
-						window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * @name Hyphenator-removeHyphenation
-	 * @methodOf Hyphenator
-	 * @description
-	 * Walks trough the DOM gathering elements and calls {@link Hyphenator.deleteHyphenationInElement}.
-	 * If the client supports <code>document.getElementsByClassName</code> this is used to find
-	 * the elements with class = {@link hyphenateclass}. If not we have to run through the whole tree.
-	 * @private
-	 */		
-	function removeHyphenation() {
-		var body = document.getElementsByTagName('body')[0];
-		var elements, i, l;
-		if (Hyphenator.isBookmarklet()) {
-			Hyphenator.deleteHyphenationInElement(body);
-		} else {
-			if (document.getElementsByClassName) {
-				elements = document.getElementsByClassName(hyphenateclass);
-				for (i = 0, l = elements.length; i < l; i++)
-				{
-					Hyphenator.deleteHyphenationInElement(elements[i]);
-				}
-			} else {
-				elements = document.getElementsByTagName('*');
-				for (i = 0, l = elements.length; i < l; i++)
-				{
-					if (elements[i].className.indexOf(hyphenateclass) !== -1) {
-						Hyphenator.deleteHyphenationInElement(elements[i]);
-					}
-				}
-			}
-		}
-	}
-
 	
 	/*
 	 * ContentLoaded.js
@@ -820,6 +477,143 @@ var Hyphenator = function () {
 		}
 	}
 	/* end ContentLoaded.js */
+	
+	/**
+	 * @name Hyphenator-autoSetMainLanguage
+	 * @methodOf Hyphenator
+	 * @description
+	 * Retrieves the language of the document from the DOM.
+	 * The function looks in the following places:
+	 * <ul>
+	 * <li>lang-attribute in the html-tag</li>
+	 * <li>&lt;meta http-equiv = "content-language" content = "xy" /&gt;</li>
+	 * <li>&lt;meta name = "DC.Language" content = "xy" /&gt;</li>
+	 * <li>&lt;meta name = "language" content = "xy" /&gt;</li>
+	 * </li>
+	 * If nothing can be found a prompt using {@link Hyphenator-LANGUAGEHINT} and {@link Hyphenator-PROMPTERSTRINGS} is displayed.
+	 * If the retrieved language is in the object {@link Hyphenator-SUPPORTEDLANG} it is copied to {@link Hyphenator-mainlanguage}
+	 * @private
+	 */		
+	function autoSetMainLanguage() {
+		var el = document.getElementsByTagName('html')[0];
+		mainlanguage = getLang(el);
+		if (!mainlanguage) {
+			var m = document.getElementsByTagName('meta');
+			for (var i = 0; i < m.length; i++) {
+				//<meta http-equiv = "content-language" content="xy">	
+				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
+					mainlanguage = m[i].getAttribute('content').substring(0, 2);
+				}
+				//<meta name = "DC.Language" content="xy">
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
+					mainlanguage = m[i].getAttribute('content').substring(0, 2);
+				}			
+				//<meta name = "language" content = "xy">
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
+					mainlanguage = m[i].getAttribute('content').substring(0, 2);
+				}
+			}
+		}
+		if (!mainlanguage) {
+			var text = '';
+			var ul = navigator.language ? navigator.language : navigator.userLanguage;
+			ul = ul.substring(0, 2);
+			if (SUPPORTEDLANG[ul]) {
+				text = PROMPTERSTRINGS[ul];
+			} else {
+				text = PROMPTERSTRINGS.en;
+			}
+			var lang = window.prompt(unescape(text), ul);
+			if (SUPPORTEDLANG[lang]) {
+				mainlanguage = lang;
+			}
+		}
+	}
+
+    
+	/**
+	 *
+	 *
+	 *
+	 */
+	function gatherDocumentInfos() {
+		var el, i, l;
+		var process = function(el, hide) {
+			var idx, lang;
+			idx = elements.push(el) - 1;
+			if (hide) {
+				elements[idx].style.visibility = 'hidden';
+			}
+			if (!!(lang = getLang(el, true))) {
+				if (SUPPORTEDLANG[lang]) {
+					doclanguages[lang] = true;
+				} else {
+					//alert('Language '+lang+' is not yet supported.');
+				}
+			}
+			elements[idx].lang = lang;
+			var n, i;
+			for (i = 0; (n = el.childNodes[i]); i++) {
+				if (n.nodeType === 1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1 = element node -> recursion
+					if(n.className.indexOf(hyphenateclass) === -1 && n.className.indexOf('donthyphenate') === -1) {
+						process(n, false);
+					}
+					
+				}
+			}
+		};
+		if (document.getElementsByClassName) {
+			el = document.getElementsByClassName(hyphenateclass);
+			for (i = 0, l = el.length; i < l; i++)
+			{
+				process(el[i], true);
+			}
+		} else {
+			el = document.getElementsByTagName('*');
+			for (i = 0, l = el.length; i < l; i++)
+			{
+				if (el[i].className.indexOf(hyphenateclass) !== -1 && el[i].className.indexOf('donthyphenate') === -1) {
+					process(el[i], true);
+				}
+			}
+		}
+	}
+	 
+	/**
+	 * @name Hyphenator-getLang
+	 * @methodOf Hyphenator
+	 * @description
+	 * Gets the language of an element. If no language is set, it may use the {@link Hyphenator-mainlanguage}.
+	 * @param object The first parameter is an DOM-Element-Object
+	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainlanguage}
+	 * if there's no language found for the element.
+	 * @private
+	 */		
+	function getLang(el, nofallback) {
+		if (!!el.lang) {
+			return el.lang.substring(0,2);
+		}
+		if (!!el.getAttribute('lang')) {
+			return el.getAttribute('lang').substring(0, 2);
+		}
+		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
+		/*if (!!el.getAttribute('xml:lang')) {
+			return el.getAttribute('xml:lang').substring(0, 2);
+		}*/
+		//instead, we have to do this (thanks to borgzor):
+		try {
+			if (!!el.getAttribute('xml:lang')) {
+				return el.getAttribute('xml:lang').substring(0, 2);
+			}
+		} catch (ex) {}
+		if (el.tagName != 'HTML' && nofallback) {
+			return getLang(el.parentNode);
+		}
+		if (!nofallback && mainlanguage) {
+			return mainlanguage;
+		}
+		return null;
+	}
 
 	/**
 	 * @name Hyphenator-prepare
@@ -874,19 +668,190 @@ var Hyphenator = function () {
 		}, 100);
 	}
 
-
 	/**
-	 * @name Hyphenator-autoinit
-	 * @memberOf Hyphenator
+	 * @name Hyphenator-loadPatterns
+	 * @methodOf Hyphenator
 	 * @description
-	 * This function is called to do initial settings, when Hyphenator is loaded on a site.
+	 * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
+	 * If the iven language is not in the {@link Hyphenator-SUPPORTEDLANG}-Object it returns.
+	 * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
+	 * has a same-origin-policy. The makes the bookmarklet-functionality impossible.
+	 * @param string The language to load the patterns for
+	 * @private
+	 * @see Hyphenator-BASEPATH
+	 */
+	function loadPatterns(lang) {
+		if (SUPPORTEDLANG[lang] && !Hyphenator.languages[lang]) {
+	        var url = BASEPATH + 'patterns/' + lang + '.js';
+		} else {
+			return;
+		}
+		//check if 'url' is available:
+		//Still commented out, because it's not yet fully tested!
+		//TBD: Where to catch errors?
+		/*var xhr = null;
+		if (typeof XMLHttpRequest != 'undefined') {
+			xhr = new XMLHttpRequest();
+		}
+		if (!xhr) {
+		    try {
+        		xhr  = new ActiveXObject("Msxml2.XMLHTTP");
+    		} catch(e) {
+				xhr  = null;
+    		}
+		}
+		if (xhr) {
+			xhr.open('HEAD', url, false);
+			xhr.send(null);
+			if(xhr.status == 404) {
+				alert('Hyphenator.js Error:\nCould not load\n'+url);
+				return;
+			}
+		}*/
+		if (document.createElement) {
+			var head = document.getElementsByTagName('head').item(0);
+			var script = document.createElement('script');
+			script.src = url;
+			script.id = lang;
+			script.type = 'text/javascript';
+			head.appendChild(script);
+		}
+	}
+	
+	/**
+	 * @name Hyphenator-convertPatternsToObject
+	 * @methodOf Hyphenator
+	 * @description
+	 * Converts the patterns from string '_a6' to object '_a':'_a6'.
+	 * The result is stored in the {@link Hyphenator-patterns}-object.
 	 * @private
 	 */		
-	function autoinit() {
-		autoSetMainLanguage();
-		checkIfBookmarklet();
+	function convertPatternsToObject(lang) {
+		var sa = Hyphenator.languages[lang].patterns.split(' ');
+		Hyphenator.languages[lang].patterns = {};
+		var pat, key, i = 0;
+		while (!!(pat = sa[i++])) {
+			key = pat.replace(/\d/g, '');
+			Hyphenator.languages[lang].patterns[key] = pat;
+		}
 	}
-	autoinit();
+	
+	/**
+	 * @name Hyphenator-prepareLanguagesObj
+	 * @methodOf Hyphenator
+	 * @description
+	 * Adds a cache to each language and converts the exceptions-list to an object.
+	 * @private
+	 */		
+	function prepareLanguagesObj(lang) {
+		if (enableCache) {
+			Hyphenator.languages[lang].cache = {};
+		}
+		if (Hyphenator.languages[lang].hasOwnProperty('exceptions')) {
+			var tmp = Hyphenator.languages[lang].exceptions;
+			Hyphenator.languages[lang].exceptions = {};
+			Hyphenator.addExceptions(lang, tmp);
+		} else {
+			Hyphenator.languages[lang].exceptions = {};
+		}
+	}
+	
+	/**
+	 * @name Hyphenator-switchToggleBox
+	 * @methodOf Hyphenator
+	 * @description
+	 * Creates or hides the toggleBox: a small button to turn off/on hyphenation on a page.
+	 * <strong>Todo:</strong>
+	 * <ul>
+	 * <li>Remove the toggle box from the DOM instead of hiding it</li>
+	 * <li>implement a possibility to style the box</li>
+	 * </ul>
+	 * @param boolean True to create the toggleBox, false to hide it
+	 * @private
+	 */		
+	function switchToggleBox(s) {
+		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute;
+		if (s) {
+			bdy = document.getElementsByTagName('body')[0];
+			myBox = document.createElement('div');
+			myIdAttribute = document.createAttribute('id');
+			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
+			myClassAttribute = document.createAttribute('class');
+			myClassAttribute.nodeValue = 'donthyphenate';
+			myTextNode = document.createTextNode('Hy-phe-na-ti-on');
+			myBox.appendChild(myTextNode);
+			myBox.setAttributeNode(myIdAttribute);
+			myBox.setAttributeNode(myClassAttribute);
+			myBox.onclick = Hyphenator.toggleHyphenation;
+			myBox.style.position = 'absolute';
+			myBox.style.top = '0px';
+			myBox.style.right = '0px';
+			myBox.style.margin = '0';
+			myBox.style.backgroundColor = '#AAAAAA';
+			myBox.style.color = '#FFFFFF';
+			myBox.style.font = '6pt Arial';
+			myBox.style.letterSpacing = '0.2em';
+			myBox.style.padding = '3px';
+			myBox.style.cursor = 'pointer';
+			myBox.style.WebkitBorderBottomLeftRadius = '4px';
+			myBox.style.MozBorderRadiusBottomleft = '4px';
+			bdy.appendChild(myBox);
+		} else {
+			myBox = document.getElementById('HyphenatorToggleBox');
+			myBox.style.visibility = 'hidden';
+		}
+	}
+
+	/**
+	 * @name Hyphenator-loadPatterns
+	 * @methodOf Hyphenator
+	 * @description
+	 * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
+	 * If the iven language is not in the {@link Hyphenator-SUPPORTEDLANG}-Object it returns.
+	 * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
+	 * has a same-origin-policy. The makes the bookmarklet-functionality impossible.
+	 * @param string The language to load the patterns for
+	 * @private
+	 * @see Hyphenator-BASEPATH
+	 */
+	function loadPatterns(lang) {
+		if (SUPPORTEDLANG[lang] && !Hyphenator.languages[lang]) {
+	        var url = BASEPATH + 'patterns/' + lang + '.js';
+		} else {
+			return;
+		}
+		//check if 'url' is available:
+		//Still commented out, because it's not yet fully tested!
+		//TBD: Where to catch errors?
+		/*var xhr = null;
+		if (typeof XMLHttpRequest != 'undefined') {
+			xhr = new XMLHttpRequest();
+		}
+		if (!xhr) {
+		    try {
+        		xhr  = new ActiveXObject("Msxml2.XMLHTTP");
+    		} catch(e) {
+				xhr  = null;
+    		}
+		}
+		if (xhr) {
+			xhr.open('HEAD', url, false);
+			xhr.send(null);
+			if(xhr.status == 404) {
+				alert('Hyphenator.js Error:\nCould not load\n'+url);
+				return;
+			}
+		}*/
+		if (document.createElement) {
+			var head = document.getElementsByTagName('head').item(0);
+			var script = document.createElement('script');
+			script.src = url;
+			script.id = lang;
+			script.type = 'text/javascript';
+			head.appendChild(script);
+		}
+	}
+
 	return {
 		/**
 		 * @name Hyphenator.leftmin
@@ -954,6 +919,7 @@ var Hyphenator = function () {
          */
 		run: function () {
 			var process = function () {
+				autoSetMainLanguage();
 				gatherDocumentInfos();
 				prepare(Hyphenator.hyphenateDocument);
 				if (displayToggleBox) {
@@ -1166,6 +1132,25 @@ var Hyphenator = function () {
 		},
 		
 		/**
+		 * @name Hyphenator.removeHyphenationFromDocument
+		 * @methodOf Hyphenator
+		 * @description
+		 * 
+		 * @public
+         */
+		removeHyphenationFromDocument: function () {
+			var i, l;
+			if (Hyphenator.isBookmarklet()) {
+				Hyphenator.deleteHyphenationInElement(document.getElementsByTagName('body')[0]);
+			} else {
+				for (i = 0, l = elements.length; i < l; i++)
+				{
+					Hyphenator.removeHyphenationFromElement(elements[i]);
+				}
+			}
+		},
+		
+		/**
 		 * @name Hyphenator.hyphenateElement
 		 * @methodOf Hyphenator
 		 * @description
@@ -1202,8 +1187,6 @@ var Hyphenator = function () {
 				for (i = 0; (n = el.childNodes[i]); i++) {
 					if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
 						n.data = n.data.replace(genRegExp, hyphenate);
-					} else if (n.nodeType === 1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1 = element node -> recursion
-						Hyphenator.hyphenateElement(n, lang);
 					}
 				}
 			}
@@ -1222,7 +1205,7 @@ var Hyphenator = function () {
 		 * @param object The element where to remove hyphenation.
 		 * @public
          */
-        deleteHyphenationInElement : function (el) {
+        removeHyphenationFromElement : function (el) {
         	var h, i, n;
         	switch (hyphen) {
 			case '|':
@@ -1241,7 +1224,7 @@ var Hyphenator = function () {
         		if (n.nodeType === 3) {
         			n.data = n.data.replace(new RegExp(h, 'g'), '');
         		} else if (n.nodeType === 1) {
-        			Hyphenator.deleteHyphenationInElement(n);
+        			Hyphenator.removeHyphenationFromElement(n);
         		}
         	}
         },
@@ -1357,11 +1340,11 @@ var Hyphenator = function () {
 		toggleHyphenation: function () {
 			var currentText = document.getElementById('HyphenatorToggleBox').firstChild.nodeValue;
 			if (currentText === 'Hy-phe-na-ti-on') {
-				removeHyphenation();
+				Hyphenator.removeHyphenationFromDocument();
 				document.getElementById('HyphenatorToggleBox').firstChild.nodeValue = 'Hyphenation';
 				
 			} else {
-				runHyphenation();
+				Hyphenator.hyphenateDocument();
 				document.getElementById('HyphenatorToggleBox').firstChild.nodeValue = 'Hy-phe-na-ti-on';
 			}
 		}
