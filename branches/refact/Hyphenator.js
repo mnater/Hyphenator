@@ -601,7 +601,9 @@ var Hyphenator = function () {
 					//alert('Language '+lang+' is not yet supported.');
 				}
 			}
-			elements[idx].lang = lang;
+			if (lang !== mainlanguage) {
+				elements[idx].lang = lang;
+			}
 			var n, i;
 			for (i = 0; (n = el.childNodes[i]); i++) {
 				if (n.nodeType === 1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1 = element node -> recursion
@@ -618,13 +620,10 @@ var Hyphenator = function () {
 		}
 		if (document.getElementsByClassName) {
 			el = document.getElementsByClassName(hyphenateclass);
-			var pt3 = new Date().getTime();
 			for (i = 0, l = el.length; i < l; i++)
 			{
 				process(el[i], true);
 			}
-			var pt4 = new Date().getTime();
-			//alert("Line 630: "+(pt4-pt3));
 		} else {
 			el = document.getElementsByTagName('*');
 			for (i = 0, l = el.length; i < l; i++)
