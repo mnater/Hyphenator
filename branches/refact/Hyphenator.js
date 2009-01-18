@@ -335,6 +335,18 @@ var Hyphenator = function () {
 	}();
 	
 	/**
+	 * @name Hyphenator-onHyphenationDone
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A method to be called, when the last element has been hyphenated or the hyphenation has been
+	 * removed from the last element.
+	 * This is set by {@link Hyphenator.run}
+	 * @type function
+	 * @private
+	 */		
+	var onHyphenationDone = function(){};
+	
+	/**
 	 * @name Hyphenator-hyphen
 	 * @fieldOf Hyphenator
 	 * @description
@@ -865,14 +877,17 @@ var Hyphenator = function () {
 		 * @name Hyphenator.run
 		 * @methodOf Hyphenator
 		 * @description
-		 * Bootstrap function that starts all hyphenationprocesses when called
+		 * Bootstrap function that starts all hyphenationprocesses when called.
+		 * Can have a callback as argument wich is called when all hyphenation is done.
+		 * @param function Callback
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
          * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.run();
+         *   Hyphenator.run(function(){alert('Hyphenation done');});
          * &lt;/script&gt;
          */
-		run: function () {
+		run: function (cb) {
+			onHyphenationDone = cb || function(){};
 			var process = function () {
 				autoSetMainLanguage();
 				gatherDocumentInfos();
@@ -1081,7 +1096,14 @@ var Hyphenator = function () {
 			} else {
 				for (i = 0, l = elements.length; i < l; i++)
 				{
-					window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
+					if (i == l - 1) {
+						window.setTimeout(function() {
+							bind(Hyphenator, "hyphenateElement", elements[i]);
+							onHyphenationDone();
+							}, 0);
+					} else {
+						window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
+					}
 				}
 			}
 		},
