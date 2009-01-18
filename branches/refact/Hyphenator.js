@@ -612,12 +612,19 @@ var Hyphenator = function () {
 				}
 			}
 		};
+		if (Hyphenator.isBookmarklet()) {
+			process(document.getElementsByTagName('body')[0], false);
+			return;
+		}
 		if (document.getElementsByClassName) {
 			el = document.getElementsByClassName(hyphenateclass);
+			var pt3 = new Date().getTime();
 			for (i = 0, l = el.length; i < l; i++)
 			{
 				process(el[i], true);
 			}
+			var pt4 = new Date().getTime();
+			//alert("Line 630: "+(pt4-pt3));
 		} else {
 			el = document.getElementsByTagName('*');
 			for (i = 0, l = el.length; i < l; i++)
@@ -626,6 +633,9 @@ var Hyphenator = function () {
 					process(el[i], true);
 				}
 			}
+		}
+		if (elements.length > 0) {
+			elements[elements.length-1].isLast = true;
 		}
 	}
 	 
@@ -1091,20 +1101,9 @@ var Hyphenator = function () {
 				};
 			}
 			var i, l;
-			if (Hyphenator.isBookmarklet()) {
-				Hyphenator.hyphenateElement(document.getElementsByTagName('body')[0]);
-			} else {
-				for (i = 0, l = elements.length; i < l; i++)
-				{
-					if (i == l - 1) {
-						window.setTimeout(function() {
-							bind(Hyphenator, "hyphenateElement", elements[i]);
-							onHyphenationDone();
-							}, 0);
-					} else {
-						window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
-					}
-				}
+			for (i = 0, l = elements.length; i < l; i++)
+			{
+					window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
 			}
 		},
 		
@@ -1169,6 +1168,9 @@ var Hyphenator = function () {
 			}
             if (el.className.indexOf(hyphenateclass) !== -1) {
 	            el.style.visibility = 'visible';
+	        }
+	        if(el.isLast) {
+	        	onHyphenationDone();
 	        }
        },
 
