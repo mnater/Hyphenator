@@ -1113,7 +1113,6 @@ var Hyphenator = function () {
 		 * @public
          */
 		removeHyphenationFromDocument: function () {
-			var i, l;
 			if (Hyphenator.isBookmarklet()) {
 				Hyphenator.deleteHyphenationInElement(document.getElementsByTagName('body')[0]);
 			} else {
