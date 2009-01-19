@@ -604,8 +604,8 @@ var Hyphenator = function () {
 			if (lang !== mainlanguage) {
 				elements[idx].lang = lang;
 			}
-			var n, i;
-			for (i = 0; (n = el.childNodes[i]); i++) {
+			var n, i = 0;
+			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1 = element node -> recursion
 					if(n.className.indexOf(hyphenateclass) === -1 && n.className.indexOf('donthyphenate') === -1) {
 						process(n, false);
@@ -1099,10 +1099,9 @@ var Hyphenator = function () {
 					return f.call(obj, args);
 				};
 			}
-			var i, l;
-			for (i = 0, l = elements.length; i < l; i++)
-			{
-					window.setTimeout(bind(Hyphenator, "hyphenateElement", elements[i]), 0);
+			var i = 0, el;
+			while (!!(el = elements[i++])) {
+				window.setTimeout(bind(Hyphenator, "hyphenateElement", el), 0);
 			}
 		},
 		
@@ -1118,9 +1117,9 @@ var Hyphenator = function () {
 			if (Hyphenator.isBookmarklet()) {
 				Hyphenator.deleteHyphenationInElement(document.getElementsByTagName('body')[0]);
 			} else {
-				for (i = 0, l = elements.length; i < l; i++)
-				{
-					Hyphenator.removeHyphenationFromElement(elements[i]);
+				var i = 0, el;
+				while (!!(el = elements[i++])) {
+					Hyphenator.removeHyphenationFromElement(el);
 				}
 			}
 		},
@@ -1158,8 +1157,8 @@ var Hyphenator = function () {
 					}
 				};
 				var genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
-				var n, i;
-				for (i = 0; (n = el.childNodes[i]); i++) {
+				var n, i = 0;
+				while (!!(n = el.childNodes[i++])) {
 					if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
 						n.data = n.data.replace(genRegExp, hyphenate);
 					}
@@ -1184,7 +1183,7 @@ var Hyphenator = function () {
 		 * @public
          */
         removeHyphenationFromElement : function (el) {
-        	var h, i, n;
+        	var h, i = 0, n;
         	switch (hyphen) {
 			case '|':
 				h = '\\|';
@@ -1198,7 +1197,7 @@ var Hyphenator = function () {
 			default:
 				h = hyphen;
         	}
-        	for (i = 0; (n = el.childNodes[i]); i++) {
+        	while (!!(n = el.childNodes[i++])) {
         		if (n.nodeType === 3) {
         			n.data = n.data.replace(new RegExp(h, 'g'), '');
         		} else if (n.nodeType === 1) {
