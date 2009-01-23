@@ -69,7 +69,8 @@ var Hyphenator = function () {
 						'pa': true,
 						'sv': true,
 						'it': true,
-						'fi': true}; //you may delete languages that you won't use (for better performance)
+						'fi': true,
+						'ru': true}; //you may delete languages that you won't use (for better performance)
 
 	/**
 	 * @name Hyphenator-LANGUAGEHINT
@@ -81,7 +82,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl\tSvenska: sv\tMalayalam: ml\tHindi: hi\tBengali: bn\tGujarati : gu\tTamil: ta\tOriya: or\tPanjabi: pa\tTelugu: te\tKannada: kn\tItaliano: it\tSuomi: fi';
+	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl\tSvenska: sv\tMalayalam: ml\tHindi: hi\tBengali: bn\tGujarati : gu\tTamil: ta\tOriya: or\tPanjabi: pa\tTelugu: te\tKannada: kn\tItaliano: it\tSuomi: fi\tRussian: ru';
 
 	/**
 	 * @name Hyphenator-PROMPTERSTRINGS
@@ -101,6 +102,7 @@ var Hyphenator = function () {
 						 'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange: \n\n' + LANGUAGEHINT,
 						 'ml': 'ഈ വെബ്‌സൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാന്‍ കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക: \n\n' + LANGUAGEHINT,
 						 'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore: \n\n' + LANGUAGEHINT,
+						 'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык: \n\n'+LANGUAGEHINT,
 						 'fi': 'Sivun kieltä ei tunnistettu automaattisesti. Määritä sivun pääkieli: \n\n' + LANGUAGEHINT};
 	
 	/**
