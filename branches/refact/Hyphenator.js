@@ -246,6 +246,19 @@ var Hyphenator = function () {
 	 * @private
 	 */	
 	var elements = [];
+	
+	/**
+	 * @name Hyphenator-exceptions
+	 * @fieldOf Hyphenator
+	 * @description
+	 * An object containing exceptions as comma separated strings for each language.
+	 * When the language-objects are loaded, this exceptions are processed and then deleted.
+	 * @see addExceptions();
+	 * @see 
+	 * @type object
+	 * @private
+	 */	
+	var exceptions = {};
 
 	/**
 	 * @name Hyphenator-doclanguages
@@ -579,10 +592,9 @@ var Hyphenator = function () {
 			}
 		}
 	}
-
     
 	/**
-	 *
+	 * 
 	 *
 	 *
 	 */
@@ -656,6 +668,17 @@ var Hyphenator = function () {
 		}
 	}
 
+	function convertExceptionsToObject(exc) {
+		var w = exc.split(',');
+		var r = {};
+		for (var i = 0, l = w.length; i < l; i++) {
+			var key = w[i].replace(/-/g, '');
+			if (!r.hasOwnProperty(key)) {
+				r[key] = w[i];
+			}
+		}
+		return r;
+	}
 	/**
 	 * @name Hyphenator-loadPatterns
 	 * @methodOf Hyphenator
@@ -718,9 +741,11 @@ var Hyphenator = function () {
 			Hyphenator.languages[lang].cache = {};
 		}
 		if (Hyphenator.languages[lang].hasOwnProperty('exceptions')) {
-			var tmp = Hyphenator.languages[lang].exceptions;
-			Hyphenator.languages[lang].exceptions = {};
-			Hyphenator.addExceptions(lang, tmp);
+			Hyphenator.addExceptions(lang, Hyphenator.languages[lang].exceptions);
+			delete Hyphenator.languages[lang].exceptions;
+		}
+		if (exceptions.hasOwnProperty(lang)) {
+			Hyphenator.languages[lang].exceptions = convertExceptionsToObject(exceptions[lang]);
 		} else {
 			Hyphenator.languages[lang].exceptions = {};
 		}
@@ -771,7 +796,7 @@ var Hyphenator = function () {
 					finishedLoading = true;
 					//do conversion while other patterns are loading:
 					convertPatternsToObject(lang);
-					prepareLanguagesObj(lang);			
+					prepareLanguagesObj(lang);		
 				}
 			}
 			if (finishedLoading) {
@@ -927,12 +952,10 @@ var Hyphenator = function () {
          * &lt;/script&gt;
          */
 		addExceptions: function (lang, words) { //words is a comma separated string of words
-			var w = words.split(',');
-			for (var i = 0, l = w.length; i < l; i++) {
-				var key = w[i].replace(/-/g, '');
-				if (!Hyphenator.languages[lang].exceptions.hasOwnProperty(key)) {
-					Hyphenator.languages[lang].exceptions[key] = w[i];
-				}
+			if (exceptions.hasOwnProperty[lang]) {
+				exceptions[lang] += ","+words;
+			} else {
+				exceptions[lang] = words;
 			}
 		},	
 		
@@ -1247,7 +1270,7 @@ var Hyphenator = function () {
 			var s = w.split('');
 			w = w.toLowerCase();
 			var hypos = [];
-			var p, maxwins, win, pat = false, patl, c, digits, z;
+			var p, maxwins, win, pat = false, patl, c, digits, z, i;
 			var numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
 			var n = wl - Hyphenator.languages[lang].shortestPattern;
 			for (p = 0; p <= n; p++) {
