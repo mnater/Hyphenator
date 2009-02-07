@@ -29,8 +29,6 @@
  * @version BetaXX
  * @TO DO:
  * - make switchToggleBox external (overwritable) to fit individual needs
- * - implement a global error-mechanism
- * - better solution for i18n
  */
 
 /**
@@ -46,38 +44,6 @@
  */
 var Hyphenator = function () {
 
-	/**
-	 * @name Hyphenator-SUPPORTEDLANG
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A key-value object that stores supported languages.
-	 * If you add hyphenation patterns change this object.
-	 * You may delete languages that you won't use (for better performance)
-	 * @type object
-	 * @private
-	 * @example
-	 * Check if language lang is supported:
-	 * if (SUPPORTEDLANG[lang])
-	 */
-	var SUPPORTEDLANG = {'de': true,
-						 'en': true,
-						 'es': true,
-						 'fr': true,
-						 'nl': true,
-						 'ml': true,
-						 'hi': true,
-						 'bn': true,
-						 'gu': true,
-						 'ta': true,
-						 'ka': true,
-						 'te': true,
-						 'or': true,
-						 'pa': true,
-						 'sv': true,
-						 'it': true,
-						 'fi': true,
-						 'ru': true,
-						 'pl': true};
 
 	/**
 	 * @name Hyphenator-LANGUAGEHINT
@@ -89,7 +55,27 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var LANGUAGEHINT = 'Deutsch: de\tEnglish: en\tEspa%F1ol: es\tFran%E7ais: fr\tNederlands: nl\tSvenska: sv\tMalayalam: ml\tHindi: hi\tBengali: bn\tGujarati : gu\tTamil: ta\tOriya: or\tPanjabi: pa\tTelugu: te\tKannada: kn\tItaliano: it\tSuomi: fi\tRussian: ru\tPolish: pl';
+	var LANGUAGEHINT = 'bn, de, en, es, fi, fr, gu, hi, it, ka, ml, nl, or, pa, pl, ru, sv, ta, te';
+
+	/**
+	 * @name Hyphenator-SUPPORTEDLANG
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A generated key-value object that stores supported languages.
+	 * @type object
+	 * @private
+	 * @example
+	 * Check if language lang is supported:
+	 * if (SUPPORTEDLANG[lang])
+	 */
+	var SUPPORTEDLANG = function () {
+		var k, i = 0, a = LANGUAGEHINT.split(', ');
+		var r = {};
+		while (k = a[i++]) {
+			r[k] = true;
+		}
+		return r;
+	}();
 
 	/**
 	 * @name Hyphenator-PROMPTERSTRINGS
@@ -101,17 +87,18 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
-	var PROMPTERSTRINGS = {	'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben: \n\n' + LANGUAGEHINT,
-						 	'en': 'The language of this website could not be determined automatically. Please indicate main language: \n\n' + LANGUAGEHINT,
-                         	'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal: \n\n'+LANGUAGEHINT,
-						 	'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue%A0: \n\n' + LANGUAGEHINT,
-						 	'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op: \n\n' + LANGUAGEHINT,
-						 	'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange: \n\n' + LANGUAGEHINT,
-							'ml': 'ഈ വെബ്‌സൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാന്‍ കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക: \n\n' + LANGUAGEHINT,
-							'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore: \n\n' + LANGUAGEHINT,
-							'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык: \n\n'+LANGUAGEHINT,
-							'pl': 'The language of this website could not be determined automatically. Please indicate main language: \n\n' + LANGUAGEHINT,
-							'fi': 'Sivun kieltä ei tunnistettu automaattisesti. Määritä sivun pääkieli: \n\n' + LANGUAGEHINT};
+	var PROMPTERSTRINGS = {
+		'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:',
+		'en': 'The language of this website could not be determined automatically. Please indicate main language:',
+		'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal:',
+		'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:',
+		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
+		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:',
+		'ml': 'ഈ വെബ്‌സൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാന്‍ കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
+		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
+		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
+		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:'
+	};
 	
 	/**
 	 * @name Hyphenator-BASEPATH
@@ -370,6 +357,20 @@ var Hyphenator = function () {
 	 * @private
 	 */		
 	var onHyphenationDone = function(){};
+
+	/**
+	 * @name Hyphenator-onHyphenationDone
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A method to be called, when the last element has been hyphenated or the hyphenation has been
+	 * removed from the last element.
+	 * This is set by {@link Hyphenator.run}
+	 * @type function
+	 * @private
+	 */		
+	var error = function(e){
+		alert("Hyphenator.js says:\n\nAn Error ocurred:\n"+e.message);
+	};
 	
 	/**
 	 * @name Hyphenator-hyphen
@@ -593,11 +594,12 @@ var Hyphenator = function () {
 			var text = '';
 			var ul = navigator.language ? navigator.language : navigator.userLanguage;
 			ul = ul.substring(0, 2);
-			if (SUPPORTEDLANG[ul]) {
+			if (PROMPTERSTRINGS.hasOwnProperty(ul)) {
 				text = PROMPTERSTRINGS[ul];
 			} else {
 				text = PROMPTERSTRINGS.en;
 			}
+			text += ' (ISO 639-1)\n\n'+LANGUAGEHINT;
 			var lang = window.prompt(unescape(text), ul);
 			if (SUPPORTEDLANG[lang]) {
 				mainlanguage = lang;
@@ -628,7 +630,7 @@ var Hyphenator = function () {
 				if (SUPPORTEDLANG[lang]) {
 					doclanguages[lang] = true;
 				} else {
-					//alert('Language '+lang+' is not yet supported.');
+					error(new Error('Language '+lang+' is not yet supported.'));
 				}
 			}
 			if (lang !== mainlanguage) {
@@ -727,9 +729,7 @@ var Hyphenator = function () {
 			return;
 		}
 		//check if 'url' is available:
-		//Still commented out, because it's not yet fully tested!
-		//TBD: Where to catch errors?
-		/*var xhr = null;
+		var xhr = null;
 		if (typeof XMLHttpRequest != 'undefined') {
 			xhr = new XMLHttpRequest();
 		}
@@ -744,10 +744,11 @@ var Hyphenator = function () {
 			xhr.open('HEAD', url, false);
 			xhr.send(null);
 			if(xhr.status == 404) {
-				alert('Hyphenator.js Error:\nCould not load\n'+url);
+				error(new Error('Could not load\n'+url));
+				delete doclanguages[lang];
 				return;
 			}
-		}*/
+		}
 		if (document.createElement) {
 			var head = document.getElementsByTagName('head').item(0);
 			var script = document.createElement('script');
@@ -951,6 +952,9 @@ var Hyphenator = function () {
 			if(obj.remoteloading) {
 				Hyphenator.setRemoteLoading(obj.remoteloading);
 			}
+			if(obj.onhyphenationdonecallback) {
+				Hyphenator.setOnHyphenationDoneCallback(obj.onhyphenationdonecallback);
+			}
 		},
 
 		/**
@@ -959,21 +963,23 @@ var Hyphenator = function () {
 		 * @description
 		 * Bootstrap function that starts all hyphenationprocesses when called.
 		 * Can have a callback as argument wich is called when all hyphenation is done.
-		 * @param function Callback
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
          * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.run(function(){alert('Hyphenation done');});
+         *   Hyphenator.run();
          * &lt;/script&gt;
          */
-		run: function (cb) {
-			onHyphenationDone = cb || function(){};
+		run: function () {
 			var process = function () {
-				autoSetMainLanguage();
-				gatherDocumentInfos();
-				prepare(Hyphenator.hyphenateDocument);
-				if (displayToggleBox) {
-					switchToggleBox(true);
+				try {
+					autoSetMainLanguage();
+					gatherDocumentInfos();
+					prepare(Hyphenator.hyphenateDocument);
+					if (displayToggleBox) {
+						switchToggleBox(true);
+					}
+				} catch (e) {
+					error(e);
 				}
 			};
 			runOnContentLoaded(window, process);
@@ -1140,6 +1146,24 @@ var Hyphenator = function () {
          */
 		setEnableCache: function (bool) {
 			enableCache = bool;
+		},
+
+		/**
+		 * @name Hyphenator.setOnHyphenationDoneCallback
+		 * @methodOf Hyphenator
+		 * @description
+         */
+		setOnHyphenationDoneCallback: function (cb) {
+			onHyphenationDone = cb || function(){};
+		},
+
+		/**
+		 * @name Hyphenator.setErrorHandler
+		 * @methodOf Hyphenator
+		 * @description
+         */
+		setOnErrorHandler: function (h) {
+			error = h || function(){};
 		},
 
 		/**
