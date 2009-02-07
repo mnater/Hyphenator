@@ -32,9 +32,9 @@
 				out.data="hyphenateElement(te,'en') :: "+(end-start)+"ms";
 			}
 			start=new Date().getTime();
-			
+			Hyphenator.setOnHyphenationDoneCallback(cb);
 			Hyphenator.setEnableCache(true);
-			Hyphenator.run(cb);
+			Hyphenator.run();
         </script>
     </head>
     <body>
