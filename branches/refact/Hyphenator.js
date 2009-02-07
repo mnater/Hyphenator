@@ -55,7 +55,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var LANGUAGEHINT = 'bn, de, en, es, fi, fr, gu, hi, it, ka, ml, nl, or, pa, pl, ru, sv, ta, te';
+	var LANGUAGEHINT = 'bn, de, en, es, fi, fr, gu, hi, it, ka, ml, nl, or, pa, pl, ru, sv, ta, te, tl';
 
 	/**
 	 * @name Hyphenator-SUPPORTEDLANG
@@ -121,6 +121,19 @@ var Hyphenator = function () {
 			}
 		}
 		return 'http://hyphenator.googlecode.com/svn/branches/refact/';
+	}();
+	
+	/**
+	 * @name Hyphenator-LOCAL
+	 * @fieldOf Hyphenator
+	 * @description
+	 */
+	var LOCAL = function () {
+		var re = false;
+		if (BASEPATH.indexOf(window.location.hostname) !== -1) {
+			re = true;
+		}
+		return re;
 	}();
 	
 	/**
@@ -728,8 +741,7 @@ var Hyphenator = function () {
 		} else {
 			return;
 		}
-		/*
-		if (!bookmarklet) {
+		if (LOCAL && !bookmarklet) {
 			//check if 'url' is available:
 			var xhr = null;
 			if (typeof XMLHttpRequest != 'undefined') {
@@ -752,7 +764,6 @@ var Hyphenator = function () {
 				}
 			}
 		}
-		*/
 		if (document.createElement) {
 			var head = document.getElementsByTagName('head').item(0);
 			var script = document.createElement('script');
