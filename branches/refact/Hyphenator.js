@@ -728,27 +728,31 @@ var Hyphenator = function () {
 		} else {
 			return;
 		}
-		//check if 'url' is available:
-		var xhr = null;
-		if (typeof XMLHttpRequest != 'undefined') {
-			xhr = new XMLHttpRequest();
-		}
-		if (!xhr) {
-		    try {
-        		xhr  = new ActiveXObject("Msxml2.XMLHTTP");
-    		} catch(e) {
-				xhr  = null;
-    		}
-		}
-		if (xhr) {
-			xhr.open('HEAD', url, false);
-			xhr.send(null);
-			if(xhr.status == 404) {
-				error(new Error('Could not load\n'+url));
-				delete doclanguages[lang];
-				return;
+		/*
+		if (!bookmarklet) {
+			//check if 'url' is available:
+			var xhr = null;
+			if (typeof XMLHttpRequest != 'undefined') {
+				xhr = new XMLHttpRequest();
+			}
+			if (!xhr) {
+				try {
+					xhr  = new ActiveXObject("Msxml2.XMLHTTP");
+				} catch(e) {
+					xhr  = null;
+				}
+			}
+			if (xhr) {
+				xhr.open('HEAD', url, false);
+				xhr.send(null);
+				if(xhr.status == 404) {
+					error(new Error('Could not load\n'+url));
+					delete doclanguages[lang];
+					return;
+				}
 			}
 		}
+		*/
 		if (document.createElement) {
 			var head = document.getElementsByTagName('head').item(0);
 			var script = document.createElement('script');
