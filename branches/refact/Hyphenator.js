@@ -51,11 +51,13 @@ var Hyphenator = function () {
 	 * @description
 	 * A string to be displayed in a prompt if the language can't be guessed.
 	 * If you add hyphenation patterns change this string.
+	 * Internally, this string is used to define languages that are supported by Hyphenator.
+	 * @see Hyphenator-SUPPORTEDLANG
 	 * @type string
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var LANGUAGEHINT = 'bn, de, en, es, fi, fr, gu, hi, it, ka, ml, nl, or, pa, pl, ru, sv, ta, te, tl';
+	var LANGUAGEHINT = 'bn, de, en, es, fi, fr, gu, hi, it, ka, ml, nl, or, pa, pl, ru, sv, ta, te';
 
 	/**
 	 * @name Hyphenator-SUPPORTEDLANG
@@ -71,7 +73,7 @@ var Hyphenator = function () {
 	var SUPPORTEDLANG = function () {
 		var k, i = 0, a = LANGUAGEHINT.split(', ');
 		var r = {};
-		while (k = a[i++]) {
+		while (!!(k = a[i++])) {
 			r[k] = true;
 		}
 		return r;
@@ -127,6 +129,8 @@ var Hyphenator = function () {
 	 * @name Hyphenator-LOCAL
 	 * @fieldOf Hyphenator
 	 * @description
+	 * LOCAL is true, if Hyphenator is loaded from the same domain, as the webpage, but false, if
+	 * it's loaded from an external source (i.e. directly from google.code)
 	 */
 	var LOCAL = function () {
 		var re = false;
@@ -285,17 +289,19 @@ var Hyphenator = function () {
 
 
 	/**
-	 * @name Hyphenator-preparestate
+	 * @name Hyphenator-state
 	 * @fieldOf Hyphenator
 	 * @description
 	 * A number that inidcates the current state of the scripts pattern-loading routine
 	 * 0: not initialized
 	 * 1: loading patterns
 	 * 2: ready
+	 * 3: hyphenation done
+	 * 4: hyphenation removed
 	 * @type number
 	 * @private
 	 */	
-	var preparestate = 0;
+	var state = 0;
 
 	/**
 	 * @name Hyphenator-url
@@ -384,6 +390,15 @@ var Hyphenator = function () {
 	var error = function(e){
 		alert("Hyphenator.js says:\n\nAn Error ocurred:\n"+e.message);
 	};
+
+	/**
+	 * @name Hyphenator-intermediateState
+	 * @fieldOf Hyphenator
+	 * @description
+	 * @type string
+	 * @private
+	 */		
+	var intermediateState = 'hidden';
 	
 	/**
 	 * @name Hyphenator-hyphen
@@ -637,7 +652,7 @@ var Hyphenator = function () {
 			var idx, lang;
 			idx = elements.push(el) - 1;
 			if (hide) {
-				elements[idx].style.visibility = 'hidden';
+				elements[idx].style.visibility = intermediateState;
 			}
 			if (!!(lang = getLang(el, true))) {
 				if (SUPPORTEDLANG[lang]) {
@@ -661,9 +676,7 @@ var Hyphenator = function () {
 		};
 		if (Hyphenator.isBookmarklet()) {
 			process(document.getElementsByTagName('body')[0], false);
-			return;
-		}
-		if (document.getElementsByClassName) {
+		} else if (document.getElementsByClassName) {
 			el = document.getElementsByClassName(hyphenateclass);
 			for (i = 0, l = el.length; i < l; i++)
 			{
@@ -820,12 +833,12 @@ var Hyphenator = function () {
 					prepareLanguagesObj(lang);
 				}
 			}
-			preparestate = 2;
+			state = 2;
 			callback();
 			return;
 		}
 		// get all languages that are used and preload the patterns
-		preparestate = 1;
+		state = 1;
 		doclanguages[mainlanguage] = true;
 		for (lang in doclanguages) {
 			if (doclanguages.hasOwnProperty(lang)) {
@@ -848,7 +861,7 @@ var Hyphenator = function () {
 			}
 			if (finishedLoading) {
 				window.clearInterval(interval);
-				preparestate = 2;
+				state = 2;
 				callback();
 			}
 		}, 100);
@@ -867,9 +880,16 @@ var Hyphenator = function () {
 	 * @param boolean True to create the toggleBox, false to hide it
 	 * @private
 	 */		
-	function switchToggleBox(s) {
-		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute;
-		if (s) {
+	var toggleBox = function (s) {
+		var myBox;
+		if (!!(myBox = document.getElementById('HyphenatorToggleBox'))) {
+			if (s) {
+				myBox.firstChild.data = 'Hy-phe-na-ti-on';
+			} else {
+				myBox.firstChild.data = 'Hyphenation';
+			}
+		} else {
+			var bdy, myIdAttribute, myTextNode, myClassAttribute; 
 			bdy = document.getElementsByTagName('body')[0];
 			myBox = document.createElement('div');
 			myIdAttribute = document.createAttribute('id');
@@ -894,11 +914,8 @@ var Hyphenator = function () {
 			myBox.style.WebkitBorderBottomLeftRadius = '4px';
 			myBox.style.MozBorderRadiusBottomleft = '4px';
 			bdy.appendChild(myBox);
-		} else {
-			myBox = document.getElementById('HyphenatorToggleBox');
-			myBox.style.visibility = 'hidden';
 		}
-	}
+	};
 
 	return {
 		/**
@@ -937,9 +954,13 @@ var Hyphenator = function () {
 		 * <tr><td>classname</td><td>string</td><td>'hyphenate'</td></tr>
 		 * <tr><td>minwordlength</td><td>integer</td><td>6</td></tr>
 		 * <tr><td>hyphenchar</td><td>string</td><td>'&amp;shy;'</td></tr>
-		 * <tr><td>togglebox</td><td>boolean</td><td>false</td></tr>
 		 * <tr><td>urlhyphenchar</td><td>string</td><td>'zero with space'</td></tr>
+		 * <tr><td>togglebox</td><td>function</td><td>see code</td></tr>
+		 * <tr><td>displaytogglebox</td><td>boolean</td><td>false</td></tr>
 		 * <tr><td>remoteloading</td><td>boolean</td><td>true</td></tr>
+		 * <tr><td>onhyphenationdonecallback</td><td>function</td><td>empty function</td></tr>
+		 * <tr><td>onerrorhandler</td><td>function</td><td>alert(error)</td></tr>
+		 * <tr><td>intermediatestate</td><td>string</td><td>'hidden'</td></tr>
 		 * </table>
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
@@ -958,17 +979,26 @@ var Hyphenator = function () {
 			if(obj.hyphenchar) {
 				Hyphenator.setHyphenChar(obj.hyphenchar);
 			}
-			if(obj.togglebox) {
-				Hyphenator.setDisplayToggleBox(obj.togglebox);
-			}
 			if(obj.urlhyphenchar) {
 				Hyphenator.setUrlHyphenChar(obj.urlhyphenchar);
+			}
+			if(obj.togglebox) {
+				Hyphenator.setToggleBox(obj.togglebox);
+			}
+			if(obj.displaytogglebox) {
+				Hyphenator.setDisplayToggleBox(obj.displaytogglebox);
 			}
 			if(obj.remoteloading) {
 				Hyphenator.setRemoteLoading(obj.remoteloading);
 			}
 			if(obj.onhyphenationdonecallback) {
 				Hyphenator.setOnHyphenationDoneCallback(obj.onhyphenationdonecallback);
+			}
+			if(obj.onerrorhandler) {
+				Hyphenator.setOnErrorHandler(obj.onerrorhandler);
+			}
+			if(obj.intermediatestate) {
+				Hyphenator.setIntermediateState(obj.intermediatestate);
 			}
 		},
 
@@ -991,7 +1021,7 @@ var Hyphenator = function () {
 					gatherDocumentInfos();
 					prepare(Hyphenator.hyphenateDocument);
 					if (displayToggleBox) {
-						switchToggleBox(true);
+						toggleBox(true);
 					}
 				} catch (e) {
 					error(e);
@@ -1182,6 +1212,32 @@ var Hyphenator = function () {
 		},
 
 		/**
+		 * @name Hyphenator.setSwitchToggleBox
+		 * @methodOf Hyphenator
+		 * @description
+         */
+		setToggleBox: function (h) {
+			toggleBox = h || function(){};
+		},
+
+		/**
+		 * @name Hyphenator.setSwitchToggleBox
+		 * @methodOf Hyphenator
+		 * @description
+         */
+		setIntermediateState: function (visibility) {
+			switch (visibility) {
+				case 'visible':
+				intermediateState = 'visible';
+				break;
+				case 'hidden':
+				default:
+				intermediateState = 'hidden';
+				break;
+			}
+		},
+
+		/**
 		 * @name Hyphenator.isBookmarklet
 		 * @methodOf Hyphenator
 		 * @description
@@ -1227,6 +1283,7 @@ var Hyphenator = function () {
 				while (!!(el = elements[i++])) {
 					Hyphenator.removeHyphenationFromElement(el);
 				}
+				state = 4;
 		},
 		
 		/**
@@ -1273,6 +1330,7 @@ var Hyphenator = function () {
 	            el.style.visibility = 'visible';
 	        }
 	        if(el.isLast) {
+	        	state = 3;
 	        	onHyphenationDone();
 	        }
        },
@@ -1354,7 +1412,7 @@ var Hyphenator = function () {
 			var s = w.split('');
 			w = w.toLowerCase();
 			var hypos = [];
-			var p, maxwins, win, patk, pat = false, patl, c, digits, z, i;
+			var p, maxwins, win, patk, pat = false, patl, c, digits, z;
 			var numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
 			var n = wl - lo.shortestPattern;
 			for (p = 0; p <= n; p++) {
@@ -1421,14 +1479,15 @@ var Hyphenator = function () {
 		 * @public
          */
 		toggleHyphenation: function () {
-			var currentText = document.getElementById('HyphenatorToggleBox').firstChild.nodeValue;
-			if (currentText === 'Hy-phe-na-ti-on') {
-				Hyphenator.removeHyphenationFromDocument();
-				document.getElementById('HyphenatorToggleBox').firstChild.nodeValue = 'Hyphenation';
-				
-			} else {
-				Hyphenator.hyphenateDocument();
-				document.getElementById('HyphenatorToggleBox').firstChild.nodeValue = 'Hy-phe-na-ti-on';
+			switch (state) {
+				case 3:
+					Hyphenator.removeHyphenationFromDocument();
+					toggleBox(false);
+					break;
+				case 4:
+					Hyphenator.hyphenateDocument();
+					toggleBox(true);
+					break;
 			}
 		}
 	};
