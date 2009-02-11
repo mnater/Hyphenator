@@ -28,7 +28,7 @@
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
  * @version BetaXX
  * @TO DO:
- * - make switchToggleBox external (overwritable) to fit individual needs
+ * - redo init()-method
  */
 
 /**
@@ -392,6 +392,16 @@ var Hyphenator = function () {
 	};
 
 	/**
+	 * @name Hyphenator-selectorFunction
+	 * @fieldOf Hyphenator
+	 * @description
+	 * 
+	 * @type function
+	 * @private
+	 */		
+	var selectorFunction = undefined;
+
+	/**
 	 * @name Hyphenator-intermediateState
 	 * @fieldOf Hyphenator
 	 * @description
@@ -676,6 +686,12 @@ var Hyphenator = function () {
 		};
 		if (Hyphenator.isBookmarklet()) {
 			process(document.getElementsByTagName('body')[0], false);
+		} else if (typeof selectorFunction === 'function') {
+			el = selectorFunction();
+			for (i = 0, l = el.length; i < l; i++)
+			{
+				process(el[i], true);
+			}			
 		} else if (document.getElementsByClassName) {
 			el = document.getElementsByClassName(hyphenateclass);
 			for (i = 0, l = el.length; i < l; i++)
@@ -1000,6 +1016,9 @@ var Hyphenator = function () {
 			if(obj.intermediatestate) {
 				Hyphenator.setIntermediateState(obj.intermediatestate);
 			}
+			if(obj.selectorfunction) {
+				Hyphenator.setSelectorFunction(obj.selectorfunction);
+			}
 		},
 
 		/**
@@ -1238,6 +1257,15 @@ var Hyphenator = function () {
 		},
 
 		/**
+		 * @name Hyphenator.setSwitchToggleBox
+		 * @methodOf Hyphenator
+		 * @description
+         */
+		setSelectorFunction: function (f) {
+			selectorFunction = f || undefined;
+		},
+
+		/**
 		 * @name Hyphenator.isBookmarklet
 		 * @methodOf Hyphenator
 		 * @description
@@ -1298,9 +1326,6 @@ var Hyphenator = function () {
 		 * @public
          */
 		hyphenateElement : function (el, lang) {
-			if (el.className.indexOf("donthyphenate") !== -1) {
-				return;
-			}
 			if (!lang) {
 				lang = getLang(el, true);
 			} else {
@@ -1326,9 +1351,7 @@ var Hyphenator = function () {
 					}
 				}
 			}
-            if (el.className.indexOf(hyphenateclass) !== -1) {
-	            el.style.visibility = 'visible';
-	        }
+            el.style.visibility = 'visible';
 	        if(el.isLast) {
 	        	state = 3;
 	        	onHyphenationDone();
