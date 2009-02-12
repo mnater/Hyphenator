@@ -870,6 +870,7 @@ var Hyphenator = function () {
 					break;
 				} else {
 					finishedLoading = true;
+					delete doclanguages[lang];
 					//do conversion while other patterns are loading:
 					convertPatternsToObject(lang);
 					prepareLanguagesObj(lang);		
