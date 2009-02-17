@@ -25,8 +25,10 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.setHyphenChar('|');
-                Hyphenator.setMinWordLength(8);
+                Hyphenator.config({
+                	hyphenchar:'|',
+                	minwordlength:8
+                });
                 Hyphenator.run();
         </script>
     </head>
@@ -34,9 +36,12 @@
         <h1>Test 12</h1>
         <p>Run Hyphenation with a minimal word length of 8.</p>
 		<p><a href="test11.html">&lt;- Prev</a> | <a href="test13.html">Next -&gt;</a></p>
-        <pre>Hyphenator.setHyphenChar('|');
-Hyphenator.setMinWordLength(8);
-Hyphenator.run();</pre>
+        <pre>Hyphenator.config({
+    hyphenchar:'|',
+    minwordlength:8
+});
+Hyphenator.run();
+</pre>
 
         <p class="hyphenate test">Die Ente holte feinen Seetang versetzt mit Schnecken vom Teichgrund.</p>
         <p class="ref">Die Ente holte feinen Seetang ver|setzt mit Schne|cken vom Teich|grund.</p>

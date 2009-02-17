@@ -28,7 +28,7 @@
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
  * @version BetaXX
  * @TO DO:
- * - redo init()-method
+ * - redo config()-method
  */
 
 /**
@@ -191,7 +191,7 @@ var Hyphenator = function () {
 	var displayToggleBox = false;
 	
 	/**
-	 * @name Hyphenator-hyphenateclass
+	 * @name Hyphenator-hyphenateClass
 	 * @fieldOf Hyphenator
 	 * @description
 	 * A string containing the css-class-name for the hyphenate class
@@ -203,7 +203,7 @@ var Hyphenator = function () {
 	 * @see Hyphenator.setClassName
 	 * @see Hyphenator-switchToggleBox
 	 */
-	var hyphenateclass = 'hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class = "hyphenate">Text</p>
+	var hyphenateClass = 'hyphenate'; // the CSS-Classname of Elements that should be hyphenated eg. <p class = "hyphenate">Text</p>
 	
 	/**
 	 * @name Hyphenator-min
@@ -243,7 +243,7 @@ var Hyphenator = function () {
 	}();
 
 	/**
-	 * @name Hyphenator-mainlanguage
+	 * @name Hyphenator-mainLanguage
 	 * @fieldOf Hyphenator
 	 * @description
 	 * The general language of the document
@@ -251,7 +251,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
-	var mainlanguage = null;
+	var mainLanguage = null;
 
 	/**
 	 * @name Hyphenator-elements
@@ -277,7 +277,7 @@ var Hyphenator = function () {
 	var exceptions = {};
 
 	/**
-	 * @name Hyphenator-doclanguages
+	 * @name Hyphenator-docLanguages
 	 * @fieldOf Hyphenator
 	 * @description
 	 * An object holding all languages used in the document. This is filled by
@@ -285,7 +285,7 @@ var Hyphenator = function () {
 	 * @type object
 	 * @private
 	 */	
-	var doclanguages = {};
+	var docLanguages = {};
 
 
 	/**
@@ -378,7 +378,7 @@ var Hyphenator = function () {
 	var onHyphenationDone = function(){};
 
 	/**
-	 * @name Hyphenator-onHyphenationDone
+	 * @name Hyphenator-error
 	 * @fieldOf Hyphenator
 	 * @description
 	 * A method to be called, when the last element has been hyphenated or the hyphenation has been
@@ -560,9 +560,9 @@ var Hyphenator = function () {
 	 * @name Hyphenator-getLang
 	 * @methodOf Hyphenator
 	 * @description
-	 * Gets the language of an element. If no language is set, it may use the {@link Hyphenator-mainlanguage}.
+	 * Gets the language of an element. If no language is set, it may use the {@link Hyphenator-mainLanguage}.
 	 * @param object The first parameter is an DOM-Element-Object
-	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainlanguage}
+	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainLanguage}
 	 * if there's no language found for the element.
 	 * @private
 	 */		
@@ -586,8 +586,8 @@ var Hyphenator = function () {
 		if (el.tagName != 'HTML' && nofallback) {
 			return getLang(el.parentNode);
 		}
-		if (!nofallback && mainlanguage) {
-			return mainlanguage;
+		if (!nofallback && mainLanguage) {
+			return mainLanguage;
 		}
 		return null;
 	}	
@@ -605,30 +605,30 @@ var Hyphenator = function () {
 	 * <li>&lt;meta name = "language" content = "xy" /&gt;</li>
 	 * </li>
 	 * If nothing can be found a prompt using {@link Hyphenator-LANGUAGEHINT} and {@link Hyphenator-PROMPTERSTRINGS} is displayed.
-	 * If the retrieved language is in the object {@link Hyphenator-SUPPORTEDLANG} it is copied to {@link Hyphenator-mainlanguage}
+	 * If the retrieved language is in the object {@link Hyphenator-SUPPORTEDLANG} it is copied to {@link Hyphenator-mainLanguage}
 	 * @private
 	 */		
 	function autoSetMainLanguage() {
 		var el = document.getElementsByTagName('html')[0];
-		mainlanguage = getLang(el);
-		if (!mainlanguage) {
+		mainLanguage = getLang(el);
+		if (!mainLanguage) {
 			var m = document.getElementsByTagName('meta');
 			for (var i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
 				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
-					mainlanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2);
 				}
 				//<meta name = "DC.Language" content="xy">
 				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
-					mainlanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2);
 				}			
 				//<meta name = "language" content = "xy">
 				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
-					mainlanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2);
 				}
 			}
 		}
-		if (!mainlanguage) {
+		if (!mainLanguage) {
 			var text = '';
 			var ul = navigator.language ? navigator.language : navigator.userLanguage;
 			ul = ul.substring(0, 2);
@@ -640,7 +640,7 @@ var Hyphenator = function () {
 			text += ' (ISO 639-1)\n\n'+LANGUAGEHINT;
 			var lang = window.prompt(unescape(text), ul);
 			if (SUPPORTEDLANG[lang]) {
-				mainlanguage = lang;
+				mainLanguage = lang;
 			}
 		}
 	}
@@ -666,18 +666,18 @@ var Hyphenator = function () {
 			}
 			if (!!(lang = getLang(el, true))) {
 				if (SUPPORTEDLANG[lang]) {
-					doclanguages[lang] = true;
+					docLanguages[lang] = true;
 				} else {
 					error(new Error('Language '+lang+' is not yet supported.'));
 				}
 			}
-			if (lang !== mainlanguage) {
+			if (lang !== mainLanguage) {
 				elements[idx].lang = lang;
 			}
 			var n, i = 0;
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !DONTHYPHENATE[n.nodeName.toLowerCase()]) {			//typ 1 = element node -> recursion
-					if(n.className.indexOf(hyphenateclass) === -1 && n.className.indexOf('donthyphenate') === -1) {
+					if(n.className.indexOf(hyphenateClass) === -1 && n.className.indexOf('donthyphenate') === -1) {
 						process(n, false);
 					}
 					
@@ -693,7 +693,7 @@ var Hyphenator = function () {
 				process(el[i], true);
 			}			
 		} else if (document.getElementsByClassName) {
-			el = document.getElementsByClassName(hyphenateclass);
+			el = document.getElementsByClassName(hyphenateClass);
 			for (i = 0, l = el.length; i < l; i++)
 			{
 				process(el[i], true);
@@ -702,7 +702,7 @@ var Hyphenator = function () {
 			el = document.getElementsByTagName('*');
 			for (i = 0, l = el.length; i < l; i++)
 			{
-				if (el[i].className.indexOf(hyphenateclass) !== -1 && el[i].className.indexOf('donthyphenate') === -1) {
+				if (el[i].className.indexOf(hyphenateClass) !== -1 && el[i].className.indexOf('donthyphenate') === -1) {
 					process(el[i], true);
 				}
 			}
@@ -788,7 +788,7 @@ var Hyphenator = function () {
 				xhr.send(null);
 				if(xhr.status == 404) {
 					error(new Error('Could not load\n'+url));
-					delete doclanguages[lang];
+					delete docLanguages[lang];
 					return;
 				}
 			}
@@ -855,22 +855,22 @@ var Hyphenator = function () {
 		}
 		// get all languages that are used and preload the patterns
 		state = 1;
-		doclanguages[mainlanguage] = true;
-		for (lang in doclanguages) {
-			if (doclanguages.hasOwnProperty(lang)) {
+		docLanguages[mainLanguage] = true;
+		for (lang in docLanguages) {
+			if (docLanguages.hasOwnProperty(lang)) {
 				loadPatterns(lang);
 			}
 		}
 		// wait until they are loaded
 		var interval = window.setInterval(function () {
 			var finishedLoading = false;
-			for (var lang in doclanguages) {
+			for (var lang in docLanguages) {
 				if (!Hyphenator.languages[lang]) {
 					finishedLoading = false;
 					break;
 				} else {
 					finishedLoading = true;
-					delete doclanguages[lang];
+					delete docLanguages[lang];
 					//do conversion while other patterns are loading:
 					convertPatternsToObject(lang);
 					prepareLanguagesObj(lang);		
@@ -961,10 +961,10 @@ var Hyphenator = function () {
 		
 
 		/**
-		 * @name Hyphenator.init
+		 * @name Hyphenator.config
 		 * @methodOf Hyphenator
 		 * @description
-		 * Init function that takes an object as an argument. The object contains key-value-pairs
+		 * Config function that takes an object as an argument. The object contains key-value-pairs
 		 * containig Hyphenator-settings. This is a shortcut for calling Hyphenator.set...-Methods.
 		 * @param object <table>
 		 * <tr><th>key</th><th>values</th><th>default</th></tr>
@@ -982,43 +982,81 @@ var Hyphenator = function () {
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
          * &lt;script type = "text/javascript"&gt;
-         *     Hyphenator.init({'minwordlength':4,'hyphenchar':'|'});
+         *     Hyphenator.config({'minwordlength':4,'hyphenchar':'|'});
          *     Hyphenator.run();
          * &lt;/script&gt;
          */
-		init: function (obj) {
-			if(obj.classname) {
-				Hyphenator.setClassName(obj.classname);
+		config: function (obj) {
+			var assert = function (name, type) {
+				if (typeof obj[name] === type) {
+					return true;
+				} else {
+					error(new Error('Config error: '+name+' must be of type '+type));
+					return false;
+				}
+			};
+			if (obj.hasOwnProperty('classname')) {
+				if (assert ('classname', 'string')) {
+					hyphenateClass = obj.classname;
+				}
 			}
-			if(obj.minwordlength) {
-				Hyphenator.setMinWordLength(obj.minwordlength);
+			if (obj.hasOwnProperty('minwordlength')) {
+				if (assert ('minwordlength', 'number')) {
+					min = obj.minwordlength;
+				}
 			}
-			if(obj.hyphenchar) {
-				Hyphenator.setHyphenChar(obj.hyphenchar);
+			if (obj.hasOwnProperty('hyphenchar')) {
+				if (assert ('hyphenchar', 'string')) {
+					if (obj.hyphenchar === '&shy;') {
+						obj.hyphenchar = String.fromCharCode(173);
+					}
+            		hyphen = obj.hyphenchar;
+            	}
 			}
-			if(obj.urlhyphenchar) {
-				Hyphenator.setUrlHyphenChar(obj.urlhyphenchar);
+			if (obj.hasOwnProperty('urlhyphenchar')) {
+				if (assert ('urlhyphenchar', 'string')) {
+					urlhyphen = obj.urlhyphenchar;
+				}
 			}
-			if(obj.togglebox) {
-				Hyphenator.setToggleBox(obj.togglebox);
+			if (obj.hasOwnProperty('togglebox')) {
+				if (assert ('togglebox', 'function')) {
+					toggleBox = obj.togglebox;
+				}
 			}
-			if(obj.displaytogglebox) {
-				Hyphenator.setDisplayToggleBox(obj.displaytogglebox);
+			if (obj.hasOwnProperty('displaytogglebox')) {
+				if (assert ('displaytogglebox', 'boolean')) {
+            		displayToggleBox = obj.displaytogglebox;
+            	}
 			}
-			if(obj.remoteloading) {
-				Hyphenator.setRemoteLoading(obj.remoteloading);
+			if (obj.hasOwnProperty('remoteloading')) {
+				if (assert ('remoteloading', 'boolean')) {
+					enableRemoteLoading = obj.remoteloading;
+				}
 			}
-			if(obj.onhyphenationdonecallback) {
-				Hyphenator.setOnHyphenationDoneCallback(obj.onhyphenationdonecallback);
+			if (obj.hasOwnProperty('enablecache')) {
+				if (assert ('enablecache', 'boolean')) {
+					enableCache = obj.enablecache;
+				}
 			}
-			if(obj.onerrorhandler) {
-				Hyphenator.setOnErrorHandler(obj.onerrorhandler);
+			if (obj.hasOwnProperty('onhyphenationdonecallback')) {
+				if (assert ('onhyphenationdonecallback', 'function')) {
+					onHyphenationDone = obj.onhyphenationdonecallback;
+				}
 			}
-			if(obj.intermediatestate) {
-				Hyphenator.setIntermediateState(obj.intermediatestate);
+			if (obj.hasOwnProperty('onerrorhandler')) {
+				if (assert ('onerrorhandler', 'function')) {
+					error = obj.onerrorhandler;
+				}
 			}
-			if(obj.selectorfunction) {
-				Hyphenator.setSelectorFunction(obj.selectorfunction);
+			if (obj.hasOwnProperty('intermediatestate')) {
+				if (assert ('intermediatestate', 'string')) {
+					intermediateState = obj.intermediatestate;
+				}
+			}
+			if (obj.hasOwnProperty('selectorfunction')) {
+				if (assert ('selectorfunction', 'function')) {
+					selectorFunction = obj.selectorfunction;
+				}
 			}
 		},
 
@@ -1076,196 +1114,6 @@ var Hyphenator = function () {
 			}
 		},	
 		
-		/**
-		 * @name Hyphenator.setClassName
-		 * @methodOf Hyphenator
-		 * @description
-		 * Sets {@link Hyphenator-hyphenateclass}
-		 * @param string The class name.
-		 * @public
-		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.setClassName('justify');
-         *   Hyphenator.run();
-         * &lt;/script&gt;
-         * @default hyphenate
-         */
-		setClassName: function (str) {
-            hyphenateclass = str || 'hyphenate';
-		},
-		
-		/**
-		 * @name Hyphenator.setMinWordLength
-		 * @methodOf Hyphenator
-		 * @description
-		 * Sets {@link Hyphenator-min}, the minimal word-length to hyphenate. Shorter words are returned without changings.
-		 * If you use small numbers, Hyphenator is slower.
-		 * @param number The word-length
-		 * @public
-		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.setMinWordLength(5);
-         *   Hyphenator.run();
-         * &lt;/script&gt;
-         * @default 6
-         */
-		setMinWordLength: function (mymin) {
-            min = mymin || 6;
-		},
-
-		/**
-		 * @name Hyphenator.setHyphenChar
-		 * @methodOf Hyphenator
-		 * @description
-		 * Sets {@link Hyphenator-hyphen}, the char to be put at hyphen points.
-		 * Use e.g. | to test hyphenation.
-		 * @param string The char.
-		 * @public
-		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.setHyphenChar('|');
-         *   Hyphenator.run();
-         * &lt;/script&gt;
-         * @default Soft Hyphen
-         */
-		setHyphenChar: function (str) {
-			if (str === '&shy;') {
-				str = String.fromCharCode(173);
-			}
-            hyphen = str || String.fromCharCode(173);
-		},
-
-		/**
-		 * @name Hyphenator.setDisplayToggleBox
-		 * @methodOf Hyphenator
-		 * @description
-		 * Sets {@link Hyphenator-displayToggleBox}. The ToggleBox is off by default.
-		 * @param boolean Set to true, if you want to display the ToggleBox.
-		 * @public
-		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.setDisplayToggleBox(true);
-         *   Hyphenator.run();
-         * &lt;/script&gt;
-         * @default true
-         */
-		setDisplayToggleBox: function (bool) {
-			if (bool===undefined) {
-				bool = true;
-			}
-            displayToggleBox = bool;
-		},
-
-		/**
-		 * @name Hyphenator.setUrlHyphenChar
-		 * @methodOf Hyphenator
-		 * @description
-		 * Sets {@link Hyphenator-urlhyphen}, the char to use to hyphenate URLs and Mailadresses.
-		 * Use e.g. | to test hyphenation.
-		 * @param string The character.
-		 * @public
-		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.setUrlHyphenChar('|');
-         *   Hyphenator.run();
-         * &lt;/script&gt;
-         * @default Zero Width Space or empty string (in IE 6).
-         */
-		setUrlHyphenChar: function (str) {
-            urlhyphen = str || zerowidthspace;
-		},
-
-		/**
-		 * @name Hyphenator.setRemoteLoading
-		 * @methodOf Hyphenator
-		 * @description
-		 * Sets {@link Hyphenator-enableRemoteLoading}.
-		 * You can load the patterns manually and turn off remote loading. Remote loading
-		 * is on by default.
-		 * @param boolean True enables remote loading
-		 * @public
-		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.setRemoteLoading(false);
-         *   Hyphenator.run();
-         * &lt;/script&gt;
-         */
-		setRemoteLoading: function (bool) {
-			enableRemoteLoading = bool;
-		},
-
-		/**
-		 * @name Hyphenator.setEnableCache
-		 * @methodOf Hyphenator
-		 * @description
-		 * Sets {@link Hyphenator-enableCache}.
-		 * If cache is enabled, hyphenated words are stored in a cache for later reuse.
-		 * This is good for longer texts.
-		 * @param boolean True enables cache
-		 * @public
-		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.setEnableCache(true);
-         *   Hyphenator.run();
-         * &lt;/script&gt;
-         */
-		setEnableCache: function (bool) {
-			enableCache = bool;
-		},
-
-		/**
-		 * @name Hyphenator.setOnHyphenationDoneCallback
-		 * @methodOf Hyphenator
-		 * @description
-         */
-		setOnHyphenationDoneCallback: function (cb) {
-			onHyphenationDone = cb || function(){};
-		},
-
-		/**
-		 * @name Hyphenator.setErrorHandler
-		 * @methodOf Hyphenator
-		 * @description
-         */
-		setOnErrorHandler: function (h) {
-			error = h || function(){};
-		},
-
-		/**
-		 * @name Hyphenator.setSwitchToggleBox
-		 * @methodOf Hyphenator
-		 * @description
-         */
-		setToggleBox: function (h) {
-			toggleBox = h || function(){};
-		},
-
-		/**
-		 * @name Hyphenator.setSwitchToggleBox
-		 * @methodOf Hyphenator
-		 * @description
-         */
-		setIntermediateState: function (visibility) {
-			switch (visibility) {
-				case 'visible':
-				intermediateState = 'visible';
-				break;
-				case 'hidden':
-				default:
-				intermediateState = 'hidden';
-				break;
-			}
-		},
-
-		/**
-		 * @name Hyphenator.setSwitchToggleBox
-		 * @methodOf Hyphenator
-		 * @description
-         */
-		setSelectorFunction: function (f) {
-			selectorFunction = f || undefined;
-		},
-
 		/**
 		 * @name Hyphenator.isBookmarklet
 		 * @methodOf Hyphenator
@@ -1517,6 +1365,6 @@ var Hyphenator = function () {
 	};
 }();
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.setDisplayToggleBox(true);
+	Hyphenator.config({displaytogglebox:true});
 	Hyphenator.run();
 }

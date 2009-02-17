@@ -25,8 +25,10 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-			Hyphenator.setDisplayToggleBox(true);
-			Hyphenator.setHyphenChar('|');
+			Hyphenator.config({
+				hyphenchar:'|',
+				displaytogglebox:true
+			});
 			Hyphenator.run();
         </script>
     </head>
@@ -34,9 +36,12 @@
         <h1>Test 22</h1>
         <p>Check if the ToggleBox is displayed and turning off/on hyphenation works.</p>
 		<p><a href="test21.html">&lt;- Prev</a> | <a href="test23.html">Next -&gt;</a></p>
-		<pre>Hyphenator.setDisplayToggleBox(true);
-Hyphenator.setHyphenChar('|');
-Hyphenator.run();</pre>
+		<pre>Hyphenator.config({
+    hyphenchar:'|',
+    displaytogglebox:true
+});
+Hyphenator.run();
+</pre>
 		<p class="hyphenate">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
     </body>
 </html>

@@ -28,7 +28,7 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-			Hyphenator.setOnErrorHandler(function(){alert('Ein Vehler ischt eingeträtn: '+arguments[0].message)});
+			Hyphenator.config({onerrorhandler:function(){alert('Ein Vehler ischt eingeträtn: '+arguments[0].message)}});
 			Hyphenator.run();
         </script>
     </head>

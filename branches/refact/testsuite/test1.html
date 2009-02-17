@@ -23,15 +23,15 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.setHyphenChar('|');
+                Hyphenator.config({hyphenchar:'|'});
                 Hyphenator.run();
         </script>
     </head>
     <body>
         <h1>Test 1</h1>
         <p>Hyphenate one word.</p>
-		<p><a href="#">&lt;- Prev</a> | <a href="test2.html">Next -&gt;</a></p>
-		<pre>Hyphenator.setHyphenChar('|');
+		<p><a href="index.html">&lt;- Prev</a> | <a href="test2.html">Next -&gt;</a></p>
+		<pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
         <p class="hyphenate test" lang="en">Hyphenation</p>
         <p class="ref">Hy|phen|ation</p>

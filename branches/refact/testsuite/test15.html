@@ -32,8 +32,10 @@
 				out.data="hyphenateElement(te,'en') :: "+(end-start)+"ms";
 			}
 			start=new Date().getTime();
-			Hyphenator.setOnHyphenationDoneCallback(cb);
-			Hyphenator.setEnableCache(true);
+			Hyphenator.config({
+				onhyphenationdonecallback:cb,
+				enablecache:true
+			});
 			Hyphenator.run();
         </script>
     </head>
@@ -41,9 +43,12 @@
         <h1>Test 15</h1>
         <p>Measuring time to hyphenate a page, including loading the patterns.</p>
 		<p><a href="test14.html">&lt;- Prev</a> | <a href="test16.html">Next -&gt;</a></p>
-        <pre>
-Hyphenator.setEnableCache(true);
-Hyphenator.run();</pre>
+        <pre>Hyphenator.config({
+    onhyphenationdonecallback:cb,
+    enablecache:true
+});
+Hyphenator.run();
+</pre>
 
 		<p id="output" class="test">Wait 3 seconds...</p>
 

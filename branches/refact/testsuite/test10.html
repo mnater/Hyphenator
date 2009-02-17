@@ -26,8 +26,10 @@
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script src="../patterns/de.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.setHyphenChar('|');
-                Hyphenator.setRemoteLoading(false);
+                Hyphenator.config({
+                	hyphenchar:'|',
+                	remoteloading:false
+                });
                 Hyphenator.run();
         </script>
     </head>
@@ -35,8 +37,10 @@
         <h1>Test 10</h1>
         <p>Run Hyphenation with manually preloaded patterns. But one language isn't loaded.</p>
 		<p><a href="test9.html">&lt;- Prev</a> | <a href="test11.html">Next -&gt;</a></p>
-        <pre>Hyphenator.setHyphenChar('|');
-Hyphenator.setRemoteLoading(false);
+        <pre>Hyphenator.config({
+    hyphenchar:'|',
+    remoteloading:false
+});
 Hyphenator.run();</pre>
 
         <p class="hyphenate test">Das englische Wort <span lang="en">&ldquo;Hyphenation&rdquo;</span> lässt sich nicht unbedingt wörtlich mit &laquo;Silbentrennung&raquo; übersetzen.</p>

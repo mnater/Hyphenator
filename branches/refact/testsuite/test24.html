@@ -25,8 +25,10 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-			Hyphenator.setHyphenChar('|');
-			Hyphenator.setMinWordLength(4);
+			Hyphenator.config({
+				hyphenchar:'|',
+				minwordlength:4
+			});
 			Hyphenator.run();
         </script>
     </head>
@@ -34,9 +36,12 @@
         <h1>Test 24</h1>
         <p>Check some special rules when hyphenating.</p>
 		<p><a href="test23.html">&lt;- Prev</a> | <a href="test25.html">Next -&gt;</a></p>
-		<pre>Hyphenator.setHyphenChar('|');
-Hyphenator.setMinWordLength(4);
-Hyphenator.run();</pre>
+		<pre>Hyphenator.config({
+    hyphenchar:'|',
+    minwordlength:4
+});
+Hyphenator.run();
+</pre>
         <p class="hyphenate test" lang="en">letters</p>
         <p class="ref">let|ters</p>
         <p class="hyphenate test" lang="de">Affe</p>

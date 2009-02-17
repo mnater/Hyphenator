@@ -28,17 +28,21 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.setHyphenChar('|');
-                Hyphenator.setIntermediateState('visible');
-                Hyphenator.run();
+                Hyphenator.config({
+                	hyphenchar:'|',
+                	intermediatestate:'visible'
+                });
+				Hyphenator.run();
         </script>
     </head>
     <body>
         <h1>Test 39</h1>
         <p>Set intermediateState to 'visible' (instead of the default 'hidden').</p>
 		<p><a href="test38.html">&lt;- Prev</a> | <a href="test40.html">Next -&gt;</a></p>
-        <pre>Hyphenator.setHyphenChar('|');
-Hyphenator.setIntermediateState('visible');
+        <pre>Hyphenator.config({
+    hyphenchar:'|',
+    intermediatestate:'visible'
+});
 Hyphenator.run();</pre>
 
         <p class="hyphenate test">Das englische Wort <span lang="en">&ldquo;Hyphenation&rdquo;</span> lässt sich nicht unbedingt wörtlich mit &laquo;Silbentrennung&raquo; übersetzen.</p>
