@@ -16,7 +16,11 @@
         </style>
         <script src="Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                 Hyphenator.run();
+        	Hyphenator.config({
+        		displaytogglebox : true,
+        		minwordlength : 4
+        	});
+        	Hyphenator.run();
         </script>
     </head>
     <body>
