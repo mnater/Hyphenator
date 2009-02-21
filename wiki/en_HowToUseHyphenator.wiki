@@ -93,5 +93,5 @@ Hyphenator.js and its documentation are published under the [http://www.gnu.org/
 Most of the patterns in the pattern files have different licenses specified in the pattern files.
 
 == Stay up to date ==
-Subscribe to the [feed://code.google.com/feeds/p/hyphenator/downloads/basic RSS on the downloads page] to get information about updates of Hyphenator.
+Subscribe to the RSS on the downloads page to get information about updates of Hyphenator.
 It's recommended to replace older versions upon release of a new version.
