@@ -1,4 +1,5 @@
 #summary How to add support for further languages
+#labels Deprecated
 
 = What we have now =
 

@@ -1,4 +1,5 @@
 #Support for &shy; in current Browsers
+#labels Deprecated
 
 = Support for &shy; in current Browsers =
 

@@ -1,4 +1,5 @@
 #summary Grösse der Musterdateien und Downloadgeschwindigkeit
+#labels Deprecated
 
 = Optimierung der Trennmuster bezüglich Grösse und Geschwindigkeit =
 

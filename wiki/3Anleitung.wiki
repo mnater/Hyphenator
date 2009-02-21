@@ -1,5 +1,6 @@
 #summary Anleitungen zur Verwendung von Hyphenator
 #sidebar 0Inhalte
+#labels Deprecated
 
 = Hyphenator auf einer Website verwenden =
 Sie können Hyphenator auf ihrer Website einbinden. Ich freue mich auf Rückmeldungen und Erfahrungen.

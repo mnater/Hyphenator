@@ -1,4 +1,5 @@
 #summary About hyphenation in HTML
+#labels Deprecated
 
 = Hyphenation in HTML =
 [http://code.google.com/p/hyphenator/wiki/1SilbentrennungInHTML zur deutschen Version]

@@ -1,5 +1,6 @@
 #summary Umgang mit Fehltrennungen
 #sidebar 0Inhalte
+#labels Deprecated
 
 = Automatische Silbentrennung ist gut, aber nicht fehlerfrei =
 

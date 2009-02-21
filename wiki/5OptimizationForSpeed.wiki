@@ -1,5 +1,5 @@
 #summary There some things you can do to speed up Hyphenator
-#labels Phase-Deploy
+#labels Deprecated
 
 = How fast is Hyphenator? =
 

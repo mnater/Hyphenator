@@ -1,5 +1,5 @@
-#labels Phase-Deploy
 #summary How to deal with inaccurate hyphenation
+#labels Deprecated
 
 = Automatic hyphenation is good, but not error-free =
 

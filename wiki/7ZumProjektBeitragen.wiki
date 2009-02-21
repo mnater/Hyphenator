@@ -1,5 +1,6 @@
 #summary Wie man zum Projekt Hyphenator.js beitragen kann
 #sidebar 0Inhalte
+#labels Deprecated
 
 = Was können Sie beitragen? =
 

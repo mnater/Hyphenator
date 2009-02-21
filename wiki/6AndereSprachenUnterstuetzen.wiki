@@ -1,5 +1,6 @@
 #summary Weitere Sprachen hinzufügen
 #sidebar 0Inhalte
+#labels Deprecated
 
 = Was haben wir jetzt =
 

@@ -1,4 +1,5 @@
 #summary How to contribute
+#labels Deprecated
 
 = How to contribute =
 

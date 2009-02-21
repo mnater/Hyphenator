@@ -1,4 +1,5 @@
 #summary automatic hyphenation by Javascript
+#labels Deprecated
 
 = Automatic hyphenation in HTML with Javascript =
 

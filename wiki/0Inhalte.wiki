@@ -1,5 +1,5 @@
 #summary Inhaltsverzeichnis
-#labels Featured
+#labels Deprecated
 
 = Table of Contents =
 
