@@ -15,5 +15,4 @@
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.run() run()]
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.addExceptions(string_language,_string_words) addExceptions()]
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#bool_Hyphenator.isBookmarklet() isBookmarklet()]
-      * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void _Hyphenator.toggleHyphenation() toggleHyphenation()]
-
+      * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.toggleHyphenation() toggleHyphenation()]
