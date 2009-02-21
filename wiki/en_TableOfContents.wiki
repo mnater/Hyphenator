@@ -19,3 +19,6 @@
   * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation Dealing with inaccurate hyphenation]
     * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation#Checking_hyphenation Checking hyphenation]
     * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation#Fixing_bad_hyphenation Fixing bad hyphenation]
+  * [http://code.google.com/p/hyphenator/wiki/en_Optimizations Optimizations]
+    * [http://code.google.com/p/hyphenator/wiki/en_Optimizations#Execution_speed Execution speed]
+    * [http://code.google.com/p/hyphenator/wiki/en_Optimizations#Loading_speed Loading speed]
