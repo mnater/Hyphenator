@@ -23,8 +23,6 @@
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
  * @version 1.0.0
- * To do:
- * - adapt fallback in basePath
   */
 
 /**
@@ -118,7 +116,7 @@ var Hyphenator = function () {
 				return t.substring(0, p);
 			}
 		}
-		return 'http://hyphenator.googlecode.com/svn/branches/refact/';
+		return 'http://hyphenator.googlecode.com/svn/trunk/';
 	}();
 	
 	/**
