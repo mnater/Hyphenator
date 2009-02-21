@@ -1258,7 +1258,7 @@ var Hyphenator = function () {
 			if (word === '') {
 				return '';
 			}
-			if (word.indexOf(String.fromCharCode(173)) !== -1) { //this String only contains the unicode char 'Soft Hyphen'
+			if (word.indexOf(hyphen) !== -1) { //this String only contains the unicode char 'Soft Hyphen'
 				//word already contains shy; -> leave at it is!
 				return word;
 			}
