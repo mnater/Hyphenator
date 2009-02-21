@@ -3,7 +3,7 @@
 
 = Download and Install =
 == Using Hyphenator as a Bookmarklet ==
-As a normal websurfer you'll just save the following line of code as a bookmark:
+As a normal websurfer you'll have to create a [http://en.wikipedia.org/wiki/Bookmarklet bookmarklet] by saving the following line of code as a bookmark:
 
 {{{
 javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
