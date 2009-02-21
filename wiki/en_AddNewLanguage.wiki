@@ -1,0 +1,51 @@
+#summary How to add support for further languages
+= Adding further languages - about the pattern files =
+
+== What we have now ==
+Currently, there's support for
+  * english
+  * german
+  * french
+  * dutch (thanks to Remco Bloemen)
+  * swedish (thanks to Andreas Johansson)
+  * spanish (thanks to Luis Pabón)
+  * Malayalam, Tamil, Hindi, Oriya, Kannda, Telugu, Bengali, Gujarati and Panjabi (thanks to Santhosh Thottingal)
+  * Italian (thanks to Stefano Gorini)
+  * Finnish (thanks to Olli Wilkman)
+  * Russian
+  * Polish
+
+But Hyphenator is written in a manner that makes it easy to add support for other languages.
+
+== What you can do ==
+
+To add a further language, language pattern file is needed. If you have a (complete) list of hyphenated words you may be able to compute patterns by your own (if you can, you know how). If not, go to http://www.ctan.org and search the LaTeX hyphenation patterns for your language (be aware of the license!)
+
+Next steps you will have to do:
+  # to convert the patterns
+  # to build a pattern file
+  # to change code in Hyphenator.js
+  # send-in changings and patterns if you feel like (I'll take you as a supporter for this language, you'll get full attribution)
+
+=== Converting the patterns ===
+  * LaTeX patterns are coming in this form: `.ab3s2`. To see the difference I use underline instead of point. A simple search&replace will do the trick: `_ab3s2`
+  * All pattern files should be encoded with *UTF-8 (with BOM)*.
+  * Copy an other pattern file and replace the patterns.
+  * Adjust the other variables as following:
+  || _Name_ || _Description_ ||
+  || Hyphenator.leftmin || On the old line, there shall remain this number of letters at minimum (preventing e.g. '  a-') ||
+  || Hyphenator.rightmin || This number of letters at minimum are on the newline (preventing e.g. '-a ') ||
+  || Hyphenator.shortestPattern || The sortest pattern in the list (for better performance). Do not count the numbers! E.g. the pattern `_ab3s2` has a length of four (4). ||
+  || Hyphenator.longestPattern || The longest pattern in the list (for better performance). Do not count the numbers! E.g. the pattern `_ab3s2` has a length of four (4). ||
+  || Hyphenator.specialChars || Non-ASCII-letters used in this language. ||
+  * Dont forget to change the language on the first line and to change the filename accordingly.
+
+=== adapt code in Hyphenator ===
+There is one thing you HAVE to change and one thing you SHOULD change in Hyphenator.js:
+  * `languageHint`: Add the new language to the list. Please use the [http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1-Code] for the language to be supported.
+  * `prompterStrings`: This strings are used if the language of a document isn't defined. Please translate this short text to the language to be supported.
+  
+Make some tests to see, if it works!
+
+== send in changings and patterns ==
+If you like to support Hyphenator, you may send in the work you've done. You'll get full attribution. I will ask you to put your Mail in the header of the pattern file (see nl.js for example).
