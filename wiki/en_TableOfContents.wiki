@@ -22,3 +22,6 @@
   * [http://code.google.com/p/hyphenator/wiki/en_Optimizations Optimizations]
     * [http://code.google.com/p/hyphenator/wiki/en_Optimizations#Execution_speed Execution speed]
     * [http://code.google.com/p/hyphenator/wiki/en_Optimizations#Loading_speed Loading speed]
+  * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage Adding new languages]
+    * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage#Converting_the_patterns Converting the patterns]
+    * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage#adapt_code_in_Hyphenator Adapt code in Hyphenator]
