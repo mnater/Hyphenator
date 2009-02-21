@@ -4,6 +4,6 @@
 = Table of Contents =
 
   # [http://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator How to use Hyphenator]
-    #  [http://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator#Using_Hyphenator_as_a_Bookmarklet As a bookmarklet]
-    # [http://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator#Using_Hyphenator_on_your_website On your website]
-    # [http://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator#Legal Legal]
+    *  [http://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator#Using_Hyphenator_as_a_Bookmarklet As a bookmarklet]
+    * [http://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator#Using_Hyphenator_on_your_website On your website]
+    * [http://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator#Legal Legal]
