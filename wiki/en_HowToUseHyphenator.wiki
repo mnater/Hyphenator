@@ -3,7 +3,13 @@
 
 = Download and Install =
 == Using Hyphenator as a Bookmarklet ==
-As a normal websurfer you'll just save the <a href="javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}">Hyphenator-bookmarklet</a> (just save this link as bookmark by right-clicking on it). When you're on the website to be hyphenated you click on that bookmarklet to start hyphenating the page.
+As a normal websurfer you'll just save the following line of code as a bookmark:
+
+{{{
+javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://hyphenator.googlecode.com/svn/trunk/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
+}}}
+
+When you're on the website to be hyphenated you click on that bookmarklet to start hyphenating the page.
 If the pages language isn't set, you will have to edit it manually in a popping-up prompt.
 
 == Using Hyphenator on your website ==
