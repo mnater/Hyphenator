@@ -26,8 +26,10 @@
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script src="../patterns/de.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.setHyphenChar('|');
-                Hyphenator.setRemoteLoading(false);
+                Hyphenator.config({
+                	hyphenchar:'|',
+                	remoteloading:false
+                });
                 Hyphenator.run();
         </script>
     </head>
@@ -35,8 +37,10 @@
         <h1>Test 9</h1>
         <p>Run Hyphenation with manually preloaded patterns.</p>
 		<p><a href="test8.html">&lt;- Prev</a> | <a href="test10.html">Next -&gt;</a></p>
-        <pre>Hyphenator.setHyphenChar('|');
-Hyphenator.setRemoteLoading(false);
+        <pre>Hyphenator.config({
+    hyphenchar:'|',
+    remoteloading:false
+});
 Hyphenator.run();</pre>
 
         <p class="hyphenate test">Silbentrennung</p>

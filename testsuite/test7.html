@@ -23,7 +23,7 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.setHyphenChar('|');
+                Hyphenator.config({hyphenchar:'|'});
                 Hyphenator.run();
         </script>
     </head>
@@ -31,7 +31,7 @@
         <h1>Test 7</h1>
         <p>Hyphenate a paragraph with a lot of punctuation marks.</p>
 		<p><a href="test6.html">&lt;- Prev</a> | <a href="test8.html">Next -&gt;</a></p>
-        <pre>Hyphenator.setHyphenChar('|');
+        <pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
 
         <p class="hyphenate test">&laquo;Wunderschönen guten Tag allerseits&raquo;, rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte:&laquo;Himmelherrgott, so viele Leute hatte ich nicht erwartet!&raquo;</p>

@@ -25,7 +25,7 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.setHyphenChar('|');
+                Hyphenator.config({hyphenchar:'|'});
                 Hyphenator.run();
         </script>
     </head>
@@ -33,7 +33,7 @@
         <h1>Test 18</h1>
         <p>Check for correctly put Zero Width Spaces. Resize window!</p>
 		<p><a href="test17.html">&lt;- Prev</a> | <a href="test19.html">Next -&gt;</a></p>
-        <pre>Hyphenator.setHyphenChar('|');
+        <pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
 
 		<p class="hyphenate test">pretty-much-not-interested-in-politics</p>

@@ -27,13 +27,7 @@
             }
         </style>
         <script type="text/javascript">
-			var Hyphenator = {	leftmin: {},
-								rightmin: {},
-								shortestPattern: {},
-								longestPattern: {},
-								specialChars: {},
-								patterns: {},
-								updatePatternsLoadState : function() {}};
+			var Hyphenator = {	languages: {}};
         </script>
         <script src="../patterns/bn.js" type="text/javascript"></script>
         <script src="../patterns/de.js" type="text/javascript"></script>
@@ -67,10 +61,10 @@
         	}
         	
         	function runTest() {        	
-				for (var lang in Hyphenator.patterns) {
-					if (Hyphenator.patterns.hasOwnProperty(lang)) {
-						var sa = Hyphenator.patterns[lang].split(' ');
-						Hyphenator.patterns[lang] = {};
+				for (var lang in Hyphenator.languages) {
+					if (Hyphenator.languages.hasOwnProperty(lang)) {
+						var sa = Hyphenator.languages[lang].patterns.split(' ');
+						Hyphenator.languages[lang].patterns = {};
 						var pat, key, i = 0;
 						var newlongest = 0;
 						var newshortest = 10;
@@ -83,14 +77,14 @@
 								newshortest = key.length;
 							}
 						}
-						var t1 = 'Hyphenator.longestPattern['+lang+'] set to '+Hyphenator.longestPattern[lang]+' -- computed: '+newlongest;
-						if (newlongest === Hyphenator.longestPattern[lang]) {
+						var t1 = 'Hyphenator.longestPattern['+lang+'] set to '+Hyphenator.languages[lang].longestPattern+' -- computed: '+newlongest;
+						if (newlongest === Hyphenator.languages[lang].longestPattern) {
 							output('ref', t1);
 						} else {
 							output('test', t1);
 						}
-						var t2 = 'Hyphenator.shortestPattern['+lang+'] set to '+Hyphenator.shortestPattern[lang]+' -- computed: '+newshortest;
-						if (newshortest === Hyphenator.shortestPattern[lang]) {
+						var t2 = 'Hyphenator.shortestPattern['+lang+'] set to '+Hyphenator.languages[lang].shortestPattern+' -- computed: '+newshortest;
+						if (newshortest === Hyphenator.languages[lang].shortestPattern) {
 							output('ref', t2);
 						} else {
 							output('test', t2);
