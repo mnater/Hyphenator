@@ -18,4 +18,4 @@
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.toggleHyphenation() toggleHyphenation()]
   * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation Dealing with inaccurate hyphenation]
     * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation#Checking_hyphenation Checking hyphenation]
-    * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation#Fixing_bad_hyphenation Fixing bad hyphenation
+    * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation#Fixing_bad_hyphenation Fixing bad hyphenation]
