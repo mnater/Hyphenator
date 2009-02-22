@@ -724,7 +724,7 @@ var Hyphenator = function () {
 			Hyphenator.languages[lang].patterns[key] = pat;
 		}
 	*/
-		var plen, i = 0, anfang, pats, pat;
+		var plen, i = 0, anfang, pats, pat, key;
 		pats = Hyphenator.languages[lang].patterns;
 		Hyphenator.languages[lang].patterns = {};
 		for (plen in pats) {
@@ -733,6 +733,7 @@ var Hyphenator = function () {
 			if (Hyphenator.languages[lang].patterns.hasOwnProperty(plen)) {
 				while (pat = Hyphenator.languages[lang].patterns[plen].substr(anfang, plen)) {
 					key = pat.replace(/\d/g, '');
+					alert(key+':'+pat);
 					Hyphenator.languages[lang].patterns[key] = pat;
 					anfang += plen;
 				}
