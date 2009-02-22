@@ -47,7 +47,7 @@
 			function output2String() {
 				var tmp = '{', len;
 				for (len in newpatterns) {
-					tmp += len + ':' + '\'' + newpatterns[len] + '\',';
+					tmp += len + ':' + '"' + newpatterns[len] + '",';
 				}
 				tmp += '}'
 				document.getElementsByName('newpattern')[0].value = tmp;
