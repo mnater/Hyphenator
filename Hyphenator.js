@@ -858,15 +858,17 @@ var Hyphenator = function () {
 		var interval = window.setInterval(function () {
 			var finishedLoading = false;
 			for (var lang in docLanguages) {
-				if (!Hyphenator.languages[lang]) {
-					finishedLoading = false;
-					break;
-				} else {
-					finishedLoading = true;
-					delete docLanguages[lang];
-					//do conversion while other patterns are loading:
-					convertPatternsToObject(lang);
-					prepareLanguagesObj(lang);		
+				if(docLanguages.hasOwnProperty(lang)) {
+					if (!Hyphenator.languages[lang]) {
+						finishedLoading = false;
+						break;
+					} else {
+						finishedLoading = true;
+						delete docLanguages[lang];
+						//do conversion while other patterns are loading:
+						convertPatternsToObject(lang);
+						prepareLanguagesObj(lang);		
+					}
 				}
 			}
 			if (finishedLoading) {
