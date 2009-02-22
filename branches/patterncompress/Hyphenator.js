@@ -724,21 +724,20 @@ var Hyphenator = function () {
 			Hyphenator.languages[lang].patterns[key] = pat;
 		}
 	*/
-		var plen, i = 0, anfang, pats, pat, key;
+		var plen, i = 0, anfang, pats, pat, key, tmp = {};
 		pats = Hyphenator.languages[lang].patterns;
-		Hyphenator.languages[lang].patterns = {};
 		for (plen in pats) {
 			plen = parseInt(plen);
 			anfang = 0;
 			if (Hyphenator.languages[lang].patterns.hasOwnProperty(plen)) {
 				while (pat = Hyphenator.languages[lang].patterns[plen].substr(anfang, plen)) {
 					key = pat.replace(/\d/g, '');
-					alert(key+':'+pat);
-					Hyphenator.languages[lang].patterns[key] = pat;
+					tmp[key] = pat;
 					anfang += plen;
 				}
 			}
 		}
+		Hyphenator.languages[lang].patterns = tmp;
 	}
 
 	/**
