@@ -715,7 +715,7 @@ var Hyphenator = function () {
 	 * @param string the language whose patterns shall be converted
 	 */		
 	function convertPatternsToObject(lang) {
-		var plen, i = 0, anfang, pats, pat, key, tmp = {}, shortest = 100, longest = 0;
+		var plen, anfang, pats, pat, key, tmp = {};
 		pats = Hyphenator.languages[lang].patterns;
 		for (plen in pats) {
 			if (pats.hasOwnProperty(plen)) {
