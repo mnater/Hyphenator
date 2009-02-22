@@ -724,22 +724,19 @@ var Hyphenator = function () {
 			Hyphenator.languages[lang].patterns[key] = pat;
 		}
 	*/
-		var plen, sa = [], i = 0, anfang, pat;
-		for (plen in Hyphenator.languages[lang].patterns) {
+		var plen, i = 0, anfang, pats, pat;
+		pats = Hyphenator.languages[lang].patterns;
+		Hyphenator.languages[lang].patterns = {};
+		for (plen in pats) {
 			plen = parseInt(plen);
 			anfang = 0;
 			if (Hyphenator.languages[lang].patterns.hasOwnProperty(plen)) {
 				while (pat = Hyphenator.languages[lang].patterns[plen].substr(anfang, plen)) {
-					sa[i++] = pat;
+					key = pat.replace(/\d/g, '');
+					Hyphenator.languages[lang].patterns[key] = pat;
 					anfang += plen;
 				}
 			}
-		}
-		Hyphenator.languages[lang].patterns = {};
-		var pat, key, i = 0;
-		while (!!(pat = sa[i++])) {
-			key = pat.replace(/\d/g, '');
-			Hyphenator.languages[lang].patterns[key] = pat;
 		}
 	}
 
