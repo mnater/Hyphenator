@@ -1,0 +1,27 @@
+#summary Frequently asked questions
+
+= FAQ =
+== Shouldn't hyphenation be done on the server side? ==
+There are some arguments against client side hyphenation - true. It costs a lot of computing time and the patterns have to be loaded for each language, everytime.
+But I believe that hyphenation belongs to the client:
+  * Only the client «knows» where to break a line (and if at all).
+  * A html file that has been hyphenated on the server would be full of &shy;'s. That's ugly and nobody knows how that would be treated by search engines…
+  * Hyphenation on the client can be turned off to work around copy&paste- and search-bugs in most browsers.
+  * as JavaScript-engines are in focus of development, they become faster and faster.
+
+== Hyphenator breaks the search functionality of my browser ==
+Your browser has a bug (currently, only Firefox3 finds hyphenated words). The only thing we can do is to turn hyphenation off before searching.
+
+== When I copy/paste hyphenated texts from a website, spaces are inserted in allmost all words ==
+This are not spaces, that's the soft hyphen that Hyphenator inserted (think of 'enriched' text). Most texteditors display the soft hyphen as a space. As far as I know, MS Word handles the soft hyphens correctly.
+You can turn off Hyphenation before copying text from a website or you search and replace the softhyphens later.
+
+== Could you write an extension/plugin for … ==
+Maybe I could. But
+  # to maintain Hyphenator.js is enough for the moment and
+  # there are so many CMSs, Blogs and other Frameworks out there, I wouldn't know where to begin.
+The coolest thing is, when YOU decide to write a plugin or whatever for your favorite environment, based on Hyphenator.js.
+If you need a special feature, send me an e-mail, We'll found a solution.
+
+== Why are the pattern files so different in size? ==
+Patterns depend highly on linguistics and grammar of the respective language. Where it seems (I suppose) to be enough for some Indian languages to break a word after some special characters the hyphenation rules for german are quite complex
