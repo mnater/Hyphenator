@@ -22,7 +22,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 1.0.0
+ * @version 1.X.X
   */
 
 /**
@@ -1233,6 +1233,7 @@ var Hyphenator = function () {
         	while (!!(n = el.childNodes[i++])) {
         		if (n.nodeType === 3) {
         			n.data = n.data.replace(new RegExp(h, 'g'), '');
+        			n.data = n.data.replace(new RegExp(zeroWidthSpace, 'g'), '');
         		} else if (n.nodeType === 1) {
         			Hyphenator.removeHyphenationFromElement(n);
         		}
