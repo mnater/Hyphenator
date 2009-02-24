@@ -1,0 +1,6 @@
+= Version History =
+
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_1.0.0.zip 1.0.0] (Feb 21, 2009) ==
+First release after twelve betas.
+
+See [http://www.mnn.ch/hyph/versionhist.html beta version history (german)].
