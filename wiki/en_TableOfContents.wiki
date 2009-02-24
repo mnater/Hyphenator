@@ -25,3 +25,5 @@
   * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage Adding new languages]
     * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage#Converting_the_patterns Convert patterns]
     * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage#adapt_code_in_Hyphenator Adapt Hyphenator]
+  
+  * [http://code.google.com/p/hyphenator/wiki/en_FAQ FAQ]
