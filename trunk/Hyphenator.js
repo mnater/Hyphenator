@@ -715,13 +715,20 @@ var Hyphenator = function () {
 	 * @param string the language whose patterns shall be converted
 	 */		
 	function convertPatternsToObject(lang) {
-		var sa = Hyphenator.languages[lang].patterns.split(' ');
-		Hyphenator.languages[lang].patterns = {};
-		var pat, key, i = 0;
-		while (!!(pat = sa[i++])) {
-			key = pat.replace(/\d/g, '');
-			Hyphenator.languages[lang].patterns[key] = pat;
+		var plen, anfang, pats, pat, key, tmp = {};
+		pats = Hyphenator.languages[lang].patterns;
+		for (plen in pats) {
+			if (pats.hasOwnProperty(plen)) {
+				plen = parseInt(plen, 10);
+				anfang = 0;
+				while (!!(pat = pats[plen].substr(anfang, plen))) {
+					key = pat.replace(/\d/g, '');
+					tmp[key] = pat;
+					anfang += plen;
+				}
+			}
 		}
+		Hyphenator.languages[lang].patterns = tmp;
 	}
 
 	/**
