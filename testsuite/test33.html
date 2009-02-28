@@ -63,18 +63,24 @@
         	function runTest() {        	
 				for (var lang in Hyphenator.languages) {
 					if (Hyphenator.languages.hasOwnProperty(lang)) {
-						var sa = Hyphenator.languages[lang].patterns.split(' ');
-						Hyphenator.languages[lang].patterns = {};
-						var pat, key, i = 0;
+						var plen, i = 0, anfang, pats, pat, key, shortest = 100, longest = 0;
 						var newlongest = 0;
 						var newshortest = 10;
-						while (!!(pat = sa[i++])) {
-							key = pat.replace(/\d/g, '');
-							if (key.length > newlongest) {
-								newlongest = key.length;
-							}
-							if (key.length < newshortest) {
-								newshortest = key.length;
+						pats = Hyphenator.languages[lang].patterns;
+						for (plen in pats) {
+							if (pats.hasOwnProperty(plen)) {
+								plen = parseInt(plen, 10);
+								anfang = 0;
+								while (!!(pat = pats[plen].substr(anfang, plen))) {
+									key = pat.replace(/\d/g, '');
+									if (key.length > newlongest) {
+										newlongest = key.length;
+									}
+									if (key.length < newshortest) {
+										newshortest = key.length;
+									}
+									anfang += plen;
+								}
 							}
 						}
 						var t1 = 'Hyphenator.longestPattern['+lang+'] set to '+Hyphenator.languages[lang].longestPattern+' -- computed: '+newlongest;
