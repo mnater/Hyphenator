@@ -1,4 +1,9 @@
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_1.0.1.zip 1.0.1] (Mar 02, 2009) ==
+A pure bugfix release. It fixes three issues:
+  * issue 43: Hyphenator.js didn't work when JSON.js was loaded
+  * issue 44: zwsp weren't removed, when hyphenation was turned off
+  * an issue that broke Hyphenator.js when there was a internal script on the page befor Hyphenator.js
 
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_1.0.0.zip 1.0.0] (Feb 21, 2009) ==
 First release after twelve betas.
