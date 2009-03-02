@@ -109,16 +109,19 @@ var Hyphenator = function () {
 	 * @see Hyphenator-loadPatterns
 	 */
 	var basePath = function () {
-		var s = document.getElementsByTagName('script'), i = 0, p, t;
-		while (!!(t = s[i++].src)) {
-			p = t.indexOf('Hyphenator.js');
+		var s = document.getElementsByTagName('script'), i = 0, p, src, t;
+		while (!!(t = s[i++])) {
+			if(!t.src) {
+				continue;
+			}
+			src = t.src;
+			p = src.indexOf('Hyphenator.js');
 			if (p !== -1) {
-				return t.substring(0, p);
+				return src.substring(0, p);
 			}
 		}
 		return 'http://hyphenator.googlecode.com/svn/trunk/';
 	}();
-	
 	/**
 	 * @name Hyphenator-isLocal
 	 * @fieldOf Hyphenator
