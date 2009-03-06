@@ -837,6 +837,13 @@ var Hyphenator = function () {
 			Hyphenator.addExceptions(lang, Hyphenator.languages[lang].exceptions);
 			delete Hyphenator.languages[lang].exceptions;
 		}
+		if (exceptions.hasOwnProperty('global')) {
+			if (exceptions.hasOwnProperty(lang)) {
+				exceptions[lang] += ', ' + exceptions['global'];
+			} else {
+				exceptions[lang] = exceptions['global'];
+			}
+		}
 		if (exceptions.hasOwnProperty(lang)) {
 			Hyphenator.languages[lang].exceptions = convertExceptionsToObject(exceptions[lang]);
 			delete exceptions[lang];
