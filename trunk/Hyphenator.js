@@ -200,6 +200,20 @@ var Hyphenator = function () {
 	 * @see Hyphenator.config
 	 */
 	var hyphenateClass = 'hyphenate';
+
+	/**
+	 * @name Hyphenator-dontHyphenateClass
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A string containing the css-class-name for elements that should not be hyphenated
+	 * @type string
+	 * @default 'donthyphenate'
+	 * @private
+	 * @example
+	 * &lt;p class = "donthyphenate"&gt;Text&lt;/p&gt;
+	 * @see Hyphenator.config
+	 */
+	var dontHyphenateClass = 'donthyphenate';
 	
 	/**
 	 * @name Hyphenator-min
@@ -405,7 +419,7 @@ var Hyphenator = function () {
 			l = tmp.length;
 			for (i = 0; i < l; i++)
 			{
-				if (tmp[i].className.indexOf(hyphenateClass) !== -1 && tmp[i].className.indexOf('donthyphenate') === -1) {
+				if (tmp[i].className.indexOf(hyphenateClass) !== -1 && tmp[i].className.indexOf(dontHyphenateClass) === -1) {
 					el.push(tmp[i]);
 				}
 			}
@@ -688,7 +702,7 @@ var Hyphenator = function () {
 			elements.push(el);
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
-					n.className.indexOf('donthyphenate') === -1 && !(n in elToProcess)) {
+					n.className.indexOf(dontHyphenateClass) === -1 && !(n in elToProcess)) {
 					process(n, false);
 				}
 			}
@@ -788,6 +802,7 @@ var Hyphenator = function () {
 			}
 			if (xhr) {
 				xhr.open('HEAD', url, false);
+				xhr.setRequestHeader('Cache-Control','no-cache');
 				xhr.send(null);
 				if(xhr.status == 404) {
 					onError(new Error('Could not load\n'+url));
@@ -800,7 +815,7 @@ var Hyphenator = function () {
 			var head = document.getElementsByTagName('head').item(0);
 			var script = document.createElement('script');
 			script.src = url;
-			script.id = lang;
+			//script.id = lang;
 			script.type = 'text/javascript';
 			head.appendChild(script);
 		}
@@ -913,7 +928,7 @@ var Hyphenator = function () {
 			myIdAttribute = document.createAttribute('id');
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
 			myClassAttribute = document.createAttribute('class');
-			myClassAttribute.nodeValue = 'donthyphenate';
+			myClassAttribute.nodeValue = dontHyphenateClass;
 			myTextNode = document.createTextNode('Hy-phe-na-ti-on');
 			myBox.appendChild(myTextNode);
 			myBox.setAttributeNode(myIdAttribute);
@@ -1012,6 +1027,11 @@ var Hyphenator = function () {
 			if (obj.hasOwnProperty('classname')) {
 				if (assert ('classname', 'string')) {
 					hyphenateClass = obj.classname;
+				}
+			}
+			if (obj.hasOwnProperty('donthyphenateclassname')) {
+				if (assert ('donthyphenateclassname', 'string')) {
+					dontHyphenateClass = obj.donthyphenateclassname;
 				}
 			}
 			if (obj.hasOwnProperty('minwordlength')) {
@@ -1120,6 +1140,10 @@ var Hyphenator = function () {
          * &lt;/script&gt;
          */
 		addExceptions: function (lang, words) {
+			if (lang === '') {
+				lang = 'global';
+				//********************//
+			}
 			if (exceptions.hasOwnProperty[lang]) {
 				exceptions[lang] += ", "+words;
 			} else {
