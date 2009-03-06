@@ -217,12 +217,12 @@ You can redefine it to execute any code upon completing hyphenation.
 In some cases, Hyphenator.js calls a method called error(). By default this method displays an alert with the error message.
 This may not be suitable for deploymet, thus you can redefine the error()-method.
 
-===== Example 11 – redefining `onerror` =====
+===== Example 11 – redefining `onerrorhandler` =====
 {{{
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var hyphenatorSettings = {
-		onerror : function (e) {
+		onerrorhandler : function (e) {
 			//do nothing
 		}
 	}
