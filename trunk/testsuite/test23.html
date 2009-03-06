@@ -25,17 +25,24 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-			Hyphenator.config({hyphenchar:'|'});
+			Hyphenator.config({
+				hyphenchar:'|',
+				donthyphenateclassname:'nohyphens'
+			});
 			Hyphenator.run();
         </script>
     </head>
     <body>
         <h1>Test 23</h1>
-        <p>Turning of hyphenation for special element with class='donthyphenate'</p>
+        <p>Turning of hyphenation for special element with class='nohyphens'</p>
 		<p><a href="test22.html">&lt;- Prev</a> | <a href="test24.html">Next -&gt;</a></p>
-		<pre>Hyphenator.config({hyphenchar:'|'});
-Hyphenator.run();</pre>
-        <p class="hyphenate test">Silbentrennung durchführen, <span class="donthyphenate">Silbentrennung nicht durchführen,</span> Silbentrennung durchführen, <span class="donthyphenate">Silbentrennung nicht durchführen,</span> Silbentrennung durchführen.</p>
+		<pre>Hyphenator.config({
+	hyphenchar:'|',
+	donthyphenateclassname:'nohyphens'
+});
+Hyphenator.run();
+</pre>
+        <p class="hyphenate test">Silbentrennung durchführen, <span class="nohyphens">Silbentrennung nicht durchführen,</span> Silbentrennung durchführen, <span class="nohyphens">Silbentrennung nicht durchführen,</span> Silbentrennung durchführen.</p>
         <p class="ref">Sil|ben|tren|nung durch|füh|ren, Silbentrennung nicht durchführen, Sil|ben|tren|nung durch|füh|ren, Silbentrennung nicht durchführen, Sil|ben|tren|nung durch|füh|ren.</p>
     </body>
 </html>
