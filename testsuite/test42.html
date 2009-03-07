@@ -3,7 +3,7 @@
 <html lang="de">
     <head>
         <title>Hyphenator.js &ndash; Test 42</title>
-        <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
                 width:50%;
@@ -33,7 +33,7 @@
         <script type="text/javascript">
         	Hyphenator.config({hyphenchar:'|'});
         	Hyphenator.addExceptions('','Hyphen-ation');
-        	Hyphenator.addExceptions('de','Silben-trennung');
+        	Hyphenator.addExceptions('de','Silben-trennung, unbe-dingt');
             Hyphenator.run();
         </script>
     </head>
@@ -43,10 +43,10 @@
 		<p><a href="test41.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
         <pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.addExceptions('','Hyphen-ation');
-Hyphenator.addExceptions('de','Silben-trennung');
+Hyphenator.addExceptions('de','Silben-trennung, unbe-dingt');
 Hyphenator.run();</pre>
 
-        <p class="test hyphenate">Das englische Wort <span lang="en">&ldquo;Hyphenation&rdquo;</span> lässt sich nicht unbedingt wörtlich mit «Silbentrennung» übersetzen.</p>
-        <p class="ref">Das eng|li|sche Wort &ldquo;Hy|phen|ation&rdquo; lässt sich nicht un|be|dingt wört|lich mit «Sil|ben|tren|nung» über|set|zen.</p>
+        <p class="test hyphenate">Das englische Wort <span lang="en">&ldquo;Hyphenation&rdquo;</span> lÃ¤sst sich nicht unbedingt wÃ¶rtlich mit Â«SilbentrennungÂ» Ã¼bersetzen.</p>
+        <p class="ref">Das eng|li|sche Wort &ldquo;Hyphen|ation&rdquo; lÃ¤sst sich nicht unbe|dingt wÃ¶rt|lich mit Â«Silben|trennungÂ» Ã¼ber|set|zen.</p>
     </body>
 </html>
