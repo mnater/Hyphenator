@@ -781,6 +781,7 @@ var Hyphenator = function () {
 			}
 			if (xhr) {
 				xhr.open('HEAD', url, false);
+				xhr.setRequestHeader('Cache-Control','no-cache');
 				xhr.send(null);
 				if(xhr.status == 404) {
 					onError(new Error('Could not load\n'+url));
