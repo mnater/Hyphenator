@@ -9,3 +9,15 @@ A pure bugfix release. It fixes three issues:
 First release after twelve betas.
 
 See [http://www.mnn.ch/hyph/versionhist.html beta version history (german)].
+
+= Version Numbers =
+You may want to know, how the version numbers are built.
+Each version number consists of three numbers separated by a dot:
+
+`A.B.C`
+
+The first number (`A`) denotes the number of the major release. This number is changed if there's a change in the API or an important new feature.
+
+The second number (`B`) denotes the number of a minor release. The numbering begins fom 0, when the major release has changed. A minor release is caused by a new language or an important bugfix.
+
+The third number (`C`) is the bugfix number. The numbering begins from 0, when the minor release number has changed.
