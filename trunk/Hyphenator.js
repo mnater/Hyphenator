@@ -684,7 +684,7 @@ var Hyphenator = function () {
 	function gatherDocumentInfos() {
 		var elToProcess, tmp, i=0;
 		var process = function(el, hide) {
-			var idx, lang, n, i = 0;
+			var lang, n, i = 0;
 			if (hide) {
 				el.style.visibility = intermediateState;
 			}
@@ -839,9 +839,9 @@ var Hyphenator = function () {
 		}
 		if (exceptions.hasOwnProperty('global')) {
 			if (exceptions.hasOwnProperty(lang)) {
-				exceptions[lang] += ', ' + exceptions['global'];
+				exceptions[lang] += ', ' + exceptions.global;
 			} else {
-				exceptions[lang] = exceptions['global'];
+				exceptions[lang] = exceptions.global;
 			}
 		}
 		if (exceptions.hasOwnProperty(lang)) {
