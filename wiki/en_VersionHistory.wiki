@@ -1,3 +1,5 @@
+#summary Version History and note about versioning
+
 = Version History =
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_1.0.2.zip 1.0.2] (Mar 08, 2009) ==
 Fixed issue 47: Hyphenator.js works in Opera, now.
