@@ -1,4 +1,7 @@
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_1.0.2.zip 1.0.2] (Mar 08, 2009) ==
+Fixed issue 47: Hyphenator.js works in Opera, now.
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_1.0.1.zip 1.0.1] (Mar 02, 2009) ==
 A pure bugfix release. It fixes three issues:
   * issue 43: Hyphenator.js didn't work when JSON.js was loaded
