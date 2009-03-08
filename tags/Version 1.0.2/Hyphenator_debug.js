@@ -1,5 +1,5 @@
 /**************** Preamble ****************/
-//  Hyphenator 1.0.1 - client side hyphenation for webbrowsers
+//  Hyphenator 1.0.2 - client side hyphenation for webbrowsers
 //  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
 // 
 //  This program is free software: you can redistribute it and/or modify
