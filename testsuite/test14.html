@@ -27,15 +27,12 @@
         <script type="text/javascript">
                 Hyphenator.config({
                 	hyphenchar:'|',
+                	onhyphenationdonecallback:cb,
                 	enablecache:false
                 });
                 Hyphenator.run();
-
-				window.onload=function(){
-					window.setTimeout('SpeedTests()',3000);
-				}
 				
-				function SpeedTests() {
+				function cb() {
 					var out=document.getElementById('output').firstChild;
 					var res,start,end,times;
 
@@ -60,7 +57,7 @@
 Hyphenator.run();
 </pre>
 
-		<p id="output" class="test">Wait 3 seconds...</p>
+		<p id="output" class="hyphenate test">Silbentrennung</p>
 
  		<p class="ref">hyphenateWord('de','Silbentrennung')-> Sil|ben|tren|nung :: 0._ _ _ms</p>
 
