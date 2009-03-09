@@ -1,5 +1,5 @@
 /**************** Preamble ****************/
-//  Hyphenator - client side hyphenation for webbrowsers
+//  Hyphenator 1.0.X - client side hyphenation for webbrowsers
 //  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
 // 
 //  This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 1.X.X
+ * @version 1.0.X
   */
 
 /**
@@ -120,7 +120,7 @@ var Hyphenator = function () {
 				return src.substring(0, p);
 			}
 		}
-		return 'http://code.google.com/p/hyphenator/source/browse/tags/Version%201.0.1/';
+		return 'http://code.google.com/p/hyphenator/source/browse/tags/Version%201.0.2/';
 	}();
 	/**
 	 * @name Hyphenator-isLocal
@@ -146,7 +146,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator.hyphenateElement
 	 */
-	var dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true};
+	var dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true};
 
 	/**
 	 * @name Hyphenator-enableCache
