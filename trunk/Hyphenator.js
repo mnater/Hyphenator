@@ -146,7 +146,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator.hyphenateElement
 	 */
-	var dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true};
+	var dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true};
 
 	/**
 	 * @name Hyphenator-enableCache
