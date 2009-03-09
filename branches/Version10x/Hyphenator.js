@@ -120,7 +120,7 @@ var Hyphenator = function () {
 				return src.substring(0, p);
 			}
 		}
-		return 'http://hyphenator.googlecode.com/svn/trunk/';
+		return 'http://code.google.com/p/hyphenator/source/browse/tags/Version%201.0.1/';
 	}();
 	/**
 	 * @name Hyphenator-isLocal
@@ -781,6 +781,7 @@ var Hyphenator = function () {
 			}
 			if (xhr) {
 				xhr.open('HEAD', url, false);
+				xhr.setRequestHeader('Cache-Control','no-cache');
 				xhr.send(null);
 				if(xhr.status == 404) {
 					onError(new Error('Could not load\n'+url));
