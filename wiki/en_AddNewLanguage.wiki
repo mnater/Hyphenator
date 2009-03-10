@@ -12,8 +12,9 @@ Currently, there's support for
   * Malayalam, Tamil, Hindi, Oriya, Kannda, Telugu, Bengali, Gujarati and Panjabi (thanks to Santhosh Thottingal)
   * Italian (thanks to Stefano Gorini)
   * Finnish (thanks to Olli Wilkman)
-  * Russian
-  * Polish
+  * Russian (thanks to Dmitry Vedernikov)
+  * Polish (thanks to Kamil)
+  * Danish – coming soon (thanks to Henrik Ryom)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
