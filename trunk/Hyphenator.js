@@ -667,6 +667,9 @@ var Hyphenator = function () {
 			var lang = window.prompt(unescape(text), ul);
 			if (supportedLang[lang]) {
 				mainLanguage = lang;
+			} else {
+				var e = new Error('The language "'+lang+'" is not yet supported.');
+				throw e;
 			}
 		}
 	}
