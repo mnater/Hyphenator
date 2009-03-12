@@ -34,11 +34,11 @@
         <script type="text/javascript">
         	Hyphenator.config({hyphenchar:'|'});
             Hyphenator.run();
-            $(document).ready(function () {
+            function insert()  {
  			    $("#target").load("inc.html",'',cb);
-			});
+			}
 			function cb () {
-				Hyphenator.run();
+				Hyphenator.runOn($("#target"));
 			}
         </script>
     </head>
@@ -46,6 +46,9 @@
         <h1>Test 44</h1>
         <p>Hyphenating content that has been loaded by AJAX.</p>
 		<p><a href="test43.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+		<form method="post" action="#">
+		<input type="button" value="load text…" onclick="insert()">
+		</form>
         <p id="target" class="hyphenate"></p>
         <p class="ref">Das eng|li|sche Wort &ldquo;Hy|phen|ation&rdquo; lässt sich nicht un|be|dingt wört|lich mit «Sil|ben|tren|nung» über|set|zen.</p>
     </body>
