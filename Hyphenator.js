@@ -700,7 +700,9 @@ var Hyphenator = function () {
 				el.lang = lang;
 			}
 			if (supportedLang[lang]) {
-				docLanguages[lang] = true;
+				if (!Hyphenator.languages.hasOwnProperty(lang)) {
+					docLanguages[lang] = true;
+				}
 			} else {
 				onError(new Error('Language '+lang+' is not yet supported.'));
 			}
@@ -722,13 +724,16 @@ var Hyphenator = function () {
 				process(tmp, true);
 			}			
 		}
+		if (!Hyphenator.languages.hasOwnProperty(mainLanguage)) {
+			docLanguages[mainLanguage] = true;
+		}
 		if (elements.length > 0) {
 			elements[elements.length-1].isLast = true;
 		}
 	}
 	 
 	/**
-	 * @name Hyphenator-convertPatternsToObject
+	 * @name Hyphenator-convertPatterns
 	 * @methodOf Hyphenator
 	 * @description
 	 * Converts the patterns from string '_a6' to object '_a':'_a6'.
@@ -736,7 +741,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @param string the language whose patterns shall be converted
 	 */		
-	function convertPatternsToObject(lang) {
+	function convertPatterns(lang) {
 		var plen, anfang, pats, pat, key, tmp = {};
 		pats = Hyphenator.languages[lang].patterns;
 		for (plen in pats) {
@@ -871,11 +876,11 @@ var Hyphenator = function () {
 	 * @private
 	 */
 	function prepare (callback) {
-		var lang;
+		var lang, docLangEmpty = true;
 		if (!enableRemoteLoading) {
 			for (lang in Hyphenator.languages) {
 				if (Hyphenator.languages.hasOwnProperty(lang)) {
-					convertPatternsToObject(lang);
+					convertPatterns(lang);
 					prepareLanguagesObj(lang);
 				}
 			}
@@ -885,11 +890,16 @@ var Hyphenator = function () {
 		}
 		// get all languages that are used and preload the patterns
 		state = 1;
-		docLanguages[mainLanguage] = true;
 		for (lang in docLanguages) {
+			docLangEmpty = false;
 			if (docLanguages.hasOwnProperty(lang)) {
 				loadPatterns(lang);
 			}
+		}
+		if (docLangEmpty) {
+			state = 2;
+			callback();
+			return;
 		}
 		// wait until they are loaded
 		var interval = window.setInterval(function () {
@@ -903,7 +913,7 @@ var Hyphenator = function () {
 						finishedLoading = true;
 						delete docLanguages[lang];
 						//do conversion while other patterns are loading:
-						convertPatternsToObject(lang);
+						convertPatterns(lang);
 						prepareLanguagesObj(lang);		
 					}
 				}
