@@ -138,6 +138,8 @@ var Hyphenator = function () {
 		return re;
 	}();
 	
+	var documentLoaded = false;
+	
 	/**
 	 * @name Hyphenator-dontHyphenate
 	 * @fieldOf Hyphenator
@@ -500,12 +502,11 @@ var Hyphenator = function () {
 			D = 'DOMContentLoaded',
 			// user agent, version
 			u = w.navigator.userAgent.toLowerCase(),
-			v = parseFloat(u.match(/.+(?:rv|it|ml|ra|ie)[\/: ]([\d.]+)/)[1]),
-			documentloaded = false;
+			v = parseFloat(u.match(/.+(?:rv|it|ml|ra|ie)[\/: ]([\d.]+)/)[1]);
 				
 		function init(e) {
-			if (!documentloaded) {
-				documentloaded = true;
+			if (!documentLoaded) {
+				documentLoaded = true;
 				// pass a fake event if needed
 				f((e.type && e.type === D) ? e : {
 					type: D,
@@ -1129,8 +1130,10 @@ var Hyphenator = function () {
 					onError(e);
 				}
 			};
-			runOnContentLoaded(window, process);
-			if (Hyphenator.isBookmarklet()) {
+			if (!documentLoaded) {
+				runOnContentLoaded(window, process);
+			}
+			if (Hyphenator.isBookmarklet() || documentLoaded) {
 				process();
 			}
 		},
