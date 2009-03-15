@@ -33,3 +33,31 @@ Further, Hyphenator.js follows the rules of *[http://en.wikipedia.org/wiki/Unobt
 
 == How about Accessibility? ==
 Following the rules of *[http://en.wikipedia.org/wiki/Unobtrusive_JavaScript unobtrusive JavaScript]* Hyphenator.js has AFAIK no influence on accessibility of your webpage. It just adds a feature that will not be missed by a screen reader.
+
+== How to hyphenate text that has been loaded with AJAX? ==
+The simple answer is: just call Hyphenator.run() again.
+The problem with this is, that Hyphenator.js will process the whole file again (and not just the reloaded text).
+Instead you can redefine `selectorfunction` in a way that it just returns the elements that have been loaded by AJAX.
+I've created a testcase (http://hyphenator.googlecode.com/svn/trunk/testsuite/test44.html) where you can have a look how this works (using jQuery).
+Here's the code:
+{{{
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
+<script src="../Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({
+		hyphenchar:'|'
+	});
+	Hyphenator.run();
+	function insert()  {
+		$("#target").load("test44inc.html",'',cb);
+	}
+	function cb () {
+		Hyphenator.config({
+			selectorfunction: function(){
+				return $("#target").get();
+			}
+		});
+		Hyphenator.run();
+	}
+</script>
+}}}
