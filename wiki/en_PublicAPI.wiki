@@ -75,14 +75,18 @@ Define a special object `hyphenatorSettings` and pass it to `Hyphenator.config()
 </script>
 }}}
 ----
-==== property `classname` ====
+==== properties `classname` and `donthyphenateclassname` ====
 By default Hyphenator.js looks for elements with a classname `hyphenate`. Instead of adding this classname to each element that you like to be hyphenated, you'll probably prefer using an existing classname (e.g. `content`) or define an other name.
+As of version 2.0.0 you can redefine the classname that marks elements that should not be hyphenated (defaults to `donthyphenate`).
 
 ===== Example 3 – redefining a classname =====
 {{{
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
-	Hyphenator.config({classname : 'content'});
+	Hyphenator.config({
+		classname : 'content',
+		donthyphenateclassname : 'header'
+	});
 	Hyphenator.run();
 </script>
 }}}
