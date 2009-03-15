@@ -726,6 +726,8 @@ var Hyphenator = function () {
 		}
 		if (!Hyphenator.languages.hasOwnProperty(mainLanguage)) {
 			docLanguages[mainLanguage] = true;
+		} else if (!Hyphenator.languages[mainLanguage].prepared) {
+			docLanguages[mainLanguage] = true;
 		}
 		if (elements.length > 0) {
 			elements[elements.length-1].isLast = true;
@@ -756,6 +758,7 @@ var Hyphenator = function () {
 			}
 		}
 		Hyphenator.languages[lang].patterns = tmp;
+		Hyphenator.languages[lang].patternsConverted = true;
 	}
 
 	/**
@@ -840,25 +843,30 @@ var Hyphenator = function () {
 	 * @param string the language ob the lang-obj
 	 */		
 	function prepareLanguagesObj(lang) {
-		if (enableCache) {
-			Hyphenator.languages[lang].cache = {};
-		}
-		if (Hyphenator.languages[lang].hasOwnProperty('exceptions')) {
-			Hyphenator.addExceptions(lang, Hyphenator.languages[lang].exceptions);
-			delete Hyphenator.languages[lang].exceptions;
-		}
-		if (exceptions.hasOwnProperty('global')) {
-			if (exceptions.hasOwnProperty(lang)) {
-				exceptions[lang] += ', ' + exceptions.global;
-			} else {
-				exceptions[lang] = exceptions.global;
+		var lo = Hyphenator.languages[lang];
+		if (!lo.prepared) {	
+			if (enableCache) {
+				lo.cache = {};
 			}
-		}
-		if (exceptions.hasOwnProperty(lang)) {
-			Hyphenator.languages[lang].exceptions = convertExceptionsToObject(exceptions[lang]);
-			delete exceptions[lang];
-		} else {
-			Hyphenator.languages[lang].exceptions = {};
+			if (lo.hasOwnProperty('exceptions')) {
+				Hyphenator.addExceptions(lang, lo.exceptions);
+				delete lo.exceptions;
+			}
+			if (exceptions.hasOwnProperty('global')) {
+				if (exceptions.hasOwnProperty(lang)) {
+					exceptions[lang] += ', ' + exceptions.global;
+				} else {
+					exceptions[lang] = exceptions.global;
+				}
+			}
+			if (exceptions.hasOwnProperty(lang)) {
+				lo.exceptions = convertExceptionsToObject(exceptions[lang]);
+				delete exceptions[lang];
+			} else {
+				lo.exceptions = {};
+			}
+			convertPatterns(lang);
+			lo.prepared = true;
 		}
 	}
 	
@@ -876,11 +884,10 @@ var Hyphenator = function () {
 	 * @private
 	 */
 	function prepare (callback) {
-		var lang, docLangEmpty = true;
+		var lang;
 		if (!enableRemoteLoading) {
 			for (lang in Hyphenator.languages) {
 				if (Hyphenator.languages.hasOwnProperty(lang)) {
-					convertPatterns(lang);
 					prepareLanguagesObj(lang);
 				}
 			}
@@ -891,15 +898,9 @@ var Hyphenator = function () {
 		// get all languages that are used and preload the patterns
 		state = 1;
 		for (lang in docLanguages) {
-			docLangEmpty = false;
 			if (docLanguages.hasOwnProperty(lang)) {
 				loadPatterns(lang);
 			}
-		}
-		if (docLangEmpty) {
-			state = 2;
-			callback();
-			return;
 		}
 		// wait until they are loaded
 		var interval = window.setInterval(function () {
@@ -913,7 +914,6 @@ var Hyphenator = function () {
 						finishedLoading = true;
 						delete docLanguages[lang];
 						//do conversion while other patterns are loading:
-						convertPatterns(lang);
 						prepareLanguagesObj(lang);		
 					}
 				}
