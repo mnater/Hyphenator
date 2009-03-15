@@ -1,7 +1,7 @@
 #summary Version History and note about versioning
 
 = Version History =
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_2.0.0.zip 2.0.0] (Mar 15, 2009) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.0.0.zip] (Mar 15, 2009) ==
 This major release brings a big improvement:
   * pattern files are packed by removing the spaces between patterns. Thus, pattern files are 12% smaller in average. As a downside they are harder to create; therefore I created a helper `compressor.html`
 Further there are some new features:
