@@ -40,11 +40,11 @@
  			    $("#target").load("test44inc.html",'',cb);
 			}
 			function cb () {
-				/*Hyphenator.config({
+				Hyphenator.config({
 					selectorfunction: function(){
 						return $("#target").get();
 					}
-				});*/
+				});
 				Hyphenator.run();
 			}
         </script>
@@ -52,7 +52,7 @@
     <body>
         <h1>Test 44</h1>
         <p>Hyphenating content that has been loaded by AJAX.</p>
-		<p><a href="test43.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+		<p><a href="test43.html">&lt;- Prev</a> | <a href="test45.html">Next -&gt;</a></p>
 		<form method="post" action="#">
 		<input type="button" value="load text…" onclick="insert()">
 		</form>
