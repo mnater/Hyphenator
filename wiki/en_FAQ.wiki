@@ -32,4 +32,4 @@ It's true, JavaScript had a very bad reputation - not because JavaScript itself 
 Further, Hyphenator.js follows the rules of [http://en.wikipedia.org/wiki/Unobtrusive_JavaScript *unobtrusive JavaScript*].
 
 == How about Accessibility? ==
-Following the rules of [http://en.wikipedia.org/wiki/Unobtrusive_JavaScript *unobtrusive JavaScript*] Hyphenator.js has AFAIK no influence on accessibility of your webpage. It just adds a feature that will not be missed by a screen reader.
+Following the rules of *[http://en.wikipedia.org/wiki/Unobtrusive_JavaScript unobtrusive JavaScript]* Hyphenator.js has AFAIK no influence on accessibility of your webpage. It just adds a feature that will not be missed by a screen reader.
