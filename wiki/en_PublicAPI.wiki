@@ -285,11 +285,14 @@ Calling this method invokes hyphenation.
 === void Hyphenator.addExceptions(string language, string words) ===
 Adds exceptions on a page-wide base. Use this to correct words that would be wrongly hyphenated by the patterns. Indicate the language in the first argument.
 The second argumet takes a comma separated string (WITH spaces) of prehyphenated words.
+For Hyphenator.js >=2.0.0:
+If the first argument is an empty string, the exception is 'global', not for a specific language, but for all languages.
 ==== Example ====
 {{{
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
-	Hyphenator.addExceptions('en','FORTRAN, man-u-script, man-u-scripts');
+	Hyphenator.addExceptions('en','man-u-script, man-u-scripts');
+	Hyphenator.addExceptions('','FORTRAN');
 	Hyphenator.run();
 </script>
 }}}
