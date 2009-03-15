@@ -1,5 +1,5 @@
 ﻿/**************** Preamble ****************/
-//  Hyphenator - client side hyphenation for webbrowsers
+//  Hyphenator 2.X.X - client side hyphenation for webbrowsers
 //  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
 // 
 //  This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 1.X.X
+ * @version 2.X.X
   */
 
 /**
@@ -123,6 +123,7 @@ var Hyphenator = function () {
 		}
 		return 'http://hyphenator.googlecode.com/svn/trunk/';
 	}();
+
 	/**
 	 * @name Hyphenator-isLocal
 	 * @fieldOf Hyphenator
@@ -138,6 +139,12 @@ var Hyphenator = function () {
 		return re;
 	}();
 	
+	/**
+	 * @name Hyphenator-documentLoaded
+	 * @fieldOf Hyphenator
+	 * @description
+	 * documentLoaded is true, when the DOM has been loaded. This is set by runOnContentLoaded
+	 */
 	var documentLoaded = false;
 	
 	/**
@@ -828,7 +835,6 @@ var Hyphenator = function () {
 			var head = document.getElementsByTagName('head').item(0);
 			var script = document.createElement('script');
 			script.src = url;
-			//script.id = lang;
 			script.type = 'text/javascript';
 			head.appendChild(script);
 		}
@@ -984,7 +990,7 @@ var Hyphenator = function () {
 		 * minor release: new languages, improvements
 		 * @public
          */		
-		version: '1.0.0',
+		version: '2.0.0',
 		
 		/**
 		 * @name Hyphenator.languages
@@ -1046,72 +1052,83 @@ var Hyphenator = function () {
 					return false;
 				}
 			};
-			if (obj.hasOwnProperty('classname')) {
-				if (assert ('classname', 'string')) {
-					hyphenateClass = obj.classname;
-				}
-			}
-			if (obj.hasOwnProperty('donthyphenateclassname')) {
-				if (assert ('donthyphenateclassname', 'string')) {
-					dontHyphenateClass = obj.donthyphenateclassname;
-				}
-			}
-			if (obj.hasOwnProperty('minwordlength')) {
-				if (assert ('minwordlength', 'number')) {
-					min = obj.minwordlength;
-				}
-			}
-			if (obj.hasOwnProperty('hyphenchar')) {
-				if (assert ('hyphenchar', 'string')) {
-					if (obj.hyphenchar === '&shy;') {
-						obj.hyphenchar = String.fromCharCode(173);
+			var key;
+			for (key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					switch (key) {
+						case 'classname':
+							if (assert ('classname', 'string')) {
+								hyphenateClass = obj.classname;
+							}
+						break;
+						case 'donthyphenateclassname':
+							if (assert ('donthyphenateclassname', 'string')) {
+								dontHyphenateClass = obj.donthyphenateclassname;
+							}						
+						break;
+						case 'minwordlength':
+							if (assert ('minwordlength', 'number')) {
+								min = obj.minwordlength;
+							}
+						break;
+						case 'hyphenchar':
+							if (assert ('hyphenchar', 'string')) {
+								if (obj.hyphenchar === '&shy;') {
+									obj.hyphenchar = String.fromCharCode(173);
+								}
+								hyphen = obj.hyphenchar;
+							}
+						break;
+						case 'urlhyphenchar':
+							if (obj.hasOwnProperty('urlhyphenchar')) {
+								if (assert ('urlhyphenchar', 'string')) {
+									urlhyphen = obj.urlhyphenchar;
+								}
+							}
+						break;
+						case 'togglebox':
+							if (assert ('togglebox', 'function')) {
+								toggleBox = obj.togglebox;
+							}
+						break;
+						case 'displaytogglebox':
+							if (assert ('displaytogglebox', 'boolean')) {
+								displayToggleBox = obj.displaytogglebox;
+							}
+						break;
+						case 'remoteloading':
+							if (assert ('remoteloading', 'boolean')) {
+								enableRemoteLoading = obj.remoteloading;
+							}
+						break;
+						case 'enablecache':
+							if (assert ('enablecache', 'boolean')) {
+								enableCache = obj.enablecache;
+							}
+						break;
+						case 'onhyphenationdonecallback':
+							if (assert ('onhyphenationdonecallback', 'function')) {
+								onHyphenationDone = obj.onhyphenationdonecallback;
+							}
+						break;
+						case 'onerrorhandler':
+							if (assert ('onerrorhandler', 'function')) {
+								onError = obj.onerrorhandler;
+							}
+						break;
+						case 'intermediatestate':
+							if (assert ('intermediatestate', 'string')) {
+								intermediateState = obj.intermediatestate;
+							}
+						break;
+						case 'selectorfunction':
+							if (assert ('selectorfunction', 'function')) {
+								selectorFunction = obj.selectorfunction;
+							}
+						break;
+						default:
+							onError(new Error('Hyphenator.config: property '+key+' not known.'));
 					}
-            		hyphen = obj.hyphenchar;
-            	}
-			}
-			if (obj.hasOwnProperty('urlhyphenchar')) {
-				if (assert ('urlhyphenchar', 'string')) {
-					urlhyphen = obj.urlhyphenchar;
-				}
-			}
-			if (obj.hasOwnProperty('togglebox')) {
-				if (assert ('togglebox', 'function')) {
-					toggleBox = obj.togglebox;
-				}
-			}
-			if (obj.hasOwnProperty('displaytogglebox')) {
-				if (assert ('displaytogglebox', 'boolean')) {
-            		displayToggleBox = obj.displaytogglebox;
-            	}
-			}
-			if (obj.hasOwnProperty('remoteloading')) {
-				if (assert ('remoteloading', 'boolean')) {
-					enableRemoteLoading = obj.remoteloading;
-				}
-			}
-			if (obj.hasOwnProperty('enablecache')) {
-				if (assert ('enablecache', 'boolean')) {
-					enableCache = obj.enablecache;
-				}
-			}
-			if (obj.hasOwnProperty('onhyphenationdonecallback')) {
-				if (assert ('onhyphenationdonecallback', 'function')) {
-					onHyphenationDone = obj.onhyphenationdonecallback;
-				}
-			}
-			if (obj.hasOwnProperty('onerrorhandler')) {
-				if (assert ('onerrorhandler', 'function')) {
-					onError = obj.onerrorhandler;
-				}
-			}
-			if (obj.hasOwnProperty('intermediatestate')) {
-				if (assert ('intermediatestate', 'string')) {
-					intermediateState = obj.intermediatestate;
-				}
-			}
-			if (obj.hasOwnProperty('selectorfunction')) {
-				if (assert ('selectorfunction', 'function')) {
-					selectorFunction = obj.selectorfunction;
 				}
 			}
 		},
@@ -1166,7 +1183,6 @@ var Hyphenator = function () {
 		addExceptions: function (lang, words) {
 			if (lang === '') {
 				lang = 'global';
-				//********************//
 			}
 			if (exceptions.hasOwnProperty[lang]) {
 				exceptions[lang] += ", "+words;
