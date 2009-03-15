@@ -1,6 +1,20 @@
 #summary Version History and note about versioning
 
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_2.0.0.zip 2.0.0] (Mar 15, 2009) ==
+This major release brings a big improvement:
+  * pattern files are packed by removing the spaces between patterns. Thus, pattern files are 12% smaller in average. As a downside they are harder to create; therefore I created a helper `compressor.html`
+Further there are some new features:
+  * support for danish (thanks to Henrik Ryom)
+  * you may now define a class for elements that should NOT be hyphenated (`donthyphenateclassname`)
+  * hyphenation of AJAX-loaded elements is possible
+  * exceptions can be defined for ALL languages
+  * Hyphenator.config throws an error, when a key is misspelled or unknown.
+and some bugfixes:
+  * added `textarea` to the elements that will not be hyphenated
+  * fixed a bug that occured when no language has been indicated in the prompt.
+  * some internal improvements
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator_1.0.2.zip 1.0.2] (Mar 08, 2009) ==
 Fixed issue 47: Hyphenator.js works in Opera, now.
 
