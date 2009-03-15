@@ -890,7 +890,7 @@ var Hyphenator = function () {
 	 * @private
 	 */
 	function prepare (callback) {
-		var lang;
+		var lang, docLangEmpty = true;
 		if (!enableRemoteLoading) {
 			for (lang in Hyphenator.languages) {
 				if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -906,7 +906,13 @@ var Hyphenator = function () {
 		for (lang in docLanguages) {
 			if (docLanguages.hasOwnProperty(lang)) {
 				loadPatterns(lang);
+				docLangEmpty = false;
 			}
+		}
+		if (docLangEmpty) {
+			state = 2;
+			callback();
+			return;
 		}
 		// wait until they are loaded
 		var interval = window.setInterval(function () {
