@@ -697,15 +697,15 @@ var Hyphenator = function () {
 		var elToProcess, tmp, i=0;
 		var process = function(el, hide) {
 			var lang, n, i = 0;
-			if (hide) {
+			if (hide && intermediateState==='hidden') {
 				el.style.visibility = intermediateState;
 			}
 			if (el.lang) {
-				lang = el.lang;
+				el.language = el.lang; //copy attribute-lang to internal lang
 			} else {
-				lang = getLang(el, true);
-				el.lang = lang;
+				el.language = getLang(el, true);
 			}
+			lang = el.language;
 			if (supportedLang[lang]) {
 				if (!Hyphenator.languages.hasOwnProperty(lang)) {
 					docLanguages[lang] = true;
@@ -1259,7 +1259,7 @@ var Hyphenator = function () {
          */
 		hyphenateElement : function (el, lang) {
 			if (!lang) {
-				lang = el.lang;
+				lang = el.language;
 			}
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
@@ -1278,7 +1278,9 @@ var Hyphenator = function () {
 					}
 				}
 			}
-            el.style.visibility = 'visible';
+			if(intermediateState === 'hidden') {
+				el.style.visibility = 'visible';
+			}
 	        if(el.isLast) {
 	        	state = 3;
 	        	onHyphenationDone();
