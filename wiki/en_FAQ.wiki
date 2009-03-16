@@ -16,6 +16,9 @@ Your browser has a bug (currently, only Firefox3 finds hyphenated words). The on
 This are not spaces, that's the soft hyphen that Hyphenator inserted (think of 'enriched' text). Most texteditors display the soft hyphen as a space. As far as I know, MS Word handles the soft hyphens correctly.
 You can turn off Hyphenation before copying text from a website or you search and replace the softhyphens later.
 
+== Hyphenator.js does NOT work in Firefox 2 ==
+Hyphenator.js infact works great in Firefox 2, but (apart from breaking urls) there's no effect since Firefox 2 does not support the soft hyphen (&shy;). If you can't be without, there's a script (external, no warranty and no support by me) that replaces the soft hyphens by spans in Firefox: [http://cheerleader.yoz.com/archives/000224.html].
+
 == Could you write an extension/plugin for … ==
 Maybe I could. But
   # to maintain Hyphenator.js is enough for the moment and
