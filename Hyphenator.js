@@ -602,7 +602,7 @@ var Hyphenator = function () {
 	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainLanguage}
 	 * if there's no language found for the element.
 	 * @private
-	 */		
+	 */
 	function getLang(el, fallback) {
 		if (!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').substring(0, 2);
@@ -695,13 +695,20 @@ var Hyphenator = function () {
 	 */		
 	function gatherDocumentInfos() {
 		var elToProcess, tmp, i=0;
-		var process = function(el, hide) {
-			var lang, n, i = 0;
+		var process = function(el, hide, lang) {
+			var n, i = 0;
 			if (hide && intermediateState==='hidden') {
+				if(el.hasAttribute('style')) {
+					el.hasOwnStyle = true;
+				} else {
+					el.hasOwnStyle = false;					
+				}
 				el.style.visibility = intermediateState;
 			}
 			if (el.lang) {
 				el.language = el.lang; //copy attribute-lang to internal lang
+			} else if (lang) {
+				el.language = lang;
 			} else {
 				el.language = getLang(el, true);
 			}
@@ -717,13 +724,13 @@ var Hyphenator = function () {
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
 					n.className.indexOf(dontHyphenateClass) === -1 && !(n in elToProcess)) {
-					process(n, false);
+					process(n, false, lang);
 				}
 			}
 		};
 		if (Hyphenator.isBookmarklet()) {
 			elToProcess = document.getElementsByTagName('body')[0];
-			process(elToProcess, false);
+			process(elToProcess, false, mainLanguage);
 		} else {
 			elToProcess = selectorFunction();
 			while (!!(tmp = elToProcess[i++]))
@@ -1257,10 +1264,8 @@ var Hyphenator = function () {
 		 * @param string The language used in this element
 		 * @public
          */
-		hyphenateElement : function (el, lang) {
-			if (!lang) {
-				lang = el.language;
-			}
+		hyphenateElement : function (el) {
+			var lang = el.language;
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
 				var hyphenate = function (word) {
@@ -1280,6 +1285,10 @@ var Hyphenator = function () {
 			}
 			if(intermediateState === 'hidden') {
 				el.style.visibility = 'visible';
+				if(!el.hasOwnStyle) {
+					el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+					el.removeAttribute('style');
+				}
 			}
 	        if(el.isLast) {
 	        	state = 3;
