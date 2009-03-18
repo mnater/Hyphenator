@@ -698,7 +698,7 @@ var Hyphenator = function () {
 		var process = function(el, hide, lang) {
 			var n, i = 0;
 			if (hide && intermediateState==='hidden') {
-				if(el.hasAttribute('style')) {
+				if(!!el.getAttribute('style')) {
 					el.hasOwnStyle = true;
 				} else {
 					el.hasOwnStyle = false;					
@@ -1288,6 +1288,12 @@ var Hyphenator = function () {
 				if(!el.hasOwnStyle) {
 					el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
 					el.removeAttribute('style');
+				} else {
+					if (el.style.removeProperty) {
+						el.style.removeProperty('visibility');
+					} else if (el.style.removeAttribute) {
+						el.style.removeAttribute('visibility');
+					}  
 				}
 			}
 	        if(el.isLast) {
