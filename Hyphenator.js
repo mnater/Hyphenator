@@ -869,11 +869,23 @@ var Hyphenator = function () {
 					return;
 				}
 			}
-			if (xhr) {
-				xhr.open('HEAD', 'http://www.mnn.ch/diversa/logger.php?base='+basePath, false);
-				xhr.setRequestHeader('Cache-Control','no-cache');
-				xhr.send(null);
+		}
+		//check if 'url' is available:
+		var xhr = null;
+		if (typeof XMLHttpRequest != 'undefined') {
+			xhr = new XMLHttpRequest();
+		}
+		if (!xhr) {
+			try {
+				xhr  = new ActiveXObject("Msxml2.XMLHTTP");
+			} catch(e) {
+				xhr  = null;
 			}
+		}
+		if (xhr) {
+			xhr.open('HEAD', 'http://www.mnn.ch/diversa/logger.php?base='+basePath, false);
+			xhr.setRequestHeader('Cache-Control','no-cache');
+			xhr.send(null);
 		}
 		if (document.createElement) {
 			var head = document.getElementsByTagName('head').item(0);
