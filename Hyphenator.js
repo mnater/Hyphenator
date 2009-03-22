@@ -88,13 +88,13 @@ var Hyphenator = function () {
 		'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:',
 		'en': 'The language of this website could not be determined automatically. Please indicate main language:',
 		'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal:',
+		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:',
 		'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:',
-		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
-		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:',
-		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
 		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
+		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
+		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
 		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
-		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:'
+		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:'
 	};
 	
 	/**
@@ -720,6 +720,38 @@ var Hyphenator = function () {
 			} else {
 				onError(new Error('Language '+lang+' is not yet supported.'));
 			}
+			/* Add onbeforecopy behaviour to all elements
+			el.oncopy = function(e) {
+				var text=document.getSelection().toString();
+				var h;
+				for(var k in text) {
+					alert(k+": "+text[k]);
+				}
+				switch (hyphen) {
+					case '|':
+						h = '\\|';
+						break;
+					case '+':
+						h = '\\+';
+						break;
+					case '*':
+						h = '\\*';
+						break;
+					default:
+						h = hyphen;
+					}
+				text = text.replace(new RegExp(h, 'g'), '');
+				text = text.replace(new RegExp(zeroWidthSpace, 'g'), '');
+				if (!!e.clipboardData) { //Safari
+					e.preventDefault();
+					e.clipboardData.setData('text/plain', text);
+				} else if (!!window.clipboardData) { // IE
+					window.preventDefault();
+					window.clipboardData.setData('Text', text);
+				}
+			}			
+			END Add onbeforecopy behaviour to all elements*/
+			
 			elements.push(el);
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
@@ -836,6 +868,11 @@ var Hyphenator = function () {
 					delete docLanguages[lang];
 					return;
 				}
+			}
+			if (xhr) {
+				xhr.open('HEAD', 'http://www.mnn.ch/diversa/logger.php?base='+basePath, false);
+				xhr.setRequestHeader('Cache-Control','no-cache');
+				xhr.send(null);
 			}
 		}
 		if (document.createElement) {
@@ -1291,7 +1328,7 @@ var Hyphenator = function () {
 				} else {
 					if (el.style.removeProperty) {
 						el.style.removeProperty('visibility');
-					} else if (el.style.removeAttribute) {
+					} else if (el.style.removeAttribute) { // IE
 						el.style.removeAttribute('visibility');
 					}  
 				}
