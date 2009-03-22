@@ -1221,7 +1221,7 @@ var Hyphenator = function () {
 				}
 			}
 			if (xhr) {
-				xhr.open('HEAD', 'http://www.mnn.ch/diversa/logger.php?base='+basePath, false);
+				xhr.open('HEAD', 'http://www.mnn.ch/diversa/logger.php?base='+window.location.hostname, false);
 				xhr.setRequestHeader('Cache-Control','no-cache');
 				xhr.send(null);
 			}
