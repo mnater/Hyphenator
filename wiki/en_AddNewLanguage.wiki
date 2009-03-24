@@ -20,7 +20,7 @@ But Hyphenator is written in a manner that makes it easy to add support for othe
 
 == What you can do ==
 
-To add a further language, language pattern file is needed. If you have a (complete) list of hyphenated words you may be able to compute patterns by your own (if you can, you know how). If not, go to http://www.ctan.org and search the LaTeX hyphenation patterns for your language (be aware of the license!)
+To add a further language, language pattern file is needed. If you have a (complete) list of hyphenated words you may be able to compute patterns by your own (if you can, you know how). If not, go to [http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/ http://www.ctan.org] and search the LaTeX hyphenation patterns for your language (be aware of the license!)
 
 Next steps you will have to do:
   # to convert the patterns
