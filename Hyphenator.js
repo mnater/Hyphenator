@@ -1493,6 +1493,6 @@ var Hyphenator = function () {
 	};
 }();
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.config({displaytogglebox:true});
+	Hyphenator.config({displaytogglebox:true,intermediatestate:'visible'});
 	Hyphenator.run();
 }
