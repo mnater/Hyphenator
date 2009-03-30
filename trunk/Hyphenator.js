@@ -379,7 +379,7 @@ var Hyphenator = function () {
 	 */		
 	var zeroWidthSpace = function() {
 		var ua = navigator.userAgent.toLowerCase();
-		if (ua.indexOf('msie 6') === -1 && ua.indexOf('msie 8') === -1) {
+		if (ua.indexOf('msie 6') === -1) {
 			zeroWidthSpace = String.fromCharCode(8203); //Unicode zero width space
 		} else {
 			zeroWidthSpace = '';
