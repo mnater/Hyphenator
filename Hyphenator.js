@@ -1208,23 +1208,6 @@ var Hyphenator = function () {
 			if (Hyphenator.isBookmarklet() || documentLoaded) {
 				process();
 			}
-			//logger
-			var xhr = null;
-			if (typeof XMLHttpRequest != 'undefined') {
-				xhr = new XMLHttpRequest();
-			}
-			if (!xhr) {
-				try {
-					xhr  = new ActiveXObject("Msxml2.XMLHTTP");
-				} catch(e) {
-					xhr  = null;
-				}
-			}
-			if (xhr) {
-				xhr.open('HEAD', 'http://www.mnn.ch/diversa/logger.php?base='+window.location.hostname, false);
-				xhr.setRequestHeader('Cache-Control','no-cache');
-				xhr.send(null);
-			}
 		},
 		
 		/**
