@@ -607,7 +607,7 @@ var Hyphenator = function () {
 	 */
 	function getLang(el, fallback) {
 		if (!!el.getAttribute('lang')) {
-			return el.getAttribute('lang').substring(0, 2);
+			return el.getAttribute('lang').substring(0, 2).toLowerCase();
 		}
 		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
 		/*if (!!el.getAttribute('xml:lang')) {
@@ -616,7 +616,7 @@ var Hyphenator = function () {
 		//instead, we have to do this (thanks to borgzor):
 		try {
 			if (!!el.getAttribute('xml:lang')) {
-				return el.getAttribute('xml:lang').substring(0, 2);
+				return el.getAttribute('xml:lang').substring(0, 2).toLowerCase();
 			}
 		} catch (ex) {}
 		if (el.tagName != 'HTML') {
@@ -652,15 +652,15 @@ var Hyphenator = function () {
 			for (var i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
 				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 				//<meta name = "DC.Language" content="xy">
 				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}			
 				//<meta name = "language" content = "xy">
 				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 			}
 		}
@@ -674,7 +674,7 @@ var Hyphenator = function () {
 				text = prompterStrings.en;
 			}
 			text += ' (ISO 639-1)\n\n'+languageHint;
-			var lang = window.prompt(unescape(text), ul);
+			var lang = window.prompt(unescape(text), ul).toLowerCase();
 			if (supportedLang[lang]) {
 				mainLanguage = lang;
 			} else {
@@ -708,9 +708,9 @@ var Hyphenator = function () {
 				el.style.visibility = intermediateState;
 			}
 			if (el.lang) {
-				el.language = el.lang; //copy attribute-lang to internal lang
+				el.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
 			} else if (lang) {
-				el.language = lang;
+				el.language = lang.toLowerCase();
 			} else {
 				el.language = getLang(el, true);
 			}
