@@ -16,7 +16,7 @@ If the pages language isn't set, you will have to edit it manually in a popping-
 For a webdeveloper who wishes to hyphenate his website, things are slightly more complicated. You'll need basic knowledge about HTML and !JavaScript to do the following steps.
 
 === Step by Step ===
-  # [http://code.google.com/p/hyphenator/downloads/list Download] an actual version of Hyphenator.js and copy it to your server (make shure to copy the folder called `patterns`, too).
+  # [http://code.google.com/p/hyphenator/downloads/list Download] an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
   # Prepare your HTML-documents by
     * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
