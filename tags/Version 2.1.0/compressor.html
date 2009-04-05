@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; pattern compressor</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            .text {
+                text-align:justify;
+            }
+            .test {
+            	background-color: #ffd6d6;
+            }
+            .ref {
+            	background-color: #d6ffd6;
+            }
+            #fields {
+            	float: left;
+            	margin-right: 10px;
+            }
+            #desc {
+            	font: 12px 'Monaco monospace';
+            }
+        </style>
+        <script type="text/javascript">
+        	var oldpatterns, newpatterns = {}, shortestPattern = 100, longestPattern = 0;
+        	
+        	function lengthSort(a, b) {
+        		return a.length - b.length;
+        	}
+        	        	
+			function startConversion() {
+				var len, i, curlen, key;
+				oldpatterns = document.getElementsByName('oldpattern')[0].value.split(' ');
+				oldpatterns.sort(lengthSort);
+				len = oldpatterns.length;
+				for(i = 0; i < len; i++) {
+					key = oldpatterns[i].replace(/\d/g, '');
+					if(key.length < shortestPattern) {
+						shortestPattern = key.length
+					}
+					if(key.length > longestPattern) {
+						longestPattern = key.length
+					}
+					curlen = oldpatterns[i].length;
+					if(curlen in newpatterns) {
+						newpatterns[curlen] += oldpatterns[i].replace(/\./g, '_');
+					} else {
+						newpatterns[curlen] = oldpatterns[i].replace(/\./g, '_');
+					}
+				}
+				output2String();
+			}
+			
+			function output2String() {
+				var tmp, len;
+				tmp = 'Hyphenator.languages.' + document.getElementsByName('language')[0].value + ' = {\n';
+				tmp += '\'leftmin\' : ' + document.getElementsByName('leftmin')[0].value + ',\n';
+				tmp += '\'rightmin\' : ' + document.getElementsByName('rightmin')[0].value + ',\n';
+				tmp += '\'shortestPattern\' : ' + shortestPattern + ',\n';
+				tmp += '\'longestPattern\' : ' + longestPattern + ',\n';
+				tmp += '\'specialChars\' : \'' + document.getElementsByName('specialChars')[0].value + '\',\n';
+				tmp += '\'patterns\' : {';
+				for (len in newpatterns) {
+					tmp += len + ':' + '"' + newpatterns[len] + '",';
+				}
+				tmp = tmp.slice(0,-1);
+				tmp += '}\n};'
+				document.getElementsByName('newpattern')[0].value = tmp;
+			}
+			
+			window.onload = function() {
+				var desc = document.getElementById('desc');
+				document.getElementsByName('language')[0].onfocus = function() {
+					this.value = '';
+					desc.innerHTML = "<em>Define language:</em><br>Use the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>ISO 639-1</a> two-letter language code.<br>(e.g. 'en' for english.)";
+				};
+				document.getElementsByName('language')[0].onblur = function() {
+					if(this.value === '') {
+						this.value = 'language';
+					}
+					desc.innerHTML = "";
+				};
+
+
+				document.getElementsByName('specialChars')[0].onfocus = function() {
+					this.value = '';
+					desc.innerHTML = "<em>Define specialChars:</em><br>Write all characters that are used in this lanuage and that are not part of ASCII.<br>(e.g. 'äöüß' for german)";
+				};
+				document.getElementsByName('specialChars')[0].onblur = function() {
+					desc.innerHTML = "";
+				};
+
+
+				document.getElementsByName('leftmin')[0].onfocus = function() {
+					this.value = '';
+					desc.innerHTML = "<em>Define leftmin:</em><br>Define how many letters at minimum should stay on the old line upon hyphenation.<br>(e.g.: setting this to 3 would prevent 'Hy-phenation')";
+				};
+				document.getElementsByName('leftmin')[0].onblur = function() {
+					if(this.value === '') {
+						this.value = 'leftmin';
+					}
+					desc.innerHTML = "";
+				};
+
+				document.getElementsByName('rightmin')[0].onfocus = function() {
+					this.value = '';
+					desc.innerHTML = "<em>Define rightmin:</em><br>Define how many letters at minimum should stay on the new line upon hyphenation.<br>(e.g.: setting this to 3 would prevent 'divid-ed')";
+				};
+				document.getElementsByName('rightmin')[0].onblur = function() {
+					if(this.value === '') {
+						this.value = 'rightmin';
+					}
+					desc.innerHTML = "";
+				};
+
+				document.getElementsByName('oldpattern')[0].onfocus = function() {
+					this.value = '';
+					desc.innerHTML = "<em>Define oldpattern:</em><br>Paste the patterns you like to convert. They have to be separated by spaces, not newlines! Points (.) will be automatically replaced by underscores (_).<br>(e.g.: .ach4 .ad4der .af1t .al3t .am5at .an5c .ang4 .ani5m .ant4)";
+				};
+				document.getElementsByName('oldpattern')[0].onblur = function() {
+					if(this.value === '') {
+						this.value = '.ach4 .ad4der .af1t .al3t .am5at .an5c .ang4 .ani5m .ant4';
+					}
+					desc.innerHTML = "";
+				};
+
+			}
+        </script>
+    </head>
+    <body>
+        <h1>Build Hyphenator.js pattern files</h1>
+		<form action="#" method="post">
+			<fieldset>
+				<legend>Paste TeX-styled patterns:</legend>
+				<span id="fields">
+				<input type="text" name="language" value="language"></input><br>
+				<input type="text" name="specialChars" value="specialChars"></input><br>
+				<input type="text" name="leftmin" value="leftmin"></input><br>
+				<input type="text" name="rightmin" value="rightmin"></input>
+				</span>
+				<span id="desc"></span>
+				<textarea name="oldpattern" cols="80" rows="20">.a5 .rt4 .d4gt2 asdf2 9kas3</textarea> 
+				<input type="submit" value="Convert!" onclick="startConversion(); return false;"><input type="Reset" value="Reset">
+			</fieldset>
+			<fieldset>
+				<legend>Copy Hyphenator.js pattern files:</legend>
+				<textarea name="newpattern" cols="80" rows="20"></textarea> 
+			</fieldset>
+		</form>
+    </body>
+</html>
