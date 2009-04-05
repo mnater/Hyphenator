@@ -1,5 +1,5 @@
 ﻿/**************** Preamble ****************/
-//  Hyphenator 2.0.0 - client side hyphenation for webbrowsers
+//  Hyphenator 2.1.0 - client side hyphenation for webbrowsers
 //  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
 //  Project and Source hosted on http://code.google.com/p/hyphenator/
 // 
@@ -24,7 +24,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 2.0.0
+ * @version 2.1.0
   */
 
 /**
@@ -1037,7 +1037,7 @@ var Hyphenator = function () {
 		 * minor release: new languages, improvements
 		 * @public
          */		
-		version: '2.0.0',
+		version: '2.1.0',
 		
 		/**
 		 * @name Hyphenator.languages
