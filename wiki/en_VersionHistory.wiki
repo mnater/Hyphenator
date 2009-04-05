@@ -1,6 +1,13 @@
 #summary Version History and note about versioning
 
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.1.0.zip 2.1.0] (Apr 05, 2009) ==
+This minor release brings a the following changes:
+  * It's licensed under LGPL version 3.0
+  * The DOM isn't cluttered anymore with `lang` and `style` attributes after Hyphenator.js is run
+and some bugfixes:
+  * fixed issue 53: language is recognized even if it's uppercase
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.0.0.zip 2.0.0] (Mar 15, 2009) ==
 This major release brings a big improvement:
   * pattern files are packed by removing the spaces between patterns. Thus, pattern files are 12% smaller in average. As a downside they are harder to create; therefore I created a helper `compressor.html`
