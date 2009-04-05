@@ -3,12 +3,12 @@
 
 == What we have now ==
 Currently, there's support for
-  * english
-  * german
-  * french
-  * dutch (thanks to Remco Bloemen)
-  * swedish (thanks to Andreas Johansson)
-  * spanish (thanks to Luis Pabón)
+  * English
+  * German
+  * French
+  * Dutch (thanks to Remco Bloemen)
+  * Swedish (thanks to Andreas Johansson)
+  * Spanish (thanks to Luis Pabón)
   * Malayalam, Tamil, Hindi, Oriya, Kannda, Telugu, Bengali, Gujarati and Panjabi (thanks to Santhosh Thottingal)
   * Italian (thanks to Stefano Gorini)
   * Finnish (thanks to Olli Wilkman)
