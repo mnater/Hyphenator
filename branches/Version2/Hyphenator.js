@@ -1,23 +1,25 @@
 ﻿/**************** Preamble ****************/
 //  Hyphenator 2.0.0 - client side hyphenation for webbrowsers
 //  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
+//  Project and Source hosted on http://code.google.com/p/hyphenator/
 // 
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-// 
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-// 
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see [http://www.gnu.org/licenses/].
+//  This JavaScript code is free software: you can redistribute
+//  it and/or modify it under the terms of the GNU Lesser
+//  General Public License (GNU LGPL) as published by the Free Software
+//  Foundation, either version 3 of the License, or (at your option)
+//  any later version.  The code is distributed WITHOUT ANY WARRANTY;
+//  without even the implied warranty of MERCHANTABILITY or FITNESS
+//  FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+//
+//  As additional permission under GNU GPL version 3 section 7, you
+//  may distribute non-source (e.g., minimized or compacted) forms of
+//  that code without the copy of the GNU GPL normally required by
+//  section 4, provided you include this license notice and a URL
+//  through which recipients can access the Corresponding Source.
 //
 //  Comments are jsdoctoolkit formatted. See jsdoctoolkit.org
 /**************** Preamble ****************/
-
+    
 /**
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
@@ -88,13 +90,13 @@ var Hyphenator = function () {
 		'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:',
 		'en': 'The language of this website could not be determined automatically. Please indicate main language:',
 		'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal:',
+		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:',
 		'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:',
-		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
-		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:',
-		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
 		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
+		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
+		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
 		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
-		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:'
+		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:'
 	};
 	
 	/**
@@ -377,7 +379,7 @@ var Hyphenator = function () {
 	 */		
 	var zeroWidthSpace = function() {
 		var ua = navigator.userAgent.toLowerCase();
-		if (ua.indexOf('msie 6') === -1 && ua.indexOf('msie 8') === -1) {
+		if (ua.indexOf('msie 6') === -1) {
 			zeroWidthSpace = String.fromCharCode(8203); //Unicode zero width space
 		} else {
 			zeroWidthSpace = '';
@@ -602,10 +604,10 @@ var Hyphenator = function () {
 	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainLanguage}
 	 * if there's no language found for the element.
 	 * @private
-	 */		
+	 */
 	function getLang(el, fallback) {
 		if (!!el.getAttribute('lang')) {
-			return el.getAttribute('lang').substring(0, 2);
+			return el.getAttribute('lang').substring(0, 2).toLowerCase();
 		}
 		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
 		/*if (!!el.getAttribute('xml:lang')) {
@@ -614,7 +616,7 @@ var Hyphenator = function () {
 		//instead, we have to do this (thanks to borgzor):
 		try {
 			if (!!el.getAttribute('xml:lang')) {
-				return el.getAttribute('xml:lang').substring(0, 2);
+				return el.getAttribute('xml:lang').substring(0, 2).toLowerCase();
 			}
 		} catch (ex) {}
 		if (el.tagName != 'HTML') {
@@ -650,15 +652,15 @@ var Hyphenator = function () {
 			for (var i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
 				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 				//<meta name = "DC.Language" content="xy">
 				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}			
 				//<meta name = "language" content = "xy">
 				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2);
+					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 			}
 		}
@@ -672,7 +674,7 @@ var Hyphenator = function () {
 				text = prompterStrings.en;
 			}
 			text += ' (ISO 639-1)\n\n'+languageHint;
-			var lang = window.prompt(unescape(text), ul);
+			var lang = window.prompt(unescape(text), ul).toLowerCase();
 			if (supportedLang[lang]) {
 				mainLanguage = lang;
 			} else {
@@ -695,17 +697,24 @@ var Hyphenator = function () {
 	 */		
 	function gatherDocumentInfos() {
 		var elToProcess, tmp, i=0;
-		var process = function(el, hide) {
-			var lang, n, i = 0;
-			if (hide) {
+		var process = function(el, hide, lang) {
+			var n, i = 0;
+			if (hide && intermediateState==='hidden') {
+				if(!!el.getAttribute('style')) {
+					el.hasOwnStyle = true;
+				} else {
+					el.hasOwnStyle = false;					
+				}
 				el.style.visibility = intermediateState;
 			}
 			if (el.lang) {
-				lang = el.lang;
+				el.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
+			} else if (lang) {
+				el.language = lang.toLowerCase();
 			} else {
-				lang = getLang(el, true);
-				el.lang = lang;
+				el.language = getLang(el, true);
 			}
+			lang = el.language;
 			if (supportedLang[lang]) {
 				if (!Hyphenator.languages.hasOwnProperty(lang)) {
 					docLanguages[lang] = true;
@@ -713,17 +722,49 @@ var Hyphenator = function () {
 			} else {
 				onError(new Error('Language '+lang+' is not yet supported.'));
 			}
+			/* Add onbeforecopy behaviour to all elements
+			el.oncopy = function(e) {
+				var text=document.getSelection().toString();
+				var h;
+				for(var k in text) {
+					alert(k+": "+text[k]);
+				}
+				switch (hyphen) {
+					case '|':
+						h = '\\|';
+						break;
+					case '+':
+						h = '\\+';
+						break;
+					case '*':
+						h = '\\*';
+						break;
+					default:
+						h = hyphen;
+					}
+				text = text.replace(new RegExp(h, 'g'), '');
+				text = text.replace(new RegExp(zeroWidthSpace, 'g'), '');
+				if (!!e.clipboardData) { //Safari
+					e.preventDefault();
+					e.clipboardData.setData('text/plain', text);
+				} else if (!!window.clipboardData) { // IE
+					window.preventDefault();
+					window.clipboardData.setData('Text', text);
+				}
+			}			
+			END Add onbeforecopy behaviour to all elements*/
+			
 			elements.push(el);
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
 					n.className.indexOf(dontHyphenateClass) === -1 && !(n in elToProcess)) {
-					process(n, false);
+					process(n, false, lang);
 				}
 			}
 		};
 		if (Hyphenator.isBookmarklet()) {
 			elToProcess = document.getElementsByTagName('body')[0];
-			process(elToProcess, false);
+			process(elToProcess, false, mainLanguage);
 		} else {
 			elToProcess = selectorFunction();
 			while (!!(tmp = elToProcess[i++]))
@@ -1257,10 +1298,8 @@ var Hyphenator = function () {
 		 * @param string The language used in this element
 		 * @public
          */
-		hyphenateElement : function (el, lang) {
-			if (!lang) {
-				lang = el.lang;
-			}
+		hyphenateElement : function (el) {
+			var lang = el.language;
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
 				var hyphenate = function (word) {
@@ -1278,7 +1317,19 @@ var Hyphenator = function () {
 					}
 				}
 			}
-            el.style.visibility = 'visible';
+			if(intermediateState === 'hidden') {
+				el.style.visibility = 'visible';
+				if(!el.hasOwnStyle) {
+					el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+					el.removeAttribute('style');
+				} else {
+					if (el.style.removeProperty) {
+						el.style.removeProperty('visibility');
+					} else if (el.style.removeAttribute) { // IE
+						el.style.removeAttribute('visibility');
+					}  
+				}
+			}
 	        if(el.isLast) {
 	        	state = 3;
 	        	onHyphenationDone();
@@ -1444,6 +1495,6 @@ var Hyphenator = function () {
 	};
 }();
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.config({displaytogglebox:true});
+	Hyphenator.config({displaytogglebox:true,intermediatestate:'visible'});
 	Hyphenator.run();
 }
