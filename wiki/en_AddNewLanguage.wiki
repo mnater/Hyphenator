@@ -29,16 +29,16 @@ Next steps you will have to do:
   # send-in changings and patterns if you feel like (I'll take you as a supporter for this language, you'll get full attribution)
 
 === Converting the patterns ===
-Version >1.2.0
+==== Version >1.2.0 ====
   * make shure that the licence of the pattern file allows reuse for Hyphenator.js
-  * work on a copy of the file, call it <lang>.js (e.g. 'en.js')
+  * work on a copy of the file, call it `lang`.js (e.g. 'en.js')
   * convert the file to UTF-8
-  * replace the lccodes by their respective characters
+  * replace the lccodes (if any) by their respective characters
   * remove all comments (from '%' to the EOL) from the LaTeX patterns.
   * replace all linebreaks by a single space. At the end there should only be patterns in the file, separated by spaces.
   * use compressor.html (that comes with the Hyphenator-package) to build the patterns and information for Hyphenator.js
 
-== Version <1.0.2 ==
+==== Version <1.0.2 ====
   * LaTeX patterns are coming in this form: `.ab3s2`. To see the difference I use underline instead of point. A simple search&replace will do the trick: `_ab3s2`
   * All pattern files should be encoded with *UTF-8 (with BOM)*.
   * Copy an other pattern file and replace the patterns.
