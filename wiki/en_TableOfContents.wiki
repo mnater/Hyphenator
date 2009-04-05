@@ -38,6 +38,7 @@
     * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage#Converting_the_patterns Convert patterns]
     * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage#adapt_code_in_Hyphenator Adapt Hyphenator]
   * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory Version History]
+    * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Apr_05,_2009) 2.1.0]
     * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Mar_15,_2009) 2.0.0]
     * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Mar_08,_2009) 1.0.2]
     * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Mar_02,_2009) 1.0.1]
