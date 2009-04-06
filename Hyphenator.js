@@ -705,7 +705,8 @@ var Hyphenator = function () {
 				} else {
 					el.hasOwnStyle = false;					
 				}
-				el.style.visibility = intermediateState;
+				el.isHidden = true;
+				el.style.visibility = 'hidden';
 			}
 			if (el.lang) {
 				el.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
@@ -1317,7 +1318,7 @@ var Hyphenator = function () {
 					}
 				}
 			}
-			if(intermediateState === 'hidden') {
+			if(el.isHidden && intermediateState === 'hidden') {
 				el.style.visibility = 'visible';
 				if(!el.hasOwnStyle) {
 					el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
