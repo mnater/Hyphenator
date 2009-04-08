@@ -699,23 +699,24 @@ var Hyphenator = function () {
 		var elToProcess, tmp, i=0;
 		var process = function(el, hide, lang) {
 			var n, i = 0;
+			el.hyphenatorSettings = {};
 			if (hide && intermediateState==='hidden') {
 				if(!!el.getAttribute('style')) {
-					el.hasOwnStyle = true;
+					el.hyphenatorSettings.hasOwnStyle = true;
 				} else {
-					el.hasOwnStyle = false;					
+					el.hyphenatorSettings.hasOwnStyle = false;					
 				}
-				el.isHidden = true;
+				el.hyphenatorSettings.isHidden = true;
 				el.style.visibility = 'hidden';
 			}
 			if (el.lang) {
-				el.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
+				el.hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
 			} else if (lang) {
-				el.language = lang.toLowerCase();
+				el.hyphenatorSettings.language = lang.toLowerCase();
 			} else {
-				el.language = getLang(el, true);
+				el.hyphenatorSettings.language = getLang(el, true);
 			}
-			lang = el.language;
+			lang = el.hyphenatorSettings.language;
 			if (supportedLang[lang]) {
 				if (!Hyphenator.languages.hasOwnProperty(lang)) {
 					docLanguages[lang] = true;
@@ -779,7 +780,7 @@ var Hyphenator = function () {
 			docLanguages[mainLanguage] = true;
 		}
 		if (elements.length > 0) {
-			elements[elements.length-1].isLast = true;
+			elements[elements.length-1].hyphenatorSettings.isLast = true;
 		}
 	}
 	 
@@ -1300,7 +1301,7 @@ var Hyphenator = function () {
 		 * @public
          */
 		hyphenateElement : function (el) {
-			var lang = el.language;
+			var lang = el.hyphenatorSettings.language;
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
 				var hyphenate = function (word) {
@@ -1318,9 +1319,9 @@ var Hyphenator = function () {
 					}
 				}
 			}
-			if(el.isHidden && intermediateState === 'hidden') {
+			if(el.hyphenatorSettings.isHidden && intermediateState === 'hidden') {
 				el.style.visibility = 'visible';
-				if(!el.hasOwnStyle) {
+				if(!el.hyphenatorSettings.hasOwnStyle) {
 					el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
 					el.removeAttribute('style');
 				} else {
@@ -1331,7 +1332,7 @@ var Hyphenator = function () {
 					}  
 				}
 			}
-	        if(el.isLast) {
+	        if(el.hyphenatorSettings.isLast) {
 	        	state = 3;
 	        	onHyphenationDone();
 	        }
