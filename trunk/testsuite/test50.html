@@ -1,8 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="EN">
+<html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 49</title>
+        <title>Hyphenator.js &ndash; Test 50</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -28,12 +28,20 @@
         </script>
     </head>
     <body>
-        <h1>Test 49</h1>
-        <p>The language is set in uppercase: <code>lang="EN"</code></p>
-		<p><a href="test48.html">&lt;- Prev</a> | <a href="test50.html">Next -&gt;</a></p>
+        <h1>Test 50</h1>
+        <p>A FORM contains an element with <code>name="language"</code>.</p>
+		<p><a href="test49.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
 		<pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
-        <p class="hyphenate test" lang="EN">Hyphenation</p>
-        <p class="ref">Hy|phen|ation</p>
+        <div class="hyphenate test">
+        	<form action="#" method="post">
+        		<input type="text" name="language"></input>Hyphenation
+        	</form>
+        </div>
+        <div class="ref">
+        	<form action="#" method="post">
+        		<input type="text"></input>Hy|phen|ation
+        	</form>
+        </div>
     </body>
 </html>
