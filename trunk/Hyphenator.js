@@ -55,7 +55,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var languageHint = 'da, bn, de, en, es, fi, fr, gu, hi, it, ka, ml, nl, or, pa, pl, ru, sv, ta, te';
+	var languageHint = 'da, bn, de, en, es, fi, fr, gu, hi, it, kn, ml, nl, or, pa, pl, ru, sv, ta, te';
 
 	/**
 	 * @name Hyphenator-supportedLang
