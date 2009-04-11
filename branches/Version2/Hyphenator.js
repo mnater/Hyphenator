@@ -55,7 +55,7 @@ var Hyphenator = function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var languageHint = 'da, bn, de, en, es, fi, fr, gu, hi, it, ka, ml, nl, or, pa, pl, ru, sv, ta, te';
+	var languageHint = 'da, bn, de, en, es, fi, fr, gu, hi, it, kn, ml, nl, or, pa, pl, pt, ru, sv, ta, te';
 
 	/**
 	 * @name Hyphenator-supportedLang
@@ -97,6 +97,7 @@ var Hyphenator = function () {
 		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
 		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
 		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
+		'pt': 'A língua deste site não pôde ser determinada automaticamente. Por favor indique a língua principal:',
 		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
 		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:'
 	};
