@@ -688,6 +688,52 @@ var Hyphenator = function () {
 	}
     
 	/**
+	 * @name Hyphenator-Expando
+	 * @methodOf Hyphenator
+	 * @description
+	 * This custom object stores data for elements: storing data directly in elements
+	 * (DomElement.customData = foobar;) isn't a good idea. It would lead to conflicts
+	 * in form elements, when the form has a child with name="foobar". Therefore, this
+	 * solution follows the approach of jQuery: the data is stored in an object and
+	 * referenced by the id of the element. If the element has no id, a new unique id is
+	 * created.
+	 * @private
+	 */		
+	var Expando = (function () {
+		var container = {};
+		var uuid_t = "HyphenatorExpando_";
+		var uuid_i = 0;
+		function uuid () {
+			return uuid_t+(uuid_i++);
+		}
+		return {
+			getDataForElem : function (elem) {
+				return container[elem.id];
+			},
+			setDataForElem : function (elem, data) {
+				var id;
+				if (elem.id && elem.id !== '') {
+					id = elem.id;
+				} else {
+					do {
+						id = uuid();
+					} while (document.getElementById(id));
+					elem.id = id;
+				}
+				if (!container[id]) {
+					container[id] = data;
+				} else {
+					for (var key in data) {
+						if (data.hasOwnProperty(key)) {
+							container[id][key] = data[key];
+						}
+					}
+				}
+			}
+		};
+	})();
+		
+	/**
 	 * @name Hyphenator-gatherDocumentInfos
 	 * @methodOf Hyphenator
 	 * @description
@@ -701,25 +747,24 @@ var Hyphenator = function () {
 	function gatherDocumentInfos() {
 		var elToProcess, tmp, i=0;
 		var process = function(el, hide, lang) {
-			var n, i = 0;
-			el.hyphenatorSettings = {};
+			var n, i = 0, hyphenatorSettings = {};
 			if (hide && intermediateState==='hidden') {
 				if(!!el.getAttribute('style')) {
-					el.hyphenatorSettings.hasOwnStyle = true;
+					hyphenatorSettings.hasOwnStyle = true;
 				} else {
-					el.hyphenatorSettings.hasOwnStyle = false;					
+					hyphenatorSettings.hasOwnStyle = false;					
 				}
-				el.hyphenatorSettings.isHidden = true;
+				hyphenatorSettings.isHidden = true;
 				el.style.visibility = 'hidden';
 			}
 			if (el.lang) {
-				el.hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
+				hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
 			} else if (lang) {
-				el.hyphenatorSettings.language = lang.toLowerCase();
+				hyphenatorSettings.language = lang.toLowerCase();
 			} else {
-				el.hyphenatorSettings.language = getLang(el, true);
+				hyphenatorSettings.language = getLang(el, true);
 			}
-			lang = el.hyphenatorSettings.language;
+			lang = hyphenatorSettings.language;
 			if (supportedLang[lang]) {
 				if (!Hyphenator.languages.hasOwnProperty(lang)) {
 					docLanguages[lang] = true;
@@ -758,7 +803,7 @@ var Hyphenator = function () {
 				}
 			}			
 			END Add onbeforecopy behaviour to all elements*/
-			
+			Expando.setDataForElem(el, hyphenatorSettings);
 			elements.push(el);
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
@@ -783,7 +828,8 @@ var Hyphenator = function () {
 			docLanguages[mainLanguage] = true;
 		}
 		if (elements.length > 0) {
-			elements[elements.length-1].hyphenatorSettings.isLast = true;
+			var hyphenatorSettings = {isLast : true};
+			Expando.setDataForElem(elements[elements.length-1], hyphenatorSettings);
 		}
 	}
 	 
@@ -1304,7 +1350,8 @@ var Hyphenator = function () {
 		 * @public
          */
 		hyphenateElement : function (el) {
-			var lang = el.hyphenatorSettings.language;
+			var hyphenatorSettings = Expando.getDataForElem(el);
+			var lang = hyphenatorSettings.language;
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
 				var hyphenate = function (word) {
@@ -1322,9 +1369,9 @@ var Hyphenator = function () {
 					}
 				}
 			}
-			if(el.hyphenatorSettings.isHidden && intermediateState === 'hidden') {
+			if(hyphenatorSettings.isHidden && intermediateState === 'hidden') {
 				el.style.visibility = 'visible';
-				if(!el.hyphenatorSettings.hasOwnStyle) {
+				if(!hyphenatorSettings.hasOwnStyle) {
 					el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
 					el.removeAttribute('style');
 				} else {
@@ -1335,7 +1382,7 @@ var Hyphenator = function () {
 					}  
 				}
 			}
-	        if(el.hyphenatorSettings.isLast) {
+	        if(hyphenatorSettings.isLast) {
 	        	state = 3;
 	        	onHyphenationDone();
 	        }
