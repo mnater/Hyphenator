@@ -10,6 +10,9 @@
                 margin-left:25%;
                 margin-right:25%;
             }
+            input, textarea {
+                font: 12px Consolas, Monaco, monospace;
+            }
             .text {
                 text-align:justify;
             }
@@ -24,11 +27,11 @@
             	margin-right: 10px;
             }
             #desc {
-            	font: 12px 'Monaco monospace';
+            	font-size: 12px;
             }
         </style>
         <script type="text/javascript">
-        	var oldpatterns, newpatterns = {}, shortestPattern = 100, longestPattern = 0;
+        	var oldpatterns, newpatterns, shortestPattern, longestPattern;
         	
         	function lengthSort(a, b) {
         		return a.length - b.length;
@@ -36,6 +39,7 @@
         	        	
 			function startConversion() {
 				var len, i, curlen, key;
+				newpatterns = {}, shortestPattern = 100, longestPattern = 0;
 				oldpatterns = document.getElementsByName('oldpattern')[0].value.split(' ');
 				oldpatterns.sort(lengthSort);
 				len = oldpatterns.length;
@@ -77,7 +81,9 @@
 			window.onload = function() {
 				var desc = document.getElementById('desc');
 				document.getElementsByName('language')[0].onfocus = function() {
-					this.value = '';
+					if(this.value === 'language') {
+						this.value = '';
+					}
 					desc.innerHTML = "<em>Define language:</em><br>Use the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>ISO 639-1</a> two-letter language code.<br>(e.g. 'en' for english.)";
 				};
 				document.getElementsByName('language')[0].onblur = function() {
@@ -89,16 +95,23 @@
 
 
 				document.getElementsByName('specialChars')[0].onfocus = function() {
-					this.value = '';
+					if(this.value === 'specialChars') {
+						this.value = '';
+					}
 					desc.innerHTML = "<em>Define specialChars:</em><br>Write all characters that are used in this lanuage and that are not part of ASCII.<br>(e.g. 'äöüß' for german)";
 				};
 				document.getElementsByName('specialChars')[0].onblur = function() {
+					if(this.value === '') {
+						this.value = 'specialChars';
+					}
 					desc.innerHTML = "";
 				};
 
 
 				document.getElementsByName('leftmin')[0].onfocus = function() {
-					this.value = '';
+					if(this.value === 'leftmin') {
+						this.value = '';
+					}
 					desc.innerHTML = "<em>Define leftmin:</em><br>Define how many letters at minimum should stay on the old line upon hyphenation.<br>(e.g.: setting this to 3 would prevent 'Hy-phenation')";
 				};
 				document.getElementsByName('leftmin')[0].onblur = function() {
@@ -109,7 +122,9 @@
 				};
 
 				document.getElementsByName('rightmin')[0].onfocus = function() {
-					this.value = '';
+					if(this.value === 'rightmin') {
+						this.value = '';
+					}
 					desc.innerHTML = "<em>Define rightmin:</em><br>Define how many letters at minimum should stay on the new line upon hyphenation.<br>(e.g.: setting this to 3 would prevent 'divid-ed')";
 				};
 				document.getElementsByName('rightmin')[0].onblur = function() {
@@ -120,12 +135,14 @@
 				};
 
 				document.getElementsByName('oldpattern')[0].onfocus = function() {
-					this.value = '';
+					if(this.value === '.a5 .rt4 .d4gt2 asdf2 9kas3') {
+						this.value = '';
+					}
 					desc.innerHTML = "<em>Define oldpattern:</em><br>Paste the patterns you like to convert. They have to be separated by spaces, not newlines! Points (.) will be automatically replaced by underscores (_).<br>(e.g.: .ach4 .ad4der .af1t .al3t .am5at .an5c .ang4 .ani5m .ant4)";
 				};
 				document.getElementsByName('oldpattern')[0].onblur = function() {
 					if(this.value === '') {
-						this.value = '.ach4 .ad4der .af1t .al3t .am5at .an5c .ang4 .ani5m .ant4';
+						this.value = '.a5 .rt4 .d4gt2 asdf2 9kas3';
 					}
 					desc.innerHTML = "";
 				};
