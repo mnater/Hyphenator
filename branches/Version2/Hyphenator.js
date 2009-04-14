@@ -714,21 +714,25 @@ var Hyphenator = function () {
 				var id;
 				if (elem.id && elem.id !== '') {
 					id = elem.id;
+					data.hasOwnId = true;
 				} else {
 					do {
 						id = uuid();
 					} while (document.getElementById(id));
 					elem.id = id;
+					data.hasOwnId = false;
 				}
-				if (!container[id]) {
-					container[id] = data;
-				} else {
-					for (var key in data) {
-						if (data.hasOwnProperty(key)) {
-							container[id][key] = data[key];
-						}
+				container[id] = data;
+			},
+			appendDataForElem : function (elem, data) {
+				for (var key in data) {
+					if (data.hasOwnProperty(key)) {
+						container[elem.id][key] = data[key];
 					}
 				}
+			},
+			delDataOfElem : function (elem) {
+				delete container[elem.id];
 			}
 		};
 	})();
@@ -829,7 +833,7 @@ var Hyphenator = function () {
 		}
 		if (elements.length > 0) {
 			var hyphenatorSettings = {isLast : true};
-			Expando.setDataForElem(elements[elements.length-1], hyphenatorSettings);
+			Expando.appendDataForElem(elements[elements.length-1], hyphenatorSettings);
 		}
 	}
 	 
@@ -1382,6 +1386,10 @@ var Hyphenator = function () {
 					}  
 				}
 			}
+	        if(!hyphenatorSettings.hasOwnId) {
+	        	Expando.delDataOfElem(el);
+	        	el.removeAttribute('id');
+	        }
 	        if(hyphenatorSettings.isLast) {
 	        	state = 3;
 	        	onHyphenationDone();
