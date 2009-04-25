@@ -159,7 +159,7 @@ var Hyphenator = function () {
 	 * A key-value object containing all html-tags whose content should not be hyphenated
 	 * @type object
 	 * @private
-	 * @see Hyphenator.hyphenateElement
+	 * @see Hyphenator-hyphenateElement
 	 */
 	var dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true};
 
@@ -172,7 +172,7 @@ var Hyphenator = function () {
 	 * @default true
 	 * @private
 	 * @see Hyphenator.config
-	 * @see Hyphenator.hyphenateWord
+	 * @see hyphenateWord
 	 */
 	var enableCache = true;
 	
@@ -383,11 +383,11 @@ var Hyphenator = function () {
 	var zeroWidthSpace = function() {
 		var ua = navigator.userAgent.toLowerCase();
 		if (ua.indexOf('msie 6') === -1) {
-			zeroWidthSpace = String.fromCharCode(8203); //Unicode zero width space
+			zws = String.fromCharCode(8203); //Unicode zero width space
 		} else {
-			zeroWidthSpace = '';
+			zws = '';
 		}
-		return zeroWidthSpace;
+		return zws;
 	}();
 	
 	/**
@@ -695,44 +695,39 @@ var Hyphenator = function () {
 	 * (DomElement.customData = foobar;) isn't a good idea. It would lead to conflicts
 	 * in form elements, when the form has a child with name="foobar". Therefore, this
 	 * solution follows the approach of jQuery: the data is stored in an object and
-	 * referenced by the id of the element. If the element has no id, a new unique id is
-	 * created.
+	 * referenced by a unique attribute of the element. The attribute has a name that 
+	 * is built by the prefix "HyphenatorExpando_" and a random number, so if the very
+	 * very rare case occurs, that there's already an attribute with the same name, a
+	 * simple reload is enough to make it function.
 	 * @private
 	 */		
 	var Expando = (function () {
 		var container = {};
-		var uuid_t = "HyphenatorExpando_";
-		var uuid_i = 0;
-		function uuid () {
-			return uuid_t+(uuid_i++);
-		}
+		var name = "HyphenatorExpando_"+Math.random();
+		var uuid = 0;
 		return {
 			getDataForElem : function (elem) {
-				return container[elem.id];
+				return container[elem[name]];
 			},
 			setDataForElem : function (elem, data) {
 				var id;
-				if (elem.id && elem.id !== '') {
-					id = elem.id;
-					data.hasOwnId = true;
+				if (elem[name] && elem[name] !== '') {
+					id = elem[name];
 				} else {
-					do {
-						id = uuid();
-					} while (document.getElementById(id));
-					elem.id = id;
-					data.hasOwnId = false;
+					id = uuid++;
+					elem[name] = id;
 				}
 				container[id] = data;
 			},
 			appendDataForElem : function (elem, data) {
 				for (var key in data) {
 					if (data.hasOwnProperty(key)) {
-						container[elem.id][key] = data[key];
+						container[elem[name]][key] = data[key];
 					}
 				}
 			},
 			delDataOfElem : function (elem) {
-				delete container[elem.id];
+				delete container[elem[name]];
 			}
 		};
 	})();
@@ -1079,7 +1074,231 @@ var Hyphenator = function () {
 			bdy.appendChild(myBox);
 		}
 	};
+	
+	/**
+	 * @name Hyphenator-hyphenateDocument
+	 * @methodOf Hyphenator
+	 * @description
+	 * Calls hyphenateElement() for all members of elements. This is done with a setTimout
+	 * to prevent a "long running Script"-alert when hyphenating large pages.
+	 * Therefore a tricky bind()-function was necessary.
+	 * @public
+	 */
+	 var hyphenateDocument = function () {
+		function bind(fun, arg) {
+			return function() {
+				return fun(arg);
+			};
+		}
+		var i = 0, el;
+		while (!!(el = elements[i++])) {
+			window.setTimeout(bind(hyphenateElement, el), 0);
 
+		}
+	};
+
+	/**
+	 * @name Hyphenator-removeHyphenationFromDocument
+	 * @methodOf Hyphenator
+	 * @description
+	 * Does what it says ;-)
+	 * @public
+	 */
+	var removeHyphenationFromDocument = function () {
+			var i = 0, el;
+			while (!!(el = elements[i++])) {
+				removeHyphenationFromElement(el);
+			}
+			state = 4;
+	};
+
+	/**
+	 * @name Hyphenator-hyphenateElement
+	 * @methodOf Hyphenator
+	 * @description
+	 * Takes the content of the given element and - if there's text - replaces the words
+	 * by hyphenated words. If there's another element, the function is called recursively.
+	 * When all words are hyphenated, the visibility of the element is set to 'visible'.
+	 * @param object The element to hyphenate
+	 * @param string The language used in this element
+	 * @public
+	 */
+	var hyphenateElement = function (el) {
+		var hyphenatorSettings = Expando.getDataForElem(el);
+		var lang = hyphenatorSettings.language;
+		if (Hyphenator.languages.hasOwnProperty(lang)) {
+			var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+			var hyphenate = function (word) {
+				if (urlRE.test(word) || mailRE.test(word)) {
+					return hyphenateURL(word);
+				} else {
+					return hyphenateWord(lang, word);
+				}
+			};
+			var genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
+			var n, i = 0;
+			while (!!(n = el.childNodes[i++])) {
+				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
+					n.data = n.data.replace(genRegExp, hyphenate);
+				}
+			}
+		}
+		if(hyphenatorSettings.isHidden && intermediateState === 'hidden') {
+			el.style.visibility = 'visible';
+			if(!hyphenatorSettings.hasOwnStyle) {
+				el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+				el.removeAttribute('style');
+			} else {
+				if (el.style.removeProperty) {
+					el.style.removeProperty('visibility');
+				} else if (el.style.removeAttribute) { // IE
+					el.style.removeAttribute('visibility');
+				}  
+			}
+		}
+		if(hyphenatorSettings.isLast) {
+			state = 3;
+			onHyphenationDone();
+		}
+	};
+
+	/**
+	 * @name Hyphenator-removeHyphenationFromElement
+	 * @methodOf Hyphenator
+	 * @description
+	 * Removes all hyphens from the element. If there are other elements, the function is
+	 * called recursively.
+	 * Removing hyphens is usefull if you like to copy text. Some browsers are buggy when the copy hyphenated texts.
+	 * @param object The element where to remove hyphenation.
+	 * @public
+	 */
+	var removeHyphenationFromElement = function (el) {
+		var h, i = 0, n;
+		switch (hyphen) {
+		case '|':
+			h = '\\|';
+			break;
+		case '+':
+			h = '\\+';
+			break;
+		case '*':
+			h = '\\*';
+			break;
+		default:
+			h = hyphen;
+		}
+		while (!!(n = el.childNodes[i++])) {
+			if (n.nodeType === 3) {
+				n.data = n.data.replace(new RegExp(h, 'g'), '');
+				n.data = n.data.replace(new RegExp(zeroWidthSpace, 'g'), '');
+			} else if (n.nodeType === 1) {
+				removeHyphenationFromElement(n);
+			}
+		}
+	};
+
+	/**
+	 * @name Hyphenator-hyphenateWord
+	 * @methodOf Hyphenator
+	 * @description
+	 * This function is the heart of Hyphenator.js. It returns a hyphenated word.
+	 *
+	 * If there's already a {@link Hyphenator-hypen} in the word, the word is returned as it is.
+	 * If the word is in the exceptions list or in the cache, it is retrieved from it.
+	 * If there's a '-' put a zeroWidthSpace after the '-' and hyphenate the parts.
+	 * @param string The language of the word
+	 * @param string The word
+	 * @returns string The hyphenated word
+	 * @public
+	 */
+	var hyphenateWord = function (lang, word) {
+		var lo = Hyphenator.languages[lang];
+		if (word === '') {
+			return '';
+		}
+		if (word.indexOf(hyphen) !== -1) { //this String only contains the unicode char 'Soft Hyphen'
+			//word already contains shy; -> leave at it is!
+			return word;
+		}
+		if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
+			return lo.exceptions[word].replace(/-/g, hyphen);
+		}
+		if (enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
+			return lo.cache[word];
+		}
+		if (word.indexOf('-') !== -1) {
+			//word contains '-' -> put a zeroWidthSpace after it and hyphenate the parts separated with '-'
+			var parts = word.split('-');
+			for (var i = 0, l = parts.length; i < l; i++) {
+				parts[i] = hyphenateWord(lang, parts[i]);
+			}
+			return parts.join('-' + zeroWidthSpace);
+		}
+		//finally the core hyphenation algorithm
+		var w = '_' + word + '_';
+		var wl = w.length;
+		var s = w.split('');
+		w = w.toLowerCase();
+		var hypos = [];
+		var p, maxwins, win, patk, pat = false, patl, c, digits, z;
+		var numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
+		var n = wl - lo.shortestPattern;
+		for (p = 0; p <= n; p++) {
+			maxwins = Math.min((wl - p), lo.longestPattern);
+			for (win = lo.shortestPattern; win <= maxwins; win++) {
+				if (lo.patterns.hasOwnProperty(patk = w.substr(p, win))) {
+					pat = lo.patterns[patk];
+				} else {
+					continue;
+				}
+				digits = 1;
+				patl = pat.length;
+				for (i = 0; i < patl; i++) {
+					c = pat.charAt(i);
+					if (numb3rs[c]) {
+						if (i === 0) {
+							z = p - 1;
+							if (!hypos[z] || hypos[z] < c) {
+								hypos[z] = c;
+							}
+						} else {
+							z = p + i - digits;
+							if (!hypos[z] || hypos[z] < c) {
+								hypos[z] = c;
+							}
+						}
+						digits++;								
+					}
+				}
+			}
+		}
+		var inserted = 0;
+		for (i = lo.leftmin; i <= (word.length - lo.rightmin); i++) {
+			if (!!(hypos[i] & 1)) {
+				s.splice(i + inserted + 1, 0, hyphen);
+				inserted++;
+			}
+		}
+		var hyphenatedword = s.slice(1, -1).join('');
+		if(enableCache) {
+			lo.cache[word] = hyphenatedword;
+		}
+		return hyphenatedword;
+	};
+
+	/**
+	 * @name Hyphenator-hyphenateURL
+	 * @methodOf Hyphenator
+	 * @description
+	 * Puts {@link Hyphenator-urlhyphen} after each no-alphanumeric char that my be in a URL.
+	 * @param string URL to hyphenate
+	 * @returns string the hyphenated URL
+	 * @public
+	 */
+	var hyphenateURL = function (url) {
+		return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + urlhyphen);
+	};
+		
 	return {
 		
 		/**
@@ -1251,7 +1470,7 @@ var Hyphenator = function () {
 				try {
 					autoSetMainLanguage();
 					gatherDocumentInfos();
-					prepare(Hyphenator.hyphenateDocument);
+					prepare(hyphenateDocument);
 					if (displayToggleBox) {
 						toggleBox(true);
 					}
@@ -1291,7 +1510,57 @@ var Hyphenator = function () {
 			} else {
 				exceptions[lang] = words;
 			}
-		},	
+		},
+		
+		/**
+		 * @name Hyphenator.hyphenate
+		 * @methodOf Hyphenator
+		 * @public
+		 * @description
+		 * Hyphenates the target. If the target is a string, the hyphenated string is returned,
+		 * if it's an object, the values are hyphenated directly.
+		 * @param mixed the target to be hyphenated
+		 * @param string the language of the target
+		 * @returns string
+		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
+         * &lt;script type = "text/javascript"&gt;
+		 * var t = Hyphenator.hyphenate('Hyphenation', 'en'); //Hy|phen|ation
+		 * &lt;/script&gt;
+		 */
+		hyphenate: function (target, lang) {
+			if (Hyphenator.languages.hasOwnProperty(lang)) {
+				if (!Hyphenator.languages[lang].prepared) {
+					prepareLanguagesObj(lang);
+				}
+				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+				var hyphenate = function (word) {
+					if (urlRE.test(word) || mailRE.test(word)) {
+						return hyphenateURL(word);
+					} else {
+						return hyphenateWord(lang, word);
+					}
+				};
+				var genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
+				switch (typeof target) {
+					case 'string':
+						return target.replace(genRegExp, hyphenate);
+					break;
+					case 'object':
+						var n, i = 0;
+						while (!!(n = target.childNodes[i++])) {
+							if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
+								n.data = n.data.replace(genRegExp, hyphenate);
+							} else if(n.nodeType === 1) {
+								Hyphenator.hyphenate(n, lang);
+							}
+						}
+					break;
+				}
+			} else {
+				docLanguages[lang] = true;
+				prepare(function(){Hyphenator.hyphenate(target, lang)});
+			}
+		},
 		
 		/**
 		 * @name Hyphenator.isBookmarklet
@@ -1305,233 +1574,6 @@ var Hyphenator = function () {
 			return isBookmarklet;
 		},
 
-		/**
-		 * @name Hyphenator.hyphenateDocument
-		 * @methodOf Hyphenator
-		 * @description
-		 * Calls hyphenateElement() for all members of elements. This is done with a setTimout
-		 * to prevent a "long running Script"-alert when hyphenating large pages.
-		 * Therefore a tricky bind()-function was necessary.
-		 * @public
-         */
-		hyphenateDocument: function () {
-			function bind(obj, fun, args) {
-				return function() {
-					var f = obj[fun];
-					return f.call(obj, args);
-				};
-			}
-			var i = 0, el;
-			while (!!(el = elements[i++])) {
-				window.setTimeout(bind(Hyphenator, "hyphenateElement", el), 0);
-			}
-		},
-		
-		/**
-		 * @name Hyphenator.removeHyphenationFromDocument
-		 * @methodOf Hyphenator
-		 * @description
-		 * Does what it says ;-)
-		 * @public
-         */
-		removeHyphenationFromDocument: function () {
-				var i = 0, el;
-				while (!!(el = elements[i++])) {
-					Hyphenator.removeHyphenationFromElement(el);
-				}
-				state = 4;
-		},
-		
-		/**
-		 * @name Hyphenator.hyphenateElement
-		 * @methodOf Hyphenator
-		 * @description
-		 * Takes the content of the given element and - if there's text - replaces the words
-		 * by hyphenated words. If there's another element, the function is called recursively.
-		 * When all words are hyphenated, the visibility of the element is set to 'visible'.
-		 * @param object The element to hyphenate
-		 * @param string The language used in this element
-		 * @public
-         */
-		hyphenateElement : function (el) {
-			var hyphenatorSettings = Expando.getDataForElem(el);
-			var lang = hyphenatorSettings.language;
-			if (Hyphenator.languages.hasOwnProperty(lang)) {
-				var wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
-				var hyphenate = function (word) {
-					if (urlRE.test(word) || mailRE.test(word)) {
-						return Hyphenator.hyphenateURL(word);
-					} else {
-						return Hyphenator.hyphenateWord(lang, word);
-					}
-				};
-				var genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
-				var n, i = 0;
-				while (!!(n = el.childNodes[i++])) {
-					if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-						n.data = n.data.replace(genRegExp, hyphenate);
-					}
-				}
-			}
-			if(hyphenatorSettings.isHidden && intermediateState === 'hidden') {
-				el.style.visibility = 'visible';
-				if(!hyphenatorSettings.hasOwnStyle) {
-					el.setAttribute('style',''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-					el.removeAttribute('style');
-				} else {
-					if (el.style.removeProperty) {
-						el.style.removeProperty('visibility');
-					} else if (el.style.removeAttribute) { // IE
-						el.style.removeAttribute('visibility');
-					}  
-				}
-			}
-	        if(!hyphenatorSettings.hasOwnId) {
-	        	Expando.delDataOfElem(el);
-	        	el.removeAttribute('id');
-	        }
-	        if(hyphenatorSettings.isLast) {
-	        	state = 3;
-	        	onHyphenationDone();
-	        }
-       },
-
-		/**
-		 * @name Hyphenator.deleteHyphenationInElement
-		 * @methodOf Hyphenator
-		 * @description
-		 * Removes all hyphens from the element. If there are other elements, the function is
-		 * called recursively.
-		 * Removing hyphens is usefull if you like to copy text. Some browsers are buggy when the copy hyphenated texts.
-		 * @param object The element where to remove hyphenation.
-		 * @public
-         */
-        removeHyphenationFromElement : function (el) {
-        	var h, i = 0, n;
-        	switch (hyphen) {
-			case '|':
-				h = '\\|';
-				break;
-			case '+':
-				h = '\\+';
-				break;
-			case '*':
-				h = '\\*';
-				break;
-			default:
-				h = hyphen;
-        	}
-        	while (!!(n = el.childNodes[i++])) {
-        		if (n.nodeType === 3) {
-        			n.data = n.data.replace(new RegExp(h, 'g'), '');
-        			n.data = n.data.replace(new RegExp(zeroWidthSpace, 'g'), '');
-        		} else if (n.nodeType === 1) {
-        			Hyphenator.removeHyphenationFromElement(n);
-        		}
-        	}
-        },
-
-		/**
-		 * @name Hyphenator.hyphenateWord
-		 * @methodOf Hyphenator
-		 * @description
-		 * This function is the heart of Hyphenator.js. It returns a hyphenated word.
-		 *
-		 * If there's already a {@link Hyphenator-hypen} in the word, the word is returned as it is.
-		 * If the word is in the exceptions list or in the cache, it is retrieved from it.
-		 * If there's a '-' put a zeroWidthSpace after the '-' and hyphenate the parts.
-		 * @param string The language of the word
-		 * @param string The word
-		 * @returns string The hyphenated word
-		 * @public
-         */
-		hyphenateWord : function (lang, word) {
-			var lo = Hyphenator.languages[lang];
-			if (word === '') {
-				return '';
-			}
-			if (word.indexOf(hyphen) !== -1) { //this String only contains the unicode char 'Soft Hyphen'
-				//word already contains shy; -> leave at it is!
-				return word;
-			}
-			if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
-				return lo.exceptions[word].replace(/-/g, hyphen);
-			}
-			if (enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
-				return lo.cache[word];
-			}
-			if (word.indexOf('-') !== -1) {
-				//word contains '-' -> put a zeroWidthSpace after it and hyphenate the parts separated with '-'
-				var parts = word.split('-');
-				for (var i = 0, l = parts.length; i < l; i++) {
-					parts[i] = Hyphenator.hyphenateWord(lang, parts[i]);
-				}
-				return parts.join('-' + zeroWidthSpace);
-			}
-			//finally the core hyphenation algorithm
-			var w = '_' + word + '_';
-			var wl = w.length;
-			var s = w.split('');
-			w = w.toLowerCase();
-			var hypos = [];
-			var p, maxwins, win, patk, pat = false, patl, c, digits, z;
-			var numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
-			var n = wl - lo.shortestPattern;
-			for (p = 0; p <= n; p++) {
-				maxwins = Math.min((wl - p), lo.longestPattern);
-				for (win = lo.shortestPattern; win <= maxwins; win++) {
-					if (lo.patterns.hasOwnProperty(patk = w.substr(p, win))) {
-						pat = lo.patterns[patk];
-					} else {
-						continue;
-					}
-					digits = 1;
-					patl = pat.length;
-					for (i = 0; i < patl; i++) {
-						c = pat.charAt(i);
-						if (numb3rs[c]) {
-							if (i === 0) {
-								z = p - 1;
-								if (!hypos[z] || hypos[z] < c) {
-									hypos[z] = c;
-								}
-							} else {
-								z = p + i - digits;
-								if (!hypos[z] || hypos[z] < c) {
-									hypos[z] = c;
-								}
-							}
-							digits++;								
-						}
-					}
-				}
-			}
-			var inserted = 0;
-			for (i = lo.leftmin; i <= (word.length - lo.rightmin); i++) {
-				if (!!(hypos[i] & 1)) {
-					s.splice(i + inserted + 1, 0, hyphen);
-					inserted++;
-				}
-			}
-			var hyphenatedword = s.slice(1, -1).join('');
-			if(enableCache) {
-				lo.cache[word] = hyphenatedword;
-			}
-			return hyphenatedword;
-		},
-
-		/**
-		 * @name Hyphenator.hyphenateURL
-		 * @methodOf Hyphenator
-		 * @description
-		 * Puts {@link Hyphenator-urlhyphen} after each no-alphanumeric char that my be in a URL.
-		 * @param string URL to hyphenate
-		 * @returns string the hyphenated URL
-		 * @public
-         */
-		hyphenateURL: function (url) {
-			return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + urlhyphen);
-		},
 
 		/**
 		 * @name Hyphenator.toggleHyphenation
@@ -1543,11 +1585,11 @@ var Hyphenator = function () {
 		toggleHyphenation: function () {
 			switch (state) {
 				case 3:
-					Hyphenator.removeHyphenationFromDocument();
+					removeHyphenationFromDocument();
 					toggleBox(false);
 					break;
 				case 4:
-					Hyphenator.hyphenateDocument();
+					hyphenateDocument();
 					toggleBox(true);
 					break;
 			}

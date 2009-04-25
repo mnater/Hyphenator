@@ -39,7 +39,7 @@
 					times=1000;
 					start=new Date().getTime();
 					for(var i=0; i<times; i++) {
-						res=Hyphenator.hyphenateWord('de','Silbentrennung');
+						res=Hyphenator.hyphenate('Silbentrennung','de');
 					}
 					end=new Date().getTime();
 					out.data="hyphenateWord('de','Silbentrennung')-> "+res+" :: "+((end-start)/times)+"ms\n";
