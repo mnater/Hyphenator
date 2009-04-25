@@ -31,13 +31,13 @@
     </head>
     <body>
         <h1>Test 51</h1>
-        <p>Doing Hyphenation 'manually' by using <code>Hyphenator.hyphenateElement(el, lang);</code></p>
+        <p>Doing Hyphenation 'manually' by using <code>Hyphenator.hyphenateElement(el, lang);</code> An error should occur.</p>
 		<p><a href="test50.html">&lt;- Prev</a> | <a href="test52.html">Next -&gt;</a></p>
 		<pre>Hyphenator.config({hyphenchar:'|'});
 window.onload = function() {
     Hyphenator.hyphenate(document.getElementById('test'), 'en');
 };</pre>
         <p id="test" class="test">Hyphenation is <span style="font-style:italic;">indeed</span> quite simple.</p>
-        <p id="test" class="ref">Hy|phen|ation is <span style="font-style:italic;">in|deed</span> quite sim|ple.</p>
+        <p id="test" class="ref">Hyphenation is <span style="font-style:italic;">indeed</span> quite simple.</p>
     </body>
 </html>
