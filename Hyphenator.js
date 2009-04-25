@@ -1517,12 +1517,14 @@ var Hyphenator = function () {
 		 * @methodOf Hyphenator
 		 * @public
 		 * @description
-		 * Hyphenates the target. If the target is a string, the hyphenated string is returned,
+		 * Hyphenates the target. The language patterns must be loaded.
+		 * If the target is a string, the hyphenated string is returned,
 		 * if it's an object, the values are hyphenated directly.
 		 * @param mixed the target to be hyphenated
 		 * @param string the language of the target
 		 * @returns string
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
+		 * &lt;script src = "patterns/en.js" type = "text/javascript"&gt;&lt;/script&gt;
          * &lt;script type = "text/javascript"&gt;
 		 * var t = Hyphenator.hyphenate('Hyphenation', 'en'); //Hy|phen|ation
 		 * &lt;/script&gt;
@@ -1557,8 +1559,7 @@ var Hyphenator = function () {
 					break;
 				}
 			} else {
-				docLanguages[lang] = true;
-				prepare(function(){Hyphenator.hyphenate(target, lang)});
+				onError(new Error('Language "'+lang+'" is not loaded.'));
 			}
 		},
 		
