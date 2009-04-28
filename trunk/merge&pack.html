@@ -1,0 +1,412 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator &ndash; merge&amp;pack</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+        	body {
+        		font: 12px/1.8em Verdana;
+        	}
+			.multicol {
+				-moz-column-width: 200px;;
+				-webkit-column-width: 200px;
+				-moz-column-gap: 10px;
+				-webkit-column-gap: 10px;
+			}
+			.grayedout {
+				border: 1px solid grey;
+				color: grey;
+			}
+ 		</style>
+        <script type="text/javascript">
+        var base = 'http://127.0.0.1/~mnater/hyph/tags/Version%202.1.0/';
+        
+        function toggleAllLanguages(value) {
+        	var inputelements = document.getElementsByName('language[]');
+        	for(var i=0; i<inputelements.length; i++) {
+				inputelements[i].checked = value;
+        	}
+        }
+        
+        function getSelMethod() {
+        	var radio = document.getElementsByName('selMethod');
+        	for(var i = 0; i<radio.length; i++) {
+        		if(radio[i].checked == true) {
+        			return radio[i].value;
+        		}
+        	}
+        }
+        
+        function toggleSelectorFunction(value) {
+        	switch(value) {
+        		case 'standard':
+        			document.getElementById('classname').disabled=false;
+        			document.getElementById('classname').className='';
+        			document.getElementById('selectorfunction').disabled=true;
+        			document.getElementById('selectorfunction').className='grayedout';
+        		break;
+        		case 'custom':
+        			document.getElementById('classname').disabled=true;
+        			document.getElementById('classname').className='grayedout';
+        			document.getElementById('selectorfunction').disabled=false;
+        			document.getElementById('selectorfunction').className='';
+        		break;
+        	}
+        }
+        
+        function toggleTBSettings(value) {
+			switch(value) {
+        		case true:
+        			document.getElementById('tbStandard').disabled=false;
+        			document.getElementById('tbCustom').disabled=false;
+        			document.getElementById('togglebox').disabled=document.getElementById('tbStandard').checked;
+        			document.getElementById('tbStandard').className='';
+        			document.getElementById('tbCustom').className='';
+        			document.getElementById('togglebox').className='';
+        		break;
+        		case false:
+        			document.getElementById('tbStandard').disabled=true;
+        			document.getElementById('tbCustom').disabled=true;
+        			document.getElementById('togglebox').disabled=true;
+        			document.getElementById('tbStandard').className='grayedout';
+        			document.getElementById('tbCustom').className='grayedout';
+        			document.getElementById('togglebox').className='grayedout';
+        		break;
+        	}
+        }
+        
+        function getTBMethod() {
+        	var radio = document.getElementsByName('tbMethod');
+        	for(var i = 0; i<radio.length; i++) {
+        		if(radio[i].checked == true) {
+        			return radio[i].value;
+        		}
+        	}
+        }
+
+		function toggletogglebox(value) {
+        	switch(value) {
+        		case 'standard':
+        			document.getElementById('togglebox').disabled=true;
+        			document.getElementById('togglebox').className='grayedout';
+        		break;
+        		case 'custom':
+        			document.getElementById('togglebox').disabled=false;
+        			document.getElementById('togglebox').className='';
+        		break;
+        	}
+        }
+        
+        function toggleonhyphenationdonecallback(value) {
+        	switch(value) {
+        		case true:
+        			document.getElementById('onhyphenationdonecallback').disabled=false;
+        			document.getElementById('onhyphenationdonecallback').className='';
+        		break;
+         		case false:
+        			document.getElementById('onhyphenationdonecallback').disabled=true;
+        			document.getElementById('onhyphenationdonecallback').className='grayedout';
+        		break;
+	       	}
+        }
+
+        function toggleonerrorhandler(value) {
+        	switch(value) {
+        		case true:
+        			document.getElementById('onerrorhandler').disabled=false;
+        			document.getElementById('onerrorhandler').className='';
+        		break;
+         		case false:
+        			document.getElementById('onerrorhandler').disabled=true;
+        			document.getElementById('onerrorhandler').className='grayedout';
+        		break;
+	       	}
+        }
+        
+
+        window.onload = function(){
+			document.getElementById('alllanguages').onclick = function(){
+				if(this.checked == true) {
+					toggleAllLanguages(true);
+				} else {
+					toggleAllLanguages(false);
+				}
+			};
+			
+			toggleSelectorFunction(getSelMethod());
+        	var radio = document.getElementsByName('selMethod');
+        	for(var i = 0; i<radio.length; i++) {
+       			radio[i].onclick = function() {
+       				toggleSelectorFunction(getSelMethod());
+       			};
+        	}
+        	
+        	document.getElementById('displaytogglebox').onclick = function(){
+				toggleTBSettings(this.checked);
+			};
+			toggletogglebox(getTBMethod());
+        	radio = document.getElementsByName('tbMethod');
+        	for(var i = 0; i<radio.length; i++) {
+       			radio[i].onclick = function() {
+       				toggletogglebox(getTBMethod());
+       			};
+        	}
+			
+			
+			toggleonhyphenationdonecallback(document.getElementById('usecb').checked);
+			document.getElementById('usecb').onclick = function(){
+				toggleonhyphenationdonecallback(this.checked);
+			}
+
+			toggleonerrorhandler(document.getElementById('useer').checked);
+			document.getElementById('useer').onclick = function(){
+				toggleonerrorhandler(this.checked);
+			}
+			
+			document.getElementById('create').onclick = document.getElementById('create2').onclick = function(){
+				var xhr = null;
+				if (typeof XMLHttpRequest != 'undefined') {
+					xhr = new XMLHttpRequest();
+				}
+				if (!xhr) {
+					try {
+						xhr  = new ActiveXObject("Msxml2.XMLHTTP");
+					} catch(e) {
+						xhr  = null;
+					}
+				}
+				if (xhr) {
+					xhr.open('GET', base+'Hyphenator_debug.js', false);
+					xhr.send(null);
+					if(xhr.status == 200) {
+						var script=xhr.responseText;
+					}
+					var langBoxes = document.getElementsByName('language[]');
+					for(var l in langBoxes) {
+						if(langBoxes.hasOwnProperty(l) && langBoxes[l].checked) {
+							xhr.open('GET', base+'patterns/'+langBoxes[l].value+'.js', false);
+							xhr.send(null);
+							if(xhr.status == 200) {
+								script+=xhr.responseText;
+							}
+						}
+					}
+				}
+				
+				var classname = document.getElementById('classname').value;
+				var donthyphenateclassname = document.getElementById('donthyphenateclassname').value;
+				var minwordlength = document.getElementById('minwordlength').value;
+				var hyphenchar = document.getElementById('hyphenchar').value;
+				var urlhyphenchar = document.getElementById('urlhyphenchar').value;
+ 				var togglebox = document.getElementById('togglebox').firstChild.data;
+ 				var displaytogglebox = document.getElementById('displaytogglebox').checked;
+ 				var remoteloading = document.getElementById('remoteloading').checked;
+ 				var enablecache = document.getElementById('enablecache').checked;
+ 				var onhyphenationdonecallback = document.getElementById('onhyphenationdonecallback').firstChild.data;
+ 				var onerrorhandler = document.getElementById('onerrorhandler').firstChild.data;
+ 				var intermediatestate = document.getElementById('intermediatestate').value;
+ 				var selectorfunction = document.getElementById('selectorfunction').firstChild.data;
+
+				var config_head = 'Hyphenator.config({';
+				var config = '';
+				if(document.getElementById('selStandard').checked) {
+					if(classname !== 'hyphenate') {
+						config += 'classname:\''+classname+'\',';
+					}
+				} else {
+					config += 'selectorfunction:'+selectorfunction+',';
+				}
+				if(donthyphenateclassname !== 'donthyphenate') {
+					config += 'donthyphenateclassname:\''+donthyphenateclassname+'\',';
+				}
+				if(minwordlength !== '6') {
+					config += 'minwordlength:'+minwordlength+',';
+				}
+				if(hyphenchar !== '') {
+					config += 'hyphenchar:\''+hyphenchar+'\',';
+				}
+				if(urlhyphenchar !== '') {
+					config += 'urlhyphenchar:\''+urlhyphenchar+'\',';
+				}
+				if(displaytogglebox === 'true') {
+					config += 'displaytogglebox:'+true+',';
+					config += 'togglebox:'+togglebox+',';
+				}
+				if(remoteloading === false) {
+					config += 'remoteloading:false,';
+				}
+				if(enablecache === false) {
+					config += 'enablecache:false,';
+				}
+				if(document.getElementById('usecb').checked) {
+					config += 'onhyphenationdonecallback:'+onhyphenationdonecallback+',';
+				}
+				if(document.getElementById('useer').checked) {
+					config += 'onerrorhandler:'+onerrorhandler+',';
+				}
+				if(intermediatestate !== 'hidden') {
+					config += 'intermediatestate:'+intermediatestate+',';	
+				}
+				
+				if(config.length > 0) {
+					script += config_head + config.slice(0,-1) + '});';					
+				}
+				document.getElementById('output').firstChild.data = script + 'Hyphenator.run();';
+				return false;
+			};
+		};
+    	</script>
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    </head>
+    <body>
+		<h1>merge &amp; pack Hyphenator.js</h1>
+		<p class="hyphenate">
+			Hyphenator.js automatically loads language pattern files. This is convenient but not performant, since at minimum two http-requests are necessary.<br>
+			This page provides a service to merge the script and the language patterns in one file. You may also set the configure parameters.
+			<br>
+			<span id="activateJS">JavaScript Must Be Activated</span>!
+		</p>
+		<form action="#outanchor" method="post">
+			<input type="reset" value=" Reset! ">
+			<input id="create" type="submit" value=" Create! ">
+			<fieldset>
+			<legend>Language</legend>
+				<ul id="languages" class="multicol">
+					<li><input type="checkbox" id="da" name="language[]" value="da"><label for="da">Danish</label></li>
+					<li><input type="checkbox" id="bn" name="language[]" value="bn"><label for="bn">Bengali</label></li>
+					<li><input type="checkbox" id="de" name="language[]" value="de"><label for="de">German</label></li>
+					<li><input type="checkbox" id="en" name="language[]" value="en"><label for="en">English</label></li>
+					<li><input type="checkbox" id="es" name="language[]" value="es"><label for="es">Spanish</label></li>
+					<li><input type="checkbox" id="fi" name="language[]" value="fi"><label for="fi">Finnish</label></li>
+					<li><input type="checkbox" id="fr" name="language[]" value="fr"><label for="fr">French</label></li>
+					<li><input type="checkbox" id="gu" name="language[]" value="gu"><label for="gu">Gujarati</label></li>
+					<li><input type="checkbox" id="hi" name="language[]" value="hi"><label for="hi">Hindi</label></li>
+					<li><input type="checkbox" id="it" name="language[]" value="it"><label for="it">Italian</label></li>
+					<li><input type="checkbox" id="ka" name="language[]" value="ka"><label for="kn">Kannada</label></li>
+					<li><input type="checkbox" id="ml" name="language[]" value="ml"><label for="ml">Malayalam</label></li>
+					<li><input type="checkbox" id="nl" name="language[]" value="nl"><label for="nl">Dutch</label></li>
+					<li><input type="checkbox" id="or" name="language[]" value="or"><label for="or">Oriya</label></li>
+					<li><input type="checkbox" id="pa" name="language[]" value="pa"><label for="pa">Punjabi</label></li>
+					<li><input type="checkbox" id="pl" name="language[]" value="pl"><label for="pl">Polish</label></li>
+					<li><input type="checkbox" id="ru" name="language[]" value="ru"><label for="ru">Russian</label></li>
+					<li><input type="checkbox" id="sv" name="language[]" value="sv"><label for="sv">Swedish</label></li>
+					<li><input type="checkbox" id="ta" name="language[]" value="ta"><label for="ta">Tamil</label></li>
+					<li><input type="checkbox" id="te" name="language[]" value="te"><label for="te">Tegulu</label></li>
+					<li><input type="checkbox" id="alllanguages" name="alllanguages" value="alllang"><label for="alllanguages"><em>Select all</em></label></li>
+				</ul>
+			</fieldset>
+			<fieldset>
+			<legend>Configuration</legend>
+				<input type="text" id="minwordlength" name="minwordlength" value="6"><label for="minwordlength">Don't hyphenate words shorter than this value.</label><br>
+				<input type="text" id="hyphenchar" name="hyphenchar" value=""><label for="hyphenchar">The hyphen char (leave empty for &amp;shy;)</label><br>
+				<input type="text" id="urlhyphenchar" name="urlhyphenchar" value=""><label for="urlhyphenchar">The hyphen char (leave empty for zero width space)</label><br>
+				<input type="checkbox" id="remoteloading" name="remoteloading" checked><label for="remoteloading">Enable remote loading of language patterns</label><br>
+				<input type="checkbox" id="enablecache" name="enablecache" checked><label for="enablecache">Enable cache</label><br>
+				<select id="intermediatestate" name="intermediatestate" size="1">
+					<option>hidden</option>
+					<option>visible</option>
+				</select>
+				<label for="intermediatestate">Define intermediate state (style.visibility of elements while they are hyphenated).</label><br>
+				<fieldset>
+				<legend>Element Selection</legend>
+					<p>Indicate how to get the elements for hyphenation:</p>
+					<input type="radio" id="selStandard" name="selMethod" value="standard" checked><label for="selStandard">Standard: Collecting elements by a Classname</label><br>
+					<input type="radio" id="selCustom" name="selMethod" value="custom"><label for="selCustom">Custom: Collecting elements by a custom Selector-Function</label><br>
+					<input type="text" id="classname" name="classname" value="hyphenate"><label for="classname">Classname</label><br>
+					<label for="selectorfunction">Selector Function:</label><br>
+					<textarea cols="80" rows="20" id="selectorfunction" name="selectorfunction">function () {
+	var tmp, el = [], i, l;
+	if (document.getElementsByClassName) {
+		el = document.getElementsByClassName(hyphenateClass);
+	} else {
+		tmp = document.getElementsByTagName('*');
+		l = tmp.length;
+		for (i = 0; i < l; i++) {
+			if (tmp[i].className.indexOf(hyphenateClass) !== -1 &amp;&amp; tmp[i].className.indexOf(dontHyphenateClass) === -1) {
+				el.push(tmp[i]);
+			}
+		}
+	}
+	return el;
+}</textarea><br>
+				<input type="text" id="donthyphenateclassname" name="donthyphenateclassname" value="donthyphenate"><label for="donthyphenateclassname">donthyphenate Classname</label><br>
+				</fieldset>
+				<fieldset>
+				<legend>Toggle Box</legend>
+					<p>Indicate how the Togglebox should be displayed:</p>
+					<input type="checkbox" id="displaytogglebox" name="displaytogglebox" checked><label for="displaytogglebox">Display Toggle Box</label><br>
+					<input type="radio" id="tbStandard" name="tbMethod" value="standard" checked><label for="tbStandard">Standard: The standard togglebox is used.</label><br>
+					<input type="radio" id="tbCustom" name="tbMethod" value="custom"><label for="tbCustom">Custom: A custom Toggle Box is used</label><br>
+					<label for="togglebox">Toggle Box Function:</label><br>
+					<textarea cols="80" rows="20" id="togglebox" name="togglebox">function (s) {
+	var myBox;
+	if (!!(myBox = document.getElementById('HyphenatorToggleBox'))) {
+		if (s) {
+			myBox.firstChild.data = 'Hy-phe-na-ti-on';
+		} else {
+			myBox.firstChild.data = 'Hyphenation';
+		}
+	} else {
+		var bdy, myIdAttribute, myTextNode, myClassAttribute; 
+		bdy = document.getElementsByTagName('body')[0];
+		myBox = document.createElement('div');
+		myIdAttribute = document.createAttribute('id');
+		myIdAttribute.nodeValue = 'HyphenatorToggleBox';
+		myClassAttribute = document.createAttribute('class');
+		myClassAttribute.nodeValue = dontHyphenateClass;
+		myTextNode = document.createTextNode('Hy-phe-na-ti-on');
+		myBox.appendChild(myTextNode);
+		myBox.setAttributeNode(myIdAttribute);
+		myBox.setAttributeNode(myClassAttribute);
+		myBox.onclick =  Hyphenator.toggleHyphenation;
+		myBox.style.position = 'absolute';
+		myBox.style.top = '0px';
+		myBox.style.right = '0px';
+		myBox.style.margin = '0';
+		myBox.style.backgroundColor = '#AAAAAA';
+		myBox.style.color = '#FFFFFF';
+		myBox.style.font = '6pt Arial';
+		myBox.style.letterSpacing = '0.2em';
+		myBox.style.padding = '3px';
+		myBox.style.cursor = 'pointer';
+		myBox.style.WebkitBorderBottomLeftRadius = '4px';
+		myBox.style.MozBorderRadiusBottomleft = '4px';
+		bdy.appendChild(myBox);
+	}
+}</textarea>
+				</fieldset>
+				<fieldset>
+				<legend>Special Settings</legend>
+					<input type="checkbox" id="usecb" name="usecb"><label for="usecb">Trigger callback function when hyphenation is done</label><br>
+					<label for="onhyphenationdonecallback">onhyphenationdonecallback function:</label><br>
+					<textarea cols="80" rows="20" id="onhyphenationdonecallback" name="onhyphenationdonecallback">function () {
+
+}</textarea><br>
+					<input type="checkbox" id="useer" name="useer"><label for="useer">Overwrite onerrorhandler</label><br>
+					<label for="onerrorhandler">onerrorhandler function:</label><br>
+					<textarea cols="80" rows="20" id="onerrorhandler" name="onerrorhandler">function(e){
+	alert("Hyphenator.js says:\n\nAn Error ocurred:\n"+e.message);
+}</textarea><br>
+				</fieldset>
+			</fieldset>
+			<input type="reset" value=" Reset! ">
+			<input id="create2" type="submit" value=" Create! ">
+		</form>
+		<label for="output">Output:</label><br>
+		<a name="outanchor"></a>
+		<textarea id="output" name="output" cols="80" rows="20"> </textarea>
+    </body>
+</html>
