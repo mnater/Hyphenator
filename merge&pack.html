@@ -589,6 +589,12 @@ function jsmin(comment, input, level) {
 			$('togglebox_btn').onclick = function () {
 				toggleInfoBoxDisplay($('togglebox_box'), this, true);
 			};
+			$('callback_btn').onclick = function () {
+				toggleInfoBoxDisplay($('callback_box'), this, true);
+			};
+			$('onerror_btn').onclick = function () {
+				toggleInfoBoxDisplay($('onerror_box'), this, true);
+			};
 						
 			$('myform').onsubmit = function(){
 				var xhr = null;
@@ -627,14 +633,14 @@ function jsmin(comment, input, level) {
 				var minwordlength = $('minwordlength').value;
 				var hyphenchar = $('hyphenchar').value;
 				var urlhyphenchar = $('urlhyphenchar').value;
- 				var togglebox = $('togglebox').firstChild.data;
+ 				var togglebox = $('togglebox').value;
  				var displaytogglebox = $('displaytogglebox').checked;
  				var remoteloading = $('remoteloading').checked;
  				var enablecache = $('enablecache').checked;
- 				var onhyphenationdonecallback = $('onhyphenationdonecallback').firstChild.data;
- 				var onerrorhandler = $('onerrorhandler').firstChild.data;
+ 				var onhyphenationdonecallback = $('onhyphenationdonecallback').value;
+ 				var onerrorhandler = $('onerrorhandler').value;
  				var intermediatestate = $('intermediatestate').value;
- 				var selectorfunction = $('selectorfunction').firstChild.data;
+ 				var selectorfunction = $('selectorfunction').value;
 
 				var config_head = 'Hyphenator.config({';
 				var config = '';
@@ -801,7 +807,7 @@ function jsmin(comment, input, level) {
 					<textarea cols="80" rows="20" id="selectorfunction" name="selectorfunction">function () {
 	var tmp, el = [], i, l;
 	if (document.getElementsByClassName) {
-		el = document.getElementsByClassName(hyphenateClass);
+		el = document.getElementsByClassName('hyphenate');
 	} else {
 		tmp = document.getElementsByTagName('*');
 		l = tmp.length;
@@ -824,7 +830,7 @@ function jsmin(comment, input, level) {
 				<fieldset>
 				<legend>Toggle Box</legend>
 					<p>Indicate how the Togglebox should be displayed:</p>
-					<p><input type="checkbox" id="displaytogglebox" name="displaytogglebox" checked><label for="displaytogglebox">Display Toggle Box</label>  <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="togglebox_btn" class="info_btn"></p>
+					<p><input type="checkbox" id="displaytogglebox" name="displaytogglebox" checked><label for="displaytogglebox">Display Toggle Box</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="togglebox_btn" class="info_btn"></p>
 					<div id="togglebox_box" class="info_box">The standard togglebox is a small button in the upper right corner of the page. By clicking on it, the user can turn off/on hyphenation. This is useful for copying or searching text on the site.<br>
 					Since the standard togglebox may interfere with the design of your page, you can define it on your own.
 					</div>
@@ -834,7 +840,7 @@ function jsmin(comment, input, level) {
 					<label for="togglebox">Toggle Box Function:</label><br>
 					<textarea cols="80" rows="20" id="togglebox" name="togglebox">function (s) {
 	var myBox;
-	if (!!(myBox = $('HyphenatorToggleBox'))) {
+	if (!!(myBox = document.getElementById('HyphenatorToggleBox'))) {
 		if (s) {
 			myBox.firstChild.data = 'Hy-phe-na-ti-on';
 		} else {
@@ -847,7 +853,7 @@ function jsmin(comment, input, level) {
 		myIdAttribute = document.createAttribute('id');
 		myIdAttribute.nodeValue = 'HyphenatorToggleBox';
 		myClassAttribute = document.createAttribute('class');
-		myClassAttribute.nodeValue = dontHyphenateClass;
+		myClassAttribute.nodeValue = 'donthyphenate';
 		myTextNode = document.createTextNode('Hy-phe-na-ti-on');
 		myBox.appendChild(myTextNode);
 		myBox.setAttributeNode(myIdAttribute);
@@ -871,16 +877,22 @@ function jsmin(comment, input, level) {
 				</fieldset>
 				<fieldset>
 				<legend>Special Settings</legend>
-					<input type="checkbox" id="usecb" name="usecb"><label for="usecb">Trigger callback function when hyphenation is done</label><br>
+					<p>
+					<input type="checkbox" id="usecb" name="usecb"><label for="usecb">Trigger callback function when hyphenation is done</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="callback_btn" class="info_btn"></p>
+					<p>
 					<label for="onhyphenationdonecallback">onhyphenationdonecallback function:</label><br>
-					<textarea cols="80" rows="20" id="onhyphenationdonecallback" name="onhyphenationdonecallback">function () {
+					<textarea cols="80" rows="10" id="onhyphenationdonecallback" name="onhyphenationdonecallback">function () {
 
-}</textarea><br>
-					<input type="checkbox" id="useer" name="useer"><label for="useer">Overwrite onerrorhandler</label><br>
+}</textarea></p>
+					<div id="callback_box" class="info_box">This function is called, when hyphenation of a page is completed.</div>
+					<p>
+					<input type="checkbox" id="useer" name="useer"><label for="useer">Overwrite onerrorhandler</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="onerror_btn" class="info_btn"></p>
+					<p>
 					<label for="onerrorhandler">onerrorhandler function:</label><br>
-					<textarea cols="80" rows="20" id="onerrorhandler" name="onerrorhandler">function(e){
+					<textarea cols="80" rows="10" id="onerrorhandler" name="onerrorhandler">function(e){
 	alert("Hyphenator.js says:\n\nAn Error ocurred:\n"+e.message);
-}</textarea><br>
+}</textarea></p>
+				<div id="onerror_box" class="info_box">Most errors are catched and catched errors dipatch the onerror function. By default there's an alert with a predefined text. You can change this function.</div>
 				</fieldset>
 			</fieldset>
 			<input type="reset" value=" Reset! ">
