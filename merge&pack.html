@@ -607,7 +607,7 @@ function jsmin(comment, input, level) {
 					xhr.send(null);
 					if(xhr.status == 200) {
 						//var script=xhr.responseText;
-						var script = jsmin(xhr.responseText.slice(0,1020), xhr.responseText, 3);
+						var script = jsmin(xhr.responseText.slice(xhr.responseText.indexOf('/*!'),xhr.responseText.indexOf('*/')+2), xhr.responseText, 3);
 					}
 					var langBoxes = document.getElementsByName('language[]');
 					var l = langBoxes.length;
@@ -684,6 +684,9 @@ function jsmin(comment, input, level) {
 				}
 				$('output').firstChild.data = '';
 				$('output').firstChild.data = script + 'Hyphenator.run();';
+				if(navigator.userAgent.indexOf('MSIE') != -1) {
+					$('output').firstChild.data = $('output').firstChild.data.replace(/\n/gi, "\r");
+				}
 				$('output').focus();
 				$('output').select();
 				return false;
