@@ -1,7 +1,7 @@
 ﻿/*!
  *  Hyphenator 2.X.X - client side hyphenation for webbrowsers
  *  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
- *  Project and Source hosted on http: *code.google.com/p/hyphenator/
+ *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
  *  This JavaScript code is free software: you can redistribute
  *  it and/or modify it under the terms of the GNU Lesser
