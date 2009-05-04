@@ -387,7 +387,7 @@ var Hyphenator = (function () {
 		if (ua.indexOf('msie 6') === -1) {
 			zws = String.fromCharCode(8203); //Unicode zero width space
 		} else {
-			zws = '';
+			zws = ''; //IE6 doesn't support zws
 		}
 		return zws;
 	}()),
@@ -1090,22 +1090,22 @@ var Hyphenator = (function () {
 	 * @param string The word
 	 * @returns string The hyphenated word
 	 * @public
-	 */
+	 */	
 	hyphenateWord = function (lang, word) {
 		var lo = Hyphenator.languages[lang],
 			parts, i, l, w, wl, s, hypos, p, maxwins, win, patk, pat = false, patl, c, digits, z, numb3rs, n, inserted, hyphenatedword;
 		if (word === '') {
 			return '';
 		}
-		if (word.indexOf(hyphen) !== -1) { //this String only contains the unicode char 'Soft Hyphen'
+		if (word.indexOf(hyphen) !== -1) {
 			//word already contains shy; -> leave at it is!
 			return word;
 		}
-		if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
-			return lo.exceptions[word].replace(/-/g, hyphen);
-		}
 		if (enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
 			return lo.cache[word];
+		}
+		if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
+			return lo.exceptions[word].replace(/-/g, hyphen);
 		}
 		if (word.indexOf('-') !== -1) {
 			//word contains '-' -> put a zeroWidthSpace after it and hyphenate the parts separated with '-'
@@ -1126,6 +1126,7 @@ var Hyphenator = (function () {
 		for (p = 0; p <= n; p++) {
 			maxwins = Math.min((wl - p), lo.longestPattern);
 			for (win = lo.shortestPattern; win <= maxwins; win++) {
+				//if (pat = lo.patterns[w.substr(p, win)]) { //todo: will this work?
 				if (lo.patterns.hasOwnProperty(patk = w.substr(p, win))) {
 					pat = lo.patterns[patk];
 				} else {
@@ -1195,15 +1196,15 @@ var Hyphenator = (function () {
 			lang = hyphenatorSettings.language,
 			wrd, hyphenate, genRegExp, n, i;
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
-			wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+			wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}'; //todo: only create once per language (->prepareLanguagesObj)
 			hyphenate = function (word) {
-				if (urlRE.test(word) || mailRE.test(word)) {
+				if (urlRE.test(word) || mailRE.test(word)) { //todo: convert to a single RE
 					return hyphenateURL(word);
 				} else {
 					return hyphenateWord(lang, word);
 				}
 			};
-			genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
+			genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi'); //todo: only create once per language (->prepareLanguagesObj)
 			i = 0;
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
