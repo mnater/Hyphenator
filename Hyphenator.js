@@ -23,8 +23,9 @@
  */
  
 /* The following comment is for JSLint: */
-/*global ActiveXObject, unescape */
-    
+/*global window, ActiveXObject, unescape */
+/*jslint browser: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, undef: true, white: true, indent: 4*/
+
 /**
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
@@ -592,7 +593,7 @@ var Hyphenator = (function () {
 					}
 				}
 			);
-			if (w == top) {
+			if (w.self === top) {
 				(function () {
 					try {
 						d.documentElement.doScroll('left');
@@ -763,37 +764,6 @@ var Hyphenator = (function () {
 			} else {
 				onError(new Error('Language ' + lang + ' is not yet supported.'));
 			}
-			/* Add onbeforecopy behaviour to all elements
-			el.oncopy = function (e) {
-				var text=document.getSelection().toString();
-				var h;
-				for(var k in text) {
-					alert(k+": "+text[k]);
-				}
-				switch (hyphen) {
-					case '|':
-						h = '\\|';
-						break;
-					case '+':
-						h = '\\+';
-						break;
-					case '*':
-						h = '\\*';
-						break;
-					default:
-						h = hyphen;
-					}
-				text = text.replace(new RegExp(h, 'g'), '');
-				text = text.replace(new RegExp(zeroWidthSpace, 'g'), '');
-				if (!!e.clipboardData) { //Safari
-					e.preventDefault();
-					e.clipboardData.setData('text/plain', text);
-				} else if (!!window.clipboardData) { // IE
-					window.preventDefault();
-					window.clipboardData.setData('Text', text);
-				}
-			}			
-			END Add onbeforecopy behaviour to all elements*/
 			Expando.setDataForElem(el, hyphenatorSettings);
 			elements.push(el);
 			while (!!(n = el.childNodes[i++])) {
@@ -822,6 +792,46 @@ var Hyphenator = (function () {
 			Expando.appendDataForElem(elements[elements.length - 1], {isLast : true});
 		}
 	},
+	
+	/*
+	registerOnCopy = function () {
+			document.getElementsByTagName('body')[0].oncopy = function (e) {
+				var text, h;
+				if (window.getSelection) {
+					text = window.getSelection().toString();
+				}
+				else if (document.selection) { // should come last; Opera!
+					text = document.selection.createRange().text;
+				}
+				switch (hyphen) {
+					case '|':
+						h = '\\|';
+						break;
+					case '+':
+						h = '\\+';
+						break;
+					case '*':
+						h = '\\*';
+						break;
+					case String.fromCharCode(173):
+						h = '\u00AD';
+						break;
+					default:
+						h = hyphen;
+					}
+				text = text.replace(new RegExp(h, 'g'), '');
+				text = text.replace(new RegExp(zeroWidthSpace, 'g'), '');
+				alert(text);
+				if (!!e && !!e.clipboardData) { //Safari
+					e.preventDefault();
+					e.clipboardData.setData('text/plain', text);
+				} else if (!!window.clipboardData) { // IE
+					window.preventDefault();
+					window.clipboardData.setData('Text', text);
+				}
+			}			
+	},
+	*/
 	 
 	/**
 	 * @name Hyphenator-convertPatterns
@@ -1085,7 +1095,7 @@ var Hyphenator = (function () {
 	 */	
 	hyphenateWord = function (lang, word) {
 		var lo = Hyphenator.languages[lang],
-			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patl, c, digits, z, numb3rs, n, inserted, hyphenatedword;
+			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, patl, c, digits, z, numb3rs, n, inserted, hyphenatedword;
 		if (word === '') {
 			return '';
 		}
@@ -1118,25 +1128,28 @@ var Hyphenator = (function () {
 		for (p = 0; p <= n; p++) {
 			maxwins = Math.min((wl - p), lo.longestPattern);
 			for (win = lo.shortestPattern; win <= maxwins; win++) {
-				if (!!(pat = lo.patterns[w.substr(p, win)])) {
-					digits = 1;
-					patl = pat.length;
-					for (i = 0; i < patl; i++) {
-						c = pat.charAt(i);
-						if (numb3rs[c]) {
-							if (i === 0) {
-								z = p - 1;
-								if (!hypos[z] || hypos[z] < c) {
-									hypos[z] = c;
-								}
-							} else {
-								z = p + i - digits;
-								if (!hypos[z] || hypos[z] < c) {
-									hypos[z] = c;
-								}
+				if (lo.patterns.hasOwnProperty(patk = w.substr(p, win))) {
+					pat = lo.patterns[patk];
+				} else {
+					continue;
+				}
+				digits = 1;
+				patl = pat.length;
+				for (i = 0; i < patl; i++) {
+					c = pat.charAt(i);
+					if (numb3rs[c]) {
+						if (i === 0) {
+							z = p - 1;
+							if (!hypos[z] || hypos[z] < c) {
+								hypos[z] = c;
 							}
-							digits++;								
+						} else {
+							z = p + i - digits;
+							if (!hypos[z] || hypos[z] < c) {
+								hypos[z] = c;
+							}
 						}
+						digits++;								
 					}
 				}
 			}
@@ -1463,6 +1476,7 @@ var Hyphenator = (function () {
 					if (displayToggleBox) {
 						toggleBox(true);
 					}
+					//registerOnCopy();
 				} catch (e) {
 					onError(e);
 				}
