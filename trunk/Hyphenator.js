@@ -349,26 +349,16 @@ var Hyphenator = (function () {
 	 * @private
 	 */	
 	mail = '[\\w-\\.]+@[\\w\\.]+',
-	
+
 	/**
 	 * @name Hyphenator-urlRE
 	 * @fieldOf Hyphenator
 	 * @description
-	 * A RegularExpressions-Object for url-matching
+	 * A RegularExpressions-Object for url- and mail adress matching
 	 * @type object
 	 * @private
 	 */		
-	urlRE = new RegExp(url, 'i'),
-
-	/**
-	 * @name Hyphenator-mailRE
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A RegularExpressions-Object for mail-adress-matching
-	 * @type object
-	 * @private
-	 */		
-	mailRE = new RegExp(mail, 'i'),
+	urlOrMailRE = new RegExp('(' + url + ')|(' + mail + ')', 'i'),
 
 	/**
 	 * @name Hyphenator-zeroWidthSpace
@@ -943,7 +933,7 @@ var Hyphenator = (function () {
 	 * @param string the language ob the lang-obj
 	 */		
 	prepareLanguagesObj = function (lang) {
-		var lo = Hyphenator.languages[lang];
+		var lo = Hyphenator.languages[lang], wrd;
 		if (!lo.prepared) {	
 			if (enableCache) {
 				lo.cache = {};
@@ -966,6 +956,8 @@ var Hyphenator = (function () {
 				lo.exceptions = {};
 			}
 			convertPatterns(lang);
+			wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+			lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 			lo.prepared = true;
 		}
 	},
@@ -1093,7 +1085,7 @@ var Hyphenator = (function () {
 	 */	
 	hyphenateWord = function (lang, word) {
 		var lo = Hyphenator.languages[lang],
-			parts, i, l, w, wl, s, hypos, p, maxwins, win, patk, pat = false, patl, c, digits, z, numb3rs, n, inserted, hyphenatedword;
+			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patl, c, digits, z, numb3rs, n, inserted, hyphenatedword;
 		if (word === '') {
 			return '';
 		}
@@ -1126,29 +1118,25 @@ var Hyphenator = (function () {
 		for (p = 0; p <= n; p++) {
 			maxwins = Math.min((wl - p), lo.longestPattern);
 			for (win = lo.shortestPattern; win <= maxwins; win++) {
-				//if (pat = lo.patterns[w.substr(p, win)]) { //todo: will this work?
-				if (lo.patterns.hasOwnProperty(patk = w.substr(p, win))) {
-					pat = lo.patterns[patk];
-				} else {
-					continue;
-				}
-				digits = 1;
-				patl = pat.length;
-				for (i = 0; i < patl; i++) {
-					c = pat.charAt(i);
-					if (numb3rs[c]) {
-						if (i === 0) {
-							z = p - 1;
-							if (!hypos[z] || hypos[z] < c) {
-								hypos[z] = c;
+				if (!!(pat = lo.patterns[w.substr(p, win)])) {
+					digits = 1;
+					patl = pat.length;
+					for (i = 0; i < patl; i++) {
+						c = pat.charAt(i);
+						if (numb3rs[c]) {
+							if (i === 0) {
+								z = p - 1;
+								if (!hypos[z] || hypos[z] < c) {
+									hypos[z] = c;
+								}
+							} else {
+								z = p + i - digits;
+								if (!hypos[z] || hypos[z] < c) {
+									hypos[z] = c;
+								}
 							}
-						} else {
-							z = p + i - digits;
-							if (!hypos[z] || hypos[z] < c) {
-								hypos[z] = c;
-							}
+							digits++;								
 						}
-						digits++;								
 					}
 				}
 			}
@@ -1193,22 +1181,19 @@ var Hyphenator = (function () {
 	 */
 	hyphenateElement = function (el) {
 		var hyphenatorSettings = Expando.getDataForElem(el),
-			lang = hyphenatorSettings.language,
-			wrd, hyphenate, genRegExp, n, i;
+			lang = hyphenatorSettings.language, hyphenate, n, i;
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
-			wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}'; //todo: only create once per language (->prepareLanguagesObj)
 			hyphenate = function (word) {
-				if (urlRE.test(word) || mailRE.test(word)) { //todo: convert to a single RE
+				if (urlOrMailRE.test(word)) {
 					return hyphenateURL(word);
 				} else {
 					return hyphenateWord(lang, word);
 				}
 			};
-			genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi'); //todo: only create once per language (->prepareLanguagesObj)
 			i = 0;
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-					n.data = n.data.replace(genRegExp, hyphenate);
+					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 				}
 			}
 		}
@@ -1534,27 +1519,25 @@ var Hyphenator = (function () {
 		 * &lt;/script&gt;
 		 */
 		hyphenate: function (target, lang) {
-			var wrd, hyphenate, genRegExp, n, i;
+			var hyphenate, n, i;
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				if (!Hyphenator.languages[lang].prepared) {
 					prepareLanguagesObj(lang);
 				}
-				wrd = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
 				hyphenate = function (word) {
-					if (urlRE.test(word) || mailRE.test(word)) {
+					if (urlOrMailRE.test(word)) {
 						return hyphenateURL(word);
 					} else {
 						return hyphenateWord(lang, word);
 					}
 				};
-				genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 				if (typeof target === 'string' || target.constructor === String) {
-					return target.replace(genRegExp, hyphenate);
+					return target.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 				} else if (typeof target === 'object') {
 					i = 0;
 					while (!!(n = target.childNodes[i++])) {
 						if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-							n.data = n.data.replace(genRegExp, hyphenate);
+							n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 						} else if (n.nodeType === 1) {
 							Hyphenator.hyphenate(n, lang);
 						}
