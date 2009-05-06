@@ -1,6 +1,14 @@
 #summary Version History and note about versioning
 
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.2.0.zip 2.2.0] (May 06, 2009) ==
+This minor release brings a the following changes:
+  * Support for portuguese
+  * Functions like hyphenateDocument(), hyphenateElement() and hyphenateWord() are made private. Instead there's a new public function hyphenate().
+  * Fixed issue55, issue56, issue60
+  * Internal code beautifying (check with jslint)
+  * new service `merge+pack.html` bundled with the package: easily create a customized and packed all-in-one script file of Hyphenator.js
+  
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.1.0.zip 2.1.0] (Apr 05, 2009) ==
 This minor release brings a the following changes:
   * It's licensed under LGPL version 3.0

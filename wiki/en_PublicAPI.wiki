@@ -298,9 +298,21 @@ If the first argument is an empty string, the exception is 'global', not for a s
 }}}
 On this page, the word FORTRAN will not be hyphenated at all.
 ----
+=== mixed Hyphenator.hyphenate(mixed target, string lang) ===
+Hyphenates the target. If the target is a string, the hyphenated string is returned. If the target is an DOM-Object (an element), it will be hyphenated directly (as are its children).
+The patterns indicated by the 2nd attribute (`lang`) have to be loaded; if not, an error is thrown.
+==== Example ====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script src="patterns/en.js" type="text/javascript"></script>
+<script type="text/javascript">
+	alert(Hyphenator.hyphenate('Hyphenation is cool!', 'en'););
+</script>
+}}}
+----
 === bool Hyphenator.isBookmarklet() ===
 Returns true if Hyphenator.js has been called by a bookmarklet.
-
+----
 === void Hyphenator.toggleHyphenation() ===
 Calls Hyphenator.removeHyphenationFromDocument() if the state of Hyphenator is 3 or calls Hyphenator.hyphenateDocument() if the state is 4.
 Use his function when implementing  your own toggleBox.
@@ -328,19 +340,3 @@ Use his function when implementing  your own toggleBox.
 <div id="hyphenationbutton">toggle hyphenation</div>
 [...]
 }}}
-
-
-_The following methods are public, too. But in most cases you will never have to use them. Therefore they are not yet documented_
-=== void Hyphenator.hyphenateDocument() ===
-
-=== void Hyphenator.removeHyphenationFromDocument() ===
-
-=== void Hyphenator.hyphenateElement(HTMLElement el, string lang) ===
-
-=== void Hyphenator.removeHyphenationFromElement(HTMLElement el) ===
-
-=== string Hyphenator.hyphenateWord(string lang, string word) ===
-
-=== string Hyphenator.hyphenateURL(string url) ===
-
-=== void Hyphenator.toggleHyphenation() ===
