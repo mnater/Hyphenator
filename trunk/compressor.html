@@ -31,16 +31,29 @@
             }
         </style>
         <script type="text/javascript">
-        	var oldpatterns, newpatterns, shortestPattern, longestPattern;
+        	var oldpatterns, newpatterns, shortestPattern, longestPattern, specialChars;
         	
         	function lengthSort(a, b) {
         		return a.length - b.length;
         	}
         	        	
 			function startConversion() {
-				var len, i, curlen, key;
+				var len, i, curlen, key, special, s;
 				newpatterns = {}, shortestPattern = 100, longestPattern = 0;
-				oldpatterns = document.getElementsByName('oldpattern')[0].value.split(' ');
+				special = document.getElementsByName('oldpattern')[0].value.match(/[^a-z0-9\. ]/gi);
+				//Todo: Special vereinfachen...
+				s = {};
+				for(i = 0; i < special.length; i++) {
+					s[special[i]] = true;
+				}
+				special = '';
+				for(i in s) {
+					if(s.hasOwnProperty(i)) {
+						special += i;
+					}
+				}
+				specialChars = special;
+				oldpatterns = document.getElementsByName('oldpattern')[0].value.replace(/ $/,'').split(' ');
 				oldpatterns.sort(lengthSort);
 				len = oldpatterns.length;
 				for(i = 0; i < len; i++) {
@@ -68,7 +81,7 @@
 				tmp += '\'rightmin\' : ' + document.getElementsByName('rightmin')[0].value + ',\n';
 				tmp += '\'shortestPattern\' : ' + shortestPattern + ',\n';
 				tmp += '\'longestPattern\' : ' + longestPattern + ',\n';
-				tmp += '\'specialChars\' : \'' + document.getElementsByName('specialChars')[0].value + '\',\n';
+				tmp += '\'specialChars\' : \'' + specialChars + '\',\n';
 				tmp += '\'patterns\' : {';
 				for (len in newpatterns) {
 					tmp += len + ':' + '"' + newpatterns[len] + '",';
@@ -92,21 +105,6 @@
 					}
 					desc.innerHTML = "";
 				};
-
-
-				document.getElementsByName('specialChars')[0].onfocus = function() {
-					if(this.value === 'specialChars') {
-						this.value = '';
-					}
-					desc.innerHTML = "<em>Define specialChars:</em><br>Write all characters that are used in this lanuage and that are not part of ASCII.<br>(e.g. 'äöüß' for german)";
-				};
-				document.getElementsByName('specialChars')[0].onblur = function() {
-					if(this.value === '') {
-						this.value = 'specialChars';
-					}
-					desc.innerHTML = "";
-				};
-
 
 				document.getElementsByName('leftmin')[0].onfocus = function() {
 					if(this.value === 'leftmin') {
@@ -157,7 +155,6 @@
 				<legend>Paste TeX-styled patterns:</legend>
 				<span id="fields">
 				<input type="text" name="language" value="language"></input><br>
-				<input type="text" name="specialChars" value="specialChars"></input><br>
 				<input type="text" name="leftmin" value="leftmin"></input><br>
 				<input type="text" name="rightmin" value="rightmin"></input>
 				</span>
