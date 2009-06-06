@@ -637,43 +637,43 @@ function jsmin(comment, input, level) {
 				var config = '';
 				if($('selStandard').checked) {
 					if(classname !== '') {
-						config += 'classname:\''+classname+'\',\n\t';
+						config += 'classname : \''+classname+'\',\n\t';
 					}
 				} else {
-					config += 'selectorfunction:'+selectorfunction+',\n\t';
+					config += 'selectorfunction : '+selectorfunction+',\n\t';
 				}
 				if(donthyphenateclassname !== '') {
-					config += 'donthyphenateclassname:\''+donthyphenateclassname+'\',\n\t';
+					config += 'donthyphenateclassname : \''+donthyphenateclassname+'\',\n\t';
 				}
 				if(minwordlength !== '') {
-					config += 'minwordlength:'+minwordlength+',\n\t';
+					config += 'minwordlength : '+minwordlength+',\n\t';
 				}
 				if(hyphenchar !== '') {
-					config += 'hyphenchar:\''+hyphenchar+'\',\n\t';
+					config += 'hyphenchar : \''+hyphenchar+'\',\n\t';
 				}
 				if(urlhyphenchar !== '') {
-					config += 'urlhyphenchar:\''+urlhyphenchar+'\',\n\t';
+					config += 'urlhyphenchar : \''+urlhyphenchar+'\',\n\t';
 				}
 				if(displaytogglebox === true) {
-					config += 'displaytogglebox:'+true+',\n\t';
+					config += 'displaytogglebox : '+true+',\n\t';
 					if($('tbCustom').checked) {
-						config += 'togglebox:'+togglebox+',\n\t';
+						config += 'togglebox : '+togglebox+',\n\t';
 					}
 				}
 				if(remoteloading === false) {
-					config += 'remoteloading:false,\n\t';
+					config += 'remoteloading : false,\n\t';
 				}
 				if(enablecache === false) {
-					config += 'enablecache:false,\n\t';
+					config += 'enablecache : false,\n\t';
 				}
 				if($('usecb').checked) {
-					config += 'onhyphenationdonecallback:'+onhyphenationdonecallback+',\n\t';
+					config += 'onhyphenationdonecallback : '+onhyphenationdonecallback+',\n\t';
 				}
 				if($('useer').checked) {
-					config += 'onerrorhandler:'+onerrorhandler+',\n\t';
+					config += 'onerrorhandler : '+onerrorhandler+',\n\t';
 				}
 				if(intermediatestate !== 'hidden') {
-					config += 'intermediatestate:\''+intermediatestate+'\',\n\t';	
+					config += 'intermediatestate : \''+intermediatestate+'\',\n\t';	
 				}
 				
 				if(config.length > 0) {
@@ -770,10 +770,10 @@ function jsmin(comment, input, level) {
 				</p>
 				<div id="minwordlength_box" class="info_box">A value lesser than 4 makes no sense. By increasing this value lesser words will be hyphenated, thus, there's a small speed gain.</div>
 				<p>
-				<label><input type="text" id="hyphenchar" name="hyphenchar" value="" size="10" title="hyphenchar"> The hyphen char (leave empty for &amp;shy;)</label>
+				<label><input type="text" id="hyphenchar" name="hyphenchar" value="" size="10" title="hyphenchar"> The hyphen char for words (leave empty for &amp;shy;)</label>
 				</p>
 				<p>
-				<label><input type="text" id="urlhyphenchar" name="urlhyphenchar" value="" size="10" title="urlhyphenchar"> The hyphen char (leave empty for zero width space)</label>
+				<label><input type="text" id="urlhyphenchar" name="urlhyphenchar" value="" size="10" title="urlhyphenchar"> The hyphen char for URLs and E-Mail (leave empty for zero width space)</label>
 				</p>
 				<p>
 				<label><input type="checkbox" id="remoteloading" name="remoteloading" title="remoteloading"> Enable remote loading of language patterns.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="remoteloading_btn" class="info_btn" alt="Show-Info Button"></p>
