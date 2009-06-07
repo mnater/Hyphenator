@@ -77,17 +77,17 @@
 			function output2String() {
 				var tmp, len;
 				tmp = 'Hyphenator.languages.' + document.getElementsByName('language')[0].value + ' = {\n';
-				tmp += '\'leftmin\' : ' + document.getElementsByName('leftmin')[0].value + ',\n';
-				tmp += '\'rightmin\' : ' + document.getElementsByName('rightmin')[0].value + ',\n';
-				tmp += '\'shortestPattern\' : ' + shortestPattern + ',\n';
-				tmp += '\'longestPattern\' : ' + longestPattern + ',\n';
-				tmp += '\'specialChars\' : \'' + specialChars + '\',\n';
-				tmp += '\'patterns\' : {';
+				tmp += '\t\'leftmin\' : ' + document.getElementsByName('leftmin')[0].value + ',\n';
+				tmp += '\t\'rightmin\' : ' + document.getElementsByName('rightmin')[0].value + ',\n';
+				tmp += '\t\'shortestPattern\' : ' + shortestPattern + ',\n';
+				tmp += '\t\'longestPattern\' : ' + longestPattern + ',\n';
+				tmp += '\t\'specialChars\' : \'' + specialChars + '\',\n';
+				tmp += '\t\'patterns\' : {\n';
 				for (len in newpatterns) {
-					tmp += len + ':' + '"' + newpatterns[len] + '",';
+					tmp += '\t\t' + len + ':' + '"' + newpatterns[len] + '",\n';
 				}
-				tmp = tmp.slice(0,-1);
-				tmp += '}\n};'
+				tmp = tmp.slice(0,-2);
+				tmp += '\n\t}\n};'
 				document.getElementsByName('newpattern')[0].value = tmp;
 			}
 			
