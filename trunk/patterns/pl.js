@@ -3,7 +3,7 @@ Hyphenator.languages.pl = {
 	rightmin : 2,
 	shortestPattern : 1,
 	longestPattern : 15,
-	specialChars : 'ąćęłńóśźżਂ‍',
+	specialChars : unescape('ąćęłńóśźżਂ%u200D'),
 	patterns : {
 		2 : 'a1ą1e1ę1i1o1ó1u1y1',
 		3 : '_a1_b8_c8_ć8_d8_e1_f8_g8_h8_i1_j8_k8_l8_ł8_m8_n8_ń8_o1_p8_r8_s8_ś8_t8_u1_v8_w8_x8_z8_ź8_ż8ś1cc4hc4zd4zd4źd4żr4zs4z8b_8c_8ć_8d_8f_8g_8h_8j_8k_8l_8ł_8m_8n_8ń_8p_8r_8s_8ś_8t_8v_8w_8x_8z_8ź_8ż_ae2ai2ao2be1bi1bo1bu1ca1cu1de1du1ea2ei2eo2fi1fo1ga1go1hi1hu1ja1ka1ki1ko1le1lu1ly1ma1mi1mo1mu1na1oa2oe2oi2ou2pa1po1ro1se1so1sy1to1tu1ty1ua2ue2ui2uo2vo1we1ya2ye2yi2yo2yu2ze1',
