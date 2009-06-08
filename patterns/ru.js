@@ -7,7 +7,7 @@ Hyphenator.languages.ru = {
 	rightmin : 2,
 	shortestPattern : 1,
 	longestPattern : 7,
-	specialChars : 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯਂ‍',
+	specialChars : unescape('абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯਂ%u200D'),
 	patterns : {
 		1 : '%',
 		2 : '1г1ж1м1п1ф1ц1ш1щъ1ы1ь11э1ю',
