@@ -18,6 +18,7 @@ Currently, there's support for
   * Portuguese (thanks to Lailson Bandeira)
   * Hungarian - comming soon (thanks to Péter Nagy)
   * Czech - coming soon (thanks to Martin Hasoň)
+  * Ukrainian - coming soon (thanks to Alexey Grekov)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
