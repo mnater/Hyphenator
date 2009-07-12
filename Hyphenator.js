@@ -105,7 +105,8 @@ var Hyphenator = (function () {
 		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
 		'pt': 'A língua deste site não pôde ser determinada automaticamente. Por favor indique a língua principal:',
 		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
-		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:'
+		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:',
+		'uk': 'Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:'
 	},
 	
 	/**
