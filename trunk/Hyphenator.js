@@ -59,7 +59,7 @@ var Hyphenator = (function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var languageHint = 'da, bn, de, en, es, fi, fr, gu, hi, hu, it, kn, ml, nl, or, pa, pl, pt, ru, sv, ta, te',
+	var languageHint = 'cs, da, bn, de, en, es, fi, fr, gu, hi, hu, it, kn, ml, nl, or, pa, pl, pt, ru, sv, ta, te',
 
 	/**
 	 * @name Hyphenator-supportedLang
@@ -92,9 +92,10 @@ var Hyphenator = (function () {
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
 	prompterStrings = {
+		'cs': 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:',
 		'da': 'Denne websides sprog kunne ikke bestemmes. Angiv venligst sprog:',
 		'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:',
-		'en': 'The language of this website could not be determined automatically. Please indicate main language:',
+		'en': 'The language of this website could not be determined automatically. Please indicate the main language:',
 		'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal:',
 		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:',
 		'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:',
