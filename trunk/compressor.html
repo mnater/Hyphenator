@@ -85,10 +85,10 @@
 				tmp += '\trightmin : ' + document.getElementsByName('rightmin')[0].value + ',\n';
 				tmp += '\tshortestPattern : ' + shortestPattern + ',\n';
 				tmp += '\tlongestPattern : ' + longestPattern + ',\n';
-				tmp += '\tspecialChars : \'' + specialChars + '\',\n';
+				tmp += '\tspecialChars : "' + specialChars + '",\n';
 				tmp += '\tpatterns : {\n';
 				for (len in newpatterns) {
-					tmp += '\t\t' + len + ':' + '"' + newpatterns[len] + '",\n';
+					tmp += '\t\t' + len + ' : "' + newpatterns[len] + '",\n';
 				}
 				tmp = tmp.slice(0,-2);
 				tmp += '\n\t}\n};'
