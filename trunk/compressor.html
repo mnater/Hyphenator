@@ -41,16 +41,20 @@
 				var len, i, curlen, key, special, s;
 				newpatterns = {}, shortestPattern = 100, longestPattern = 0;
 				special = document.getElementsByName('oldpattern')[0].value.match(/[^a-z0-9\. ]/gi);
-				//Todo: Special vereinfachen...
-				s = {};
-				for(i = 0; i < special.length; i++) {
-					s[special[i]] = true;
-				}
-				special = '';
-				for(i in s) {
-					if(s.hasOwnProperty(i)) {
-						special += i;
+				if (special) {
+					//Todo: Special vereinfachen...
+					s = {};
+					for(i = 0; i < special.length; i++) {
+						s[special[i]] = true;
 					}
+					special = '';
+					for(i in s) {
+						if(s.hasOwnProperty(i)) {
+							special += i;
+						}
+					}
+				} else {
+					special = '';
 				}
 				specialChars = special;
 				oldpatterns = document.getElementsByName('oldpattern')[0].value.replace(/ $/,'').split(' ');
@@ -77,12 +81,12 @@
 			function output2String() {
 				var tmp, len;
 				tmp = 'Hyphenator.languages.' + document.getElementsByName('language')[0].value + ' = {\n';
-				tmp += '\t\'leftmin\' : ' + document.getElementsByName('leftmin')[0].value + ',\n';
-				tmp += '\t\'rightmin\' : ' + document.getElementsByName('rightmin')[0].value + ',\n';
-				tmp += '\t\'shortestPattern\' : ' + shortestPattern + ',\n';
-				tmp += '\t\'longestPattern\' : ' + longestPattern + ',\n';
-				tmp += '\t\'specialChars\' : \'' + specialChars + '\',\n';
-				tmp += '\t\'patterns\' : {\n';
+				tmp += '\tleftmin : ' + document.getElementsByName('leftmin')[0].value + ',\n';
+				tmp += '\trightmin : ' + document.getElementsByName('rightmin')[0].value + ',\n';
+				tmp += '\tshortestPattern : ' + shortestPattern + ',\n';
+				tmp += '\tlongestPattern : ' + longestPattern + ',\n';
+				tmp += '\tspecialChars : \'' + specialChars + '\',\n';
+				tmp += '\tpatterns : {\n';
 				for (len in newpatterns) {
 					tmp += '\t\t' + len + ':' + '"' + newpatterns[len] + '",\n';
 				}
@@ -154,9 +158,9 @@
 			<fieldset>
 				<legend>Paste TeX-styled patterns:</legend>
 				<span id="fields">
-				<input type="text" name="language" value="language"></input><br>
-				<input type="text" name="leftmin" value="leftmin"></input><br>
-				<input type="text" name="rightmin" value="rightmin"></input>
+				<input type="text" name="language" value="language"><br>
+				<input type="text" name="leftmin" value="leftmin"><br>
+				<input type="text" name="rightmin" value="rightmin">
 				</span>
 				<span id="desc"></span>
 				<textarea name="oldpattern" cols="80" rows="20">.a5 .rt4 .d4gt2 asdf2 9kas3</textarea> 
