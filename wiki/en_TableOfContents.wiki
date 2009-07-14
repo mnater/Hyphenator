@@ -39,7 +39,7 @@
     * [http://code.google.com/p/hyphenator/wiki/en_AddNewLanguage#adapt_code_in_Hyphenator Adapt Hyphenator]
   * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory Version History]
     * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(July_14,_2009) 2.3.0]
-    * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Mai_06,_2009) 2.2.0]
+    * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(May_06,_2009) 2.2.0]
     * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Apr_05,_2009) 2.1.0]
     * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Mar_15,_2009) 2.0.0]
     * [http://code.google.com/p/hyphenator/wiki/en_VersionHistory#(Mar_08,_2009) 1.0.2]
