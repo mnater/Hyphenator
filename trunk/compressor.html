@@ -31,53 +31,12 @@
             }
         </style>
         <script type="text/javascript">
-        	var oldpatterns, newpatterns, shortestPattern, longestPattern, specialChars;
-        	
-        	function lengthSort(a, b) {
-        		return a.length - b.length;
-        	}
-        	        	
-			function startConversion() {
-				var len, i, curlen, key, special, s;
-				newpatterns = {}, shortestPattern = 100, longestPattern = 0;
-				special = document.getElementsByName('oldpattern')[0].value.match(/[^a-z0-9\. ]/gi);
-				if (special) {
-					//Todo: Special vereinfachen...
-					s = {};
-					for(i = 0; i < special.length; i++) {
-						s[special[i]] = true;
-					}
-					special = '';
-					for(i in s) {
-						if(s.hasOwnProperty(i)) {
-							special += i;
-						}
-					}
-				} else {
-					special = '';
-				}
-				specialChars = special;
-				oldpatterns = document.getElementsByName('oldpattern')[0].value.replace(/ $/,'').split(' ');
-				oldpatterns.sort(lengthSort);
-				len = oldpatterns.length;
-				for(i = 0; i < len; i++) {
-					key = oldpatterns[i].replace(/\d/g, '');
-					if(key.length < shortestPattern) {
-						shortestPattern = key.length
-					}
-					if(key.length > longestPattern) {
-						longestPattern = key.length
-					}
-					curlen = oldpatterns[i].length;
-					if(curlen in newpatterns) {
-						newpatterns[curlen] += oldpatterns[i].replace(/\./g, '_');
-					} else {
-						newpatterns[curlen] = oldpatterns[i].replace(/\./g, '_');
-					}
-				}
-				output2String();
-			}
+			var oldpatterns, newpatterns, shortestPattern, longestPattern, specialChars;
 			
+			function lengthSort(a, b) {
+				return a.length - b.length;
+			}
+						
 			function output2String() {
 				var tmp, len;
 				tmp = 'Hyphenator.languages.' + document.getElementsByName('language')[0].value + ' = {\n';
@@ -88,68 +47,111 @@
 				tmp += '\tspecialChars : "' + specialChars + '",\n';
 				tmp += '\tpatterns : {\n';
 				for (len in newpatterns) {
-					tmp += '\t\t' + len + ' : "' + newpatterns[len] + '",\n';
+					if (newpatterns.hasOwnProperty(len)) {
+						tmp += '\t\t' + len + ' : "' + newpatterns[len] + '",\n';
+					}
 				}
-				tmp = tmp.slice(0,-2);
-				tmp += '\n\t}\n};'
+				tmp = tmp.slice(0, -2);
+				tmp += '\n\t}\n};';
 				document.getElementsByName('newpattern')[0].value = tmp;
 			}
 			
-			window.onload = function() {
+			function startConversion() {
+				var len, i, curlen, key, special, s,
+				newpatterns = {}, shortestPattern = 100, longestPattern = 0;
+				special = document.getElementsByName('oldpattern')[0].value.match(/[^a-z0-9\. ]/gi);
+				if (special) {
+					//Todo: Special vereinfachen...
+					s = {};
+					for (i = 0; i < special.length; i++) {
+						s[special[i]] = true;
+					}
+					special = '';
+					for (i in s) {
+						if (s.hasOwnProperty(i)) {
+							special += i;
+						}
+					}
+				} else {
+					special = '';
+				}
+				specialChars = special;
+				oldpatterns = document.getElementsByName('oldpattern')[0].value.replace(/ $/, '').split(' ');
+				oldpatterns.sort(lengthSort);
+				len = oldpatterns.length;
+				for (i = 0; i < len; i++) {
+					key = oldpatterns[i].replace(/\d/g, '');
+					if (key.length < shortestPattern) {
+						shortestPattern = key.length;
+					}
+					if (key.length > longestPattern) {
+						longestPattern = key.length;
+					}
+					curlen = oldpatterns[i].length;
+					if (curlen in newpatterns) {
+						newpatterns[curlen] += oldpatterns[i].replace(/\./g, '_');
+					} else {
+						newpatterns[curlen] = oldpatterns[i].replace(/\./g, '_');
+					}
+				}
+				output2String();
+			}
+						
+			window.onload = function () {
 				var desc = document.getElementById('desc');
-				document.getElementsByName('language')[0].onfocus = function() {
-					if(this.value === 'language') {
+				document.getElementsByName('language')[0].onfocus = function () {
+					if (this.value === 'language') {
 						this.value = '';
 					}
 					desc.innerHTML = "<em>Define language:</em><br>Use the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>ISO 639-1</a> two-letter language code.<br>(e.g. 'en' for english.)";
 				};
-				document.getElementsByName('language')[0].onblur = function() {
-					if(this.value === '') {
+				document.getElementsByName('language')[0].onblur = function () {
+					if (this.value === '') {
 						this.value = 'language';
 					}
 					desc.innerHTML = "";
 				};
-
-				document.getElementsByName('leftmin')[0].onfocus = function() {
-					if(this.value === 'leftmin') {
+			
+				document.getElementsByName('leftmin')[0].onfocus = function () {
+					if (this.value === 'leftmin') {
 						this.value = '';
 					}
 					desc.innerHTML = "<em>Define leftmin:</em><br>Define how many letters at minimum should stay on the old line upon hyphenation.<br>(e.g.: setting this to 3 would prevent 'Hy-phenation')";
 				};
-				document.getElementsByName('leftmin')[0].onblur = function() {
-					if(this.value === '') {
+				document.getElementsByName('leftmin')[0].onblur = function () {
+					if (this.value === '') {
 						this.value = 'leftmin';
 					}
 					desc.innerHTML = "";
 				};
-
-				document.getElementsByName('rightmin')[0].onfocus = function() {
-					if(this.value === 'rightmin') {
+			
+				document.getElementsByName('rightmin')[0].onfocus = function () {
+					if (this.value === 'rightmin') {
 						this.value = '';
 					}
 					desc.innerHTML = "<em>Define rightmin:</em><br>Define how many letters at minimum should stay on the new line upon hyphenation.<br>(e.g.: setting this to 3 would prevent 'divid-ed')";
 				};
-				document.getElementsByName('rightmin')[0].onblur = function() {
-					if(this.value === '') {
+				document.getElementsByName('rightmin')[0].onblur = function () {
+					if (this.value === '') {
 						this.value = 'rightmin';
 					}
 					desc.innerHTML = "";
 				};
-
-				document.getElementsByName('oldpattern')[0].onfocus = function() {
-					if(this.value === '.a5 .rt4 .d4gt2 asdf2 9kas3') {
+			
+				document.getElementsByName('oldpattern')[0].onfocus = function () {
+					if (this.value === '.a5 .rt4 .d4gt2 asdf2 9kas3') {
 						this.value = '';
 					}
 					desc.innerHTML = "<em>Define oldpattern:</em><br>Paste the patterns you like to convert. They have to be separated by spaces, not newlines! Points (.) will be automatically replaced by underscores (_).<br>(e.g.: .ach4 .ad4der .af1t .al3t .am5at .an5c .ang4 .ani5m .ant4)";
 				};
-				document.getElementsByName('oldpattern')[0].onblur = function() {
-					if(this.value === '') {
+				document.getElementsByName('oldpattern')[0].onblur = function () {
+					if (this.value === '') {
 						this.value = '.a5 .rt4 .d4gt2 asdf2 9kas3';
 					}
 					desc.innerHTML = "";
 				};
-
-			}
+			
+			};
         </script>
     </head>
     <body>
