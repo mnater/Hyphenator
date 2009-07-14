@@ -1,7 +1,17 @@
-#summary Version History and note about versioning
+﻿#summary Version History and note about versioning
 
 = Version History =
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Version%202.2.0.zip 2.2.0] (May 06, 2009) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.3.0.zip 2.3.0] (June 14, 2009) ==
+This minor release brings a the following changes:
+  * Support for Hungarian (thanks to Péter Nagy)
+  * Support for Czech (thanks to Martin Hasoň)
+  * Support for Ukrainian (thanks to Alexey Grekov)
+  * Updated patterns for german (thanks to the [http://groups.google.de/group/trennmuster-opensource trennmuster-group])
+  * Pattern files are passing jslint w/o warning
+  * Fixed issues in compressor.html and merge+pack.html
+  * Fixed issue65
+  
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.2.0.zip 2.2.0] (May 06, 2009) ==
 This minor release brings a the following changes:
   * Support for portuguese
   * Functions like hyphenateDocument(), hyphenateElement() and hyphenateWord() are made private. Instead there's a new public function hyphenate().
