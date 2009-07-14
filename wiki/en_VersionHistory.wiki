@@ -1,7 +1,7 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.3.0.zip 2.3.0] (June 14, 2009) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.3.0.zip 2.3.0] (July 14, 2009) ==
 This minor release brings a the following changes:
   * Support for Hungarian (thanks to Péter Nagy)
   * Support for Czech (thanks to Martin Hasoň)
