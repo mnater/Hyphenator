@@ -1,4 +1,4 @@
-// For questions about the dutch hyphenation patterns
+﻿// For questions about the dutch hyphenation patterns
 // ask Remco Bloemen (remco dot bloemen at gmail dot com)
 Hyphenator.languages.nl = {
 	leftmin : 2,

@@ -1,4 +1,4 @@
-// For questions about the Gujarati hyphenation patterns
+﻿// For questions about the Gujarati hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
 Hyphenator.languages.gu = {
 	leftmin : 2,
