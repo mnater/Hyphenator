@@ -57,8 +57,10 @@
 			}
 			
 			function startConversion() {
-				var len, i, curlen, key, special, s,
-				newpatterns = {}, shortestPattern = 100, longestPattern = 0;
+				var len, i, curlen, key, special, s;
+				shortestPattern = 100;
+				longestPattern = 0;
+				newpatterns = {};
 				special = document.getElementsByName('oldpattern')[0].value.match(/[^a-z0-9\. ]/gi);
 				if (special) {
 					//Todo: Special vereinfachen...
