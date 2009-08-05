@@ -1,5 +1,5 @@
 ﻿/*!
- *  Hyphenator 2.X.X - client side hyphenation for webbrowsers
+ *  Hyphenator 2.3.0 - client side hyphenation for webbrowsers
  *  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
@@ -30,7 +30,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 2.X.X
+ * @version 2.3.0
   */
 
 /**
@@ -184,18 +184,6 @@ var Hyphenator = (function () {
 	enableCache = true,
 	
 	/**
-	 * @name Hyphenator-useWebWorker
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A var to set if Web Workers should be used or not. May be set by the config-routine.
-	 * @type boolean
-	 * @default false (not yet a true standard)
-	 * @private
-	 * @see Hypphenator.hyphenateElement
-	 */
-	useWebWorker = false,
-	
-	/**
 	 * @name Hyphenator-enableRemoteLoading
 	 * @fieldOf Hyphenator
 	 * @description
@@ -220,19 +208,6 @@ var Hyphenator = (function () {
 	 * @see Hyphenator-toggleBox
 	 */
 	displayToggleBox = false,
-
-	/**
-	 * @name Hyphenator-removeHyphensOnCopy
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A variable to set if the hyphens should be copied or removed upon copying
-	 * @type boolean
-	 * @default false
-	 * @private
-	 * @see Hyphenator.config
-	 * @see Hyphenator-registerOnCopy
-	 */
-	/*removeHyphensOnCopy = false,*/
 	
 	/**
 	 * @name Hyphenator-hyphenateClass
@@ -821,33 +796,45 @@ var Hyphenator = (function () {
 		}
 	},
 	
-	/**
-	 * @name Hyphenator-registerOnCopy
-	 * @methodOf Hyphenator
-	 * @description
-	 * Removes hyphenation, when a user copies text.
-	 * Todo: make browser dependent
-	 * Todo: restore selection from befor redraw
-	 * @private
-	 */		
-	/*registerOnCopy = function () {
-		document.getElementsByTagName('body')[0].oncopy = function (e) {
-			var selObj = window.getSelection();
-			for (var i=0; i<selObj.rangeCount; i++) {
-				var oldRange = selObj.getRangeAt(i);
-				var oldRangeStart = {
-					container: oldRange.startContainer,
-					offset: oldRange.startOffset
+	/*
+	registerOnCopy = function () {
+			document.getElementsByTagName('body')[0].oncopy = function (e) {
+				var text, h;
+				if (window.getSelection) {
+					text = window.getSelection().toString();
 				}
-				var oldRangeEnd = {
-					container: oldRange.endContainer,
-					offset: oldRange.endOffset,
+				else if (document.selection) { // should come last; Opera!
+					text = document.selection.createRange().text;
 				}
-			}
-			removeHyphenationFromElement(e.target);
-			alert(oldRangeEnd);
-		};			
-	},*/
+				switch (hyphen) {
+					case '|':
+						h = '\\|';
+						break;
+					case '+':
+						h = '\\+';
+						break;
+					case '*':
+						h = '\\*';
+						break;
+					case String.fromCharCode(173):
+						h = '\u00AD';
+						break;
+					default:
+						h = hyphen;
+					}
+				text = text.replace(new RegExp(h, 'g'), '');
+				text = text.replace(new RegExp(zeroWidthSpace, 'g'), '');
+				alert(text);
+				if (!!e && !!e.clipboardData) { //Safari
+					e.preventDefault();
+					e.clipboardData.setData('text/plain', text);
+				} else if (!!window.clipboardData) { // IE
+					window.preventDefault();
+					window.clipboardData.setData('Text', text);
+				}
+			}			
+	},
+	*/
 	 
 	/**
 	 * @name Hyphenator-convertPatterns
@@ -1003,10 +990,6 @@ var Hyphenator = (function () {
 	 */
 	prepare = function (callback) {
 		var lang, docLangEmpty = true, interval;
-		if (useWebWorker) {
-			callback();
-			return;
-		}
 		if (!enableRemoteLoading) {
 			for (lang in Hyphenator.languages) {
 				if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -1213,12 +1196,8 @@ var Hyphenator = (function () {
 	 * @public
 	 */
 	hyphenateElement = function (el) {
-		if (useWebWorker) {
-			hyphenateElementWithWorker(el);
-			return;
-		}
 		var hyphenatorSettings = Expando.getDataForElem(el),
-			lang = hyphenatorSettings.language, hyphenate, n, i=0;
+			lang = hyphenatorSettings.language, hyphenate, n, i;
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
 			hyphenate = function (word) {
 				if (urlOrMailRE.test(word)) {
@@ -1252,42 +1231,6 @@ var Hyphenator = (function () {
 			onHyphenationDone();
 		}
 	},
-	hyphenateElementWithWorker = function (el) {
-		var hyphenatorSettings = Expando.getDataForElem(el),
-			lang = hyphenatorSettings.language, hyphenate, n, i=0,
-			wkr = new Worker(basePath + 'Hyphenator_Worker.js');
-		while (!!(n = el.childNodes[i])) {
-			if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-				console.log(lang + ',' + i + ',' + n.data);
-				wkr.postMessage(lang + ',' + i + ',' + n.data);
-			}
-			i++;
-		}
-		wkr.onmessage = function (e) {
-			var parts = e.data.split(',');
-			var index = parts.shift();
-			var text = parts.join(',');
-			el.childNodes[index].data = text;
-		};
-		if (hyphenatorSettings.isHidden && intermediateState === 'hidden') {
-			el.style.visibility = 'visible';
-			if (!hyphenatorSettings.hasOwnStyle) {
-				el.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-				el.removeAttribute('style');
-			} else {
-				if (el.style.removeProperty) {
-					el.style.removeProperty('visibility');
-				} else if (el.style.removeAttribute) { // IE
-					el.style.removeAttribute('visibility');
-				}  
-			}
-		}
-		if (hyphenatorSettings.isLast) {
-			state = 3;
-			onHyphenationDone();
-		}
-	},
-
 	
 	/**
 	 * @name Hyphenator-removeHyphenationFromElement
@@ -1334,17 +1277,16 @@ var Hyphenator = (function () {
 	 * @public
 	 */
 	hyphenateDocument = function () {
-		/*function bind(fun, arg) {
+		function bind(fun, arg) {
 			return function () {
 				return fun(arg);
 			};
-		}*/
+		}
 		var i = 0, el;
 		while (!!(el = elements[i++])) {
-			//window.setTimeout(bind(hyphenateElement, el), 0);
-			hyphenateElement(el);
+			window.setTimeout(bind(hyphenateElement, el), 0);
+
 		}
-		
 	},
 
 	/**
@@ -1374,7 +1316,7 @@ var Hyphenator = (function () {
 		 * minor release: new languages, improvements
 		 * @public
          */		
-		version: '2.0.0',
+		version: '2.3.0',
 		
 		/**
 		 * @name Hyphenator.languages
@@ -1510,32 +1452,6 @@ var Hyphenator = (function () {
 							selectorFunction = obj.selectorfunction;
 						}
 						break;
-					case 'removehyphensoncopy':
-						if (assert('removehyphensoncopy', 'boolean')) {
-							removeHyphensOnCopy = obj.removehyphensoncopy;
-						}
-						break;
-					case 'usewebworker':
-						if (assert('usewebworker', 'string')) {
-							switch (obj.usewebworker) {
-								case 'yes':
-									useWebWorker = true;
-									break;
-								case 'auto':
-									useWebWorker = (function () {
-										if (Worker) {
-											return true;
-										} else {
-											return false;
-										}
-									}());
-									break;
-								case 'no':
-								default:
-									useWebWorker = false;
-							}
-						}
-						break;
 					default:
 						onError(new Error('Hyphenator.config: property ' + key + ' not known.'));
 					}
@@ -1563,9 +1479,7 @@ var Hyphenator = (function () {
 					if (displayToggleBox) {
 						toggleBox(true);
 					}
-					/*if (removeHyphensOnCopy) {
-						registerOnCopy();
-					}*/
+					//registerOnCopy();
 				} catch (e) {
 					onError(e);
 				}
