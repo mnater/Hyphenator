@@ -1,4 +1,4 @@
-// For questions about the Czech hyphenation patterns
+﻿// For questions about the Czech hyphenation patterns
 // ask Martin Hasoň (martin dot hason at gmail dot com)
 Hyphenator.languages.cs = {
 	leftmin : 2,

@@ -1,4 +1,4 @@
-// For questions about the Telugu hyphenation patterns
+﻿// For questions about the Telugu hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
 Hyphenator.languages.te = {
 	leftmin : 2,

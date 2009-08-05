@@ -1,4 +1,4 @@
-// For questions about the Oriya hyphenation patterns
+﻿// For questions about the Oriya hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
 Hyphenator.languages.or = {
 	leftmin : 2,

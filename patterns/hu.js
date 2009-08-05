@@ -1,4 +1,4 @@
-// For questions about the hungarian hyphenation patterns
+﻿// For questions about the hungarian hyphenation patterns
 // ask Nagy Péter (nagy dot pite at gmail dot com)
 Hyphenator.languages.hu = {
 	'leftmin' : 2,

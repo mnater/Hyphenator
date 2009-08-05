@@ -1,4 +1,4 @@
-// Swedish hyphenation patterns by Jan Michael Rynning, jmr@nada.kth.se
+﻿// Swedish hyphenation patterns by Jan Michael Rynning, jmr@nada.kth.se
 // Patterns modified for Hyphenator by Andreas Johansson, andreas@ibuypink.com
 Hyphenator.languages.sv = {
 	leftmin : 2,
