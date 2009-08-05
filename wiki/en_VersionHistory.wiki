@@ -1,6 +1,11 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.3.1.zip 2.3.1] (August 05, 2009) ==
+This bugfix release fixes
+  * an issue with sites that don't use utf8.
+  * an issue with compressor.html
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.3.0.zip 2.3.0] (July 14, 2009) ==
 This minor release brings a the following changes:
   * Support for Hungarian (thanks to Péter Nagy)
