@@ -1,4 +1,4 @@
-// For questions about the Panjabi hyphenation patterns
+﻿// For questions about the Panjabi hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
 Hyphenator.languages.pa = {
 	leftmin : 2,
