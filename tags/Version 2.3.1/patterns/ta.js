@@ -1,4 +1,4 @@
-// For questions about the Tamil hyphenation patterns
+﻿// For questions about the Tamil hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
 Hyphenator.languages.ta = {
 	leftmin : 2,

@@ -1,4 +1,4 @@
-// For questions about the Malayalam hyphenation patterns
+﻿// For questions about the Malayalam hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
 Hyphenator.languages.ml = {
 	leftmin : 2,
