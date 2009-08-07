@@ -1255,18 +1255,17 @@ var Hyphenator = (function () {
 	hyphenateElementWithWorker = function (el) {
 		var hyphenatorSettings = Expando.getDataForElem(el),
 			lang = hyphenatorSettings.language, hyphenate, n, i=0,
-			wkr = new Worker(basePath + 'Hyphenator_Worker.js');
+			wkr = new Worker(basePath + "Hyphenator_Worker.js");
 		while (!!(n = el.childNodes[i])) {
 			if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-				console.log(lang + ',' + i + ',' + n.data);
 				wkr.postMessage(lang + ',' + i + ',' + n.data);
 			}
 			i++;
 		}
 		wkr.onmessage = function (e) {
-			var parts = e.data.split(',');
-			var index = parts.shift();
-			var text = parts.join(',');
+			var parts = e.data.split(','),
+			index = parts.shift(),
+			text = parts.join(',');
 			el.childNodes[index].data = text;
 		};
 		if (hyphenatorSettings.isHidden && intermediateState === 'hidden') {
