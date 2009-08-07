@@ -23,7 +23,7 @@ Last but not least hyphenation may also be useful in ragged-left text. Not only 
 == Automatic Hyphenation ==
 Hyphenation is a big issue for professional applications in print business. But things like optical margin alignment isn't very important in webdesign because of the much lower resolution of screens. Far from it! There is no hyphenation on webpages (yet)!
 
-Automatic hyphenation is quite complex: It depends fairly on the particular language. English words are shorter on average then e.g. german words. Other languages behave completly different. In Thai aren't any spaces between words.
+Automatic hyphenation is quite complex: It depends fairly on the particular language. English words are shorter on average then e.g. german words. Other languages behave completly different. In Thai there aren't any spaces between words.
 
 In most text processing applications lexical algorithms are used to find components and hyphenation points for each word. Words and components that can't be found on the list have to be hyphenated manually. The disadvantage of this approach is the extended use of storage space and the fact that unknown words (often compounds) can't be hyphenated.
 
