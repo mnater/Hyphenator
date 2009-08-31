@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 6</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            .text {
+                text-align:justify;
+            }
+            .test {
+            	background-color: #ffd6d6;
+            }
+            .ref {
+            	background-color: #d6ffd6;
+            }
+            pre {border: 1px dotted grey;}
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                Hyphenator.config({hyphenchar:'|'});
+                Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <h1>Test 6</h1>
+        <p>Hyphenate a paragraph for each supported language in latin-script.</p>
+		<p><a href="test5.html">&lt;- Prev</a> | <a href="test7.html">Next -&gt;</a></p>
+        <pre>Hyphenator.config({hyphenchar:'|'});
+Hyphenator.run();</pre>
+
+		<h2>cs</h2>
+        <p class="hyphenate test" lang="cs">Typografie je umělecko-technický obor, který se zabývá písmem.</p>
+        <p class="ref" lang="cs">Ty|po|gra|fie je umě|lec|ko-tech|nic|ký obor, který se za|bý|vá pís|mem.</p>
+
+		<h2>da</h2>
+        <p class="hyphenate test" lang="da">Bindestregen er et symbol brugt i grammatisk tegnsætning. Den bruges til at lave sammensatte ord eller adskille stavelser ved linjeskift.</p>
+        <p class="ref" lang="da">Bin|de|stre|gen er et sym|bol brugt i gram|ma|tisk tegn|sæt|ning. Den bru|ges til at lave sam|men|sat|te ord eller ad|skil|le sta|vel|ser ved linjeskift.</p>
+		
+		<h2>en</h2>
+        <p class="hyphenate test" lang="en">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+        <p class="ref" lang="en">A hy|phen|ation al|go|rithm is a set of rules that de|cides at which points a word can be bro|ken over two lines with a hy|phen.</p>
+		<h2>de</h2>
+        <p class="hyphenate test" lang="de">Die Worttrennung, auch Silbentrennung genannt, bezeichnet in der Orthographie die Art und Weise, wie die Wörter insbesondere am Zeilenende getrennt werden können.</p>
+        <p class="ref" lang="de">Die Wort|tren|nung, auch Sil|ben|tren|nung ge|nannt, be|zeich|net in der Or|tho|gra|phie die Art und Weise, wie die Wör|ter ins|be|son|de|re am Zei|len|en|de ge|trennt wer|den kön|nen.</p>
+		<h2>fr</h2>
+        <p class="hyphenate test" lang="fr">En typographie, la coupure de mot (parfois aussi appelée césure) est l'opération qui consiste à couper en fin de ligne un mot qui n'entrerait pas dans la justification.</p>
+        <p class="ref" lang="fr">En ty|po|gra|phie, la cou|pure de mot (par|fois aussi ap|pe|lée cé|sure) est l'opé|ra|tion qui consiste à cou|per en fin de ligne un mot qui n'en|tre|rait pas dans la jus|ti|fi|ca|tion.</p>
+		<h2>nl</h2>
+        <p class="hyphenate test" lang="nl">Een lettergreep of syllabe is een prosodische eenheid in gesproken taal.</p>
+        <p class="ref" lang="nl">Een let|ter|greep of syl|la|be is een pro|so|di|sche een|heid in ge|spro|ken taal.</p>
+		<h2>es</h2>
+        <p class="hyphenate test" lang="es">Las palabras en español suelen ser, en promedio, más largas que en inglés pero más cortas que en alemán. <span lang="de">«Silbentrennungsalgorithmus»</span>, por ejemplo, es una palabra bastante larga.</p>
+		<p class="ref" lang="es">Las pa|la|bras en es|pa|ñol sue|len ser, en pro|me|dio, más lar|gas que en in|glés pero más cor|tas que en ale|mán. «Sil|ben|tren|nungs|al|go|rith|mus», por ejem|plo, es una pa|la|bra bas|tan|te larga.</p>
+		<h2>sv</h2>
+        <p class="hyphenate test" lang="sv">En algoritm är inom matematiken och datavetenskapen begränsad uppsättning (mängd) väldefinierade instruktioner för att lösa en uppgift, som från givna utgångstillstånd (starttillstånd) med säkerhet leder till något givet sluttillstånd.</p>
+		<p class="ref" lang="sv">En al|go|ritm är inom ma|te|ma|ti|ken och data|ve|ten|ska|pen be|grän|sad upp|sätt|ning (mängd) väl|de|fi|ni|e|ra|de in|struk|tio|ner för att lösa en upp|gift, som från givna ut|gångs|till|stånd (start|till|stånd) med sä|kerhet leder till något givet slut|till|stånd.</p>
+		<h2>it</h2>
+        <p class="hyphenate test" lang="it">La storia della scrittura, quel processo lungo e tortuoso, ma anche estremamente affascinante e ricco di sorprese, che parte dai primi incerti disegni sulla roccia degli uomini primitivi e giunge ai moderni word processor, ha avuto proprio negli scribi, nei copisti e negli amanuensi dei solitari, silenziosi, laboriosi e importantissimi protagonisti.</p>
+		<p class="ref" lang="it">La sto|ria della scrit|tu|ra, quel pro|ces|so lungo e tor|tuo|so, ma anche e|stre|ma|men|te af|fa|sci|nan|te e ricco di sor|pre|se, che parte dai primi in|cer|ti di|se|gni sulla roc|cia degli uo|mi|ni pri|mi|ti|vi e giun|ge ai mo|der|ni word pro|ces|sor, ha avuto pro|prio negli scri|bi, nei co|pi|sti e negli a|ma|nuen|si dei so|li|ta|ri, si|len|zio|si, la|bo|rio|si e im|por|tan|tis|si|mi pro|ta|go|ni|sti.</p>
+		<h2>fi</h2>
+        <p class="hyphenate test" lang="fi">Typografia tarkoittaa nykyisin mitä tahansa tekstiin, tekstityyppiin, kirjainten asetteluun, väritykseen ja muuhun liittyvää suunnittelua.</p>
+		<p class="ref" lang="fi">Ty|po|gra|fia tar|koit|taa ny|kyi|sin mitä ta|han|sa teks|tiin, teks|ti|tyyp|piin, kir|jain|ten aset|te|luun, vä|ri|tyk|seen ja muu|hun liit|ty|vää suun|nit|te|lua.</p>
+		<h2>pl</h2>
+        <p class="hyphenate test" lang="pl">Typografia - termin mający szereg pokrewnych znaczeń związanych z użyciem znaków pisarskich w druku, prezentacją ich na ekranie monitora komputerowego itp.</p>
+		<p class="ref" lang="fi">Ty|po|gra|fia - ter|min ma|ją|cy sze|reg po|krew|nych zna|czeń zwią|za|nych z uży|ciem zna|ków pi|sar|skich w druku, pre|zen|ta|cją ich na ekra|nie mo|ni|to|ra kom|pu|te|ro|we|go itp.</p>
+		<h2>pt</h2>
+        <p class="hyphenate test" lang="pt">A tipografia é a arte e o processo de criação na composição de um texto, física ou digitalmente.</p>
+		<p class="ref" lang="pt">A ti|po|grafia é a arte e o pro|cesso de cri|ação na com|po|sição de um texto, fí|sica ou di|gi|tal|mente.</p>
+		<h2>hu</h2>
+        <p class="hyphenate test" lang="hu">A weboldal nyelvét nem sikerült automatikusan megállapítani. Kérem adja meg a nyelvet.</p>
+		<p class="ref" lang="hu">A web|ol|dal nyel|vét nem si|ke|rült auto|ma|ti|ku|san meg|ál|la|pí|ta|ni. Kérem adja meg a nyel|vet.</p>
+     </body>
+</html>
