@@ -40,9 +40,9 @@
  * @namespace Holds all methods and properties
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
- * &lt;script type = "text/javascript"&gt;
- *   Hyphenator.run();
- * &lt;/script&gt;
+ * &lt;script type = "text/javascript"&gt;
+ *   Hyphenator.run();
+ * &lt;/script&gt;
  */
 var Hyphenator = (function () {
 
@@ -1254,8 +1254,8 @@ var Hyphenator = (function () {
 	},
 	hyphenateElementWithWorker = function (el) {
 		var hyphenatorSettings = Expando.getDataForElem(el),
-			lang = hyphenatorSettings.language, hyphenate, n, i=0,
-			wkr = new Worker(basePath + "Hyphenator_Worker.js");
+			lang = hyphenatorSettings.language, hyphenate, n, i=0;
+		wkr = new Worker(basePath + "Hyphenator_Worker.js");
 		while (!!(n = el.childNodes[i])) {
 			if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
 				wkr.postMessage(lang + ',' + i + ',' + n.data);
@@ -1421,10 +1421,10 @@ var Hyphenator = (function () {
 		 * </table>
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *     Hyphenator.config({'minwordlength':4,'hyphenchar':'|'});
+         * &lt;script type = "text/javascript"&gt;
+         *     Hyphenator.config({'minwordlength':4,'hyphenchar':'|'});
          *     Hyphenator.run();
-         * &lt;/script&gt;
+         * &lt;/script&gt;
          */
 		config: function (obj) {
 			var assert = function (name, type) {
@@ -1549,9 +1549,9 @@ var Hyphenator = (function () {
 		 * Bootstrap function that starts all hyphenation processes when called.
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.run();
-         * &lt;/script&gt;
+         * &lt;script type = "text/javascript"&gt;
+         *   Hyphenator.run();
+         * &lt;/script&gt;
          */
 		run: function () {
 			var process = function () {
@@ -1587,10 +1587,10 @@ var Hyphenator = (function () {
 		 * @param string A comma separated string of hyphenated words WITH spaces.
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
-         *   Hyphenator.addExceptions('de','ziem-lich, Wach-stube');
+         * &lt;script type = "text/javascript"&gt;
+         *   Hyphenator.addExceptions('de','ziem-lich, Wach-stube');
          *   Hyphenator.run();
-         * &lt;/script&gt;
+         * &lt;/script&gt;
          */
 		addExceptions: function (lang, words) {
 			if (lang === '') {
@@ -1616,7 +1616,7 @@ var Hyphenator = (function () {
 		 * @returns string
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
 		 * &lt;script src = "patterns/en.js" type = "text/javascript"&gt;&lt;/script&gt;
-         * &lt;script type = "text/javascript"&gt;
+         * &lt;script type = "text/javascript"&gt;
 		 * var t = Hyphenator.hyphenate('Hyphenation', 'en'); //Hy|phen|ation
 		 * &lt;/script&gt;
 		 */
