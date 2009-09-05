@@ -145,7 +145,7 @@ var Hyphenator = (function () {
 	 */
 	isLocal = (function () {
 		var re = false;
-		if (basePath.indexOf(window.location.hostname) !== -1) {
+		if (window.location.href.indexOf(basePath) !== -1) {
 			re = true;
 		}
 		return re;
