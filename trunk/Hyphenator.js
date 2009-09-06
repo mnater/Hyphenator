@@ -1,5 +1,5 @@
 ﻿/*!
- *  Hyphenator 2.3.0 - client side hyphenation for webbrowsers
+ *  Hyphenator X.Y.Z - client side hyphenation for webbrowsers
  *  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
@@ -30,7 +30,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 2.3.0
+ * @version X.Y.Z
   */
 
 /**
@@ -521,124 +521,81 @@ var Hyphenator = (function () {
 	}()),
 		
 	/*
-	 * ContentLoaded.js
+	 * runOnContentLoaded is based od jQuery.bindReady()
+	 * see
+	 * jQuery JavaScript Library v1.3.2
+	 * http://jquery.com/
 	 *
-	 * Author: Diego Perini (diego.perini at gmail.com)
-	 * Summary: Cross-browser wrapper for DOMContentLoaded
-	 * Updated: 17/05/2008
-	 * License: MIT
-	 * Version: 1.1
+	 * Copyright (c) 2009 John Resig
+	 * Dual licensed under the MIT and GPL licenses.
+	 * http://docs.jquery.com/License
 	 *
-	 * URL:
-	 * http://javascript.nwbox.com/ContentLoaded/
-	 * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
-	 *
-	 * Notes:
-	 * based on code by Dean Edwards and John Resig
-	 * http://dean.edwards.name/weblog/2006/06/again/
-	 */
-	// @w	window reference
-	// @f	function reference
-	//function ContentLoaded(w, f) {
+	 * Date: 2009-02-19 17:34:21 -0500 (Thu, 19 Feb 2009)
+	 * Revision: 6246
+	 /*
 	/**
 	 * @name Hyphenator-runOnContentLoaded
 	 * @methodOf Hyphenator
 	 * @description
-	 * A crossbrowser solution for the DOMContentLoaded-Event
-	 * @author Diego Perini (diego.perini at gmail.com)
-	 * <a href = "http://javascript.nwbox.com/ContentLoaded/">http://javascript.nwbox.com/ContentLoaded/</a>
+	 * A crossbrowser solution for the DOMContentLoaded-Event based on jQuery
+	 * <a href = "http://jquery.com/</a>
 	 * @param object the window-object
 	 * @param function-object the function to call onDOMContentLoaded
 	 * @private
  	 */		
 	runOnContentLoaded = function (w, f) {
-		var	d = w.document,
-			D = 'DOMContentLoaded',
-			// user agent, version
-			u = w.navigator.userAgent.toLowerCase(),
-			v = parseFloat(u.match(/.+(?:rv|it|ml|ra|ie)[\/: ]([\d.]+)/)[1]),
-			oldonload = w.onload;
-				
-		function init(e) {
-			if (!documentLoaded) {
-				documentLoaded = true;
-				// pass a fake event if needed
-				f((e.type && e.type === D) ? e : {
-					type: D,
-					target: d,
-					eventPhase: 0,
-					currentTarget: d,
-					timeStamp: new Date().getTime(),
-					eventType: e.type || e
-				});
-			}
+		var oldonload = w.onload;
+		if (documentLoaded) return;
+		documentLoaded = true;
+	
+		// Mozilla, Opera and webkit nightlies currently support this event
+		if ( document.addEventListener ) {
+			// Use the handy event callback
+			document.addEventListener( "DOMContentLoaded", function(){
+				document.removeEventListener( "DOMContentLoaded", arguments.callee, false );
+				f();
+			}, false );
+	
+		// If IE event model is used
+		} else if ( document.attachEvent ) {
+			// ensure firing before onload,
+			// maybe late but safe also for iframes
+			document.attachEvent("onreadystatechange", function(){
+				if ( document.readyState === "complete" ) {
+					document.detachEvent( "onreadystatechange", arguments.callee );
+					f();
+				}
+			});
+	
+			// If IE and not an iframe
+			// continually check to see if the document is ready
+			if ( document.documentElement.doScroll && window == window.top ) (function(){
+				if (documentLoaded) return;
+	
+				try {
+					// If IE is used, use the trick by Diego Perini
+					// http://javascript.nwbox.com/IEContentLoaded/
+					document.documentElement.doScroll("left");
+				} catch( error ) {
+					setTimeout( arguments.callee, 0 );
+					return;
+				}
+	
+				// and execute any waiting functions
+				f();
+			})();
 		}
 	
-		// safari < 525.13
-		if (/webkit\//.test(u) && v < 525.13) {
-	
-			(function () {
-				if (/complete|loaded/.test(d.readyState)) {
-					init('khtml-poll');
-				} else {
-					setTimeout(arguments.callee, 10);
-				}
-			}());
-	
-		// internet explorer all versions
-		} else if (/msie/.test(u) && !w.opera) {
-	
-			d.attachEvent('onreadystatechange',
-				function (e) {
-					if (d.readyState === 'complete') {
-						d.detachEvent('on' + e.type, arguments.callee);
-						init(e);
-					}
-				}
-			);
-			if (w.self === top) {
-				(function () {
-					try {
-						d.documentElement.doScroll('left');
-					} catch (e) {
-						setTimeout(arguments.callee, 10);
-						return;
-					}
-					init('msie-poll');
-				}());
+		// A fallback to window.onload, that will always work
+		w.onload = function (e) {
+			f();
+			if (typeof oldonload === 'function') {
+				oldonload();
 			}
-	
-		// browsers having native DOMContentLoaded
-		} else if (d.addEventListener &&
-			(/opera\//.test(u) && v > 9) ||
-			(/gecko\//.test(u) && v >= 1.8) ||
-			(/khtml\//.test(u) && v >= 4.0) ||
-			(/webkit\//.test(u) && v >= 525.13)) {
-	
-			d.addEventListener(D,
-				function (e) {
-					d.removeEventListener(D, arguments.callee, false);
-					init(e);
-				}, false
-			);
-	
-		// fallback to last resort for older browsers
-		} else {
-	
-			// from Simon Willison
-			/**
-			 * @ignore
-			 */
-			w.onload = function (e) {
-				init(e || w.event);
-				if (typeof oldonload === 'function') {
-					oldonload(e || w.event);
-				}
-			};
-	
-		}
+		};
 	},
-	/* end ContentLoaded.js */
+
+
 
 	/**
 	 * @name Hyphenator-getLang
@@ -743,7 +700,7 @@ var Hyphenator = (function () {
 	 */		
 	gatherDocumentInfos = function () {
 		var elToProcess, tmp, i = 0,
-			process = function (el, hide, lang) {
+		process = function (el, hide, lang) {
 			var n, i = 0, hyphenatorSettings = {};
 			if (hide && intermediateState === 'hidden') {
 				if (!!el.getAttribute('style')) {
@@ -754,7 +711,7 @@ var Hyphenator = (function () {
 				hyphenatorSettings.isHidden = true;
 				el.style.visibility = 'hidden';
 			}
-			if (el.lang) {
+			if (!!el.getAttribute('lang')) {
 				hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
 			} else if (lang) {
 				hyphenatorSettings.language = lang.toLowerCase();
@@ -1316,7 +1273,7 @@ var Hyphenator = (function () {
 		 * minor release: new languages, improvements
 		 * @public
          */		
-		version: '2.3.0',
+		version: 'X.Y.Z',
 		
 		/**
 		 * @name Hyphenator.languages
