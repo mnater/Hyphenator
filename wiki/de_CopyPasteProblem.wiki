@@ -52,14 +52,14 @@ Opera kopiert den Text als reinen Text in die Zwischenablage. Shy's werden dabei
  * Word for Mac 2008 speichert das Softhyphen zwar als solches (#xAD), kann aber nicht damit umgehen. (Erstaunlicherweise; ich hätte gleiches Verhalten wie bei Firefox erwartet.)
  * OpenOffice setzt die Softhyphens korrekt um.
 
-==== Windows XP, Firefox 3.5.3 ====
-Firefox kopiert den Text mit allen Softhyphens in die Zwischenablage.
+==== Windows XP, IE 6 - IE 8 ====
+IE kopiert den Text mit allen Softhyphens in die Zwischenablage.
 
  * Microsoft Office 2007 scheint gut zurecht zu kommen mit den Softhyphens: Sie werden in Words interne optionale Trennstriche verwandelt.
  * Wordpad kann ebenso mit ihnen umgehen, nicht aber Notepad, dass einfach Trennstriche anzeigt, aber Softhyphens speichert.
 
-==== Windows XP, IE 6 - IE 8 ====
-IE kopiert den Text mit allen Softhyphens in die Zwischenablage.
+==== Windows XP, Firefox 3.5.3 ====
+Firefox kopiert den Text mit allen Softhyphens in die Zwischenablage.
 
  * Microsoft Office 2007 scheint gut zurecht zu kommen mit den Softhyphens: Sie werden in Words interne optionale Trennstriche verwandelt.
  * Wordpad kann ebenso mit ihnen umgehen, nicht aber Notepad, dass einfach Trennstriche anzeigt, aber Softhyphens speichert.
@@ -69,7 +69,17 @@ Unter Windows stellt sich kein eigentliches Problem dar; im Gegenteil: die Trenn
 Auf dem Mac hingegen (es fällt mir schwer das einzugestehen) sieht man sich aber einer Reihe von Inkonsistenzen gegenübergestellt, die das Weiterverwenden von getrennten Texten mühsam macht (v.a. wenn man Safari oder Opera und MS Office verwendet).
 
 == Lösungsansätze ==
-more to come
+=== Voraussetzungen ===
+Grundsätzlich gibt es verschiedene Ziele, die angestrebt werden können:
+ # Der Benutzer spürt keinen Unterschied zu Seiten, die Hyphenator nicht verwenden: die Softhyphens müssen aus kopiertem Text entfernt werden.
+ # Dem Benutzer wird abhängig von der verwendeten Umgebung die optimale Lösung geboten.
+ # Der Benutzer kann selber kontrollieren, wie das Verhalten beim Kopieren ist.
+Ich bin der Meinung das 1 der richtige Weg ist, weil Silbentrennung eine Frage der Darstellung ist und nicht des Inhalts. Kopiert man einen Text, ist man aber an dessen Inhalt interessiert. Ausserdem passt das zum gewohnten Verhalten der Browser.
+Es geht also darum, einen Weg zu finden, wie der Benutzer egal in welchem Browser beim Kopieren lediglich den Text, nicht aber die Trennzeichen erhält.
+
+
+
+
 
 == Wie weiter? ==
 more to come

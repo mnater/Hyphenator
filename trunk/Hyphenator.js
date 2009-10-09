@@ -59,7 +59,7 @@ var Hyphenator = (function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var languageHint = 'cs, da, bn, de, en, es, fi, fr, gu, hi, hu, it, kn, ml, nl, or, pa, pl, pt, ru, sv, ta, te, uk',
+	var languageHint = 'cs, da, bn, de, en, es, fi, fr, gu, hi, hu, it, kn, ml, nl, or, pa, pl, pt, ru, sv, ta, te, tr, uk',
 
 	/**
 	 * @name Hyphenator-supportedLang
@@ -106,6 +106,7 @@ var Hyphenator = (function () {
 		'pt': 'A língua deste site não pôde ser determinada automaticamente. Por favor indique a língua principal:',
 		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
 		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:',
+		'tr': 'Bu web sitesinin dilini otomatik olarak tespit edilememiştir. Lütfen ana dili gösterir:',
 		'uk': 'Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:'
 	},
 	
@@ -113,7 +114,7 @@ var Hyphenator = (function () {
 	 * @name Hyphenator-basePath
 	 * @fieldOf Hyphenator
 	 * @description
- 	 * A string storing the basepath from where Hyphenator.js was loaded.
+	 * A string storing the basepath from where Hyphenator.js was loaded.
 	 * This is used to load the patternfiles.
 	 * The basepath is determined dynamically by searching all script-tags for Hyphenator.js
 	 * If the path cannot be determined http://hyphenator.googlecode.com/svn/trunk/ is used as fallback.
@@ -532,7 +533,7 @@ var Hyphenator = (function () {
 	 *
 	 * Date: 2009-02-19 17:34:21 -0500 (Thu, 19 Feb 2009)
 	 * Revision: 6246
-	 /*
+	 */
 	/**
 	 * @name Hyphenator-runOnContentLoaded
 	 * @methodOf Hyphenator
@@ -542,57 +543,66 @@ var Hyphenator = (function () {
 	 * @param object the window-object
 	 * @param function-object the function to call onDOMContentLoaded
 	 * @private
- 	 */		
+	 */
 	runOnContentLoaded = function (w, f) {
 		var oldonload = w.onload;
-		if (documentLoaded) return;
-		documentLoaded = true;
+		if (documentLoaded) {
+			f();
+			return;
+		}
+		function init() {
+			if (!documentLoaded) {
+				documentLoaded = true;
+				f();
+			}
+		}
 	
 		// Mozilla, Opera and webkit nightlies currently support this event
-		if ( document.addEventListener ) {
+		if (document.addEventListener) {
 			// Use the handy event callback
-			document.addEventListener( "DOMContentLoaded", function(){
-				document.removeEventListener( "DOMContentLoaded", arguments.callee, false );
-				f();
-			}, false );
+			document.addEventListener("DOMContentLoaded", function () {
+				document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+				init();
+			}, false);
 	
 		// If IE event model is used
-		} else if ( document.attachEvent ) {
+		} else if (document.attachEvent) {
 			// ensure firing before onload,
 			// maybe late but safe also for iframes
-			document.attachEvent("onreadystatechange", function(){
-				if ( document.readyState === "complete" ) {
-					document.detachEvent( "onreadystatechange", arguments.callee );
-					f();
+			document.attachEvent("onreadystatechange", function () {
+				if (document.readyState === "complete") {
+					document.detachEvent("onreadystatechange", arguments.callee);
+					init();
 				}
 			});
 	
 			// If IE and not an iframe
 			// continually check to see if the document is ready
-			if ( document.documentElement.doScroll && window == window.top ) (function(){
-				if (documentLoaded) return;
-	
-				try {
-					// If IE is used, use the trick by Diego Perini
-					// http://javascript.nwbox.com/IEContentLoaded/
-					document.documentElement.doScroll("left");
-				} catch( error ) {
-					setTimeout( arguments.callee, 0 );
-					return;
-				}
-	
-				// and execute any waiting functions
-				f();
-			})();
+			if (document.documentElement.doScroll && window == window.top) {
+				(function () {
+					if (documentLoaded) {
+						return;
+					}
+					try {
+						// If IE is used, use the trick by Diego Perini
+						// http://javascript.nwbox.com/IEContentLoaded/
+						document.documentElement.doScroll("left");
+					} catch (error) {
+						setTimeout(arguments.callee, 0);
+						return;
+					}
+					// and execute any waiting functions
+					f();
+				}());
+			}		
 		}
-	
 		// A fallback to window.onload, that will always work
 		w.onload = function (e) {
-			f();
+			init();
 			if (typeof oldonload === 'function') {
 				oldonload();
 			}
-		};
+		};	
 	},
 
 
@@ -711,7 +721,7 @@ var Hyphenator = (function () {
 				hyphenatorSettings.isHidden = true;
 				el.style.visibility = 'hidden';
 			}
-			if (!!el.getAttribute('lang')) {
+			if (el.lang && typeof(el.lang) === 'string') {
 				hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
 			} else if (lang) {
 				hyphenatorSettings.language = lang.toLowerCase();
@@ -753,11 +763,16 @@ var Hyphenator = (function () {
 		}
 	},
 	
-	/*
-	registerOnCopy = function () {
+/*	registerOnCopy = function () {
 			document.getElementsByTagName('body')[0].oncopy = function (e) {
 				var text, h;
+				var myArea = document.createElement('textarea');
+				var myStyleAttribute = document.createAttribute('style');
+				myStyleAttribute.nodeValue = 'display:block';
+				myArea.setAttributeNode(myStyleAttribute);
+				document.getElementsByTagName('body')[0].appendChild(myArea);
 				if (window.getSelection) {
+					myArea.value = window.getSelection();
 					text = window.getSelection().toString();
 				}
 				else if (document.selection) { // should come last; Opera!
@@ -791,7 +806,8 @@ var Hyphenator = (function () {
 				}
 			}			
 	},
-	*/
+*/
+	
 	 
 	/**
 	 * @name Hyphenator-convertPatterns
@@ -1070,12 +1086,12 @@ var Hyphenator = (function () {
 			return lo.exceptions[word].replace(/-/g, hyphen);
 		}
 		if (word.indexOf('-') !== -1) {
-			//word contains '-' -> put a zeroWidthSpace after it and hyphenate the parts separated with '-'
+			//word contains '-' -> hyphenate the parts separated with '-'
 			parts = word.split('-');
 			for (i = 0, l = parts.length; i < l; i++) {
 				parts[i] = hyphenateWord(lang, parts[i]);
 			}
-			return parts.join('-' + zeroWidthSpace);
+			return parts.join('-');
 		}
 		//finally the core hyphenation algorithm
 		w = '_' + word + '_';
@@ -1513,6 +1529,9 @@ var Hyphenator = (function () {
 						if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
 							n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 						} else if (n.nodeType === 1) {
+							if (n.lang !== '') {
+								lang = n.lang;
+							}
 							Hyphenator.hyphenate(n, lang);
 						}
 					}

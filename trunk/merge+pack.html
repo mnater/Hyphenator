@@ -404,7 +404,7 @@ function jsmin(comment, input, level) {
 /* End of jsmin.js */        
         
         
-        var base = window.location.href.slice(0,-15);
+        var base = window.location.href.replace(/[^/]*$/, '');
         function $(id) {
         	return document.getElementById(id);
         } 

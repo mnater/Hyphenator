@@ -1,8 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="de">
+<html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 18</title>
+        <title>Hyphenator.js &ndash; Test 59</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -19,9 +19,7 @@
             .ref {
             	background-color: #d6ffd6;
             }
-            pre {
-            	border: 1px dotted grey;
-            }
+            pre {border: 1px dotted grey;}
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -30,17 +28,21 @@
         </script>
     </head>
     <body>
-        <h1>Test 18</h1>
-        <p>Check for correctly put Zero Width Spaces. Resize window!</p>
-		<p><a href="test17.html">&lt;- Prev</a> | <a href="test19.html">Next -&gt;</a></p>
-        <pre>Hyphenator.config({hyphenchar:'|'});
+        <h1>Test 59</h1>
+        <p>A FORM contains an element with <code>class="hyphenate"</code> and <code>name="lang"</code>.<br>
+        IE&lt;8 has a major bug here…</p>
+		<p><a href="test58.xml">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+		<pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
-
-		<p class="hyphenate test">pretty-much-not-interested-in-politics<br>
-		http://www.mnn.ch/silbentrennung.html</p>
-
-		<p class="ref">pretty- much- not- in|te|res|ted- in- po|li|tics (spaces not visible!)<br>
-		http:// www. mnn. ch/ silbentrennung. html</p>
-
-     </body>
+        <div class="test">
+        	<form action="#" method="post">
+        		<input type="text" name="lang"><span class="hyphenate">Hyphenation</span></input>
+        	</form>
+        </div>
+        <div class="ref">
+        	<form action="#" method="post">
+        		<input type="text">Hy|phen|ation</input>
+        	</form>
+        </div>
+    </body>
 </html>

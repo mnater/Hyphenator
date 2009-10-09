@@ -35,7 +35,7 @@
         <h1>Test 58</h1>
         <p>Run Hyphenator with XSLT.<br />
         Some browsers may fail on DOMContentLoaded here...</p>
-		<p><a href="test57.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+		<p><a href="test57.html">&lt;- Prev</a> | <a href="test59.html">Next -&gt;</a></p>
 		<pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
 
