@@ -14,10 +14,10 @@ Your browser has a bug (currently, only Firefox3 finds hyphenated words). The on
 
 == When I copy/paste hyphenated texts from a website, spaces/hyphens are inserted in allmost all words ==
 Browsers behave very different when a user copies hyphenated text:
-* Firefox copies the soft hyphens witch looks ugly in word, but is very usefull upon printing (soft hyphens aren't printed). 
-* Opera deletes all soft hyphens.
-* Safari (as of version 4.0.2) has a serious bug: it stupidly replaces soft hyphens by spaces... (https://bugs.webkit.org/show_bug.cgi?id=11154)
-* IE (up to IE8) is buggy, too: it replaces all soft hyphens by hyphens ('-').
+  * Firefox copies the soft hyphens witch looks ugly in word, but is very usefull upon printing (soft hyphens aren't printed). 
+  * Opera deletes all soft hyphens.
+  * Safari (as of version 4.0.2) has a serious bug: it stupidly replaces soft hyphens by spaces... (https://bugs.webkit.org/show_bug.cgi?id=11154)
+  * IE (up to IE8) is buggy, too: it replaces all soft hyphens by hyphens ('-').
 This makes copying very problematic (aka unusable). Thus, befor copying, users have to disable hyphenation. If you know a solution let me know: (http://code.google.com/p/hyphenator/issues/detail?id=34)
 
 == Hyphenator.js does NOT work in Firefox 2 ==
