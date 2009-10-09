@@ -1,5 +1,5 @@
 ﻿/*!
- *  Hyphenator X.Y.Z - client side hyphenation for webbrowsers
+ *  Hyphenator 2.4.0 - client side hyphenation for webbrowsers
  *  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
@@ -30,7 +30,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version X.Y.Z
+ * @version 2.4.0
   */
 
 /**
@@ -762,53 +762,7 @@ var Hyphenator = (function () {
 			Expando.appendDataForElem(elements[elements.length - 1], {isLast : true});
 		}
 	},
-	
-/*	registerOnCopy = function () {
-			document.getElementsByTagName('body')[0].oncopy = function (e) {
-				var text, h;
-				var myArea = document.createElement('textarea');
-				var myStyleAttribute = document.createAttribute('style');
-				myStyleAttribute.nodeValue = 'display:block';
-				myArea.setAttributeNode(myStyleAttribute);
-				document.getElementsByTagName('body')[0].appendChild(myArea);
-				if (window.getSelection) {
-					myArea.value = window.getSelection();
-					text = window.getSelection().toString();
-				}
-				else if (document.selection) { // should come last; Opera!
-					text = document.selection.createRange().text;
-				}
-				switch (hyphen) {
-					case '|':
-						h = '\\|';
-						break;
-					case '+':
-						h = '\\+';
-						break;
-					case '*':
-						h = '\\*';
-						break;
-					case String.fromCharCode(173):
-						h = '\u00AD';
-						break;
-					default:
-						h = hyphen;
-					}
-				text = text.replace(new RegExp(h, 'g'), '');
-				text = text.replace(new RegExp(zeroWidthSpace, 'g'), '');
-				alert(text);
-				if (!!e && !!e.clipboardData) { //Safari
-					e.preventDefault();
-					e.clipboardData.setData('text/plain', text);
-				} else if (!!window.clipboardData) { // IE
-					window.preventDefault();
-					window.clipboardData.setData('Text', text);
-				}
-			}			
-	},
-*/
-	
-	 
+		 
 	/**
 	 * @name Hyphenator-convertPatterns
 	 * @methodOf Hyphenator
@@ -1289,7 +1243,7 @@ var Hyphenator = (function () {
 		 * minor release: new languages, improvements
 		 * @public
          */		
-		version: 'X.Y.Z',
+		version: '2.4.0',
 		
 		/**
 		 * @name Hyphenator.languages
@@ -1452,7 +1406,6 @@ var Hyphenator = (function () {
 					if (displayToggleBox) {
 						toggleBox(true);
 					}
-					//registerOnCopy();
 				} catch (e) {
 					onError(e);
 				}
