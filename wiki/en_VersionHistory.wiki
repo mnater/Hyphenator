@@ -1,7 +1,7 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.4.0.zip 2.4.0] (October 08, 2009) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.4.0.zip 2.4.0] (October 09, 2009) ==
 This minor release brings a the following changes:
   * Support for Turkish (thanks to Andreas Lappe)
   * Fixed issue69
