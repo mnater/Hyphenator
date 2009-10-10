@@ -42,7 +42,7 @@ What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingE
     "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
     <head>
-        <title>hyph.js</title>
+        <title>Hyphenator.js</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -56,7 +56,11 @@ What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingE
         </style>
         <script src="Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                 Hyphenator.run();
+        	Hyphenator.config({
+        		displaytogglebox : true,
+        		minwordlength : 4
+        	});
+        	Hyphenator.run();
         </script>
     </head>
     <body>
@@ -67,6 +71,8 @@ What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingE
         <h2>English</h2>
         <p class="hyphenate text" lang="en">English words are shorter in the average then german words. <span lang="de">«Silbentrennungsalgorithmus»</span> for example is quite long.</p>
         <p class="hyphenate text" lang="en">Resize the window to see hyphenation in effect.</p>
+        <h2>Links</h2>
+        <p class="hyphenate text" lang="en">Not only words but also links like <a href="http://code.google.com/p/hyphenator/">http://code.google.com/p/hyphenator/</a> are processed. But in a special manner (using zero width space).</p>
     </body>
 </html>
 }}}
