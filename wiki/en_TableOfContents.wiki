@@ -26,6 +26,7 @@
         * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_selectorfunction selectorfunction]
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.run() run()]
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.addExceptions(string_language,_string_words) addExceptions()]
+      * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#mixed_Hyphenator.hyphenate(mixed_target,_string_lang) hyphenate()]
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#bool_Hyphenator.isBookmarklet() isBookmarklet()]
       * [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.toggleHyphenation() toggleHyphenation()]
   * [http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation Dealing with inaccurate hyphenation]
