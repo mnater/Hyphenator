@@ -33,7 +33,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
 </script>
 }}}
 	Done.
-	There are many interesting and useful settings you can change before you invoke the script. See [http://code.google.com/p/hyphenator/wiki/documentation Documentation] for more details.
+	There are many interesting and useful settings you can change before you invoke the script. See [http://code.google.com/p/hyphenator/wiki/en_PublicAPI Documentation] for more details.
 
 === Example ===
 What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingExample.html working example]?
