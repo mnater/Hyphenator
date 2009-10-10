@@ -4,7 +4,7 @@
 = Das copy-paste Problem =
 Wenn jemand einen Text, der durch Hyphenator.js getrennt wurde, kopiert und an anderer Stelle wieder einfügt, kann dies zu seltsamen Resultaten führen. In der Tat ist dies die derzeit am häufigsten geäusserte Kritik an Hyphenator:
 
-    «das Bundesministerium der Justiz hat uns heute gebeten den Hyphenator-Code von der BMJ Site zu entfernen. Grund sind beschwerden von Journalisten, die bisher Pressemitteilung via Copy / Paste in eigene Artikel übernommen hatten.»
+    «das Bundesministerium der Justiz hat uns heute gebeten den Hyphenator-Code von der BMJ Site zu entfernen. Grund sind Beschwerden von Journalisten, die bisher Pressemitteilung via Copy / Paste in eigene Artikel übernommen hatten.»
 
 Ich habe dieses Problem schon einige Male in Angriff genommen, konnte es aber nicht lösen. Dieser Artikel soll meine bisherigen Versuche dokumentieren und – hoffentlich – neue Lösungsansätze aufwerfen…
 
