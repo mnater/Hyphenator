@@ -13,11 +13,11 @@ Thanks for reading it!
 _Hi, I updated to the new version. It does not work._
 
 == A good description ==
-* Gives me an exact description of the problem (what do you see / see not, what happens / happens not, what is expected)
-* Tells me what version you where using before the error occurred.
-* Tells me in wich version the error occurred.
-* Tells me what browser with wich version on which system you where using (or simply: in all browsers)
-* Gives me a link or a file, where I can see the problem live. A screenshot is fine, too but a html-page is preferred.
+  * Gives me an exact description of the problem (what do you see / see not, what happens / happens not, what is expected)
+  * Tells me what version you where using before the error occurred.
+  * Tells me in wich version the error occurred.
+  * Tells me what browser with wich version on which system you where using (or simply: in all browsers)
+  * Gives me a link or a file, where I can see the problem live. A screenshot is fine, too but a html-page is preferred.
 
 == How do I work, when I get a issue report? ==
 First I try to reproduce the problem. You can save me a lot of time by providing a file or a link, where the problem occurs. Often i put it in the issue tracker (specially if I'm short on time).
