@@ -378,12 +378,11 @@ var Hyphenator = (function () {
 	zeroWidthSpace = (function () {
 		var zws, ua = navigator.userAgent.toLowerCase();
 		zws = String.fromCharCode(8203); //Unicode zero width space
-		alert(ua);
 		if (ua.indexOf('msie 6') !== -1) {
 			zws = ''; //IE6 doesn't support zws
 		}
-		if (ua.indexOf('opera') !== -1 && ua.indexOf('windows') !== -1 && ua.indexOf('version/10.00') !== -1) {
-			zws = ''; //opera 10 doesn't support zws
+		if (ua.indexOf('opera') !== -1 && ua.indexOf('version/10.00') !== -1) {
+			zws = ''; //opera 10 on XP doesn't support zws
 		}
 		return zws;
 	}()),
