@@ -371,18 +371,19 @@ var Hyphenator = (function () {
 	 * @description
 	 * A string that holds a char.
 	 * Depending on the browser, this is the zero with space or an empty string.
-	 * The zeroWidthSpace is inserted after a '-' in compound words, so even FF and IE
-	 * will break after a '-' if necessary.
-	 * zeroWidthSpace is also used to break URLs
+	 * zeroWidthSpace is used to break URLs
 	 * @type string
 	 * @private
 	 */		
 	zeroWidthSpace = (function () {
 		var zws, ua = navigator.userAgent.toLowerCase();
-		if (ua.indexOf('msie 6') === -1) {
-			zws = String.fromCharCode(8203); //Unicode zero width space
-		} else {
+		zws = String.fromCharCode(8203); //Unicode zero width space
+		alert(ua);
+		if (ua.indexOf('msie 6') !== -1) {
 			zws = ''; //IE6 doesn't support zws
+		}
+		if (ua.indexOf('opera') !== -1 && ua.indexOf('windows') !== -1 && ua.indexOf('version/10.00') !== -1) {
+			zws = ''; //opera 10 doesn't support zws
 		}
 		return zws;
 	}()),
