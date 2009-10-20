@@ -388,6 +388,22 @@ var Hyphenator = (function () {
 	}()),
 	
 	/**
+	 * @name Hyphenator-createElem
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A function alias to document.createElementNS or document.createElement
+	 * @type function
+	 * @private
+	 */		
+	createElem = function (tagname) {
+		if (document.createElementNS) {
+			return document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
+		} else if (document.createElement) {
+			return document.createElement(tagname);
+		}
+	},
+	
+	/**
 	 * @name Hyphenator-onHyphenationDone
 	 * @fieldOf Hyphenator
 	 * @description
@@ -855,9 +871,9 @@ var Hyphenator = (function () {
 				}
 			}
 		}
-		if (document.createElement) {
+		if (createElem) {
 			head = document.getElementsByTagName('head').item(0);
-			script = document.createElement('script');
+			script = createElem('script');
 			script.src = url;
 			script.type = 'text/javascript';
 			head.appendChild(script);
@@ -952,7 +968,7 @@ var Hyphenator = (function () {
 						finishedLoading = true;
 						delete docLanguages[lang];
 						//do conversion while other patterns are loading:
-						prepareLanguagesObj(lang);		
+						prepareLanguagesObj(lang);
 					}
 				}
 			}
@@ -983,7 +999,7 @@ var Hyphenator = (function () {
 			}
 		} else {
 			bdy = document.getElementsByTagName('body')[0];
-			myBox = document.createElement('div');
+			myBox = createElem('div');
 			myIdAttribute = document.createAttribute('id');
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
 			myClassAttribute = document.createAttribute('class');
