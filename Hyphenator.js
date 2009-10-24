@@ -343,8 +343,8 @@ var Hyphenator = (function () {
 	 * @type string
 	 * @private
 	 */	
-	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|(([\\w]*\\.)+([\\w]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
-
+	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www.|[a-zA-Z].)[a-zA-Z0-9\\-\\.]+\.([\\w]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*'
+	//      protocoll     usr     pwd                    ip               or                          host                       port               path
 	/**
 	 * @name Hyphenator-mail
 	 * @fieldOf Hyphenator
@@ -384,7 +384,8 @@ var Hyphenator = (function () {
 		if (ua.indexOf('opera') !== -1 && ua.indexOf('version/10.00') !== -1) {
 			zws = ''; //opera 10 on XP doesn't support zws
 		}
-		return zws;
+		//return zws;
+		return '[zws]';
 	}()),
 	
 	/**
