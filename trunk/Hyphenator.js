@@ -59,7 +59,7 @@ var Hyphenator = (function () {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var languageHint = 'cs, da, bn, de, en, es, fi, fr, gu, hi, hu, it, kn, ml, nl, or, pa, pl, pt, ru, sv, ta, te, tr, uk',
+	var languageHint = 'cs, da, bn, de, en, es, fi, fr, gu, hi, hu, hy, it, kn, ml, nl, or, pa, pl, pt, ru, sv, ta, te, tr, uk',
 
 	/**
 	 * @name Hyphenator-supportedLang
@@ -100,6 +100,7 @@ var Hyphenator = (function () {
 		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:',
 		'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:',
 		'hu': 'A weboldal nyelvét nem sikerült automatikusan megállapítani. Kérem adja meg a nyelvet:',
+		'hy': 'Չհաջողվեց հայտնաբերել այս կայքի լեզուն։ Խնդրում ենք նշեք հիմնական լեզուն՝',
 		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
 		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
 		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
@@ -343,7 +344,7 @@ var Hyphenator = (function () {
 	 * @type string
 	 * @private
 	 */	
-	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([\\w]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*'
+	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([\\D]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
 	//      protocoll     usr     pwd                    ip               or                          host                       port               path
 	/**
 	 * @name Hyphenator-mail
