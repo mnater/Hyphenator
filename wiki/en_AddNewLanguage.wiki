@@ -19,7 +19,8 @@ Currently, there's support for
   * Hungarian (thanks to Péter Nagy)
   * Czech  (thanks to Martin Hasoň)
   * Ukrainian (thanks to Alexey Grekov)
-  * Turkish
+  * Turkish (thanks to Andreas Lappe)
+  * Armenian (coming soon thanks to Sahak Petrosyan)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
