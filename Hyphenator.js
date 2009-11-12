@@ -385,8 +385,8 @@ var Hyphenator = (function () {
 		if (ua.indexOf('opera') !== -1 && ua.indexOf('version/10.00') !== -1) {
 			zws = ''; //opera 10 on XP doesn't support zws
 		}
-		//return zws;
-		return '[zws]';
+		return zws;
+		//return '[zws]';
 	}()),
 	
 	/**
