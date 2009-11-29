@@ -35,7 +35,7 @@
     <body>
         <h1>Test 60</h1>
         <p>Hyphenating an xhtml document (parsed as xml). This test will alway fail in IE since it doesn't support XML.</p>
-		<p><a href="test59.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+		<p><a href="test59.html">&lt;- Prev</a> | <a href="test61.html">Next -&gt;</a></p>
 		<pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
         <div class="test hyphenate" lang="en">
