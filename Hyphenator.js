@@ -427,7 +427,7 @@ var Hyphenator = (function () {
 	 * @private
 	 */		
 	onError = function (e) {
-		alert("Hyphenator.js says:\n\nAn Error ocurred:\n" + e.message);
+		window.alert("Hyphenator.js says:\n\nAn Error ocurred:\n" + e.message);
 	},
 
 	/**
@@ -750,7 +750,9 @@ var Hyphenator = (function () {
 			if (supportedLang[lang]) {
 				docLanguages[lang] = true;
 			} else {
-				onError(new Error('Language ' + lang + ' is not yet supported.'));
+				if (!Hyphenator.isBookmarklet()) {
+					onError(new Error('Language ' + lang + ' is not yet supported.'));
+				}
 			}
 			Expando.setDataForElem(el, hyphenatorSettings);
 			elements.push(el);
