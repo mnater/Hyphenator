@@ -51,7 +51,7 @@ On this page, the word FORTRAN will not be hyphenated at all.
 === Language wide exceptions ===
 Finally, if the same word is used over several pages you don't have to define the exceptions on every page.
 
-Instead, you can define the exceptions directly in the pattern files for each language. Therefore you have to insert a new field in the pattern object (don't forget the semicolon):
+Instead, you can define the exceptions directly in the pattern files for each language. Therefore you have to insert a new field in the pattern object (don't forget to add the comma after the patterns):
 
 {{{
 Hyphenator.languages.en={
