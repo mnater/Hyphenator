@@ -61,6 +61,6 @@ shortestPattern : 2,
 longestPattern : 8,
 specialChars : '',
 patterns : "[... the patterns ..]",
-exceptions : 'FORTRAN, man-u-script, man-u-scripts';
+exceptions : 'FORTRAN, man-u-script, man-u-scripts'
 };
 }}}
