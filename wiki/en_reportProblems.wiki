@@ -20,6 +20,6 @@ _Hi, I updated to the new version. It does not work._
   * Gives me a link or a file, where I can see the problem live. A screenshot is fine, too but a html-page is preferred.
 
 == How do I work, when I get a issue report? ==
-First I try to reproduce the problem. You can save me a lot of time by providing a file or a link, where the problem occurs. Often i put it in the issue tracker (specially if I'm short on time).
+First I try to reproduce the problem. You can save me a lot of time by providing a file or a link, where the problem occurs. Often I put it in the issue tracker (specially if I'm short on time).
 Then I create a testcase to make shure that this problem stays solved, later.
 Finally I try to fix it.
