@@ -24,7 +24,7 @@
  
 /* The following comment is for JSLint: */
 /*global window, ActiveXObject, unescape */
-/*jslint browser: true, eqeqeq: true, immed: true, newcap: true, nomen: true, onevar: true, undef: true, white: true, indent: 4*/
+/*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, newcap: true, immed: true */
 
 /**
  * @fileOverview
@@ -344,8 +344,8 @@ var Hyphenator = (function () {
 	 * @type string
 	 * @private
 	 */	
-	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([\\D]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
-	//      protocoll     usr     pwd                    ip               or                          host                       port               path
+	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([a-z]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
+	//      protocoll     usr     pwd                    ip               or                          host                 tld        port               path
 	/**
 	 * @name Hyphenator-mail
 	 * @fieldOf Hyphenator
@@ -627,9 +627,8 @@ var Hyphenator = (function () {
 			// If IE and not a frame
 			// continually check to see if the document is ready
 			toplevel = false;
-
 			try {
-				toplevel = window.frameElement == null;
+				toplevel = window.frameElement === null;
 			} catch (e) {}
 
 			if (document.documentElement.doScroll && toplevel) {
