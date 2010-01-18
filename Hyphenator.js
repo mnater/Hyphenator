@@ -563,7 +563,7 @@ var Hyphenator = (function () {
 	 * @private
 	 */
 	runOnContentLoaded = function (w, f) {
-		var oldonload = w.onload;
+		var DOMContentLoaded, toplevel;
 		if (documentLoaded) {
 			f();
 			return;
@@ -574,53 +574,69 @@ var Hyphenator = (function () {
 				f();
 			}
 		}
-	
+		
+		function doScrollCheck() {
+			try {
+				// If IE is used, use the trick by Diego Perini
+				// http://javascript.nwbox.com/IEContentLoaded/
+				document.documentElement.doScroll("left");
+			} catch (error) {
+				setTimeout(doScrollCheck, 1);
+				return;
+			}
+		
+			// and execute any waiting functions
+			init();
+		}
+
+		
+		// Cleanup functions for the document ready method
+		if (document.addEventListener) {
+			DOMContentLoaded = function () {
+				document.removeEventListener("DOMContentLoaded", DOMContentLoaded, false);
+				init();
+			};
+		
+		} else if (document.attachEvent) {
+			DOMContentLoaded = function () {
+				// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
+				if (document.readyState === "complete") {
+					document.detachEvent("onreadystatechange", DOMContentLoaded);
+					init();
+				}
+			};
+		}
+
 		// Mozilla, Opera and webkit nightlies currently support this event
 		if (document.addEventListener) {
 			// Use the handy event callback
-			document.addEventListener("DOMContentLoaded", function () {
-				document.removeEventListener("DOMContentLoaded", arguments.callee, false);
-				init();
-			}, false);
-	
+			document.addEventListener("DOMContentLoaded", DOMContentLoaded, false);
+			
+			// A fallback to window.onload, that will always work
+			window.addEventListener("load", init, false);
+
 		// If IE event model is used
 		} else if (document.attachEvent) {
 			// ensure firing before onload,
 			// maybe late but safe also for iframes
-			document.attachEvent("onreadystatechange", function () {
-				if (document.readyState === "complete") {
-					document.detachEvent("onreadystatechange", arguments.callee);
-					init();
-				}
-			});
-	
-			// If IE and not an iframe
+			document.attachEvent("onreadystatechange", DOMContentLoaded);
+			
+			// A fallback to window.onload, that will always work
+			window.attachEvent("onload", init);
+
+			// If IE and not a frame
 			// continually check to see if the document is ready
-			if (document.documentElement.doScroll && window == window.top) {
-				(function () {
-					if (documentLoaded) {
-						return;
-					}
-					try {
-						// If IE is used, use the trick by Diego Perini
-						// http://javascript.nwbox.com/IEContentLoaded/
-						document.documentElement.doScroll("left");
-					} catch (error) {
-						setTimeout(arguments.callee, 0);
-						return;
-					}
-					// and execute any waiting functions
-					f();
-				}());
-			}		
-		}
-		// A fallback to window.onload, that will always work
-		w.onload = function (e) {
-			init();
-			if (typeof oldonload === 'function') {
-				oldonload();
+			toplevel = false;
+
+			try {
+				toplevel = window.frameElement == null;
+			} catch (e) {}
+
+			if (document.documentElement.doScroll && toplevel) {
+				doScrollCheck();
 			}
-		};	
+		}
+
 	},
 
 
