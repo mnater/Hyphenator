@@ -20,8 +20,8 @@ Currently, there's support for
   * Czech  (thanks to Martin Hasoň)
   * Ukrainian (thanks to Alexey Grekov)
   * Turkish (thanks to Andreas Lappe)
-  * Armenian (coming soon thanks to Sahak Petrosyan)
-  * Lithuanian (coming soon thanks to Rogutės Sparnuotos)
+  * Armenian (thanks to Sahak Petrosyan)
+  * Lithuanian (thanks to Rogutės Sparnuotos)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
