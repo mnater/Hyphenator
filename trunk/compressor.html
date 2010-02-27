@@ -207,7 +207,11 @@
 					desc.innerHTML = "";
 				};
 				document.getElementById('myform').onsubmit = function (e) {
-					e.preventDefault();
+					if (e && e.preventDefault) {
+							e.preventDefault();
+					} else if (window.event) {
+						window.event.returnValue = false;
+					}
 					startConversion();
 				};
 			
