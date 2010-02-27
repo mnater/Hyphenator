@@ -24,3 +24,4 @@ By merging the script and the patterns in one file and by packing the resulting 
   * *Use merge+pack.html:* There's a customizing service bundled in the download package (called `merge+pack.html`) since version 2.2.0. Open this file in your browser via http (not via `file:` !) and follow the instructions.
   * *Serve the files zipped:* Depending on your server you may serve the files zipped. Current browsers can easily deal with zipped packages. Zipping typically saves +/- 50%.
   * *Cache:* Make sure that the script file is correctly cached in the browser.
+  * *Reduce PatternSet:* If you have a static web site (i.e. text that doesn't change) you can reduce the patterns to those you actually need (see `reducePatternSet.html` in the package).
