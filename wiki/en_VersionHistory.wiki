@@ -1,6 +1,18 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.5.0.zip 2.5.0] (February 27, 2010) ==
+This minor release brings a the following changes:
+  * Support for Armenian (Thanks to Sahak Petrosyan)
+  * Support for Lithuanian (Thanks to Rogutės Sparnuotos)
+  * Added a tool to compute reduced pattern sets ([http://hyphenator.googlecode.com/svn/trunk/reducePatternSet.html reducePatternSet.html])
+  * Worked on issue70
+  * Fixed issue72
+  * Fixed issue73
+  * Fixed issue75
+  * Updated the runOnContentLoaded function to most recent state of the art
+
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.4.0.zip 2.4.0] (October 09, 2009) ==
 This minor release brings a the following changes:
   * Support for Turkish (thanks to Andreas Lappe)
