@@ -1,6 +1,6 @@
 ﻿/*!
- *  Hyphenator X.Y.Z - client side hyphenation for webbrowsers
- *  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
+ *  Hyphenator 2.5.0 - client side hyphenation for webbrowsers
+ *  Copyright (C) 2010  Mathias Nater, Zürich (mathias at mnn dot ch)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
  *  This JavaScript code is free software: you can redistribute
@@ -30,7 +30,7 @@
  * @fileOverview
  * A script that does hyphenation in (X)HTML files
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version X.Y.Z
+ * @version 2.5.0
   */
 
 /**
@@ -1299,7 +1299,7 @@ var Hyphenator = (function () {
 		 * minor release: new languages, improvements
 		 * @public
          */		
-		version: 'X.Y.Z',
+		version: '2.5.0',
 		
 		/**
 		 * @name Hyphenator.languages
