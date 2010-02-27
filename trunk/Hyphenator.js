@@ -185,6 +185,20 @@ var Hyphenator = (function () {
 	 * @see hyphenateWord
 	 */
 	enableCache = true,
+
+	/**
+	 * @name Hyphenator-enableReducedPatternSet
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A variable to set if storing the used patterns is set
+	 * @type boolean
+	 * @default false
+	 * @private
+	 * @see Hyphenator.config
+	 * @see hyphenateWord
+	 * @see Hyphenator.getRedPatternSet
+	 */	
+	enableReducedPatternSet = false,
 	
 	/**
 	 * @name Hyphenator-enableRemoteLoading
@@ -914,6 +928,9 @@ var Hyphenator = (function () {
 			if (enableCache) {
 				lo.cache = {};
 			}
+			if (enableReducedPatternSet) {
+				lo.redPatSet = {};
+			}
 			if (lo.hasOwnProperty('exceptions')) {
 				Hyphenator.addExceptions(lang, lo.exceptions);
 				delete lo.exceptions;
@@ -1098,6 +1115,9 @@ var Hyphenator = (function () {
 					pat = lo.patterns[patk];
 				} else {
 					continue;
+				}
+				if (enableReducedPatternSet) {
+					lo.redPatSet[patk] = pat;
 				}
 				digits = 1;
 				patl = pat.length;
@@ -1395,6 +1415,11 @@ var Hyphenator = (function () {
 							enableCache = obj.enablecache;
 						}
 						break;
+					case 'enablereducedpatternset':
+						if (assert('enablereducedpatternset', 'boolean')) {
+							enableReducedPatternSet = obj.enablereducedpatternset;
+						}
+						break;
 					case 'onhyphenationdonecallback':
 						if (assert('onhyphenationdonecallback', 'function')) {
 							onHyphenationDone = obj.onhyphenationdonecallback;
@@ -1528,6 +1553,19 @@ var Hyphenator = (function () {
 			} else {
 				onError(new Error('Language "' + lang + '" is not loaded.'));
 			}
+		},
+		
+		/**
+		 * @name Hyphenator.getRedPatternSet
+		 * @methodOf Hyphenator
+		 * @description
+		 * Returns {@link Hyphenator-isBookmarklet}.
+		 * @param string the language patterns are stored for
+		 * @returns object {'patk': pat}
+		 * @public
+         */
+		getRedPatternSet: function (lang) {
+			return Hyphenator.languages[lang].redPatSet;
 		},
 		
 		/**
