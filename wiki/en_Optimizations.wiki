@@ -3,7 +3,7 @@
 
 = How fast is Hyphenator? =
 
-There is no answer to this question despite of: “it depends on a lot of parameteres”.
+There is no answer to this question despite of: “it depends on a lot of parameters”.
 For most tasks Hyphenator is fast enough, but speed is cool and there are things you can do to make Hyphenator faster and thus even cooler ;-)
 
 == Execution speed ==
