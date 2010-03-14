@@ -318,6 +318,9 @@ The patterns indicated by the 2nd attribute (`lang`) have to be loaded; if not, 
 </script>
 }}}
 ----
+=== bool Hyphenator.getRedPatternSet(string lang) ===
+returns all used patterns of the indicated language. (But only if the confic-option `enablereducedpatternset` had been set to `true`)
+----
 === bool Hyphenator.isBookmarklet() ===
 Returns true if Hyphenator.js has been called by a bookmarklet.
 ----
