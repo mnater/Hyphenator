@@ -8,6 +8,9 @@ Hyphenator.js provides an [http://en.wikipedia.org/wiki/Application_programming_
 Methods and fields that are accessible (public) are defined in the following.
 
 == Fields ==
+=== version ===
+String that holds the version number.
+
 === languages ===
 Object that holds a key-value pairs, where key is the language and the value is the language-object loaded from (and set by) the pattern files.
 The language object holds the following members:
