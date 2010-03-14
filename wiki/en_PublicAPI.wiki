@@ -97,7 +97,7 @@ As of version 2.0.0 you can redefine the classname that marks elements that shou
 }}}
 ----
 ==== property `minwordlegth` ====
-By default Hyphenator.js only hyphenates words with a minimum of 6 letters. You can change this values. The higher the value, the slower the script; the lower the value, the better the result.
+By default Hyphenator.js only hyphenates words with a minimum of 6 letters. You can change this values. The higher the value, the faster the script; the lower the value, the better the result.
 
 ===== Example 3 – redefining minwordlegth =====
 {{{
@@ -248,7 +248,7 @@ When a paragraph is hyphenated, the browser does a reflow of the layout, which y
 
 By default Hyphenator.js hides elements when they are hyphenated an makes them visible, when hyphenation is done.
 
-You can change this behaviour in such a manner, that elements sty visible.
+You can change this behaviour in such a manner, that elements stay visible.
 
 ===== Example 12 – redefining `intermediatestate` =====
 {{{
@@ -264,7 +264,7 @@ This property is one of the most interesting, since it changes the way, Hyphenat
 
 By default Hyphenator.js looks for all elements with classname='hyphenate'. If you declare a selector function, wich has to return a HTMLNodeList, you can hyphenate any arbitrary element your function returns.
 
-`selectorfunction` is really powerful, if it's used with a JavaScript-Framework like jQuery (see example), prototype or similar. These frameworks include functionalities to adress elements by CSS-selectors.
+`selectorfunction` is really powerful, if it's used with a JavaScript-Framework like jQuery (see example), prototype or similar. These frameworks include functionalities to adress elements by special selectors.
 ===== Example 13 – defining `selectorfunction` =====
 {{{
 <script src="jquery.js" type="text/javascript"></script>
@@ -319,7 +319,7 @@ The patterns indicated by the 2nd attribute (`lang`) have to be loaded; if not, 
 }}}
 ----
 === bool Hyphenator.getRedPatternSet(string lang) ===
-returns all used patterns of the indicated language. (But only if the confic-option `enablereducedpatternset` had been set to `true`)
+Returns all used patterns of the indicated language. (But only if the confic-option `enablereducedpatternset` had been set to `true`)
 ----
 === bool Hyphenator.isBookmarklet() ===
 Returns true if Hyphenator.js has been called by a bookmarklet.
