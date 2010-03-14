@@ -272,7 +272,7 @@ By default Hyphenator.js looks for all elements with classname='hyphenate'. If y
 <script type="text/javascript">
 	var hyphenatorSettings = {
 		selectorfunction: function () {
-			return $('p');
+			return $('p').get();
 		}
 	};
 	Hyphenator.config(hyphenatorSettings);
