@@ -37,6 +37,7 @@ The values for the associated keys must be of the defined type:
 <table>
 <tr><th>key</th><th>type</th></tr>
 <tr><td>classname</td><td>string</td></tr>
+<tr><td>donthyphenateclassname</td><td>string</td></tr>
 <tr><td>minwordlength</td><td>number</td></tr>
 <tr><td>hyphenchar</td><td>string</td></tr>
 <tr><td>urlhyphenchar</td><td>string</td></tr>
@@ -44,6 +45,7 @@ The values for the associated keys must be of the defined type:
 <tr><td>displaytogglebox</td><td>boolean</td></tr>
 <tr><td>remoteloading</td><td>boolean</td></tr>
 <tr><td>enablecache</td><td>boolean</td></tr>
+<tr><td>enablereducedpatternset</td><td>boolean</td></tr>
 <tr><td>onhyphenationdonecallback</td><td>function</td></tr>
 <tr><td>onerrorhandler</td><td>function</td></tr>
 <tr><td>intermediatestate</td><td>string</td></tr>
@@ -201,6 +203,9 @@ Hyphenator caches words that have been hyphenated to fasten execution. If for so
 	Hyphenator.run();
 </script>
 }}}
+----
+==== property `enablereducedpatternset` ====
+This property is used by the reducePatternSet-tool. It stores all patterns used in a run in the language-object. They can be retrieved with the Hyphenator.getRedPatternSet(lang)-method.
 ----
 ==== property `onhyphenationdonecallback` ====
 Hyphenator.js calls the function `onhyphenationdonecallback()` when hyphenation is complete. This function is empty by default.
