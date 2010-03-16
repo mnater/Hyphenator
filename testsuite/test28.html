@@ -33,7 +33,7 @@
         		minwordlength: 4,
         		hyphenchar: '|',
         		selectorfunction: function () {
-        			return $('p.test');
+        			return $('p.test').get();
         		}
         	};
         	Hyphenator.config(hyphenatorSettings);
