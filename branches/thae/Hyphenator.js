@@ -252,6 +252,18 @@ var Hyphenator = (function () {
 	min = 6,
 	
 	/**
+	 * @name Hyphenator-mch
+	 * @fieldOf Hyphenator
+	 * @description
+	 * Maximum of consecutive hyphens, 0 = no limits
+	 * @type number
+	 * @default 0
+	 * @private
+	 * @see Hyphenator.config
+	 */	
+	mch = 0,
+	
+	/**
 	 * @name Hyphenator-isBookmarklet
 	 * @fieldOf Hyphenator
 	 * @description
@@ -1348,6 +1360,11 @@ var Hyphenator = (function () {
 								obj.hyphenchar = String.fromCharCode(173);
 							}
 							hyphen = obj.hyphenchar;
+						}
+						break;
+					case 'maxconsecutivehyphens':
+						if (assert('maxconsecutivehyphens', 'number')) {
+							mch = obj.maxconsecutivehyphens;
 						}
 						break;
 					case 'urlhyphenchar':
