@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+    <head>
+        <title>Hyphenator.js &ndash; Test 19</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            .text {
+                text-align:justify;
+            }
+            .test {
+            	background-color: #ffd6d6;
+            }
+            .ref {
+            	background-color: #d6ffd6;
+            }
+            pre {
+            	border: 1px dotted grey;
+            }
+			table {
+				width:100%;
+				border: 1px solid #555555;
+				border-collapse:collapse
+			}
+			th {
+				text-align:left;
+			}
+			tr {
+				text-align:left;
+				border: 1px solid #555555;
+			}
+			td {border: 1px solid #555555;}
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                Hyphenator.config({hyphenchar:'|'});
+                Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <h1>Test 19</h1>
+        <p>Do some checks related to german patterns.</p>
+		<p><a href="test18.html">&lt;- Prev</a> | <a href="test20.html">Next -&gt;</a></p>
+        <pre>Hyphenator.config({hyphenchar:'|'});
+Hyphenator.run();</pre>
+
+		<table>
+<tr>
+	<th style="width:40em">Manuell</th>
+	<th style="width:40em">Word 2008 (Mac)</th>
+	<th style="width:40em">Hyphenator</th>
+</tr>
+<tr>	
+	<td>Ab|trei|bung<br>ab|tren|nen<br>Al|pen|ost|rand<br>Al|ters|teil|zeit<br>An|alpha|be|ten<br>An|schlags|or|te<br>an|zu|glei|chen<br>Auto|ren|nen<br>Bil|lig|rei|se<br>Blu|men|topf|er|de<br>Du|de|lei<br>Ei|dot|ter<br>Ei|lei|ter<br>Ein|kaufs|tem|pel<br>Erd|ach|se<br>er|drü|ckend<br>er|stun|ken<br>Fan|krei|se<br>Gast|raum<br>Gau|lei|ter<br>Ge|läch|ter<br>Gelb|rand<br>Haus|auf|ga|be<br>Haus|esel<br>Hei|mat|schla|ger<br>Host|es|sen<br>Kauf|la|den<br>Kirsch|wein<br>Mus|topf<br>Mu|sik|no|ten<br>Nacht|eil|zug<br>Nacht|ru|he<br>Pa|na|ma|zo|ne<br>Pa|tent|rich|ter<br>Punkt|rich|ter<br>Schwein|ige|lei<br>Sie|ben|te<br>Staats|exa|men<br>Stau|be|cken<br>Ta|lent|för|de|rung<br>Tal|ent|wäs|se|rung<br>Tal|grund<br>Tan|gen|te<br>Teen|ager<br>Ur|ins|tinkt<br>Ve|ran|da|brüs|tung<br>ver|beu|len<br>ver|se|hen<br>ver|sun|ken<br>Wachs|tu|be<br>Was|ser|schie|ber<br>Zu|cker|guss<br>Zwerg|els|tern</td>
+	
+	<td>Ab|trei|bung<br>ab|tren|nen<br>Al|pen|ost|rand<br>Al|tersteil|zeit<br>An|al|pha|be|ten<br>An|schlag|sor|te<br>an|zu|glei|chen<br>Au|to|ren|nen<br>Bil|lig|rei|se<br>Blu|men|topf|er|de<br>Du|de|lei<br>Ei|dot|ter<br>Eilei|ter<br>Ein|kaufstem|pel<br>Erd|ach|se<br>erdrüc|kend<br>erstunken<br>Fan|krei|se<br>Gastraum<br>Gaulei|ter<br>Ge|läch|ter<br>Gelb|rand<br>Hausauf|ga|be<br>Haus|esel<br>Hei|mat|schla|ger<br>Ho|stes|sen<br>Kaufla|den<br>Kirsch|wein<br>Mu|stopf<br>Mu|sik|no|ten<br>Nachteil|zug<br>Nachtruhe<br>Panama|zo|ne<br>Pa|tentrich|ter<br>Punktrich|ter<br>Schwein|ige|lei<br>Sie|ben|te<br>Staatsex|amen<br>Staubec|ken<br>Ta|lent|för|de|rung<br>Ta|lent|wäs|se|rung<br>Talg|rund<br>Tan|gen|te<br>Tee|na|ger<br>Ur|in|stinkt<br>Ve|ran|da|brüs|tung<br>verbeulen<br>ver|se|hen<br>versunken<br>Wachstube<br>Was|ser|schie|ber<br>Zuc|ker|guss<br>Zwerg|el|stern</td>
+	
+	<td class="hyphenate">Abtreibung<br>abtrennen<br>Alpenostrand<br>Altersteilzeit<br>Analphabeten<br>Anschlagsorte<br>anzugleichen<br>Autorennen<br>Billigreise<br>Blumentopferde<br>Dudelei<br>Eidotter<br>Eileiter<br>Einkaufstempel<br>Erdachse<br>erdrückend<br>erstunken<br>Fankreise<br>Gastraum<br>Gauleiter<br>Gelächter<br>Gelbrand<br>Hausaufgabe<br>Hausesel<br>Heimatschlager<br>Hostessen<br>Kaufladen<br>Kirschwein<br>Mustopf<br>Musiknoten<br>Nachteilzug<br>Nachtruhe<br>Panamazone<br>Patentrichter<br>Punktrichter<br>Schweinigelei<br>Siebente<br>Staatsexamen<br>Staubecken<br>Talentförderung<br>Talentwässerung<br>Talgrund<br>Tangente<br>Teenager<br>Urinstinkt<br>Verandabrüstung<br>verbeulen<br>versehen<br>versunken<br>Wachstube<br>Wasserschieber<br>Zuckerguss<br>Zwergelstern</td>
+</tr>
+</table>
+<a href="http://giardino.blogger.de/stories/1236034/">...</a>
+     </body>
+</html>
