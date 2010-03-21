@@ -44,7 +44,7 @@
  *   Hyphenator.run();
  * &lt;/script&gt;
  */
-var Hyphenator = (function () {
+var Hyphenator = (function (window) {
 
 
 	/**
@@ -403,6 +403,9 @@ var Hyphenator = (function () {
 		return zws;
 		//return '[zws]';
 	}()),
+	
+	//check for member is faster then isFinite()
+	numb3rs = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9},
 	
 	/**
 	 * @name Hyphenator-createElem
@@ -1078,7 +1081,7 @@ var Hyphenator = (function () {
 	 */	
 	hyphenateWord = function (lang, word) {
 		var lo = Hyphenator.languages[lang],
-			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, patl, c, digits, z, numb3rs, n, inserted, hyphenatedword;
+			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, c, t, n, inserted, hyphenatedword, val;
 		if (word === '') {
 			return '';
 		}
@@ -1106,37 +1109,36 @@ var Hyphenator = (function () {
 		s = w.split('');
 		w = w.toLowerCase();
 		hypos = [];
-		numb3rs = {'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true}; //check for member is faster then isFinite()
 		n = wl - lo.shortestPattern;
 		for (p = 0; p <= n; p++) {
 			maxwins = Math.min((wl - p), lo.longestPattern);
 			for (win = lo.shortestPattern; win <= maxwins; win++) {
 				if (lo.patterns.hasOwnProperty(patk = w.substr(p, win))) {
 					pat = lo.patterns[patk];
+					if (enableReducedPatternSet) {
+						lo.redPatSet[patk] = pat;
+					}
+					if (typeof pat === 'string') {
+						//convert from string 'a5b' to array [1,5] (pos,value)
+						t = 0;
+						val = [];
+						for (i = 0; i < pat.length; i++) {
+							if (!!(c = numb3rs[pat.charAt(i)])) {
+								val.push(i - t, c);
+								t++;								
+							}
+						}
+						pat = lo.patterns[patk] = val;
+					}
 				} else {
 					continue;
 				}
-				if (enableReducedPatternSet) {
-					lo.redPatSet[patk] = pat;
-				}
-				digits = 1;
-				patl = pat.length;
-				for (i = 0; i < patl; i++) {
-					c = pat.charAt(i);
-					if (numb3rs[c]) {
-						if (i === 0) {
-							z = p - 1;
-							if (!hypos[z] || hypos[z] < c) {
-								hypos[z] = c;
-							}
-						} else {
-							z = p + i - digits;
-							if (!hypos[z] || hypos[z] < c) {
-								hypos[z] = c;
-							}
-						}
-						digits++;								
+				for (i = 0; i < pat.length; i++) {
+					c = p - 1 + pat[i];
+					if (!hypos[c] || hypos[c] < pat[i + 1]) {
+						hypos[c] = pat[i + 1];
 					}
+					i++;
 				}
 			}
 		}
@@ -1601,7 +1603,7 @@ var Hyphenator = (function () {
 			}
 		}
 	};
-}());
+}(window));
 if (Hyphenator.isBookmarklet()) {
 	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible'});
 	Hyphenator.run();
