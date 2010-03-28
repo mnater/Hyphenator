@@ -33,6 +33,44 @@
  * @version X.Y.Z
   */
 
+
+// Only add setZeroTimeout to the window object, and hide everything
+// else in a closure.
+// Initial idea by http://dbaron.org/log/20100309-faster-timeouts
+// I just made it cross browser compatible
+(function() {
+	var timeouts = [];
+	var messageName = "zero-timeout-message";
+
+	// Like setTimeout, but only takes a function argument.  There's
+	// no time argument (always zero) and no arguments (you have to
+	// use a closure).
+	function setZeroTimeout(fn) {
+		timeouts.push(fn);
+		window.postMessage(messageName, "*");
+	}
+
+	function handleMessage(event) {
+		if (event.source == window && event.data == messageName) {
+			event.stopPropagation();
+			if (timeouts.length > 0) {
+				var fn = timeouts.shift();
+				fn();
+			}
+		}
+	}
+
+	if (window.addEventListener) {
+		window.addEventListener("message", handleMessage, true);
+	} else if (window.attachEvent) {
+		window.attachEvent('onmessage', handleMessage);
+	}
+
+	// Add the one thing we want added to the window object.
+	window.setZeroTimeout = setZeroTimeout;
+})();
+
+
 /**
  * @constructor
  * @description Provides all functionality to do hyphenation, except the patterns that are loaded
@@ -1267,7 +1305,7 @@ var Hyphenator = (function () {
 		}
 		var i = 0, el;
 		while (!!(el = elements[i++])) {
-			window.setTimeout(bind(hyphenateElement, el), 0);
+			window.setZeroTimeout(bind(hyphenateElement, el));
 
 		}
 	},
