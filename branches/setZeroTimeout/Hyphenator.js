@@ -52,7 +52,7 @@
 
 	function handleMessage(event) {
 		if (event.source == window && event.data == messageName) {
-			event.stopPropagation();
+			//event.stopPropagation();
 			if (timeouts.length > 0) {
 				var fn = timeouts.shift();
 				fn();
