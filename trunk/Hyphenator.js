@@ -712,15 +712,15 @@ var Hyphenator = (function () {
 		if (!mainLanguage) {
 			for (i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
-				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
+				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv').toLowerCase() === 'content-language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 				//<meta name = "DC.Language" content="xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'dc.language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}			
 				//<meta name = "language" content = "xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 			}
