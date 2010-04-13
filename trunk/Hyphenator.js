@@ -1113,7 +1113,7 @@ var Hyphenator = (function () {
 		for (p = 0; p <= n; p++) {
 			maxwins = Math.min((wl - p), lo.longestPattern);
 			for (win = lo.shortestPattern; win <= maxwins; win++) {
-				if (lo.patterns.hasOwnProperty(patk = w.substr(p, win))) {
+				if (lo.patterns.hasOwnProperty(patk = w.substring(p, p + win))) {
 					pat = lo.patterns[patk];
 				} else {
 					continue;
