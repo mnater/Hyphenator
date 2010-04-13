@@ -823,16 +823,18 @@ var Hyphenator = (function () {
 	 * @param string the language whose patterns shall be converted
 	 */		
 	convertPatterns = function (lang) {
-		var plen, anfang, pats, pat, key, tmp = {};
+		var plen, anfang, ende, pats, pat, key, tmp = {};
 		pats = Hyphenator.languages[lang].patterns;
 		for (plen in pats) {
 			if (pats.hasOwnProperty(plen)) {
 				plen = parseInt(plen, 10);
 				anfang = 0;
-				while (!!(pat = pats[plen].substr(anfang, plen))) {
+				ende = plen;
+				while (!!(pat = pats[plen].substring(anfang, ende))) {
 					key = pat.replace(/\d/g, '');
 					tmp[key] = pat;
-					anfang += plen;
+					anfang = ende;
+					ende += plen;
 				}
 			}
 		}
