@@ -96,14 +96,14 @@ As of version 2.0.0 you can redefine the classname that marks elements that shou
 </script>
 }}}
 ----
-==== property `minwordlegth` ====
+==== property `minwordlength` ====
 By default Hyphenator.js only hyphenates words with a minimum of 6 letters. You can change this values. The higher the value, the faster the script; the lower the value, the better the result.
 
-===== Example 3 – redefining minwordlegth =====
+===== Example 3 – redefining minwordlength =====
 {{{
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
-	Hyphenator.config({minwordlegth : 8});
+	Hyphenator.config({minwordlength : 8});
 	Hyphenator.run();
 </script>
 }}}
