@@ -1077,8 +1077,98 @@ var Hyphenator = (function (window) {
 	 * @param string The word
 	 * @returns string The hyphenated word
 	 * @public
-	 */	
-	hyphenateWord = function (lang, word) {
+	 */
+	 
+	 hyphenateWordFunctions = {},
+	 hyphenateWord = function (lang, word) {
+	 	if (hyphenateWordFunctions.hasOwnProperty(lang)) {
+	 		return hyphenateWordFunctions[lang](word);
+	 	} else {
+	 		hyphenateWordFunctions[lang] = (function () {
+				var lo = Hyphenator.languages[lang],
+					parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, c, t, n, numb3rs, inserted, hyphenatedword, val;
+					numb3rs = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}; //check for member is faster then isFinite()
+	 			return function (word) {
+					if (word === '') {
+						return '';
+					}
+					if (word.indexOf(hyphen) !== -1) {
+						//word already contains shy; -> leave at it is!
+						return word;
+					}
+					if (enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
+						return lo.cache[word];
+					}
+					if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
+						return lo.exceptions[word].replace(/-/g, hyphen);
+					}
+					if (word.indexOf('-') !== -1) {
+						//word contains '-' -> hyphenate the parts separated with '-'
+						parts = word.split('-');
+						for (i = 0, l = parts.length; i < l; i++) {
+							parts[i] = hyphenateWord(lang, parts[i]);
+						}
+						return parts.join('-');
+					}
+					//finally the core hyphenation algorithm
+					w = '_' + word + '_';
+					wl = w.length;
+					s = w.split('');
+					w = w.toLowerCase();
+					hypos = [];
+					n = wl - lo.shortestPattern;
+					for (p = 0; p <= n; p++) {
+						maxwins = Math.min((wl - p), lo.longestPattern);
+						for (win = lo.shortestPattern; win <= maxwins; win++) {
+							if (lo.patterns.hasOwnProperty(patk = w.substring(p, p + win))) {
+								pat = lo.patterns[patk];
+								if (enableReducedPatternSet) {
+									lo.redPatSet[patk] = pat;
+								}
+								if (typeof pat === 'string') {
+									//convert from string 'a5b' to array [1,5] (pos,value)
+									t = 0;
+									val = [];
+									for (i = 0; i < pat.length; i++) {
+										if (!!(c = numb3rs[pat.charAt(i)])) {
+											val.push(i - t, c);
+											t++;								
+										}
+									}
+									pat = lo.patterns[patk] = val;
+								}
+							} else {
+								continue;
+							}
+							for (i = 0; i < pat.length; i++) {
+								c = p - 1 + pat[i];
+								if (!hypos[c] || hypos[c] < pat[i + 1]) {
+									hypos[c] = pat[i + 1];
+								}
+								i++;
+							}
+						}
+					}
+					inserted = 0;
+					for (i = lo.leftmin; i <= (word.length - lo.rightmin); i++) {
+						if (!!(hypos[i] & 1)) {
+							s.splice(i + inserted + 1, 0, hyphen);
+							inserted++;
+						}
+					}
+					hyphenatedword = s.slice(1, -1).join('');
+					if (enableCache) {
+						lo.cache[word] = hyphenatedword;
+					}
+					return hyphenatedword;
+				};
+	 		})();
+	 		return hyphenateWord(lang, word);
+	 	}
+	 	
+	 },
+	 
+	/*hyphenateWord = function (lang, word) {
 		var lo = Hyphenator.languages[lang],
 			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, c, t, n, numb3rs, inserted, hyphenatedword, val;
 		if (word === '') {
@@ -1154,7 +1244,7 @@ var Hyphenator = (function (window) {
 			lo.cache[word] = hyphenatedword;
 		}
 		return hyphenatedword;
-	},
+	},*/
 		
 	/**
 	 * @name Hyphenator-hyphenateURL
