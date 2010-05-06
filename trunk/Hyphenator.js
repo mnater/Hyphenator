@@ -507,6 +507,19 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator-zeroWidthSpace
 	 */
 	urlhyphen = zeroWidthSpace,
+
+	/**
+	 * @name Hyphenator-safeCopy
+	 * @fieldOf Hyphenator
+	 * @description
+	 * Defines wether work-around for copy issues is ative or not
+	 * @type boolean
+	 * @default true
+	 * @private
+	 * @see Hyphenator.config
+	 * @see Hyphenator-registerOnCopy
+	 */
+	safeCopy = true,
 	
 	/**
 	 * @name Hyphenator-Expando
@@ -811,8 +824,8 @@ var Hyphenator = (function (window) {
 		if (elements.length > 0) {
 			Expando.appendDataForElem(elements[elements.length - 1], {isLast : true});
 		}
-	},	
-	 
+	},
+		 
 	/**
 	 * @name Hyphenator-convertPatterns
 	 * @methodOf Hyphenator
@@ -1287,6 +1300,77 @@ var Hyphenator = (function (window) {
 			removeHyphenationFromElement(el);
 		}
 		state = 4;
+	},
+	
+	/**
+	 * @name Hyphenator-registerOnCopy
+	 * @methodOf Hyphenator
+	 * @description
+	 * Huge work-around for browser-inconsistency when it comes to
+	 * copying of hyphenated text.
+	 * The idea behind this code is stolen from http://github.com/aristus/sweet-justice
+	 * sweet-justice is under BSD-License
+	 * @private
+	 * @param null
+	 */
+	registerOnCopy = function () {
+		var body = document.getElementsByTagName('body')[0],
+		shadow,
+		selection,
+		range,
+		rangeShadow,
+		restore,
+		oncopyHandler = function (e) {
+			//create a hidden shadow element
+			shadow = document.createElement("div");
+			shadow.style.overflow = 'hidden';
+			shadow.style.position = 'absolute';
+			shadow.style.top = '-5000px';
+			shadow.style.height = '1px';
+			body.appendChild(shadow);
+			
+			if (window.getSelection) {
+				//FF3, Webkit
+				selection = window.getSelection();
+				range = selection.getRangeAt(0);
+				shadow.appendChild(range.cloneContents());
+				removeHyphenationFromElement(shadow);
+				selection.selectAllChildren(shadow);
+				restore = function () {
+					shadow.parentNode.removeChild(shadow);
+					if (window.getSelection().setBaseAndExtent) {
+						selection.setBaseAndExtent(
+							range.startContainer,
+							range.startOffset,
+							range.endContainer,
+							range.endOffset
+						);
+					}
+				};
+			} else {
+				// IE
+				selection = document.selection;
+				range = selection.createRange();
+				shadow.innerHTML = range.htmlText;
+				removeHyphenationFromElement(shadow);
+				rangeShadow = body.createTextRange();
+				rangeShadow.moveToElementText(shadow);
+				rangeShadow.select();
+				restore = function () {
+					shadow.parentNode.removeChild(shadow);
+					if (range.text !== "") {
+						range.select();
+					}
+				};
+			}
+			window.setTimeout(restore, 0);
+		};
+
+		if (window.addEventListener) {
+			body.addEventListener("copy", oncopyHandler, false);
+		} else {
+			body.attachEvent("oncopy", oncopyHandler);
+		}
 	};
 
 	return {
@@ -1442,6 +1526,11 @@ var Hyphenator = (function (window) {
 							selectorFunction = obj.selectorfunction;
 						}
 						break;
+					case 'safecopy':
+						if (assert('safecopy', 'boolean')) {
+							safeCopy = obj.safecopy;
+						}
+						break;
 					default:
 						onError(new Error('Hyphenator.config: property ' + key + ' not known.'));
 					}
@@ -1468,6 +1557,9 @@ var Hyphenator = (function (window) {
 					prepare(hyphenateDocument);
 					if (displayToggleBox) {
 						toggleBox(true);
+					}
+					if (safeCopy) {
+						registerOnCopy();
 					}
 				} catch (e) {
 					onError(e);
