@@ -73,3 +73,7 @@ Here's the code:
 	}
 </script>
 }}}
+
+== Can I use hyphenator.js in a frameset? ==
+No. You'll have to include hyphenator.js in each frame.
+Besides that you should think about rewriting your website without frames!
