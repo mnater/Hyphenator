@@ -22,6 +22,7 @@ Currently, there's support for
   * Turkish (thanks to Andreas Lappe)
   * Armenian (thanks to Sahak Petrosyan)
   * Lithuanian (thanks to Rogutės Sparnuotos)
+  * coming soon: Slovenian (thanks to Mojca Miklavec)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
