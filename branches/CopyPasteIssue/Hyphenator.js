@@ -763,50 +763,69 @@ var Hyphenator = (function () {
 		}
 	},
 	
-/*	registerOnCopy = function () {
-			document.getElementsByTagName('body')[0].oncopy = function (e) {
-				var text, h;
-				var myArea = document.createElement('textarea');
-				var myStyleAttribute = document.createAttribute('style');
-				myStyleAttribute.nodeValue = 'display:block';
-				myArea.setAttributeNode(myStyleAttribute);
-				document.getElementsByTagName('body')[0].appendChild(myArea);
-				if (window.getSelection) {
-					myArea.value = window.getSelection();
-					text = window.getSelection().toString();
-				}
-				else if (document.selection) { // should come last; Opera!
-					text = document.selection.createRange().text;
-				}
-				switch (hyphen) {
-					case '|':
-						h = '\\|';
-						break;
-					case '+':
-						h = '\\+';
-						break;
-					case '*':
-						h = '\\*';
-						break;
-					case String.fromCharCode(173):
-						h = '\u00AD';
-						break;
-					default:
-						h = hyphen;
+	/**
+	 * @name Hyphenator-registerOnCopy
+	 * @methodOf Hyphenator
+	 * @description
+	 * Huge work-around for browser-inconsistency when it comes to
+	 * copying of hyphenated text.
+	 * The idea behind this code is stolen from http://github.com/aristus/sweet-justice
+	 * sweet-justice is under BSD-License
+	 * @private
+	 * @param null
+	 */
+	registerOnCopy = function () {
+		var body = document.getElementsByTagName('body')[0],
+		shadow,
+		selection,
+		range,
+		rangeShadow,
+		restore;
+		body.oncopy = function (e) {
+			//create a hidden shadow element
+			shadow = document.createElement("div");
+			shadow.style.overflow = 'hidden';
+			shadow.style.position = 'absolute';
+			shadow.style.top = '-5000px';
+			shadow.style.height = '1px';
+			body.appendChild(shadow);
+			
+			if (window.getSelection) {
+				//FF3, Webkit
+				selection = window.getSelection();
+				range = selection.getRangeAt(0);
+				shadow.appendChild(range.cloneContents());
+				removeHyphenationFromElement(shadow);
+				selection.selectAllChildren(shadow);
+				restore = function () {
+					shadow.parentNode.removeChild(shadow);
+					if (window.getSelection().setBaseAndExtent) {
+						selection.setBaseAndExtent(
+							range.startContainer,
+							range.startOffset,
+							range.endContainer,
+							range.endOffset
+						);
 					}
-				text = text.replace(new RegExp(h, 'g'), '');
-				text = text.replace(new RegExp(zeroWidthSpace, 'g'), '');
-				alert(text);
-				if (!!e && !!e.clipboardData) { //Safari
-					e.preventDefault();
-					e.clipboardData.setData('text/plain', text);
-				} else if (!!window.clipboardData) { // IE
-					window.preventDefault();
-					window.clipboardData.setData('Text', text);
-				}
-			}			
+				};
+			} else {
+				// IE
+				selection = document.selection;
+				range = selection.createRange();
+				removeHyphenationFromElement(shadow);
+				rangeShadow = body.createTextRange();
+				rangeShadow.moveToElement(shadow);
+				rangeShadow.select();
+				restore = function () {
+					shadow.parentNode.removeChild(shadow);
+					if (range.text != "") {
+						range.select()
+					}
+				};
+			}
+			window.setTimeout(restore, 0);
+		}
 	},
-*/
 	
 	 
 	/**
@@ -1452,7 +1471,7 @@ var Hyphenator = (function () {
 					if (displayToggleBox) {
 						toggleBox(true);
 					}
-					//registerOnCopy();
+					registerOnCopy();
 				} catch (e) {
 					onError(e);
 				}
