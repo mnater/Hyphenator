@@ -23,7 +23,10 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.config({hyphenchar:'|'});
+                Hyphenator.config({
+                	hyphenchar:'|',
+                	safecopy: false	
+                });
                 Hyphenator.run();
         </script>
     </head>
@@ -81,5 +84,8 @@ Hyphenator.run();</pre>
 		<h2>lt</h2>
         <p class="hyphenate test" lang="lt">Lietuvių kalba yra labiausiai vartojama iš rytų baltų kalbų.</p>
 		<p class="ref" lang="lt">Lie|tu|vių kalba yra la|biau|siai var|to|ja|ma iš rytų baltų kalbų.</p>
+		<h2>sl</h2>
+        <p class="hyphenate test" lang="sl">Tipografija je veda o tipografskem oblikovanju. Preučuje izdelavo črk in pisav ter njihovo uporabo v besedilu.</p>
+		<p class="ref" lang="sl">Ti|po|gra|fi|ja je veda o ti|po|graf|skem obli|ko|va|nju. Pre|u|ču|je iz|de|la|vo črk in pisav ter nji|ho|vo upo|ra|bo v be|se|di|lu.</p>
 	</body>
 </html>
