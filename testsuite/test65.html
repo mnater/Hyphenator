@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 65</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            .text {
+                text-align:justify;
+            }
+            .test {
+            	background-color: #ffd6d6;
+            }
+            .ref {
+            	background-color: #d6ffd6;
+            }
+            pre {border: 1px dotted grey;}
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script src="http://jsprettify.googlecode.com/files/prettify-comp-20100507.js"></script>
+        <script type="text/javascript">
+                Hyphenator.config({
+                	hyphenchar:'|',
+                	intermediatestate: 'visible',
+                	onhyphenationdonecallback: window.prettify});
+                Hyphenator.run();
+				
+        </script>
+    </head>
+    <body>
+        <h1>Test 65</h1>
+        <p>Test coexistence with <a href="http://code.google.com/p/jsprettify/">jsprettify</a></p>
+        <pre>&lt;script src="../Hyphenator.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="http://jsprettify.googlecode.com/files/prettify-comp-20100507.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+		Hyphenator.config({
+			hyphenchar:'|',
+			intermediatestate: 'visible',
+			onhyphenationdonecallback: window.prettify});
+		Hyphenator.run();	
+&lt;/script&gt;</pre>
+		<p><a href="test64.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+
+
+        <p class="hyphenate prettify test">"Wunderschönen guten Tag allerseits", rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: "Himmelherrgott, so viele Leute hatte ich nicht erwartet!"</p>
+        <p class="ref">«Wun|der|schö|nen guten Tag al|ler|seits», rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te:«Him|mel|herr|gott, so viele Leute hatte ich nicht er|war|tet!»</p>
+    </body>
+</html>
