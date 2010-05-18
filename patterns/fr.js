@@ -3,7 +3,7 @@
 	rightmin : 2,
 	shortestPattern : 1,
 	longestPattern : 14,
-	specialChars : 'âêîôûçœéèàî',
+	specialChars : "âêîôûçœéèàî'’",
 	//The french hyphenation patterns are retrieved from http://extensions.services.openoffice.org/project/french-dictionary-reform1990
 	//They are under LGPL
 	patterns : {
