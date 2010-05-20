@@ -726,15 +726,15 @@ var Hyphenator = (function (window) {
 		if (!mainLanguage) {
 			for (i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
-				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv').toLowerCase() === 'content-language')) {
+				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 				//<meta name = "DC.Language" content="xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'dc.language')) {
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}			
 				//<meta name = "language" content = "xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'language')) {
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 			}
@@ -749,13 +749,11 @@ var Hyphenator = (function (window) {
 				text = prompterStrings.en;
 			}
 			text += ' (ISO 639-1)\n\n' + languageHint;
-			lang = window.prompt(unescape(text), ul).toLowerCase();
-			if (supportedLang[lang]) {
-				mainLanguage = lang;
-			} else {
-				e = new Error('The language "' + lang + '" is not yet supported.');
-				throw e;
-			}
+			mainLanguage = window.prompt(unescape(text), ul).toLowerCase();
+		}
+		if (!supportedLang.hasOwnProperty(mainLanguage)) {
+			e = new Error('The language "' + mainLanguage + '" is not yet supported.');
+			throw e;
 		}
 	},
     
