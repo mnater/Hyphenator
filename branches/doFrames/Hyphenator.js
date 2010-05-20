@@ -423,11 +423,12 @@ var Hyphenator = (function (window) {
 	 * @type function
 	 * @private
 	 */		
-	createElem = function (tagname) {
+	createElem = function (tagname, context) {
+		context = context || contextWindow;
 		if (document.createElementNS) {
-			return contextWindow.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
+			return context.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
 		} else if (document.createElement) {
-			return contextWindow.document.createElement(tagname);
+			return context.document.createElement(tagname);
 		}
 	},
 	
@@ -953,8 +954,8 @@ var Hyphenator = (function (window) {
 			}
 		}
 		if (createElem) {
-			head = document.getElementsByTagName('head').item(0);
-			script = createElem('script');
+			head = window.document.getElementsByTagName('head').item(0);
+			script = createElem('script', window);
 			script.src = url;
 			script.type = 'text/javascript';
 			head.appendChild(script);
@@ -1084,11 +1085,11 @@ var Hyphenator = (function (window) {
 		} else {
 			bdy = contextWindow.document.getElementsByTagName('body')[0];
 			myBox = createElem('div');
-			myIdAttribute = document.createAttribute('id');
+			myIdAttribute = contextWindow.document.createAttribute('id');
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
-			myClassAttribute = document.createAttribute('class');
+			myClassAttribute = contextWindow.document.createAttribute('class');
 			myClassAttribute.nodeValue = dontHyphenateClass;
-			myTextNode = document.createTextNode('Hy-phe-na-ti-on');
+			myTextNode = contextWindow.document.createTextNode('Hy-phe-na-ti-on');
 			myBox.appendChild(myTextNode);
 			myBox.setAttributeNode(myIdAttribute);
 			myBox.setAttributeNode(myClassAttribute);
@@ -1353,8 +1354,12 @@ var Hyphenator = (function (window) {
 		rangeShadow,
 		restore,
 		oncopyHandler = function (e) {
+			e = e || window.event;
+			var target = e.target || e.srcElement,
+			currDoc = target.ownerDocument,
+			body = currDoc.getElementsByTagName('body')[0];
 			//create a hidden shadow element
-			shadow = document.createElement("div");
+			shadow = currDoc.createElement("div");
 			shadow.style.overflow = 'hidden';
 			shadow.style.position = 'absolute';
 			shadow.style.top = '-5000px';
@@ -1363,14 +1368,14 @@ var Hyphenator = (function (window) {
 			
 			if (window.getSelection) {
 				//FF3, Webkit
-				selection = window.getSelection();
+				selection = currDoc.getSelection();
 				range = selection.getRangeAt(0);
 				shadow.appendChild(range.cloneContents());
 				removeHyphenationFromElement(shadow);
 				selection.selectAllChildren(shadow);
 				restore = function () {
 					shadow.parentNode.removeChild(shadow);
-					if (window.getSelection().setBaseAndExtent) {
+					if (currDoc.getSelection().setBaseAndExtent) {
 						selection.setBaseAndExtent(
 							range.startContainer,
 							range.startOffset,
@@ -1381,7 +1386,7 @@ var Hyphenator = (function (window) {
 				};
 			} else {
 				// IE
-				selection = document.selection;
+				selection = currDoc.selection;
 				range = selection.createRange();
 				shadow.innerHTML = range.htmlText;
 				removeHyphenationFromElement(shadow);
@@ -1397,7 +1402,9 @@ var Hyphenator = (function (window) {
 			}
 			window.setTimeout(restore, 0);
 		};
-
+		if (!body) {
+			return;
+		}
 		if (window.addEventListener) {
 			body.addEventListener("copy", oncopyHandler, false);
 		} else {
@@ -1597,14 +1604,13 @@ var Hyphenator = (function (window) {
 					onError(e);
 				}
 			}, i;
-			if (!documentLoaded) {
+			if (!documentLoaded && !Hyphenator.isBookmarklet()) {
 				runOnContentLoaded(window, process);
 			}
 			if (Hyphenator.isBookmarklet() || documentLoaded) {
 				if (window.frames.length > 0) {
 					for (i = 0; i < window.frames.length; i++) {
 						contextWindow = window.frames[i];
-						alert(contextWindow.location);
 						process();
 					}
 				} else {
