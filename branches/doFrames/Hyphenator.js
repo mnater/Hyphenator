@@ -610,7 +610,7 @@ var Hyphenator = (function (window) {
 		}
 		function init(context) {
 			contextWindow = context || window;
-			if (!documentLoaded || contextWindow != '_parent') {
+			if (!documentLoaded || contextWindow != parent) {
 				documentLoaded = true;
 				f();
 			}
