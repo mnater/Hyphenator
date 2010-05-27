@@ -1638,9 +1638,10 @@ var Hyphenator = (function (window) {
 							n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 						} else if (n.nodeType === 1) {
 							if (n.lang !== '') {
-								lang = n.lang;
+								Hyphenator.hyphenate(n, n.lang);
+							} else {
+								Hyphenator.hyphenate(n, lang);
 							}
-							Hyphenator.hyphenate(n, lang);
 						}
 					}
 				}
