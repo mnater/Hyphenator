@@ -102,6 +102,7 @@ var Hyphenator = (function (window) {
 		'hu': 'A weboldal nyelvét nem sikerült automatikusan megállapítani. Kérem adja meg a nyelvet:',
 		'hy': 'Չհաջողվեց հայտնաբերել այս կայքի լեզուն։ Խնդրում ենք նշեք հիմնական լեզուն՝',
 		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
+		'kn': 'ಜಾಲ ತಾಣದ ಭಾಷೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಮುಖ್ಯ ಭಾಷೆಯನ್ನು ಸೂಚಿಸಿ:',
 		'lt': 'Nepavyko automatiškai nustatyti šios svetainės kalbos. Prašome įvesti kalbą:',
 		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
 		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
@@ -758,15 +759,15 @@ var Hyphenator = (function (window) {
 		if (!mainLanguage) {
 			for (i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
-				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv').toLowerCase() === 'content-language')) {
+				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 				//<meta name = "DC.Language" content="xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'dc.language')) {
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}			
 				//<meta name = "language" content = "xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'language')) {
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
 					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
 				}
 			}
@@ -781,13 +782,11 @@ var Hyphenator = (function (window) {
 				text = prompterStrings.en;
 			}
 			text += ' (ISO 639-1)\n\n' + languageHint;
-			lang = window.prompt(unescape(text), ul).toLowerCase();
-			if (supportedLang[lang]) {
-				mainLanguage = lang;
-			} else {
-				e = new Error('The language "' + lang + '" is not yet supported.');
-				throw e;
-			}
+			mainLanguage = window.prompt(unescape(text), ul).toLowerCase();
+		}
+		if (!supportedLang.hasOwnProperty(mainLanguage)) {
+			e = new Error('The language "' + mainLanguage + '" is not yet supported.');
+			throw e;
 		}
 	},
     
@@ -1684,9 +1683,10 @@ var Hyphenator = (function (window) {
 							n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 						} else if (n.nodeType === 1) {
 							if (n.lang !== '') {
-								lang = n.lang;
+								Hyphenator.hyphenate(n, n.lang);
+							} else {
+								Hyphenator.hyphenate(n, lang);
 							}
-							Hyphenator.hyphenate(n, lang);
 						}
 					}
 				}
