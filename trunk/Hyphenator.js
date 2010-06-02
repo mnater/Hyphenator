@@ -646,6 +646,8 @@ var Hyphenator = (function (window) {
 				for (i = 0; i < window.frames.length; i++) {
 					init(window.frames[i]);
 				}
+				contextWindow = window;
+				f();
 			} else {
 				init();
 			}
@@ -655,7 +657,7 @@ var Hyphenator = (function (window) {
 		if (document.addEventListener) {
 			DOMContentLoaded = function () {
 				document.removeEventListener("DOMContentLoaded", DOMContentLoaded, false);
-				if (window.frames.length > 0 ) {
+				if (doFrames && window.frames.length > 0) {
 					//we are in a frameset, so do nothing but wait for onload to fire
 					return;
 				} else {
