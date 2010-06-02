@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="tl">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/transitional.dtd">
+<html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 1</title>
+        <title>Hyphenator.js &ndash; Test 70</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -23,17 +23,22 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.config({hyphenchar: '|'});
+                Hyphenator.config({
+                	hyphenchar:'|',
+                	doframes: true
+                });
                 Hyphenator.run();
         </script>
     </head>
     <body>
-        <h1>Test 69</h1>
-        <p>Catch error if mainlanguage is not supported</p>
-		<p><a href="test68.html">&lt;- Prev</a> | <a href="test70.html">Next -&gt;</a></p>
-		<pre>Hyphenator.config({hyphenchar:'|'});
+        <h1>Test 70</h1>
+        <p>Run Hyphenator on site with an iFrame</p>
+		<p><a href="test69.html">&lt;- Prev</a> | <a href="test71.html">Next -&gt;</a></p>
+		<pre>Hyphenator.config({
+	hyphenchar:'|',
+	doframes: true
+});
 Hyphenator.run();</pre>
-        <p class="hyphenate test" lang="en">Hyphenation</p>
-        <p class="ref">[Error message: tl not supported]</p>
+        <iframe width="600" height="400" src="test67_frame1.html"></iframe>
     </body>
 </html>
