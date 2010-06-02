@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/transitional.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 71</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            .text {
+                text-align:justify;
+            }
+            .test {
+            	background-color: #ffd6d6;
+            }
+            .ref {
+            	background-color: #d6ffd6;
+            }
+            pre {border: 1px dotted grey;}
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                Hyphenator.config({hyphenchar:'|'});
+                Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <h1>Test 71</h1>
+        <p>Run Hyphenator on site with a google map (external site in an iframe).</p>
+		<p><a href="test70.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+		<pre>Hyphenator.config({hyphenchar:'|'});
+Hyphenator.run();</pre>
+		<iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=de&amp;geocode=&amp;q=paris+eiffeltower&amp;sll=48.856667,2.350987&amp;sspn=0.252542,0.496445&amp;g=paris&amp;ie=UTF8&amp;hq=eiffeltower&amp;hnear=Paris,+Frankreich&amp;ll=48.858108,2.294512&amp;spn=0.060297,0.124111&amp;z=13&amp;iwloc=A&amp;cid=9132296577817829097&amp;output=embed"></iframe>
+    </body>
+</html>

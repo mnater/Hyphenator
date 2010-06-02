@@ -173,6 +173,15 @@ var Hyphenator = (function (window) {
 	 * So use contextWindow instead of window!
 	 */
 	contextWindow = window,
+
+	/**
+	 * @name Hyphenator-doFrames
+	 * @fieldOf Hyphenator
+	 * @description
+	 * switch to control if frames/iframes should be hyphenated, too
+	 * defaults to false (frames are a bag of hurt!)
+	 */
+	doFrames = false,
 	
 	/**
 	 * @name Hyphenator-dontHyphenate
@@ -633,7 +642,7 @@ var Hyphenator = (function (window) {
 
 		function doOnLoad() {
 			var i;
-			if (window.frames.length > 0) {
+			if (doFrames && window.frames.length > 0) {
 				for (i = 0; i < window.frames.length; i++) {
 					init(window.frames[i]);
 				}
@@ -1567,6 +1576,11 @@ var Hyphenator = (function (window) {
 					case 'safecopy':
 						if (assert('safecopy', 'boolean')) {
 							safeCopy = obj.safecopy;
+						}
+						break;
+					case 'doframes':
+						if (assert('doframes', 'boolean')) {
+							doFrames = obj.doframes;
 						}
 						break;
 					default:
