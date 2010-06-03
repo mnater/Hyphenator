@@ -695,7 +695,7 @@ var Hyphenator = (function (window) {
 				// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
 				if (document.readyState === "complete") {
 					document.detachEvent("onreadystatechange", DOMContentLoaded);
-					if (doFrames && window.frames.length > 0 ) {
+					if (doFrames && window.frames.length > 0) {
 						//we are in a frameset, so do nothing but wait for onload to fire
 						return;
 					} else {
@@ -790,7 +790,7 @@ var Hyphenator = (function (window) {
 	autoSetMainLanguage = function () {
 		var el = contextWindow.document.getElementsByTagName('html')[0],
 			m = contextWindow.document.getElementsByTagName('meta'),
-			i, text, lang, e, ul;
+			i, text, e, ul;
 		mainLanguage = getLang(el);
 		if (!mainLanguage) {
 			for (i = 0; i < m.length; i++) {
@@ -958,7 +958,7 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator-basePath
 	 */
 	loadPatterns = function (lang) {
-		var url, xhr, head, script, storage;
+		var url, xhr, head, script;
 		if (supportedLang[lang] && !Hyphenator.languages[lang]) {
 	        url = basePath + 'patterns/' + lang + '.js';
 		} else {
@@ -1205,7 +1205,7 @@ var Hyphenator = (function (window) {
 		wl = w.length;
 		s = w.split('');
 		if (word.indexOf("'") !== -1) {
-			w = w.toLowerCase().replace("'","’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
+			w = w.toLowerCase().replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
 		} else {
 			w = w.toLowerCase();
 		}
@@ -1671,20 +1671,19 @@ var Hyphenator = (function (window) {
 				}
 			}, i;
 			if (storageType !== 'none' &&
-				typeof(localStorage) !== 'undefined' &&
-				typeof(sessionStorage) !== 'undefined' &&
+				typeof(window.localStorage) !== 'undefined' &&
+				typeof(window.sessionStorage) !== 'undefined' &&
 				typeof(JSON.stringify) !== 'undefined' &&
-				typeof(JSON.parse) !== 'undefined'
-			) {
+				typeof(JSON.parse) !== 'undefined') {
 				switch (storageType) {
-					case 'session':
-						storage = sessionStorage;
+				case 'session':
+					storage = window.sessionStorage;
 					break;
-					case 'local':
-						storage = localStorage;
+				case 'local':
+					storage = window.localStorage;
 					break;
-					default:
-						delete storage;
+				default:
+					storage = undefined;
 					break;
 				}
 			}
