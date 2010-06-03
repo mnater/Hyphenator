@@ -670,7 +670,7 @@ var Hyphenator = (function (window) {
 				// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
 				if (document.readyState === "complete") {
 					document.detachEvent("onreadystatechange", DOMContentLoaded);
-					if (window.frames.length > 0 ) {
+					if (doFrames && window.frames.length > 0 ) {
 						//we are in a frameset, so do nothing but wait for onload to fire
 						return;
 					} else {
