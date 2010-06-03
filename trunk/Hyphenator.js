@@ -208,6 +208,31 @@ var Hyphenator = (function (window) {
 	enableCache = true,
 
 	/**
+	 * @name Hyphenator-storageType
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A variable to define what html5-DOM-Storage-Method is used ('none', 'local' or 'session')
+	 * @type string
+	 * @default 'none'
+	 * @private
+	 * @see Hyphenator.config
+	 */	
+	storageType = 'none',
+
+	/**
+	 * @name Hyphenator-storage
+	 * @fieldOf Hyphenator
+	 * @description
+	 * An alias to the storage-Method defined in storageType.
+	 * Set by Hyphenator.run()
+	 * @type function
+	 * @default null
+	 * @private
+	 * @see Hyphenator.run
+	 */	
+	storage,
+	
+	/**
 	 * @name Hyphenator-enableReducedPatternSet
 	 * @fieldOf Hyphenator
 	 * @description
@@ -933,7 +958,7 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator-basePath
 	 */
 	loadPatterns = function (lang) {
-		var url, xhr, head, script;
+		var url, xhr, head, script, storage;
 		if (supportedLang[lang] && !Hyphenator.languages[lang]) {
 	        url = basePath + 'patterns/' + lang + '.js';
 		} else {
@@ -981,7 +1006,7 @@ var Hyphenator = (function (window) {
 	 * @param string the language ob the lang-obj
 	 */		
 	prepareLanguagesObj = function (lang) {
-		var lo = Hyphenator.languages[lang], wrd;
+		var lo = Hyphenator.languages[lang], wrd, tmp;
 		if (!lo.prepared) {	
 			if (enableCache) {
 				lo.cache = {};
@@ -1011,6 +1036,13 @@ var Hyphenator = (function (window) {
 			lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 			lo.prepared = true;
 		}
+		if (storage) {
+			tmp = lo.genRegExp;
+			lo.genRegExp = lo.genRegExp.source; //RegExp are not stringified -> store the source
+			storage.setItem(lang, JSON.stringify(lo));
+			lo.genRegExp = tmp;
+		}
+		
 	},
 	
 	/**
@@ -1042,6 +1074,16 @@ var Hyphenator = (function (window) {
 		state = 1;
 		for (lang in docLanguages) {
 			if (docLanguages.hasOwnProperty(lang)) {
+				if (storage) {
+					if (storage.getItem(lang)) {
+						Hyphenator.languages[lang] = JSON.parse(storage.getItem(lang));
+						//reconstruct the regExp from string
+						Hyphenator.languages[lang].genRegExp = new RegExp(Hyphenator.languages[lang].genRegExp, 'gi');
+						delete docLanguages[lang];
+						docLangEmpty = true;
+						continue;
+					}
+				} 
 				loadPatterns(lang);
 				docLangEmpty = false;
 			}
@@ -1589,6 +1631,11 @@ var Hyphenator = (function (window) {
 							doFrames = obj.doframes;
 						}
 						break;
+					case 'storagetype':
+						if (assert('storagetype', 'string')) {
+							storageType = obj.storagetype;
+						}						
+						break;
 					default:
 						onError(new Error('Hyphenator.config: property ' + key + ' not known.'));
 					}
@@ -1623,6 +1670,24 @@ var Hyphenator = (function (window) {
 					onError(e);
 				}
 			}, i;
+			if (storageType !== 'none' &&
+				typeof(localStorage) !== 'undefined' &&
+				typeof(sessionStorage) !== 'undefined' &&
+				typeof(JSON.stringify) !== 'undefined' &&
+				typeof(JSON.parse) !== 'undefined'
+			) {
+				switch (storageType) {
+					case 'session':
+						storage = sessionStorage;
+					break;
+					case 'local':
+						storage = localStorage;
+					break;
+					default:
+						delete storage;
+					break;
+				}
+			}
 			if (!documentLoaded && !Hyphenator.isBookmarklet()) {
 				runOnContentLoaded(window, process);
 			}
