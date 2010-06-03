@@ -1162,7 +1162,11 @@ var Hyphenator = (function (window) {
 		w = '_' + word + '_';
 		wl = w.length;
 		s = w.split('');
-		w = w.toLowerCase();
+		if (word.indexOf("'") !== -1) {
+			w = w.toLowerCase().replace("'","’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
+		} else {
+			w = w.toLowerCase();
+		}
 		hypos = [];
 		numb3rs = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}; //check for member is faster then isFinite()
 		n = wl - lo.shortestPattern;
@@ -1623,7 +1627,7 @@ var Hyphenator = (function (window) {
 				runOnContentLoaded(window, process);
 			}
 			if (Hyphenator.isBookmarklet() || documentLoaded) {
-				if (window.frames.length > 0) {
+				if (doFrames && window.frames.length > 0) {
 					for (i = 0; i < window.frames.length; i++) {
 						contextWindow = window.frames[i];
 						process();
@@ -1759,6 +1763,6 @@ var Hyphenator = (function (window) {
 	};
 }(window));
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible'});
+	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
 	Hyphenator.run();
 }
