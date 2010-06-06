@@ -335,7 +335,7 @@ var Hyphenator = (function (window) {
 		}
 		return re;
 	}()),
-
+	
 	/**
 	 * @name Hyphenator-mainLanguage
 	 * @fieldOf Hyphenator
@@ -1804,6 +1804,42 @@ var Hyphenator = (function (window) {
 			return isBookmarklet;
 		},
 
+		getConfigFromURI: function () {
+			var loc = null, re = {}, jsArray = document.getElementsByTagName('script'), i, j, l, s, gp, option;
+			for (i = 0, l = jsArray.length; i < l; i++) {
+				if (!!jsArray[i].getAttribute('src')) {
+					loc = jsArray[i].getAttribute('src');
+				}
+				if (!loc) {
+					continue;
+				} else {
+					s = loc.indexOf('Hyphenator.js?');
+					gp = loc.substring(s + 14);
+					gp = gp.split('&');
+					for (j = 0; j < gp.length; j++) {
+						option = gp[j].split('=');
+						if (option[0] === 'bm') {
+							continue;
+						}
+						if (option[1] === 'true') {
+							re[option[0]] = true;
+							continue;
+						}
+						if (option[1] === 'false') {
+							re[option[0]] = false;
+							continue;
+						}
+						if (isFinite(option[1])) {
+							re[option[0]] = parseInt(option[1]);
+							continue;
+						}
+						re[option[0]] = option[1];
+					}
+					break;
+				}
+			}
+			return re;
+		},
 
 		/**
 		 * @name Hyphenator.toggleHyphenation
@@ -1828,5 +1864,7 @@ var Hyphenator = (function (window) {
 }(window));
 if (Hyphenator.isBookmarklet()) {
 	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
+	Hyphenator.config(Hyphenator.getConfigFromURI());
+	window.console.log(Hyphenator.getConfigFromURI());
 	Hyphenator.run();
 }
