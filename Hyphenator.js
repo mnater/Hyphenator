@@ -48,6 +48,64 @@ var Hyphenator = (function (window) {
 
 
 	/**
+	 * @name Hyphenator-supportedLang
+	 * @fieldOf Hyphenator
+	 * @description
+	 * A key-value object that stores supported languages.
+	 * The key is the bcp47 code of the language and the value
+	 * is the (abbreviated) filename of the pattern file.
+	 * The languages are retrieved from {@link Hyphenator-languageHint}.
+	 * @type object
+	 * @private
+	 * @example
+	 * Check if language lang is supported:
+	 * if (supportedLang[lang])
+	 */
+	 
+	/*
+	supportedLang = (function () {
+		var k, i = 0, a = languageHint.split(', '), r = {};
+		while (!!(k = a[i++])) {
+			r[k] = true;
+		}
+		return r;
+	}()),
+	*/
+	
+	var supportedLang = {
+		'cs': 'cs.js',
+		'da': 'da.js',
+		'bn': 'bn.js',
+		'de': 'de.js',
+		'en': 'en-us.js',
+		'en-gb': 'en-gb.js',
+		'en-us': 'en-us.js',
+		'es': 'es.js',
+		'fi': 'fi.js',
+		'fr': 'fr.js',
+		'gu': 'gu.js',
+		'hi': 'hi.js',
+		'hu': 'hu.js',
+		'hy': 'hy.js',
+		'it': 'it.js',
+		'kn': 'kn.js',
+		'lt': 'lt.js',
+		'ml': 'ml.js',
+		'nl': 'nl.js',
+		'or': 'or.js',
+		'pa': 'pa.js',
+		'pl': 'pl.js',
+		'pt': 'pt.js',
+		'ru': 'ru.js',
+		'sl': 'sl.js',
+		'sv': 'sv.js',
+		'ta': 'ta.js',
+		'te': 'te.js',
+		'tr': 'tr.js',
+		'uk': 'uk.js'
+	},
+
+	/**
 	 * @name Hyphenator-languageHint
 	 * @fieldOf Hyphenator
 	 * @description
@@ -59,28 +117,19 @@ var Hyphenator = (function (window) {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	var languageHint = 'cs, da, bn, de, en, es, fi, fr, gu, hi, hu, hy, it, kn, lt, ml, nl, or, pa, pl, pt, ru, sl, sv, ta, te, tr, uk',
+	/*var languageHint = 'cs, da, bn, de, en, en-gb, en-us, es, fi, fr, gu, hi, hu, hy, it, kn, lt, ml, nl, or, pa, pl, pt, ru, sl, sv, ta, te, tr, uk',*/
 
-	/**
-	 * @name Hyphenator-supportedLang
-	 * @fieldOf Hyphenator
-	 * @description
-	 * A generated key-value object that stores supported languages.
-	 * The languages are retrieved from {@link Hyphenator-languageHint}.
-	 * @type object
-	 * @private
-	 * @example
-	 * Check if language lang is supported:
-	 * if (supportedLang[lang])
-	 */
-	supportedLang = (function () {
-		var k, i = 0, a = languageHint.split(', '), r = {};
-		while (!!(k = a[i++])) {
-			r[k] = true;
+	languageHint = (function () {
+		var k, r = '';
+		for (k in supportedLang) {
+			if (supportedLang.hasOwnProperty(k)) {
+				r += k + ', ';
+			}
 		}
+		r = r.substring(0, r.length-2);
 		return r;
 	}()),
-
+	
 	/**
 	 * @name Hyphenator-prompterStrings
 	 * @fieldOf Hyphenator
@@ -960,7 +1009,7 @@ var Hyphenator = (function (window) {
 	loadPatterns = function (lang) {
 		var url, xhr, head, script;
 		if (supportedLang[lang] && !Hyphenator.languages[lang]) {
-	        url = basePath + 'patterns/' + lang + '.js';
+	        url = basePath + 'patterns/' + supportedLang[lang];
 		} else {
 			return;
 		}
