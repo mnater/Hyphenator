@@ -18,7 +18,8 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
 === Step by Step ===
   # [http://code.google.com/p/hyphenator/downloads/list Download] an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
   # Prepare your HTML-documents by
-    * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
+    * Validate your HTML (not absolutely necessary, but highly recommended): http://validator.w3.org/
+    * Encoding them in UTF-8 (not absolutely necessary, but again highly recommended)
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
   # Include the script by adding the following code to your HTML-document:
