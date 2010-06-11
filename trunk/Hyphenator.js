@@ -1863,8 +1863,10 @@ var Hyphenator = (function (window) {
 					continue;
 				} else {
 					s = loc.indexOf('Hyphenator.js?');
-					gp = loc.substring(s + 14);
-					gp = gp.split('&');
+					if (s === -1) {
+						continue;
+					}
+					gp = loc.substring(s + 14).split('&');
 					for (j = 0; j < gp.length; j++) {
 						option = gp[j].split('=');
 						if (option[0] === 'bm') {
@@ -1912,8 +1914,7 @@ var Hyphenator = (function (window) {
 	};
 }(window));
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
+	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible'});
 	Hyphenator.config(Hyphenator.getConfigFromURI());
-	window.console.log(Hyphenator.getConfigFromURI());
 	Hyphenator.run();
 }
