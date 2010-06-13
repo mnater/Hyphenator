@@ -61,16 +61,6 @@ var Hyphenator = (function (window) {
 	 * Check if language lang is supported:
 	 * if (supportedLang[lang])
 	 */
-	 
-	/*
-	supportedLang = (function () {
-		var k, i = 0, a = languageHint.split(', '), r = {};
-		while (!!(k = a[i++])) {
-			r[k] = true;
-		}
-		return r;
-	}()),
-	*/
 	
 	var supportedLang = {
 		'cs': 'cs.js',
@@ -118,7 +108,6 @@ var Hyphenator = (function (window) {
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
-	/*var languageHint = 'cs, da, bn, de, en, en-gb, en-us, es, fi, fr, gu, hi, hu, hy, it, kn, lt, ml, nl, or, pa, pl, pt, ru, sl, sv, ta, te, tr, uk',*/
 
 	languageHint = (function () {
 		var k, r = '';
