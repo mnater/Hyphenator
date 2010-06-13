@@ -2,7 +2,7 @@
 // http://tug_org/svn/texhyphen/trunk/collaboration/repository/hyphenator/
 Hyphenator.languages['en-us'] = Hyphenator.languages.en = {
 	leftmin : 2,
-	rightmin : 3,
+	rightmin : 2,
 	shortestPattern : 2,
 	longestPattern : 9,
 	specialChars : "",
