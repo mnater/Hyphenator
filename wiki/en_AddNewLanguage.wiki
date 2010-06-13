@@ -23,6 +23,8 @@ Currently, there's support for
   * Armenian (thanks to Sahak Petrosyan)
   * Lithuanian (thanks to Rogutės Sparnuotos)
   * Slovenian (thanks to Mojca Miklavec)
+  * Latin (coming soon, thanks to Pablo Rodríguez)
+  * Greek, monoton, polyton and ancient (coming soon, thanks to Pablo Rodríguez)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
