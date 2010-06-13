@@ -126,7 +126,7 @@ var Hyphenator = (function (window) {
 				r += k + ', ';
 			}
 		}
-		r = r.substring(0, r.length-2);
+		r = r.substring(0, r.length - 2);
 		return r;
 	}()),
 	
@@ -715,10 +715,20 @@ var Hyphenator = (function (window) {
 		}
 
 		function doOnLoad() {
-			var i;
-			if (doFrames && window.frames.length > 0) {
-				for (i = 0; i < window.frames.length; i++) {
-					init(window.frames[i]);
+			var i, haveAccess, fl = window.frames.length;
+			if (doFrames && fl > 0) {
+				for (i = 0; i < fl; i++) {
+					delete haveAccess;
+					//try catch isn't enough for webkit
+					try {
+						//opera throws only on document.toString-access
+						haveAccess = window.frames[i].document.toString();
+					} catch(e) {
+						haveAccess = undefined
+					}
+					if (!!haveAccess) {
+						init(window.frames[i]);
+					}
 				}
 				contextWindow = window;
 				f();
@@ -1718,7 +1728,7 @@ var Hyphenator = (function (window) {
 				} catch (e) {
 					onError(e);
 				}
-			}, i;
+			}, i, haveAccess, fl = window.frames.length;
 			if (storageType !== 'none' &&
 				typeof(window.localStorage) !== 'undefined' &&
 				typeof(window.sessionStorage) !== 'undefined' &&
@@ -1740,12 +1750,25 @@ var Hyphenator = (function (window) {
 				runOnContentLoaded(window, process);
 			}
 			if (Hyphenator.isBookmarklet() || documentLoaded) {
-				if (doFrames && window.frames.length > 0) {
-					for (i = 0; i < window.frames.length; i++) {
-						contextWindow = window.frames[i];
-						process();
+				if (doFrames && fl > 0) {
+					for (i = 0; i < fl; i++) {
+						delete haveAccess;
+						//try catch isn't enough for webkit
+						try {
+							//opera throws only on document.toString-access
+							haveAccess = window.frames[i].document.toString();
+						} catch(e) {
+							haveAccess = undefined
+						}
+						if (!!haveAccess) {
+							contextWindow = window.frames[i];
+							process();
+						}						
 					}
+					contextWindow = window;
+					process();
 				} else {
+					contextWindow = window;
 					process();
 				}
 			}
@@ -1881,7 +1904,7 @@ var Hyphenator = (function (window) {
 							continue;
 						}
 						if (isFinite(option[1])) {
-							re[option[0]] = parseInt(option[1]);
+							re[option[0]] = parseInt(option[1], 10);
 							continue;
 						}
 						re[option[0]] = option[1];
@@ -1914,7 +1937,7 @@ var Hyphenator = (function (window) {
 	};
 }(window));
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible'});
+	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
 	Hyphenator.config(Hyphenator.getConfigFromURI());
 	Hyphenator.run();
 }
