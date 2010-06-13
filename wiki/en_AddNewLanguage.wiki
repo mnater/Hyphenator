@@ -38,7 +38,7 @@ Next steps you will have to do:
 
 === Converting the patterns ===
 ==== Version >1.2.0 ====
-  * make shure that the licence of the pattern file allows reuse for Hyphenator.js
+  * make sure that the licence of the pattern file allows reuse for Hyphenator.js
   * work on a copy of the file, call it `lang`.js (e.g. 'en.js')
   * convert the file to UTF-8
   * replace the lccodes (if any) by their respective characters
