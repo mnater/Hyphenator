@@ -89,6 +89,7 @@ var Hyphenator = (function (window) {
 		'hy': 'hy.js',
 		'it': 'it.js',
 		'kn': 'kn.js',
+		'la': 'la.js',
 		'lt': 'lt.js',
 		'ml': 'ml.js',
 		'nl': 'nl.js',
