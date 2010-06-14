@@ -803,7 +803,7 @@ var Hyphenator = (function (window) {
 	 */
 	getLang = function (el, fallback) {
 		if (!!el.getAttribute('lang')) {
-			return el.getAttribute('lang').substring(0, 2).toLowerCase();
+			return el.getAttribute('lang').toLowerCase();
 		}
 		// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
 		/*if (!!el.getAttribute('xml:lang')) {
@@ -812,7 +812,7 @@ var Hyphenator = (function (window) {
 		//instead, we have to do this (thanks to borgzor):
 		try {
 			if (!!el.getAttribute('xml:lang')) {
-				return el.getAttribute('xml:lang').substring(0, 2).toLowerCase();
+				return el.getAttribute('xml:lang').toLowerCase();
 			}
 		} catch (ex) {}
 		if (el.tagName !== 'HTML') {
@@ -848,16 +848,16 @@ var Hyphenator = (function (window) {
 		if (!mainLanguage) {
 			for (i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
-				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv') === 'content-language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
+				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv').toLowerCase() === 'content-language')) {
+					mainLanguage = m[i].getAttribute('content').toLowerCase();
 				}
 				//<meta name = "DC.Language" content="xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'DC.language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'dc.language')) {
+					mainLanguage = m[i].getAttribute('content').toLowerCase();
 				}			
 				//<meta name = "language" content = "xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name') === 'language')) {
-					mainLanguage = m[i].getAttribute('content').substring(0, 2).toLowerCase();
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'language')) {
+					mainLanguage = m[i].getAttribute('content').toLowerCase();
 				}
 			}
 		}
@@ -874,8 +874,12 @@ var Hyphenator = (function (window) {
 			mainLanguage = window.prompt(unescape(text), ul).toLowerCase();
 		}
 		if (!supportedLang.hasOwnProperty(mainLanguage)) {
-			e = new Error('The language "' + mainLanguage + '" is not yet supported.');
-			throw e;
+			if (supportedLang.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
+					mainLanguage = mainLanguage.split('-')[0];
+				} else {
+				e = new Error('The language "' + mainLanguage + '" is not yet supported.');
+				throw e;
+			}
 		}
 	},
     
@@ -914,7 +918,10 @@ var Hyphenator = (function (window) {
 			if (supportedLang[lang]) {
 				docLanguages[lang] = true;
 			} else {
-				if (!Hyphenator.isBookmarklet()) {
+				if (supportedLang.hasOwnProperty(lang.split('-')[0])) { //try subtag
+					lang = lang.split('-')[0];
+					hyphenatorSettings.language = lang;
+				} else if (!Hyphenator.isBookmarklet()) {
 					onError(new Error('Language ' + lang + ' is not yet supported.'));
 				}
 			}
