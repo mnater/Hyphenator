@@ -54,12 +54,11 @@ var Hyphenator = (function (window) {
 	 * A key-value object that stores supported languages.
 	 * The key is the bcp47 code of the language and the value
 	 * is the (abbreviated) filename of the pattern file.
-	 * The languages are retrieved from {@link Hyphenator-languageHint}.
 	 * @type object
 	 * @private
 	 * @example
 	 * Check if language lang is supported:
-	 * if (supportedLang[lang])
+	 * if (supportedLang.hasOwnProperty(lang))
 	 */
 	
 	var supportedLang = {
@@ -104,9 +103,8 @@ var Hyphenator = (function (window) {
 	 * @name Hyphenator-languageHint
 	 * @fieldOf Hyphenator
 	 * @description
-	 * A string to be displayed in a prompt if the language can't be guessed.
-	 * If you add hyphenation patterns change this string.
-	 * Internally, this string is used to define languages that are supported by Hyphenator.
+	 * An automatically generated string to be displayed in a prompt if the language can't be guessed.
+	 * The string is generated using the supportedLang-object.
 	 * @see Hyphenator-supportedLang
 	 * @type string
 	 * @private
@@ -490,7 +488,6 @@ var Hyphenator = (function (window) {
 			zws = ''; //opera 10 on XP doesn't support zws
 		}
 		return zws;
-		//return '[zws]';
 	}()),
 	
 	/**
@@ -676,6 +673,7 @@ var Hyphenator = (function (window) {
 	 * @description
 	 * A crossbrowser solution for the DOMContentLoaded-Event based on jQuery
 	 * <a href = "http://jquery.com/</a>
+	 * I added some functionality: e.g. support for frames and iframes…
 	 * @param object the window-object
 	 * @param function-object the function to call onDOMContentLoaded
 	 * @private
@@ -688,7 +686,7 @@ var Hyphenator = (function (window) {
 		}
 		function init(context) {
 			contextWindow = context || window;
-			if (!documentLoaded || contextWindow != parent) {
+			if (!documentLoaded || contextWindow !== window.parent) {
 				documentLoaded = true;
 				f();
 			}
@@ -712,13 +710,13 @@ var Hyphenator = (function (window) {
 			var i, haveAccess, fl = window.frames.length;
 			if (doFrames && fl > 0) {
 				for (i = 0; i < fl; i++) {
-					delete haveAccess;
+					haveAccess = undefined;
 					//try catch isn't enough for webkit
 					try {
 						//opera throws only on document.toString-access
 						haveAccess = window.frames[i].document.toString();
-					} catch(e) {
-						haveAccess = undefined
+					} catch (e) {
+						haveAccess = undefined;
 					}
 					if (!!haveAccess) {
 						init(window.frames[i]);
@@ -875,8 +873,8 @@ var Hyphenator = (function (window) {
 		}
 		if (!supportedLang.hasOwnProperty(mainLanguage)) {
 			if (supportedLang.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
-					mainLanguage = mainLanguage.split('-')[0];
-				} else {
+				mainLanguage = mainLanguage.split('-')[0];
+			} else {
 				e = new Error('The language "' + mainLanguage + '" is not yet supported.');
 				throw e;
 			}
@@ -1010,7 +1008,7 @@ var Hyphenator = (function (window) {
 	 * @methodOf Hyphenator
 	 * @description
 	 * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
-	 * If the iven language is not in the {@link Hyphenator-supportedLang}-Object it returns.
+	 * If the given language is not in the {@link Hyphenator-supportedLang}-Object it returns.
 	 * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
 	 * has a same-origin-policy. This makes the isBookmarklet-functionality impossible.
 	 * @param string The language to load the patterns for
@@ -1062,6 +1060,7 @@ var Hyphenator = (function (window) {
 	 * @methodOf Hyphenator
 	 * @description
 	 * Adds a cache to each language and converts the exceptions-list to an object.
+	 * If storage is active the object is stored there.
 	 * @private
 	 * @param string the language ob the lang-obj
 	 */		
@@ -1111,6 +1110,7 @@ var Hyphenator = (function (window) {
 	 * @description
 	 * This funtion prepares the Hyphenator-Object: If RemoteLoading is turned off, it assumes
 	 * that the patternfiles are loaded, all conversions are made and the callback is called.
+	 * If storage is active the object is retrieved there.
 	 * If RemoteLoading is on (default), it loads the pattern files and waits until they are loaded,
 	 * by repeatedly checking Hyphenator.languages. If a patterfile is loaded the patterns are
 	 * converted to their object style and the lang-object extended.
@@ -1457,7 +1457,7 @@ var Hyphenator = (function (window) {
 	 * @description
 	 * Huge work-around for browser-inconsistency when it comes to
 	 * copying of hyphenated text.
-	 * The idea behind this code is stolen from http://github.com/aristus/sweet-justice
+	 * The idea behind this code has been provided by http://github.com/aristus/sweet-justice
 	 * sweet-justice is under BSD-License
 	 * @private
 	 * @param null
@@ -1576,15 +1576,22 @@ var Hyphenator = (function (window) {
 		 * @param object <table>
 		 * <tr><th>key</th><th>values</th><th>default</th></tr>
 		 * <tr><td>classname</td><td>string</td><td>'hyphenate'</td></tr>
+		 * <tr><td>donthyphenateclassname</td><td>string</td><td>''</td></tr>
 		 * <tr><td>minwordlength</td><td>integer</td><td>6</td></tr>
 		 * <tr><td>hyphenchar</td><td>string</td><td>'&amp;shy;'</td></tr>
 		 * <tr><td>urlhyphenchar</td><td>string</td><td>'zero with space'</td></tr>
 		 * <tr><td>togglebox</td><td>function</td><td>see code</td></tr>
 		 * <tr><td>displaytogglebox</td><td>boolean</td><td>false</td></tr>
 		 * <tr><td>remoteloading</td><td>boolean</td><td>true</td></tr>
+		 * <tr><td>enablecache</td><td>boolean</td><td>true</td></tr>
+		 * <tr><td>enablereducedpatternset</td><td>boolean</td><td>false</td></tr>
 		 * <tr><td>onhyphenationdonecallback</td><td>function</td><td>empty function</td></tr>
 		 * <tr><td>onerrorhandler</td><td>function</td><td>alert(onError)</td></tr>
 		 * <tr><td>intermediatestate</td><td>string</td><td>'hidden'</td></tr>
+		 * <tr><td>selectorfunction</td><td>function</td><td>[…]</td></tr>
+		 * <tr><td>safecopy</td><td>boolean</td><td>true</td></tr>
+		 * <tr><td>doframes</td><td>boolean</td><td>false</td></tr>
+		 * <tr><td>storagetype</td><td>string</td><td>'none'</td></tr>
 		 * </table>
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
@@ -1717,6 +1724,9 @@ var Hyphenator = (function (window) {
 		run: function () {
 			var process = function () {
 				try {
+					if (contextWindow.document.getElementsByTagName('frameset').length > 0) {
+						return; //we are in a frameset
+					}
 					autoSetMainLanguage();
 					gatherDocumentInfos();
 					prepare(hyphenateDocument);
@@ -1753,25 +1763,22 @@ var Hyphenator = (function (window) {
 			if (Hyphenator.isBookmarklet() || documentLoaded) {
 				if (doFrames && fl > 0) {
 					for (i = 0; i < fl; i++) {
-						delete haveAccess;
+						haveAccess = undefined;
 						//try catch isn't enough for webkit
 						try {
 							//opera throws only on document.toString-access
 							haveAccess = window.frames[i].document.toString();
-						} catch(e) {
-							haveAccess = undefined
+						} catch (e) {
+							haveAccess = undefined;
 						}
 						if (!!haveAccess) {
 							contextWindow = window.frames[i];
 							process();
 						}						
 					}
-					contextWindow = window;
-					process();
-				} else {
-					contextWindow = window;
-					process();
 				}
+				contextWindow = window;
+				process();
 			}
 		},
 		
