@@ -686,7 +686,7 @@ var Hyphenator = (function (window) {
 		}
 		function init(context) {
 			contextWindow = context || window;
-			if (!documentLoaded || contextWindow !== window.parent) {
+			if (!documentLoaded || contextWindow != window.parent) {
 				documentLoaded = true;
 				f();
 			}
@@ -1801,7 +1801,7 @@ var Hyphenator = (function (window) {
 			if (lang === '') {
 				lang = 'global';
 			}
-			if (exceptions.hasOwnProperty[lang]) {
+			if (exceptions.hasOwnProperty(lang)) {
 				exceptions[lang] += ", " + words;
 			} else {
 				exceptions[lang] = words;
