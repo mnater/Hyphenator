@@ -1,7 +1,7 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.0.0.zip 3.0..0] (June 16, 2010) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.0.0.zip 3.0.0] (June 16, 2010) ==
 This major release brings a the following new features:
   * remove hyphenation from copied text (issue34)
   * store patterns in DOM storage (issue18)
