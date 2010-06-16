@@ -258,7 +258,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 * @see Hyphenator.config
 	 */	
-	storageType = 'none',
+	storageType = 'local',
 
 	/**
 	 * @name Hyphenator-storage
