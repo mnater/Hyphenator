@@ -20,6 +20,8 @@ The script itself isn't that big (commented Hyphenator.js: ca. 44KB). But the pa
 
 By merging the script and the patterns in one file and by packing the resulting script with a Javascript-packer we can optimize loading speed (one file = one http request).
 
+Since version 3.0.0 the patterns are stored in DOM Storage if the browser supports it.
+
 *What an webauthor can do:*
   * *Use merge+pack.html:* There's a customizing service bundled in the download package (called `merge+pack.html`) since version 2.2.0. Open this file in your browser via http (not via `file:` !) and follow the instructions.
   * *Serve the files zipped:* Depending on your server you may serve the files zipped. Current browsers can easily deal with zipped packages. Zipping typically saves +/- 50%.

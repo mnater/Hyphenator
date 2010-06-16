@@ -34,6 +34,7 @@
 			start=new Date().getTime();
 			Hyphenator.config({
 				onhyphenationdonecallback:cb,
+				storagetype: 'none',
 				enablecache:true
 			});
 			Hyphenator.run();

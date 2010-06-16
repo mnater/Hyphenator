@@ -1,6 +1,23 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.0.0.zip 3.0..0] (June 16, 2010) ==
+This major release brings a the following new features:
+  * remove hyphenation from copied text (issue34)
+  * store patterns in DOM storage (issue18)
+  * hyphenate frames/iframes (issue82)
+  * support for latin
+  * support for modern (monoton and polyton) and ancient greek
+  * support for slovenian
+  * support for bcp47 language tags
+  * support for en-us and en-gb
+  * updated patterns
+  * supports possibility to make settings in bookmarklets (issue91)
+An many bugfixes:
+  * Fixed issue85
+  * Fixed issue95
+  
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%202.5.0.zip 2.5.0] (February 27, 2010) ==
 This minor release brings a the following changes:
   * Support for Armenian (Thanks to Sahak Petrosyan)

@@ -10,17 +10,11 @@ But I believe that hyphenation belongs to the client:
   * as JavaScript-engines are in focus of development, they become faster and faster.
 
 == Hyphenator breaks the search functionality of my browser ==
-Your browser has a bug (currently, only Firefox3 finds hyphenated words). The only thing we can do is to turn hyphenation off before searching.
+Your browser has a bug (currently, only Firefox3 finds hyphenated words). So I don't want/can't fix this in Hyphenator.js.
+The only thing we can do is to turn hyphenation off before searching.
 
 == When I copy/paste hyphenated texts from a website, spaces/hyphens are inserted in allmost all words ==
-Browsers behave very different when a user copies hyphenated text:
-  * Firefox copies the soft hyphens witch looks ugly in word, but is very usefull upon printing (soft hyphens aren't printed). 
-  * Opera deletes all soft hyphens.
-  * Safari (as of version 4.0.2) has a serious bug: it stupidly replaces soft hyphens by spaces... (https://bugs.webkit.org/show_bug.cgi?id=11154)
-  * IE (up to IE8) is buggy, too: it replaces all soft hyphens by hyphens ('-').
-This makes copying very problematic (aka unusable). Thus, befor copying, users have to disable hyphenation. If you know a solution let me know: (http://code.google.com/p/hyphenator/issues/detail?id=34)
-
-*Update: 05/05/10* is fixed in the trunk and will be in the next update
+This is fixed since version 3.0.0. Make sure that the option `safecopy` is set to `true`.
 
 == Hyphenator.js does NOT work in Firefox 2 ==
 Hyphenator.js infact works great in Firefox 2, but (apart from breaking urls) there's no effect since Firefox 2 does not support the soft hyphen (&shy;). If you can't be without, there's a script (external, no warranty and no support by me) that replaces the soft hyphens by spans in Firefox: [http://cheerleader.yoz.com/archives/000224.html].
@@ -75,5 +69,5 @@ Here's the code:
 }}}
 
 == Can I use hyphenator.js in a frameset? ==
-No. You'll have to include hyphenator.js in each frame.
-Besides that you should think about rewriting your website without frames!
+Yes, this feature is new in version 3.0.0 but turned off by default. You can turn it on with the option `doframes`.
+Due to the [http://en.wikipedia.org/wiki/Same_origin_policy Same Origin Policy] only frames with the same origin can be hyphenated.

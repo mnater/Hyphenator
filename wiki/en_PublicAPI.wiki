@@ -50,6 +50,9 @@ The values for the associated keys must be of the defined type:
 <tr><td>onerrorhandler</td><td>function</td></tr>
 <tr><td>intermediatestate</td><td>string</td></tr>
 <tr><td>selectorfunction</td><td>function</td></tr>
+<tr><td>safecopy</td><td>boolean</td></tr>
+<tr><td>doframes</td><td>boolean</td></tr>
+<tr><td>storagetype</td><td>string</td></tr>
 </table>
 
 For detailed description of each property see below.
@@ -279,6 +282,50 @@ By default Hyphenator.js looks for all elements with classname='hyphenate'. If y
 	Hyphenator.run();
 </script>
 }}}
+----
+==== property `safecopy` ====
+*new in version 3.0.0*
+This property this property tells Hyphenator.js if it should remove hyphenation from copied text.
+
+By default this feature is enabled but you can turn it off if you like so.
+===== Example 14 – setting `safecopy` to `false` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({safecopy: false});
+	Hyphenator.run();
+</script>
+}}}
+----
+==== property `doframes` ====
+*new in version 3.0.0*
+Hyphenator does not automatically hyphenate text in frames nor iframes. But you can turn this feature on.
+Remember: due to the Same Origin Policy scripts can only access frames with the same origin.
+
+By default this feature is turned off.
+===== Example 15 – setting `doframes` to `true` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({doframes: true});
+	Hyphenator.run();
+</script>
+}}}
+----
+==== property `storagetype` ====
+*new in version 3.0.0*
+To speed up Hyphenator.js the pattern files are stored in [http://en.wikipedia.org/wiki/DOM_storage DOM storage], if the browser supports it.
+
+By default the storage method is `localStorage` but you can change this to `sessionStorage` (option `'session'`)or turn this feature off (by setting `storagetype` to `'none'`.
+===== Example 15 – setting `storagetype` to `none` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({storagetype: 'none'});
+	Hyphenator.run();
+</script>
+}}}
+
 ----
 === void Hyphenator.run() ===
 Calling this method invokes hyphenation.
