@@ -46,7 +46,7 @@
         		margin:0em 1em;
         	}
         	ul.multicol {
-        		width:21em;
+        		width:28em;
         		padding:0;
         		margin:0;
         		
@@ -81,7 +81,8 @@
         <script type="text/javascript">
         Hyphenator.config({
         	displaytogglebox:true,
-        	remoteloading:false
+        	remoteloading:false,
+        	safecopy:false
         });
         Hyphenator.run();
         
@@ -532,6 +533,7 @@ function jsmin(comment, input, level) {
        			};
         	}
         	
+        	toggleTBSettings(false);
         	$('displaytogglebox').onclick = function(){
 				toggleTBSettings(this.checked);
 			};
@@ -563,8 +565,14 @@ function jsmin(comment, input, level) {
 			$('enablecache_btn').onclick = function () {
 				toggleInfoBoxDisplay($('enablecache_box'), this, true);
 			};
+			$('safecopy_btn').onclick = function () {
+				toggleInfoBoxDisplay($('safecopy_box'), this, true);
+			};
 			$('intermediatestate_btn').onclick = function () {
 				toggleInfoBoxDisplay($('intermediatestate_box'), this, true);
+			};
+			$('storagetype_btn').onclick = function () {
+				toggleInfoBoxDisplay($('storagetype_box'), this, true);
 			};
 			$('classname_btn').onclick = function () {
 				toggleInfoBoxDisplay($('classname_box'), this, true);
@@ -626,9 +634,12 @@ function jsmin(comment, input, level) {
  				var displaytogglebox = $('displaytogglebox').checked;
  				var remoteloading = $('remoteloading').checked;
  				var enablecache = $('enablecache').checked;
+ 				var safecopy = $('safecopy').checked;
+ 				var doframes = $('doframes').checked;
  				var onhyphenationdonecallback = $('onhyphenationdonecallback').value;
  				var onerrorhandler = $('onerrorhandler').value;
  				var intermediatestate = $('intermediatestate').value;
+ 				var storagetype = $('storagetype').value;
  				var selectorfunction = $('selectorfunction').value;
  				var pack = $('pack').checked;
  				var packlevel = parseInt($('packlevel').value, 10);
@@ -666,6 +677,12 @@ function jsmin(comment, input, level) {
 				if(enablecache === false) {
 					config += 'enablecache : false,\n\t';
 				}
+				if(safecopy === false) {
+					config += 'safecopy : false,\n\t';
+				}
+				if(doframes === true) {
+					config += 'doframes : true,\n\t';
+				}
 				if($('usecb').checked) {
 					config += 'onhyphenationdonecallback : '+onhyphenationdonecallback+',\n\t';
 				}
@@ -674,6 +691,9 @@ function jsmin(comment, input, level) {
 				}
 				if(intermediatestate !== 'hidden') {
 					config += 'intermediatestate : \''+intermediatestate+'\',\n\t';	
+				}
+				if(storagetype !== 'local') {
+					config += 'storagetype : \''+storagetype+'\',\n\t';	
 				}
 				
 				if(config.length > 0) {
@@ -734,18 +754,22 @@ function jsmin(comment, input, level) {
 					<li><label><input type="checkbox" id="cs" name="language[]" value="cs">Česky (Czech)</label></li>
 					<li><label><input type="checkbox" id="da" name="language[]" value="da">Dansk (Danish)</label></li>
 					<li><label><input type="checkbox" id="de" name="language[]" value="de">Deutsch (German)</label></li>
-					<li><label><input type="checkbox" id="en" name="language[]" value="en">English (English)</label></li>
+					<li><label><input type="checkbox" id="en-gb" name="language[]" value="en-gb">British English (British English)</label></li>
+					<li><label><input type="checkbox" id="en-us" name="language[]" value="en-us">American English (American English)</label></li>
 					<li><label><input type="checkbox" id="es" name="language[]" value="es">Español (Spanish)</label></li>
 					<li><label><input type="checkbox" id="fr" name="language[]" value="fr">Français (French)</label></li>
+					<li><label><input type="checkbox" id="el-monoton" name="language[]" value="el-monoton">monotone greek (monotone greek)</label></li>
+					<li><label><input type="checkbox" id="el-polyton" name="language[]" value="el-polyton">polytone greek (polytone greek)</label></li>
+					<li><label><input type="checkbox" id="grc" name="language[]" value="grc">ancient greek (ancient greek)</label></li>
 					<li><label><input type="checkbox" id="hu" name="language[]" value="hu">Magyar (Hungarian)</label></li>
 					<li><label><input type="checkbox" id="it" name="language[]" value="it">Italiano (Italian)</label></li>
 					<li><label><input type="checkbox" id="lt" name="language[]" value="lt">Lietuvių (Lithuanian)</label></li>
 					<li><label><input type="checkbox" id="nl" name="language[]" value="nl">Nederlands (Dutch)</label></li>
 					<li><label><input type="checkbox" id="pl" name="language[]" value="pl">Polski (Polish)</label></li>
-					<li><label><input type="checkbox" id="pt" name="language[]" value="pt">Português (Portuguese)</label></li>
-					<li><label><input type="checkbox" id="ru" name="language[]" value="ru">Pyccĸий (Russian)</label></li>
 				</ul>
 				<ul class="multicol">
+					<li><label><input type="checkbox" id="pt" name="language[]" value="pt">Português (Portuguese)</label></li>
+					<li><label><input type="checkbox" id="ru" name="language[]" value="ru">Pyccĸий (Russian)</label></li>
 					<li><label><input type="checkbox" id="sl" name="language[]" value="sl">Slovenščina (Slovenian)</label></li>
 					<li><label><input type="checkbox" id="fi" name="language[]" value="fi">Suomi (Finnish)</label></li>					
 					<li><label><input type="checkbox" id="sv" name="language[]" value="sv">Svenska (Swedish)</label></li>
@@ -781,12 +805,20 @@ function jsmin(comment, input, level) {
 				<label><input type="text" id="urlhyphenchar" name="urlhyphenchar" value="" size="10" title="urlhyphenchar"> The hyphen char for URLs and E-Mail (leave empty for zero width space)</label>
 				</p>
 				<p>
-				<label><input type="checkbox" id="remoteloading" name="remoteloading" title="remoteloading"> Enable remote loading of language patterns.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="remoteloading_btn" class="info_btn" alt="Show-Info Button"></p>
+				<label><input type="checkbox" id="remoteloading" name="remoteloading" title="remoteloading" checked> Enable remote loading of language patterns.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="remoteloading_btn" class="info_btn" alt="Show-Info Button"></p>
 				<div id="remoteloading_box" class="info_box">By enabling remote loading Hyphenator will automatically load language patterns of supported languages when they are needed.<br>
 				If you turn off remote loading Hyphenator only hyphenates texts in languages it has the patterns for. Make sure you have them selected!</div>
 				<p>
 				<label><input type="checkbox" id="enablecache" name="enablecache" title="enablecache" checked> Enable cache</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="enablecache_btn" class="info_btn" alt="Show-Info Button"></p>
 				<div id="enablecache_box" class="info_box">Once a word is hyphenated it is cached, thus a word has only to be hyphenated once. You can turn this mechanism off &ndash; mainly for performance-measuring.
+				</div>
+				<p>
+				<label><input type="checkbox" id="safecopy" name="safecopy" title="safecopy" checked> Remove hyphenation when copying text</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="safecopy_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="safecopy_box" class="info_box">Browsers don't remove soft hyphens from copied text. By enabling this feature hyphenation is removed on copy. This only works in browsers that support the oncopy-event.
+				</div>
+				<p>
+				<label><input type="checkbox" id="doframes" name="doframes" title="doframes"> Hyphenate frames and iframes, too</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="doframes_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="doframes_box" class="info_box">By default, hyphenator doesn't hyphenate text in frames. You can turn this on, but it will only work on frames that fullfill the same origin policy!
 				</div>
 				<p>
 				<label><select id="intermediatestate" name="intermediatestate" size="1" title="intermediatestate">
@@ -797,6 +829,24 @@ function jsmin(comment, input, level) {
 				<div id="intermediatestate_box" class="info_box">Since Javascript is executed after the page is loaded, the user may see the unhyphenated text for a short time befor it is hyphenated and redrawn. To prevent this all textblocks treated by Hyphenator are set to invisible upon hyphenation (setting: "hidden"). The result is, that only hyphenated text is displayed.<br>
 				On the other hand &ndash; if there's an error in the execution of Hyphenator.js &ndash; the text may stay invisible. Turn hiding off for debugging or if you prefer to see the redrawing of the text (setting: "visible").
 				</div>
+				
+				
+				<p>
+				<label><select id="storagetype" name="storagetype" size="1" title="storagetype">
+					<option>local</option>
+					<option>session</option>
+					<option>none</option>
+				</select>
+				 Define storagetype (for modern browsers only).</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="storagetype_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="storagetype_box" class="info_box">Hyphenation patterns can be stored in DOM-Storage for later reuse. You can define the method (if at all):<br>
+				'local': patterns are stored locally (they will be there even after a restart)<br>
+				'session': patterns are removed if the window is closed
+				'none': DOM-Storage is not used<br>
+				</div>
+				
+				
+				
+				
 				<fieldset>
 				<legend>Element Selection</legend>
 					<p>Indicate how to get the elements for hyphenation:</p>
@@ -841,7 +891,7 @@ function jsmin(comment, input, level) {
 				<fieldset>
 				<legend>Toggle Box</legend>
 					<p>Indicate how the Togglebox should be displayed:</p>
-					<p><label><input type="checkbox" id="displaytogglebox" name="displaytogglebox" checked> Display Toggle Box</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="togglebox_btn" class="info_btn" alt="Show-Info Button"></p>
+					<p><label><input type="checkbox" id="displaytogglebox" name="displaytogglebox"> Display Toggle Box</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="togglebox_btn" class="info_btn" alt="Show-Info Button"></p>
 					<div id="togglebox_box" class="info_box">The standard togglebox is a small button in the upper right corner of the page. By clicking on it, the user can turn off/on hyphenation. This is useful for copying or searching text on the site.<br>
 					Since the standard togglebox may interfere with the design of your page, you can define it on your own.
 					</div>

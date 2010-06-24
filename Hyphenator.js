@@ -233,7 +233,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 * @see Hyphenator-hyphenateElement
 	 */
-	dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true},
+	dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true},
 
 	/**
 	 * @name Hyphenator-enableCache
@@ -599,7 +599,8 @@ var Hyphenator = (function (window) {
 	 * @name Hyphenator-safeCopy
 	 * @fieldOf Hyphenator
 	 * @description
-	 * Defines wether work-around for copy issues is ative or not
+	 * Defines wether work-around for copy issues is active or not
+	 * Not supported by Opera (no onCopy handler)
 	 * @type boolean
 	 * @default true
 	 * @private
@@ -1474,24 +1475,27 @@ var Hyphenator = (function (window) {
 			var target = e.target || e.srcElement,
 			currDoc = target.ownerDocument,
 			body = currDoc.getElementsByTagName('body')[0];
+			if (target.tagName && dontHyphenate[target.tagName.toLowerCase()]) {
+				//Safari needs this
+				return;
+			}
 			//create a hidden shadow element
-			shadow = currDoc.createElement("div");
+			shadow = currDoc.createElement('div');
 			shadow.style.overflow = 'hidden';
 			shadow.style.position = 'absolute';
 			shadow.style.top = '-5000px';
 			shadow.style.height = '1px';
 			body.appendChild(shadow);
-			
 			if (window.getSelection) {
 				//FF3, Webkit
-				selection = currDoc.getSelection();
+				selection = contextWindow.getSelection();
 				range = selection.getRangeAt(0);
 				shadow.appendChild(range.cloneContents());
 				removeHyphenationFromElement(shadow);
 				selection.selectAllChildren(shadow);
 				restore = function () {
 					shadow.parentNode.removeChild(shadow);
-					if (currDoc.getSelection().setBaseAndExtent) {
+					if (contextWindow.getSelection().setBaseAndExtent) {
 						selection.setBaseAndExtent(
 							range.startContainer,
 							range.startOffset,
@@ -1502,7 +1506,7 @@ var Hyphenator = (function (window) {
 				};
 			} else {
 				// IE
-				selection = currDoc.selection;
+				selection = contextWindow.document.selection;
 				range = selection.createRange();
 				shadow.innerHTML = range.htmlText;
 				removeHyphenationFromElement(shadow);
