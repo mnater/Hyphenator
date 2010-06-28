@@ -1474,7 +1474,8 @@ var Hyphenator = (function (window) {
 			e = e || window.event;
 			var target = e.target || e.srcElement,
 			currDoc = target.ownerDocument,
-			body = currDoc.getElementsByTagName('body')[0];
+			body = currDoc.getElementsByTagName('body')[0],
+			targetWindow = 'defaultView' in currDoc ? currDoc.defaultView : currDoc.parentWindow;
 			if (target.tagName && dontHyphenate[target.tagName.toLowerCase()]) {
 				//Safari needs this
 				return;
@@ -1488,14 +1489,14 @@ var Hyphenator = (function (window) {
 			body.appendChild(shadow);
 			if (window.getSelection) {
 				//FF3, Webkit
-				selection = contextWindow.getSelection();
+				selection = targetWindow.getSelection();
 				range = selection.getRangeAt(0);
 				shadow.appendChild(range.cloneContents());
 				removeHyphenationFromElement(shadow);
 				selection.selectAllChildren(shadow);
 				restore = function () {
 					shadow.parentNode.removeChild(shadow);
-					if (contextWindow.getSelection().setBaseAndExtent) {
+					if (targetWindow.getSelection().setBaseAndExtent) {
 						selection.setBaseAndExtent(
 							range.startContainer,
 							range.startOffset,
@@ -1506,7 +1507,7 @@ var Hyphenator = (function (window) {
 				};
 			} else {
 				// IE
-				selection = contextWindow.document.selection;
+				selection = targetWindow.document.selection;
 				range = selection.createRange();
 				shadow.innerHTML = range.htmlText;
 				removeHyphenationFromElement(shadow);
