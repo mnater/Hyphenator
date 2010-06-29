@@ -568,6 +568,9 @@ function jsmin(comment, input, level) {
 			$('safecopy_btn').onclick = function () {
 				toggleInfoBoxDisplay($('safecopy_box'), this, true);
 			};
+			$('doframes_btn').onclick = function () {
+				toggleInfoBoxDisplay($('doframes_box'), this, true);
+			};
 			$('intermediatestate_btn').onclick = function () {
 				toggleInfoBoxDisplay($('intermediatestate_box'), this, true);
 			};
@@ -737,7 +740,7 @@ function jsmin(comment, input, level) {
 			This page provides a service to merge the script and the language patterns in one file. You may also set the configure parameters and minify the resulting script.
 		</p>
 		<p class="multicol hyphenate">
-			Since this page uses XMLHttpRequests to load the script and pattern files, it will not work if you call it with the file:// protocol. Instead put it on your server or go to <a href="http://code.google.com/p/hyphenator/">http://code.google.com/p/hyphenator/</a>.
+			Since this page uses XMLHttpRequests to load the script and pattern files, it will not work if you call it with the file:// protocol. Instead put it on your server or go to <a href="http://hyphenator.googlecode.com/svn/trunk/mergeAndPack.html">http://code.google.com/p/hyphenator/</a>.
 		</p>
 		<p class="multicol hyphenate">
 			The script loads the version of Hyphenator.js that resides in the same directory like this page.
@@ -843,6 +846,7 @@ function jsmin(comment, input, level) {
 				'local': patterns are stored locally (they will be there even after a restart)<br>
 				'session': patterns are removed if the window is closed
 				'none': DOM-Storage is not used<br>
+				Degrades gracefully, if the browser does not support DOM-Storage.
 				</div>
 				
 				
