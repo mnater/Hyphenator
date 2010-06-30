@@ -1097,10 +1097,7 @@ var Hyphenator = (function (window) {
 			lo.prepared = true;
 		}
 		if (storage) {
-			tmp = lo.genRegExp;
-			lo.genRegExp = lo.genRegExp.source; //RegExp are not stringified -> store the source
 			storage.setItem(lang, JSON.stringify(lo));
-			lo.genRegExp = tmp;
 		}
 		
 	},
@@ -1120,7 +1117,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	prepare = function (callback) {
-		var lang, docLangEmpty = true, interval;
+		var lang, docLangEmpty = true, interval, tmp1, tmp2;
 		if (!enableRemoteLoading) {
 			for (lang in Hyphenator.languages) {
 				if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -1138,8 +1135,20 @@ var Hyphenator = (function (window) {
 				if (storage) {
 					if (storage.getItem(lang)) {
 						Hyphenator.languages[lang] = JSON.parse(storage.getItem(lang));
-						//reconstruct the regExp from string
-						Hyphenator.languages[lang].genRegExp = new RegExp(Hyphenator.languages[lang].genRegExp, 'gi');
+						//Replace exceptions since they may have been changed:
+						if (exceptions.hasOwnProperty(lang)) {
+							tmp1 = convertExceptionsToObject(exceptions[lang]);
+							for (tmp2 in tmp1) {
+								if (tmp1.hasOwnProperty(tmp2)) {
+									Hyphenator.languages[lang].exceptions[tmp2] = tmp1[tmp2];
+								}
+							}
+							delete exceptions[lang];
+						}
+						//Replace genRegExp since it may have been changed:
+						tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+						Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
+						
 						delete docLanguages[lang];
 						docLangEmpty = true;
 						continue;
