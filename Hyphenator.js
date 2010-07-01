@@ -1066,7 +1066,7 @@ var Hyphenator = (function (window) {
 	 * @param string the language ob the lang-obj
 	 */		
 	prepareLanguagesObj = function (lang) {
-		var lo = Hyphenator.languages[lang], wrd, tmp;
+		var lo = Hyphenator.languages[lang], wrd;
 		if (!lo.prepared) {	
 			if (enableCache) {
 				lo.cache = {};
@@ -1117,7 +1117,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	prepare = function (callback) {
-		var lang, docLangEmpty = true, interval, tmp1, tmp2;
+		var lang, languagesToLoad = 0, interval, tmp1, tmp2;
 		if (!enableRemoteLoading) {
 			for (lang in Hyphenator.languages) {
 				if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -1132,6 +1132,7 @@ var Hyphenator = (function (window) {
 		state = 1;
 		for (lang in docLanguages) {
 			if (docLanguages.hasOwnProperty(lang)) {
+				++languagesToLoad;
 				if (storage) {
 					if (storage.getItem(lang)) {
 						Hyphenator.languages[lang] = JSON.parse(storage.getItem(lang));
@@ -1150,15 +1151,14 @@ var Hyphenator = (function (window) {
 						Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
 						
 						delete docLanguages[lang];
-						docLangEmpty = true;
+						--languagesToLoad;
 						continue;
 					}
 				} 
 				loadPatterns(lang);
-				docLangEmpty = false;
 			}
 		}
-		if (docLangEmpty) {
+		if (languagesToLoad === 0) {
 			state = 2;
 			callback();
 			return;
