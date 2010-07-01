@@ -6,9 +6,9 @@ This major release brings a the following new features:
   * remove hyphenation from copied text (issue34)
   * store patterns in DOM storage (issue18)
   * hyphenate frames/iframes (issue82)
-  * support for latin
-  * support for modern (monoton and polyton) and ancient greek
-  * support for slovenian
+  * support for latin (Thanks to Pablo Rodríguez)
+  * support for modern (monoton and polyton) and ancient greek (Thanks to Pablo Rodríguez)
+  * support for slovenian (Thanks to Mojca Miklavec)
   * support for bcp47 language tags
   * support for en-us and en-gb
   * updated patterns
