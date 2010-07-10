@@ -77,7 +77,7 @@
 			}
  		</style>
  		<script src="Hyphenator.js" type="text/javascript"></script>
- 		<script src="patterns/en.js" type="text/javascript"></script>
+ 		<script src="patterns/en-us.js" type="text/javascript"></script>
         <script type="text/javascript">
         Hyphenator.config({
         	displaytogglebox:true,
@@ -868,12 +868,13 @@ function jsmin(comment, input, level) {
 					<textarea cols="80" rows="20" id="selectorfunction" name="selectorfunction">function () {
 	var tmp, el = [], i, l;
 	if (document.getElementsByClassName) {
-		el = document.getElementsByClassName('hyphenate');
+		el = contextWindow.document.getElementsByClassName(hyphenateClass);
 	} else {
-		tmp = document.getElementsByTagName('*');
+		tmp = contextWindow.document.getElementsByTagName('*');
 		l = tmp.length;
-		for (i = 0; i < l; i++) {
-			if (tmp[i].className.indexOf(hyphenateClass) !== -1 &amp;&amp; tmp[i].className.indexOf(dontHyphenateClass) === -1) {
+		for (i = 0; i < l; i++)
+		{
+			if (tmp[i].className.indexOf(hyphenateClass) !== -1 && tmp[i].className.indexOf(dontHyphenateClass) === -1) {
 				el.push(tmp[i]);
 			}
 		}
@@ -906,22 +907,21 @@ function jsmin(comment, input, level) {
 					<div id="toggleboxfunction_block">
 					<label>Toggle Box Function:<br>
 					<textarea cols="80" rows="20" id="togglebox" name="togglebox">function (s) {
-	var myBox;
-	if (!!(myBox = document.getElementById('HyphenatorToggleBox'))) {
+	var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute;
+	if (!!(myBox = contextWindow.document.getElementById('HyphenatorToggleBox'))) {
 		if (s) {
 			myBox.firstChild.data = 'Hy-phe-na-ti-on';
 		} else {
 			myBox.firstChild.data = 'Hyphenation';
 		}
 	} else {
-		var bdy, myIdAttribute, myTextNode, myClassAttribute; 
-		bdy = document.getElementsByTagName('body')[0];
-		myBox = document.createElement('div');
-		myIdAttribute = document.createAttribute('id');
+		bdy = contextWindow.document.getElementsByTagName('body')[0];
+		myBox = createElem('div');
+		myIdAttribute = contextWindow.document.createAttribute('id');
 		myIdAttribute.nodeValue = 'HyphenatorToggleBox';
-		myClassAttribute = document.createAttribute('class');
-		myClassAttribute.nodeValue = 'donthyphenate';
-		myTextNode = document.createTextNode('Hy-phe-na-ti-on');
+		myClassAttribute = contextWindow.document.createAttribute('class');
+		myClassAttribute.nodeValue = dontHyphenateClass;
+		myTextNode = contextWindow.document.createTextNode('Hy-phe-na-ti-on');
 		myBox.appendChild(myTextNode);
 		myBox.setAttributeNode(myIdAttribute);
 		myBox.setAttributeNode(myClassAttribute);
