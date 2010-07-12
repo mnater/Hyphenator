@@ -1754,22 +1754,26 @@ var Hyphenator = (function (window) {
 					onError(e);
 				}
 			}, i, haveAccess, fl = window.frames.length;
-			if (storageType !== 'none' &&
-				typeof(window.localStorage) !== 'undefined' &&
-				typeof(window.sessionStorage) !== 'undefined' &&
-				typeof(JSON.stringify) !== 'undefined' &&
-				typeof(JSON.parse) !== 'undefined') {
-				switch (storageType) {
-				case 'session':
-					storage = window.sessionStorage;
-					break;
-				case 'local':
-					storage = window.localStorage;
-					break;
-				default:
-					storage = undefined;
-					break;
+			try {
+				if (storageType !== 'none' &&
+					typeof(window.localStorage) !== 'undefined' &&
+					typeof(window.sessionStorage) !== 'undefined' &&
+					typeof(JSON.stringify) !== 'undefined' &&
+					typeof(JSON.parse) !== 'undefined') {
+					switch (storageType) {
+					case 'session':
+						storage = window.sessionStorage;
+						break;
+					case 'local':
+						storage = window.localStorage;
+						break;
+					default:
+						storage = undefined;
+						break;
+					}
 				}
+			} catch(e) {
+				//FF throws an error if DOM.storage.enabled is set to false
 			}
 			if (!documentLoaded && !Hyphenator.isBookmarklet()) {
 				runOnContentLoaded(window, process);
