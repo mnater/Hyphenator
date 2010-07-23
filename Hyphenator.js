@@ -1,5 +1,4 @@
-﻿/*!
- *  Hyphenator X.Y.Z - client side hyphenation for webbrowsers
+﻿/** @license Hyphenator X.Y.Z - client side hyphenation for webbrowsers
  *  Copyright (C) 2010  Mathias Nater, Zürich (mathias at mnn dot ch)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
@@ -19,7 +18,7 @@
  */
  
 /* 
- *  Comments are jsdoctoolkit formatted. See jsdoctoolkit.org
+ *  Comments are jsdoctoolkit formatted. See http://code.google.com/p/jsdoc-toolkit/
  */
  
 /* The following comment is for JSLint: */
