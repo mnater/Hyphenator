@@ -515,6 +515,14 @@ function jsmin(comment, input, level) {
         window.onload = function(){
         	var ul = navigator.language ? navigator.language.slice(0,2) : navigator.userLanguage.slice(0,2);
 			if(ul) {
+				switch (ul) {
+					case 'en':
+						ul = 'en-us';
+						break;
+					case 'el':
+						ul = 'el-monoton';
+						break;
+				}
 				$(ul).checked = true;
 			}        	
 			$('alllanguages').onclick = function(){
@@ -707,7 +715,8 @@ function jsmin(comment, input, level) {
 					script = script.replace(/\n/gi, "\r");
 				}
 				if(pack) {
-					script = jsmin(script.slice(script.indexOf('/*!'), script.indexOf('*/')+2), script, packlevel);
+					var license = script.slice(script.indexOf('/** @license'), script.indexOf('*/')+2).replace('* @license', '\n * ');
+					script = jsmin(license, script, packlevel);
 				}
 				var output = $('output');
 				output.firstChild.data = '';
@@ -965,7 +974,7 @@ function jsmin(comment, input, level) {
 				</fieldset>
 				<fieldset>
 				<legend>Minify</legend>
-				<p>By minifying the resulting script you can save some bandwith. This page uses the <a href="http://fmarcia.info/jsmin/">JavaScript-Version</a> of <a href="http://www.crockford.com/javascript/jsmin.html">jsmin</a> since it's easy to run on a webpage. You may achieve better results if you pack the resulting script with other minifiers/packers such as <a href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a> or <a href="http://dean.edwards.name/packer/">Dean Edwards' packer</a>.</p>
+				<p>By minifying the resulting script you can save some bandwith. This page uses the <a href="http://fmarcia.info/jsmin/">JavaScript-Version</a> of <a href="http://www.crockford.com/javascript/jsmin.html">jsmin</a> since it's easy to run on a webpage. You may achieve better results if you pack the resulting script with other minifiers/packers such as <a href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a> or <a href="http://closure-compiler.appspot.com/home">Google's Closure Compiler</a>.</p>
 				<p>
 					<label>
 						<input type="checkbox" id="pack" checked> pack with jsmin
