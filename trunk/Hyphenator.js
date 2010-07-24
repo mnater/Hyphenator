@@ -25,17 +25,13 @@
 /*global window, ActiveXObject, unescape */
 /*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, regexp: true, newcap: true, immed: true */
 
-/**
- * @fileOverview
- * A script that does hyphenation in (X)HTML files
- * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version X.Y.Z
-  */
 
 /**
  * @constructor
  * @description Provides all functionality to do hyphenation, except the patterns that are loaded
  * externally.
+ * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
+ * @version X.Y.Z
  * @namespace Holds all methods and properties
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
@@ -45,22 +41,20 @@
  */
 var Hyphenator = (function (window) {
 
-
+	var
 	/**
 	 * @name Hyphenator-supportedLang
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A key-value object that stores supported languages.
 	 * The key is the bcp47 code of the language and the value
 	 * is the (abbreviated) filename of the pattern file.
-	 * @type object
+	 * @type {Object.<string, string>}
 	 * @private
 	 * @example
 	 * Check if language lang is supported:
 	 * if (supportedLang.hasOwnProperty(lang))
 	 */
-	
-	var supportedLang = {
+	supportedLang = {
 		'cs': 'cs.js',
 		'da': 'da.js',
 		'bn': 'bn.js',
@@ -100,12 +94,11 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-languageHint
-	 * @fieldOf Hyphenator
 	 * @description
 	 * An automatically generated string to be displayed in a prompt if the language can't be guessed.
 	 * The string is generated using the supportedLang-object.
 	 * @see Hyphenator-supportedLang
-	 * @type string
+	 * @type {string}
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */
@@ -123,11 +116,10 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-prompterStrings
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A key-value object holding the strings to be displayed if the language can't be guessed
 	 * If you add hyphenation patterns change this string.
-	 * @type object
+	 * @type {Object.<string,string>}
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
@@ -156,13 +148,12 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-basePath
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string storing the basepath from where Hyphenator.js was loaded.
 	 * This is used to load the patternfiles.
 	 * The basepath is determined dynamically by searching all script-tags for Hyphenator.js
 	 * If the path cannot be determined http://hyphenator.googlecode.com/svn/trunk/ is used as fallback.
-	 * @type string
+	 * @type {string}
 	 * @private
 	 * @see Hyphenator-loadPatterns
 	 */
@@ -183,7 +174,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-isLocal
-	 * @fieldOf Hyphenator
 	 * @description
 	 * isLocal is true, if Hyphenator is loaded from the same domain, as the webpage, but false, if
 	 * it's loaded from an external source (i.e. directly from google.code)
@@ -198,7 +188,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-documentLoaded
-	 * @fieldOf Hyphenator
 	 * @description
 	 * documentLoaded is true, when the DOM has been loaded. This is set by runOnContentLoaded
 	 */
@@ -206,7 +195,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-contextWindow
-	 * @fieldOf Hyphenator
 	 * @description
 	 * contextWindow stores the window for the document to be hyphenated.
 	 * If there are frames this will change.
@@ -216,7 +204,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-doFrames
-	 * @fieldOf Hyphenator
 	 * @description
 	 * switch to control if frames/iframes should be hyphenated, too
 	 * defaults to false (frames are a bag of hurt!)
@@ -225,10 +212,9 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-dontHyphenate
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A key-value object containing all html-tags whose content should not be hyphenated
-	 * @type object
+	 * @type {Object.<string,boolean>}
 	 * @private
 	 * @see Hyphenator-hyphenateElement
 	 */
@@ -236,7 +222,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-enableCache
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A variable to set if caching is enabled or not
 	 * @type boolean
@@ -249,10 +234,9 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-storageType
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A variable to define what html5-DOM-Storage-Method is used ('none', 'local' or 'session')
-	 * @type string
+	 * @type {string}
 	 * @default 'none'
 	 * @private
 	 * @see Hyphenator.config
@@ -261,11 +245,10 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-storage
-	 * @fieldOf Hyphenator
 	 * @description
 	 * An alias to the storage-Method defined in storageType.
 	 * Set by Hyphenator.run()
-	 * @type function
+	 * @type {Object|undefined}
 	 * @default null
 	 * @private
 	 * @see Hyphenator.run
@@ -274,7 +257,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-enableReducedPatternSet
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A variable to set if storing the used patterns is set
 	 * @type boolean
@@ -288,7 +270,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-enableRemoteLoading
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A variable to set if pattern files should be loaded remotely or not
 	 * @type boolean
@@ -301,7 +282,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-displayToggleBox
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A variable to set if the togglebox should be displayed or not
 	 * @type boolean
@@ -314,10 +294,9 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-hyphenateClass
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string containing the css-class-name for the hyphenate class
-	 * @type string
+	 * @type {string}
 	 * @default 'hyphenate'
 	 * @private
 	 * @example
@@ -328,10 +307,9 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-dontHyphenateClass
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string containing the css-class-name for elements that should not be hyphenated
-	 * @type string
+	 * @type {string}
 	 * @default 'donthyphenate'
 	 * @private
 	 * @example
@@ -342,10 +320,9 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-min
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A number wich indicates the minimal length of words to hyphenate.
-	 * @type number
+	 * @type {number}
 	 * @default 6
 	 * @private
 	 * @see Hyphenator.config
@@ -354,7 +331,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-isBookmarklet
-	 * @fieldOf Hyphenator
 	 * @description
 	 * Indicates if Hyphanetor runs as bookmarklet or not.
 	 * @type boolean
@@ -378,10 +354,9 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-mainLanguage
-	 * @fieldOf Hyphenator
 	 * @description
 	 * The general language of the document
-	 * @type number
+	 * @type {string|null}
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
@@ -389,34 +364,31 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-elements
-	 * @fieldOf Hyphenator
 	 * @description
 	 * An array holding all elements that have to be hyphenated. This var is filled by
 	 * {@link Hyphenator-gatherDocumentInfos}
-	 * @type array
+	 * @type {Array}
 	 * @private
 	 */	
 	elements = [],
 	
 	/**
 	 * @name Hyphenator-exceptions
-	 * @fieldOf Hyphenator
 	 * @description
 	 * An object containing exceptions as comma separated strings for each language.
 	 * When the language-objects are loaded, their exceptions are processed, copied here and then deleted.
 	 * @see Hyphenator-prepareLanguagesObj
-	 * @type object
+	 * @type {Object}
 	 * @private
 	 */	
 	exceptions = {},
 
 	/**
 	 * @name Hyphenator-docLanguages
-	 * @fieldOf Hyphenator
 	 * @description
 	 * An object holding all languages used in the document. This is filled by
 	 * {@link Hyphenator-gatherDocumentInfos}
-	 * @type object
+	 * @type {Object}
 	 * @private
 	 */	
 	docLanguages = {},
@@ -424,7 +396,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-state
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A number that inidcates the current state of the script
 	 * 0: not initialized
@@ -432,49 +403,45 @@ var Hyphenator = (function (window) {
 	 * 2: ready
 	 * 3: hyphenation done
 	 * 4: hyphenation removed
-	 * @type number
+	 * @type {number}
 	 * @private
 	 */	
 	state = 0,
 
 	/**
 	 * @name Hyphenator-url
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string containing a RegularExpression to match URL's
-	 * @type string
+	 * @type {string}
 	 * @private
 	 */	
 	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([a-z]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
 	//      protocoll     usr     pwd                    ip               or                          host                 tld        port               path
 	/**
 	 * @name Hyphenator-mail
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string containing a RegularExpression to match mail-adresses
-	 * @type string
+	 * @type {string}
 	 * @private
 	 */	
 	mail = '[\\w-\\.]+@[\\w\\.]+',
 
 	/**
 	 * @name Hyphenator-urlRE
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A RegularExpressions-Object for url- and mail adress matching
-	 * @type object
+	 * @type {RegExp}
 	 * @private
 	 */		
 	urlOrMailRE = new RegExp('(' + url + ')|(' + mail + ')', 'i'),
 
 	/**
 	 * @name Hyphenator-zeroWidthSpace
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string that holds a char.
 	 * Depending on the browser, this is the zero with space or an empty string.
 	 * zeroWidthSpace is used to break URLs
-	 * @type string
+	 * @type {string}
 	 * @private
 	 */		
 	zeroWidthSpace = (function () {
@@ -491,10 +458,9 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-createElem
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A function alias to document.createElementNS or document.createElement
-	 * @type function
+	 * @type {function(string, Object)}
 	 * @private
 	 */		
 	createElem = function (tagname, context) {
@@ -508,23 +474,21 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-onHyphenationDone
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A method to be called, when the last element has been hyphenated or the hyphenation has been
 	 * removed from the last element.
 	 * @see Hyphenator.config
-	 * @type function
+	 * @type {function()}
 	 * @private
 	 */		
 	onHyphenationDone = function () {},
 
 	/**
 	 * @name Hyphenator-onError
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A function that can be called upon an error.
 	 * @see Hyphenator.config
-	 * @type function
+	 * @type {function(Object)}
 	 * @private
 	 */		
 	onError = function (e) {
@@ -533,12 +497,11 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-selectorFunction
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A function that has to return a HTMLNodeList of Elements to be hyphenated.
 	 * By default it uses the classname ('hyphenate') to select the elements.
 	 * @see Hyphenator.config
-	 * @type function
+	 * @type {function()}
 	 * @private
 	 */		
 	selectorFunction = function () {
@@ -560,21 +523,19 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-intermediateState
-	 * @fieldOf Hyphenator
 	 * @description
 	 * The value of style.visibility of the text while it is hyphenated.
 	 * @see Hyphenator.config
-	 * @type string
+	 * @type {string}
 	 * @private
 	 */		
 	intermediateState = 'hidden',
 	
 	/**
 	 * @name Hyphenator-hyphen
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string containing the character for in-word-hyphenation
-	 * @type string
+	 * @type {string}
 	 * @default the soft hyphen
 	 * @private
 	 * @see Hyphenator.config
@@ -583,10 +544,9 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-urlhyphen
-	 * @fieldOf Hyphenator
 	 * @description
 	 * A string containing the character for url/mail-hyphenation
-	 * @type string
+	 * @type {string}
 	 * @default the zero width space
 	 * @private
 	 * @see Hyphenator.config
@@ -596,7 +556,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-safeCopy
-	 * @fieldOf Hyphenator
 	 * @description
 	 * Defines wether work-around for copy issues is active or not
 	 * Not supported by Opera (no onCopy handler)
@@ -610,7 +569,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-Expando
-	 * @methodOf Hyphenator
 	 * @description
 	 * This custom object stores data for elements: storing data directly in elements
 	 * (DomElement.customData = foobar;) isn't a good idea. It would lead to conflicts
@@ -669,13 +627,12 @@ var Hyphenator = (function (window) {
 	 */
 	/**
 	 * @name Hyphenator-runOnContentLoaded
-	 * @methodOf Hyphenator
 	 * @description
 	 * A crossbrowser solution for the DOMContentLoaded-Event based on jQuery
 	 * <a href = "http://jquery.com/</a>
 	 * I added some functionality: e.g. support for frames and iframes…
-	 * @param object the window-object
-	 * @param function-object the function to call onDOMContentLoaded
+	 * @param {Object} w the window-object
+	 * @param {function()} f the function to call onDOMContentLoaded
 	 * @private
 	 */
 	runOnContentLoaded = function (w, f) {
@@ -703,7 +660,7 @@ var Hyphenator = (function (window) {
 			}
 		
 			// and execute any waiting functions
-			init();
+			init(window);
 		}
 
 		function doOnLoad() {
@@ -725,7 +682,7 @@ var Hyphenator = (function (window) {
 				contextWindow = window;
 				f();
 			} else {
-				init();
+				init(window);
 			}
 		}
 		
@@ -737,7 +694,7 @@ var Hyphenator = (function (window) {
 					//we are in a frameset, so do nothing but wait for onload to fire
 					return;
 				} else {
-					init();
+					init(window);
 				}
 			};
 		
@@ -750,7 +707,7 @@ var Hyphenator = (function (window) {
 						//we are in a frameset, so do nothing but wait for onload to fire
 						return;
 					} else {
-						init();
+						init(window);
 					}
 				}
 			};
@@ -791,11 +748,10 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-getLang
-	 * @methodOf Hyphenator
 	 * @description
 	 * Gets the language of an element. If no language is set, it may use the {@link Hyphenator-mainLanguage}.
-	 * @param object The first parameter is an DOM-Element-Object
-	 * @param boolean The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainLanguage}
+	 * @param {Object} el The first parameter is an DOM-Element-Object
+	 * @param {boolean} fallback The second parameter is a boolean to tell if the function should return the {@link Hyphenator-mainLanguage}
 	 * if there's no language found for the element.
 	 * @private
 	 */
@@ -824,7 +780,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-autoSetMainLanguage
-	 * @methodOf Hyphenator
 	 * @description
 	 * Retrieves the language of the document from the DOM.
 	 * The function looks in the following places:
@@ -842,7 +797,7 @@ var Hyphenator = (function (window) {
 		var el = contextWindow.document.getElementsByTagName('html')[0],
 			m = contextWindow.document.getElementsByTagName('meta'),
 			i, text, e, ul;
-		mainLanguage = getLang(el);
+		mainLanguage = getLang(el, false);
 		if (!mainLanguage) {
 			for (i = 0; i < m.length; i++) {
 				//<meta http-equiv = "content-language" content="xy">	
@@ -883,7 +838,6 @@ var Hyphenator = (function (window) {
     
 	/**
 	 * @name Hyphenator-gatherDocumentInfos
-	 * @methodOf Hyphenator
 	 * @description
 	 * This method runs through the DOM and executes the process()-function on:
 	 * - every node returned by the {@link Hyphenator-selectorFunction}.
@@ -939,7 +893,7 @@ var Hyphenator = (function (window) {
 			elToProcess = selectorFunction();
 			while (!!(tmp = elToProcess[i++]))
 			{
-				process(tmp, true);
+				process(tmp, true, '');
 			}			
 		}
 		if (!Hyphenator.languages.hasOwnProperty(mainLanguage)) {
@@ -954,12 +908,11 @@ var Hyphenator = (function (window) {
 		 
 	/**
 	 * @name Hyphenator-convertPatterns
-	 * @methodOf Hyphenator
 	 * @description
 	 * Converts the patterns from string '_a6' to object '_a':'_a6'.
 	 * The result is stored in the {@link Hyphenator-patterns}-object.
 	 * @private
-	 * @param string the language whose patterns shall be converted
+	 * @param {string} lang the language whose patterns shall be converted
 	 */		
 	convertPatterns = function (lang) {
 		var plen, anfang, ende, pats, pat, key, tmp = {};
@@ -983,12 +936,11 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-convertExceptionsToObject
-	 * @methodOf Hyphenator
 	 * @description
 	 * Converts a list of comma seprated exceptions to an object:
 	 * 'Fortran,Hy-phen-a-tion' -> {'Fortran':'Fortran','Hyphenation':'Hy-phen-a-tion'}
 	 * @private
-	 * @param string a comma separated string of exceptions (without spaces)
+	 * @param {string} exc a comma separated string of exceptions (without spaces)
 	 */		
 	convertExceptionsToObject = function (exc) {
 		var w = exc.split(', '),
@@ -1005,13 +957,12 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-loadPatterns
-	 * @methodOf Hyphenator
 	 * @description
 	 * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
 	 * If the given language is not in the {@link Hyphenator-supportedLang}-Object it returns.
 	 * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
 	 * has a same-origin-policy. This makes the isBookmarklet-functionality impossible.
-	 * @param string The language to load the patterns for
+	 * @param {string} lang The language to load the patterns for
 	 * @private
 	 * @see Hyphenator-basePath
 	 */
@@ -1057,12 +1008,11 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-prepareLanguagesObj
-	 * @methodOf Hyphenator
 	 * @description
 	 * Adds a cache to each language and converts the exceptions-list to an object.
 	 * If storage is active the object is stored there.
 	 * @private
-	 * @param string the language ob the lang-obj
+	 * @param {string} lang the language ob the lang-obj
 	 */		
 	prepareLanguagesObj = function (lang) {
 		var lo = Hyphenator.languages[lang], wrd;
@@ -1103,7 +1053,6 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-prepare
-	 * @methodOf Hyphenator
 	 * @description
 	 * This funtion prepares the Hyphenator-Object: If RemoteLoading is turned off, it assumes
 	 * that the patternfiles are loaded, all conversions are made and the callback is called.
@@ -1112,7 +1061,7 @@ var Hyphenator = (function (window) {
 	 * by repeatedly checking Hyphenator.languages. If a patterfile is loaded the patterns are
 	 * converted to their object style and the lang-object extended.
 	 * Finally the callback is called.
-	 * @param function-object callback to call, when all patterns are loaded
+	 * @param {function()} callback to call, when all patterns are loaded
 	 * @private
 	 */
 	prepare = function (callback) {
@@ -1188,10 +1137,9 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-switchToggleBox
-	 * @methodOf Hyphenator
 	 * @description
 	 * Creates or hides the toggleBox: a small button to turn off/on hyphenation on a page.
-	 * @param boolean true when hyphenation is on, false when it's off
+	 * @param {boolean} s true when hyphenation is on, false when it's off
 	 * @see Hyphenator.config
 	 * @private
 	 */		
@@ -1205,7 +1153,7 @@ var Hyphenator = (function (window) {
 			}
 		} else {
 			bdy = contextWindow.document.getElementsByTagName('body')[0];
-			myBox = createElem('div');
+			myBox = createElem('div', contextWindow);
 			myIdAttribute = contextWindow.document.createAttribute('id');
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
 			myClassAttribute = contextWindow.document.createAttribute('class');
@@ -1233,15 +1181,14 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-hyphenateWord
-	 * @methodOf Hyphenator
 	 * @description
 	 * This function is the heart of Hyphenator.js. It returns a hyphenated word.
 	 *
 	 * If there's already a {@link Hyphenator-hypen} in the word, the word is returned as it is.
 	 * If the word is in the exceptions list or in the cache, it is retrieved from it.
 	 * If there's a '-' put a zeroWidthSpace after the '-' and hyphenate the parts.
-	 * @param string The language of the word
-	 * @param string The word
+	 * @param {string} lang The language of the word
+	 * @param {string} word The word
 	 * @returns string The hyphenated word
 	 * @public
 	 */	
@@ -1329,10 +1276,9 @@ var Hyphenator = (function (window) {
 		
 	/**
 	 * @name Hyphenator-hyphenateURL
-	 * @methodOf Hyphenator
 	 * @description
 	 * Puts {@link Hyphenator-urlhyphen} after each no-alphanumeric char that my be in a URL.
-	 * @param string URL to hyphenate
+	 * @param {string} url to hyphenate
 	 * @returns string the hyphenated URL
 	 * @public
 	 */
@@ -1342,13 +1288,11 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-hyphenateElement
-	 * @methodOf Hyphenator
 	 * @description
 	 * Takes the content of the given element and - if there's text - replaces the words
 	 * by hyphenated words. If there's another element, the function is called recursively.
 	 * When all words are hyphenated, the visibility of the element is set to 'visible'.
-	 * @param object The element to hyphenate
-	 * @param string The language used in this element
+	 * @param {Object} el The element to hyphenate
 	 * @public
 	 */
 	hyphenateElement = function (el) {
@@ -1390,12 +1334,11 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-removeHyphenationFromElement
-	 * @methodOf Hyphenator
 	 * @description
 	 * Removes all hyphens from the element. If there are other elements, the function is
 	 * called recursively.
 	 * Removing hyphens is usefull if you like to copy text. Some browsers are buggy when the copy hyphenated texts.
-	 * @param object The element where to remove hyphenation.
+	 * @param {Object} el The element where to remove hyphenation.
 	 * @public
 	 */
 	removeHyphenationFromElement = function (el) {
@@ -1425,7 +1368,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-hyphenateDocument
-	 * @methodOf Hyphenator
 	 * @description
 	 * Calls hyphenateElement() for all members of elements. This is done with a setTimout
 	 * to prevent a "long running Script"-alert when hyphenating large pages.
@@ -1447,7 +1389,6 @@ var Hyphenator = (function (window) {
 
 	/**
 	 * @name Hyphenator-removeHyphenationFromDocument
-	 * @methodOf Hyphenator
 	 * @description
 	 * Does what it says ;-)
 	 * @public
@@ -1462,14 +1403,12 @@ var Hyphenator = (function (window) {
 	
 	/**
 	 * @name Hyphenator-registerOnCopy
-	 * @methodOf Hyphenator
 	 * @description
 	 * Huge work-around for browser-inconsistency when it comes to
 	 * copying of hyphenated text.
 	 * The idea behind this code has been provided by http://github.com/aristus/sweet-justice
 	 * sweet-justice is under BSD-License
 	 * @private
-	 * @param null
 	 */
 	registerOnCopy = function () {
 		var body = contextWindow.document.getElementsByTagName('body')[0],
@@ -1582,11 +1521,10 @@ var Hyphenator = (function (window) {
 
 		/**
 		 * @name Hyphenator.config
-		 * @methodOf Hyphenator
-		 * @description
+			 * @description
 		 * Config function that takes an object as an argument. The object contains key-value-pairs
 		 * containig Hyphenator-settings. This is a shortcut for calling Hyphenator.set...-Methods.
-		 * @param object <table>
+		 * @param {Object} obj <table>
 		 * <tr><th>key</th><th>values</th><th>default</th></tr>
 		 * <tr><td>classname</td><td>string</td><td>'hyphenate'</td></tr>
 		 * <tr><td>donthyphenateclassname</td><td>string</td><td>''</td></tr>
@@ -1725,8 +1663,7 @@ var Hyphenator = (function (window) {
 
 		/**
 		 * @name Hyphenator.run
-		 * @methodOf Hyphenator
-		 * @description
+			 * @description
 		 * Bootstrap function that starts all hyphenation processes when called.
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
@@ -1801,12 +1738,11 @@ var Hyphenator = (function (window) {
 		
 		/**
 		 * @name Hyphenator.addExceptions
-		 * @methodOf Hyphenator
-		 * @description
+			 * @description
 		 * Adds the exceptions from the string to the appropriate language in the 
 		 * {@link Hyphenator-languages}-object
-		 * @param string The language
-		 * @param string A comma separated string of hyphenated words WITH spaces.
+		 * @param {string} lang The language
+		 * @param {string} words A comma separated string of hyphenated words WITH spaces.
 		 * @public
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
          * &lt;script type = "text/javascript"&gt;
@@ -1827,14 +1763,13 @@ var Hyphenator = (function (window) {
 		
 		/**
 		 * @name Hyphenator.hyphenate
-		 * @methodOf Hyphenator
-		 * @public
+			 * @public
 		 * @description
 		 * Hyphenates the target. The language patterns must be loaded.
 		 * If the target is a string, the hyphenated string is returned,
 		 * if it's an object, the values are hyphenated directly.
-		 * @param mixed the target to be hyphenated
-		 * @param string the language of the target
+		 * @param {string|Object} target the target to be hyphenated
+		 * @param {string} lang the language of the target
 		 * @returns string
 		 * @example &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
 		 * &lt;script src = "patterns/en.js" type = "text/javascript"&gt;&lt;/script&gt;
@@ -1878,10 +1813,9 @@ var Hyphenator = (function (window) {
 		
 		/**
 		 * @name Hyphenator.getRedPatternSet
-		 * @methodOf Hyphenator
-		 * @description
+			 * @description
 		 * Returns {@link Hyphenator-isBookmarklet}.
-		 * @param string the language patterns are stored for
+		 * @param {string} lang the language patterns are stored for
 		 * @returns object {'patk': pat}
 		 * @public
          */
@@ -1891,8 +1825,7 @@ var Hyphenator = (function (window) {
 		
 		/**
 		 * @name Hyphenator.isBookmarklet
-		 * @methodOf Hyphenator
-		 * @description
+			 * @description
 		 * Returns {@link Hyphenator-isBookmarklet}.
 		 * @returns boolean
 		 * @public
@@ -1942,8 +1875,7 @@ var Hyphenator = (function (window) {
 
 		/**
 		 * @name Hyphenator.toggleHyphenation
-		 * @methodOf Hyphenator
-		 * @description
+			 * @description
 		 * Checks the current state of the ToggleBox and removes or does hyphenation.
 		 * @public
          */
