@@ -330,6 +330,19 @@ var Hyphenator = (function (window) {
 	min = 6,
 	
 	/**
+	 * @name Hyphenator-orphanControl
+	 * @description
+	 * Control how the last words of a line are handled:
+	 * level 1 (default): last word is hyphenated
+	 * level 2: last word is not hyphenated
+	 * level 3: last word is not hyphenated and last space is non breaking
+	 * @type {number}
+	 * @default 1
+	 * @private
+	 */
+	orphanControl = 1,
+	
+	/**
 	 * @name Hyphenator-isBookmarklet
 	 * @description
 	 * Indicates if Hyphanetor runs as bookmarklet or not.
@@ -1310,6 +1323,36 @@ var Hyphenator = (function (window) {
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
 					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+					if(orphanControl !== 1) {
+						n.data = n.data.replace(/[\S]+ [\S]+$/, function (part) {
+							var h, r;
+							switch (hyphen) {
+							case '|':
+								h = '\\|';
+								break;
+							case '+':
+								h = '\\+';
+								break;
+							case '*':
+								h = '\\*';
+								break;
+							default:
+								h = hyphen;
+							}
+							if (orphanControl >= 2) {
+								//remove hyphen points from last word
+								r = part.split(' ');
+								r[1] = r[1].replace(new RegExp(h, 'g'), '');
+								r[1] = r[1].replace(new RegExp(zeroWidthSpace, 'g'), '');
+								r = r.join(' ');
+							}
+							if (orphanControl === 3) {
+								//replace spaces by non breaking spaces
+								r = r.replace(/[ ]+/g, String.fromCharCode(160));
+							}
+							return r;
+						});
+					}
 				}
 			}
 		}
@@ -1653,6 +1696,11 @@ var Hyphenator = (function (window) {
 						if (assert('storagetype', 'string')) {
 							storageType = obj.storagetype;
 						}						
+						break;
+					case 'orphancontrol':
+						if (assert('orphancontrol', 'number')) {
+							orphanControl = obj.orphancontrol;
+						}
 						break;
 					default:
 						onError(new Error('Hyphenator.config: property ' + key + ' not known.'));
