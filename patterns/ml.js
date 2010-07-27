@@ -1,6 +1,6 @@
 ﻿// For questions about the Malayalam hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
-Hyphenator.languages.ml = {
+Hyphenator.languages['ml'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

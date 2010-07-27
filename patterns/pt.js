@@ -1,7 +1,7 @@
 ﻿// For questions about the portuguese hyphenation patterns
 // ask Lailson Bandeira (lailsonbm at gmail dot com)
 // based on LaTeX patterns in Portuguese, by Pedro J. de Rezende and J.Joao Dias Almeida (http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/)
-Hyphenator.languages.pt = {
+Hyphenator.languages['pt'] = {
 	leftmin : 2,
 	rightmin : 4,
 	shortestPattern : 1,

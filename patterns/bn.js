@@ -1,6 +1,6 @@
 ﻿// For questions about the Bengali hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
-Hyphenator.languages.bn = {
+Hyphenator.languages['bn'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

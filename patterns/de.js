@@ -1,4 +1,4 @@
-﻿Hyphenator.languages.de = {
+﻿Hyphenator.languages['de'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 2,

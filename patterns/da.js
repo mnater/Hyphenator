@@ -1,4 +1,4 @@
-﻿Hyphenator.languages.da = {
+﻿Hyphenator.languages['da'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 2,

@@ -1,6 +1,6 @@
 ﻿// Swedish hyphenation patterns by Jan Michael Rynning, jmr@nada.kth.se
 // Patterns modified for Hyphenator by Andreas Johansson, andreas@ibuypink.com
-Hyphenator.languages.sv = {
+Hyphenator.languages['sv'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

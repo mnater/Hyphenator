@@ -2,7 +2,7 @@
 // Pablo Rodríguez (hyphenator at pragmata dot tk)
 // based on LaTeX Latin hyphenation patterns by Claudio Beccari
 // (http://tug.ctan.org/tex-archive/language/hyphenation/lahyph.tex)
-Hyphenator.languages.la = {
+Hyphenator.languages['la'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

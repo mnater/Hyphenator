@@ -1,6 +1,6 @@
 ﻿// For questions about the hungarian hyphenation patterns
 // ask Nagy Péter (nagy dot pite at gmail dot com)
-Hyphenator.languages.hu = {
+Hyphenator.languages['hu'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 2,
