@@ -3,7 +3,7 @@
 // Yannis Haralambous, Kostis Dryllerakis and Claudio Beccari.
 ﻿// From http://tug.org/svn/texhyphen/branches/ptex/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-grc.tex
 // Converted by Pablo Rodríguez (hyphenator at pragmata dot tk)
-Hyphenator.languages.grc = {
+Hyphenator.languages['grc'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

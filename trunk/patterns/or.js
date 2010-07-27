@@ -1,6 +1,6 @@
 ﻿// For questions about the Oriya hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
-Hyphenator.languages.or = {
+Hyphenator.languages['or'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

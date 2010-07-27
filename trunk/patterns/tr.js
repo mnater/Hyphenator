@@ -1,6 +1,6 @@
 // For questions about the turkish hyphenation patterns ask
 // Andreas Lappe nd at off-pist dot de
-Hyphenator.languages.tr = {
+Hyphenator.languages['tr'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

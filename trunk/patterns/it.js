@@ -1,4 +1,4 @@
-﻿Hyphenator.languages.it = {
+﻿Hyphenator.languages['it'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,

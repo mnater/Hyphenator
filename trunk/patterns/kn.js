@@ -1,6 +1,6 @@
 ﻿// For questions about the Kannada hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
-Hyphenator.languages.kn = {
+Hyphenator.languages['kn'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 1,
