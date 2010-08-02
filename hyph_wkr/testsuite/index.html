@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Testsuite</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            .text {
+                text-align:justify;
+            }
+            .test {
+            	background-color: #ffd6d6;
+            }
+            .ref {
+            	background-color: #d6ffd6;
+            }
+            pre {
+            	border: 1px dotted grey;
+            }
+            dt {
+            	display: inline-block;
+            	width: 60px;
+            }
+            dd {
+            	display: inline;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>The Hyphenator (with Web Worker) Testsuite</h1>
+        <p class="hyphenate">Run this tests before releasing a new version! Do the same run with the <a href="http://yui.2clics.net/">packed</a> version of Hyphenator.js.</p>
+		<p><a href="test1.html">Start -&gt;</a></p>
+		<dl>
+			<dt><a href="test1.html">test1.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a single word.</dd>
+		</dl>
+		<dl>
+			<dt><a href="test2.html">test2.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph.</dd>
+		</dl>
+		<dl>
+			<dt><a href="test3.html">test3.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Raise error, when no language information is set.</dd>
+		</dl>
+		<dl>
+			<dt><a href="test4.html">test4.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph when only mainlanguage is set.</dd>
+		</dl>
+		<dl>
+			<dt><a href="test5.html">test5.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph when language is set in a parent.</dd>
+		</dl>
+		<dl>
+			<dt><a href="test6.html">test6.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph for each latin script language.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test7.html">test7.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph with lots of punctuation.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test8.html">test8.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph that contains a word in a different language.</dd>
+		</dl>
+		<dl>
+			<dt><a href="test9.html">test9.html</a></dt>
+			<dd><span style="color: maroon; background-color:red;">[KO]</span> Run Hyphenation with manually preloaded patterns.</dd>
+		</dl>
+		<dl>
+			<dt><a href="test10.html">test10.html</a></dt>
+			<dd><span style="color: maroon; background-color:red;">[KO]</span> Run Hyphenation with manually preloaded patterns. But one language isn't loaded.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test11.html">test11.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Run Hyphenation with a minimal word length of 4.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test12.html">test12.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Run Hyphenation with a minimal word length of 8.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test13.html">test13.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate different styles of URLs.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test14.html">test14.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Measuring time to hyphenate a word.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test15.html">test15.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Measuring time to hyphenate a page, including loading the patterns.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test16.html">test16.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Check Hyphenator with JSLint!</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test17.html">test17.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> (obsolete) Test running onContentLoaded (instead of onload).</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test18.html">test18.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Check for correctly put Zero Width Spaces. Resize window!</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test19.html">test19.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Do some checks related to german patterns.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test20.html">test20.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Checks if a Bug in Firefox 3 is still here.</dd>
+		</dl>
+    </body>
+</html>
