@@ -104,7 +104,7 @@ var Hyphenator = (function (window) {
 			if (config) {
 				Hyphenator.config(config);
 			}
-						
+
 			//do the run
 			Hyphenator.Worker.onmessage = function (e) {
 				var msg = JSON.parse(e.data), element;
