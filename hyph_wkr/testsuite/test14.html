@@ -37,7 +37,7 @@
 					var res,start,end,times = 1000, received = 0;
 					var hyphenator = new Worker('../Hyphenator_worker.js');
 					hyphenator.postMessage(JSON.stringify({
-						type: 1,
+						type: 'config',
 						wordHyphenChar: '|'
 					}));
 					hyphenator.onmessage = function(e) {
@@ -48,7 +48,7 @@
 						}
 					};
 					var msg = JSON.stringify({
-						type: 0,
+						type: 'hyphenate',
 						text: 'Silbentrennung',
 						lang: 'de'
 					});
