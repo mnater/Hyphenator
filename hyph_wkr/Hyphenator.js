@@ -1,3 +1,7 @@
+/* The following comment is for JSLint: */
+/*global window */
+/*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, regexp: true, newcap: true, immed: true */
+
 var Hyphenator = (function (window) {
 	return {
 		wordHyphenChar: String.fromCharCode(173),
@@ -85,12 +89,12 @@ var Hyphenator = (function (window) {
 							nodeNumber: i,
 							text: n.data,
 							lang: lang
-						}
+						};
 						messageCount++;
 						Hyphenator.Worker.postMessage(JSON.stringify(msg));
 					} else if (n.nodeType === 1) {
 						if (elNoProcess.length > 0) {
-							for(j = 0; j < elNoProcess.length; j++) {
+							for (j = 0; j < elNoProcess.length; j++) {
 								if (elNoProcess[j] === n) {
 									hyphenateChild = false;
 								}
@@ -112,32 +116,32 @@ var Hyphenator = (function (window) {
 			Hyphenator.Worker.onmessage = function (e) {
 				var msg = JSON.parse(e.data), element;
 				switch (msg.type) {
-					case 'hyphenate':
-						element = Hyphenator.Expando.getDataForId(msg.link).element;
-						element.childNodes[msg.nodeNumber].data = msg.text;
-						if (Hyphenator.Expando.getDataForId(msg.link).isHidden && Hyphenator.intermediateState === 'hidden') {
-							element.style.visibility = 'visible';
-							if (!Hyphenator.Expando.getDataForId(msg.link).hasOwnStyle) {
-								element.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-								element.removeAttribute('style');
-							} else {
-								if (element.style.removeProperty) {
-									element.style.removeProperty('visibility');
-								} else if (element.style.removeAttribute) { // IE
-									element.style.removeAttribute('visibility');
-								}  
-							}
+				case 'hyphenate':
+					element = Hyphenator.Expando.getDataForId(msg.link).element;
+					element.childNodes[msg.nodeNumber].data = msg.text;
+					if (Hyphenator.Expando.getDataForId(msg.link).isHidden && Hyphenator.intermediateState === 'hidden') {
+						element.style.visibility = 'visible';
+						if (!Hyphenator.Expando.getDataForId(msg.link).hasOwnStyle) {
+							element.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+							element.removeAttribute('style');
+						} else {
+							if (element.style.removeProperty) {
+								element.style.removeProperty('visibility');
+							} else if (element.style.removeAttribute) { // IE
+								element.style.removeAttribute('visibility');
+							}  
 						}
-						messageCount--;
-						if (messageCount === 0) {
-							Hyphenator.customEvents.fire('onhyphenationdone', 'Hyphenator.run()');
-						}
+					}
+					messageCount--;
+					if (messageCount === 0) {
+						Hyphenator.customEvents.fire('onhyphenationdone', 'Hyphenator.run()');
+					}
 					break;
-					case 'pattern':
-						Hyphenator.storage.setItem('Hyphenator_' + msg.lang, msg.patterns);
+				case 'pattern':
+					Hyphenator.storage.setItem('Hyphenator_' + msg.lang, msg.patterns);
 					break;
-					case 'error':
-						Hyphenator.customEvents.fire('onerror', {sender: msg.sender, message: msg.message});
+				case 'error':
+					Hyphenator.customEvents.fire('onerror', {sender: msg.sender, message: msg.message});
 					break;
 				}
 			};			
@@ -150,34 +154,34 @@ var Hyphenator = (function (window) {
 
 		},
 		removehyphenation: function () {
-			var i = 0,
+			var i = 0, elToProcess, element,
 			process = function (element, hide) {
 				var n, i = 0, wordHyphenChar, urlHyphenChar;
 				switch (Hyphenator.wordHyphenChar) {
-					case '|':
-						wordHyphenChar = '\\|';
-						break;
-					case '+':
-						wordHyphenChar = '\\+';
-						break;
-					case '*':
-						wordHyphenChar = '\\*';
-						break;
-					default:
-						wordHyphenChar = Hyphenator.wordHyphenChar;
+				case '|':
+					wordHyphenChar = '\\|';
+					break;
+				case '+':
+					wordHyphenChar = '\\+';
+					break;
+				case '*':
+					wordHyphenChar = '\\*';
+					break;
+				default:
+					wordHyphenChar = Hyphenator.wordHyphenChar;
 				}
 				switch (Hyphenator.urlHyphenChar) {
-					case '|':
-						urlHyphenChar = '\\|';
-						break;
-					case '+':
-						urlHyphenChar = '\\+';
-						break;
-					case '*':
-						urlHyphenChar = '\\*';
-						break;
-					default:
-						urlHyphenChar = Hyphenator.urlHyphenChar;
+				case '|':
+					urlHyphenChar = '\\|';
+					break;
+				case '+':
+					urlHyphenChar = '\\+';
+					break;
+				case '*':
+					urlHyphenChar = '\\*';
+					break;
+				default:
+					urlHyphenChar = Hyphenator.urlHyphenChar;
 				}
 				while (!!(n = element.childNodes[i++])) {
 					if (n.nodeType === 3) {
@@ -196,9 +200,9 @@ var Hyphenator = (function (window) {
 		}
 	};
 
-})(window);
+}(window));
 
-Hyphenator.Worker = new Worker(Hyphenator.basePath + 'Hyphenator_worker.js');
+Hyphenator.Worker = new window.Worker(Hyphenator.basePath + 'Hyphenator_worker.js');
 Hyphenator.Expando = (function () {
 	var container = {},
 		name = "HyphenatorExpando_" + Math.random(),
@@ -242,19 +246,16 @@ Hyphenator.storage = (function () {
 			switch (Hyphenator.storageType) {
 			case 'session':
 				return window.sessionStorage;
-				break;
 			case 'local':
 				return window.localStorage;
-				break;
 			default:
 				return;
-				break;
 			}
 		}
-	} catch(e) {
+	} catch (e) {
 		//FF throws an error if DOM.storage.enabled is set to false
 	}
-})();
+}());
 
 
 Hyphenator.restorePatterns = (function () {
@@ -273,11 +274,11 @@ Hyphenator.restorePatterns = (function () {
 				restored[l] = true;
 			}
 		}
-	}
-})();
+	};
+}());
 
 Hyphenator.addExceptions = function (lang, words) {
-	var lang, tmp = [], i, exceptions = {}, msg = {
+	var tmp = [], i, exceptions = {}, msg = {
 		type: 'exception'
 	};
 	tmp = words.split(', ');
@@ -343,7 +344,7 @@ Hyphenator.config = function (configObj) {
 		}
 	}
 	Hyphenator.Worker.postMessage(JSON.stringify(msg));
-}
+};
 
 Hyphenator.customEvents = (function () {
 	var events = {};
@@ -361,13 +362,13 @@ Hyphenator.customEvents = (function () {
 			events[name] = function (data) {
 				oldEvent(data);
 				action(data);
-			}
+			};
 		}
 	};
-})();
+}());
 Hyphenator.customEvents.add('onhyphenationdone');
 Hyphenator.customEvents.add('onremovehyphenationdone');
 Hyphenator.customEvents.add('onerror');
-Hyphenator.customEvents.addEventListener('onerror', function(e) {
-	alert(e.message);
+Hyphenator.customEvents.addEventListener('onerror', function (e) {
+	window.alert(e.message);
 });

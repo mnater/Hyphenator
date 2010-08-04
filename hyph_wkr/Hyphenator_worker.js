@@ -1,3 +1,7 @@
+/* The following comment is for JSLint: */
+/*global self */
+/*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, regexp: true, newcap: true, immed: true */
+
 var Hyphenator_worker = (function (self) {
 	var
 	url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([a-z]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
@@ -23,11 +27,11 @@ var Hyphenator_worker = (function (self) {
 	},
 	storePatterns = function (lang) {
 		var patterns = JSON.stringify(Hyphenator_worker.languages[lang]);
-		postMessage(JSON.stringify({
-						type: 'pattern',
-						lang: lang,
-						patterns: patterns
-					}));
+		self.postMessage(JSON.stringify({
+			type: 'pattern',
+			lang: lang,
+			patterns: patterns
+		}));
 	},
 	addExceptions = function (lang, exceptions) {
 		var exception;
@@ -42,35 +46,35 @@ var Hyphenator_worker = (function (self) {
 	};
 
 	self.onmessage = function (e) {
-		var msg = JSON.parse(e.data);
+		var msg = JSON.parse(e.data), wordRE;
 		switch (msg.type) {
-			case 'hyphenate':
-				msg.text = Hyphenator_worker.hyphenateText(msg.text, msg.lang);
-				postMessage(JSON.stringify(msg));
+		case 'hyphenate':
+			msg.text = Hyphenator_worker.hyphenateText(msg.text, msg.lang);
+			self.postMessage(JSON.stringify(msg));
 			break;
-			case 'config':
-				if (msg.hasOwnProperty('wordHyphenChar')) {
-					Hyphenator_worker.wordHyphenChar = msg.wordHyphenChar;
-				}
-				if (msg.hasOwnProperty('urlHyphenChar')) {
-					Hyphenator_worker.urlHyphenChar = msg.urlHyphenChar;
-				}
-				if (msg.hasOwnProperty('minWordLength')) {
-					Hyphenator_worker.minWordLength = msg.minWordLength;
-				}
-				if (msg.hasOwnProperty('storageType')) {
-					Hyphenator_worker.storageType = msg.storageType;
-				}
+		case 'config':
+			if (msg.hasOwnProperty('wordHyphenChar')) {
+				Hyphenator_worker.wordHyphenChar = msg.wordHyphenChar;
+			}
+			if (msg.hasOwnProperty('urlHyphenChar')) {
+				Hyphenator_worker.urlHyphenChar = msg.urlHyphenChar;
+			}
+			if (msg.hasOwnProperty('minWordLength')) {
+				Hyphenator_worker.minWordLength = msg.minWordLength;
+			}
+			if (msg.hasOwnProperty('storageType')) {
+				Hyphenator_worker.storageType = msg.storageType;
+			}
 			break;
-			case 'exception':
-				addExceptions(msg.lang, msg.exceptions);
+		case 'exception':
+			addExceptions(msg.lang, msg.exceptions);
 			break;
-			case 'pattern':
-				Hyphenator_worker.languages[msg.lang] = JSON.parse(msg.patterns);
-				convertPatterns(msg.lang);
-				wordRE = '[\\w' + Hyphenator_worker.languages[msg.lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + Hyphenator_worker.minWordLength + ',}';
-				Hyphenator_worker.languages[msg.lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wordRE + ')', 'gi');
-				Hyphenator_worker.languages[msg.lang].cache = {};
+		case 'pattern':
+			Hyphenator_worker.languages[msg.lang] = JSON.parse(msg.patterns);
+			convertPatterns(msg.lang);
+			wordRE = '[\\w' + Hyphenator_worker.languages[msg.lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + Hyphenator_worker.minWordLength + ',}';
+			Hyphenator_worker.languages[msg.lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wordRE + ')', 'gi');
+			Hyphenator_worker.languages[msg.lang].cache = {};
 			break;
 		}
 	};
@@ -171,16 +175,19 @@ var Hyphenator_worker = (function (self) {
 			}, path;
 			if (!Hyphenator_worker.languages.hasOwnProperty(lang)) {
 				switch (lang) {
-					case 'en':
-						path = 'patterns/en-us.js';
+				case 'en':
+					path = 'patterns/en-us.js';
 					break;
-					default:
-						path = 'patterns/' + lang + '.js';
+				case 'el':
+					path = 'patterns/el-monoton.js';
+					break;
+				default:
+					path = 'patterns/' + lang + '.js';
 				}
 				try {
 					self.importScripts(path);
 				} catch (e) {
-					postMessage(JSON.stringify({
+					self.postMessage(JSON.stringify({
 						type: 'error',
 						sender: 'Hyphenator_worker: importScripts',
 						message: 'Couldn\'t load file: \'' + path + '\''
@@ -195,4 +202,4 @@ var Hyphenator_worker = (function (self) {
 			return text.replace(Hyphenator_worker.languages[lang].genRegExp, hyphenate);
 		}
 	};
-})(self);
+}(self));
