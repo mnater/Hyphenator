@@ -24,7 +24,7 @@ var Hyphenator_worker = (function (self) {
 	storePatterns = function (lang) {
 		var patterns = JSON.stringify(Hyphenator_worker.languages[lang]);
 		postMessage(JSON.stringify({
-						type: 3,
+						type: 'pattern',
 						lang: lang,
 						patterns: patterns
 					}));
@@ -44,11 +44,11 @@ var Hyphenator_worker = (function (self) {
 	self.onmessage = function (e) {
 		var msg = JSON.parse(e.data);
 		switch (msg.type) {
-			case 0:
+			case 'hyphenate':
 				msg.text = Hyphenator_worker.hyphenateText(msg.text, msg.lang);
 				postMessage(JSON.stringify(msg));
 			break;
-			case 1:
+			case 'config':
 				if (msg.hasOwnProperty('wordHyphenChar')) {
 					Hyphenator_worker.wordHyphenChar = msg.wordHyphenChar;
 				}
@@ -62,10 +62,10 @@ var Hyphenator_worker = (function (self) {
 					Hyphenator_worker.storageType = msg.storageType;
 				}
 			break;
-			case 2:
+			case 'exception':
 				addExceptions(msg.lang, msg.exceptions);
 			break;
-			case 3:
+			case 'pattern':
 				Hyphenator_worker.languages[msg.lang] = JSON.parse(msg.patterns);
 				convertPatterns(msg.lang);
 				wordRE = '[\\w' + Hyphenator_worker.languages[msg.lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + Hyphenator_worker.minWordLength + ',}';
@@ -181,7 +181,7 @@ var Hyphenator_worker = (function (self) {
 					self.importScripts(path);
 				} catch (e) {
 					postMessage(JSON.stringify({
-						type: 42,
+						type: 'error',
 						sender: 'Hyphenator_worker: importScripts',
 						message: 'Couldn\'t load file: \'' + path + '\''
 					}));
