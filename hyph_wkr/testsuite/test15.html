@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <title>Hyphenator.js &ndash; Test 15</title>
@@ -27,10 +26,10 @@
     <body>
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="test14.html">&lt;- Prev</a> | <a href="test16.html">Next -&gt;</a></p>
         <h1>Test 15</h1>
-        <p>Measuring time to hyphenate a page, including loading the patterns.</p>
+        <p id="desc">Measuring time to hyphenate a page, including loading the patterns.</p>
 
 		<p id="output" class="test">Wait 3 seconds...</p>
- 		<p class="ref">hyphenateElement(te,'en') :: _ms<br>(The result differs widely, depending on network, browser-engine and machine-power.)</p>
+ 		<p id="ref">hyphenateElement(te,'en') :: _ms<br>(The result differs widely, depending on network, browser-engine and machine-power.)</p>
  		
  		<div id="testelement" class="hyphenate text">
  <p>In the year 1878 I took my degree of Doctor of Medicine of the University of London, and proceeded to Netley to go through the course prescribed for surgeons in the army. Having completed my studies there, I was duly attached to the Fifth Northumberland Fusiliers as Assistant Surgeon. The regiment was stationed in India at the time, and before I could join it, the second Afghan war had broken out. On landing at Bombay, I learned that my corps had advanced through the passes, and was already deep in the enemy's country. I followed, however, with many other officers who were in the same situation as myself, and succeeded in reaching Candahar in safety, where I found my regiment, and at once entered upon my new duties.</p>
@@ -178,6 +177,14 @@
 				end = new Date().getTime();
 				var out=document.getElementById('output').firstChild;
 				out.data="hyphenateElement(te,'en') :: "+(end-start)+"ms";
+				if (parent != window) {
+					var msg = {
+						desc: 'Hyphenating a word took: ' + (end-start) + 'ms',
+						index: 15,
+						result: 'passed'
+					};
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				}
 			}
 			start=new Date().getTime();
 			Hyphenator.customEvents.addEventListener('onhyphenationdone', cb);

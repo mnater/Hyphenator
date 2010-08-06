@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <title>Hyphenator.js &ndash; Testsuite</title>
@@ -10,17 +9,11 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
-            }
-            pre {
-            	border: 1px dotted grey;
             }
             dl {
             	margin: 0;
@@ -37,6 +30,7 @@
     <body>
         <h1>The Hyphenator (with Web Worker) Testsuite</h1>
         <p class="hyphenate">Run this tests before releasing a new version! Do the same run with the <a href="http://yui.2clics.net/">packed</a> version of Hyphenator.js.</p>
+		<p><a href="index_auto.html">Autotest</a></p>
 		<p><a href="test1.html">Start -&gt;</a></p>
 		<dl>
 			<dt><a href="test1.html">test1.html</a></dt>
@@ -198,5 +192,45 @@
 			<dt><a href="test40.html">test40.html</a></dt>
 			<dd><span style="color: green; background-color:lime;">[OK]</span> Using charset=ISO-8859-1 instead of utf8.</dd>
 		</dl>
-   </body>
+ 		<dl>
+			<dt><a href="test41.html">test41.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Check what happens if there are many scripts included.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test42.html">test42.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Test global exceptions.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test43.html">test43.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Setting classname:'test'.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test44.html">test44.html</a></dt>
+			<dd><span style="color: maroon; background-color:red;">[KO]</span> Hyphenating content that has been loaded by AJAX.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test45.html">test45.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Test nonexistent config-key.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test46.html">test46.html</a></dt>
+			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete) Hyphenating content that has been loaded by AJAX. This time, de.js is loaded manually.</dd>
+		</dl>
+  		<dl>
+			<dt><a href="test47.html">test47.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> Preserve style-Attribute of hyphenated elements.</dd>
+		</dl>
+ 		<dl>
+			<dt><a href="test48.html">test48.html</a></dt>
+			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete?) Test if the bookmarklet preserves styles of elements.</dd>
+		</dl>
+  		<dl>
+			<dt><a href="test49.html">test49.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> The language is set in uppercase: lang="EN"</dd>
+		</dl>
+  		<dl>
+			<dt><a href="test50.html">test50.html</a></dt>
+			<dd><span style="color: green; background-color:lime;">[OK]</span> A FORM contains an element with name="language".</dd>
+		</dl>
+  </body>
 </html>

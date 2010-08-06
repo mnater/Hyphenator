@@ -6,8 +6,21 @@ var Hyphenator = (function (window) {
 	return {
 		wordHyphenChar: String.fromCharCode(173),
 		urlHyphenChar: String.fromCharCode(8203),
-		basePath: '../',
-		Worker: undefined,
+		basePath: (function () {
+			var s = document.getElementsByTagName('script'), i = 0, p, src, t;
+			while (!!(t = s[i++])) {
+				if (!t.src) {
+					continue;
+				}
+				src = t.src;
+				p = src.indexOf('Hyphenator.js');
+				if (p !== -1) {
+					return src.substring(0, p);
+				}
+			}
+			return '';
+		}()),
+		Wkr: undefined,
 		Expando: undefined,
 		intermediateState: 'hidden',
 		storageType: 'local',
@@ -91,7 +104,7 @@ var Hyphenator = (function (window) {
 							lang: lang
 						};
 						messageCount++;
-						Hyphenator.Worker.postMessage(JSON.stringify(msg));
+						Hyphenator.Wkr.postMessage(window.JSON.stringify(msg));
 					} else if (n.nodeType === 1) {
 						if (elNoProcess.length > 0) {
 							for (j = 0; j < elNoProcess.length; j++) {
@@ -113,8 +126,8 @@ var Hyphenator = (function (window) {
 			}
 
 			//do the run
-			Hyphenator.Worker.onmessage = function (e) {
-				var msg = JSON.parse(e.data), element;
+			Hyphenator.Wkr.onmessage = function (e) {
+				var msg = window.JSON.parse(e.data), element;
 				switch (msg.type) {
 				case 'hyphenate':
 					element = Hyphenator.Expando.getDataForId(msg.link).element;
@@ -149,13 +162,13 @@ var Hyphenator = (function (window) {
 			elNoProcess = Hyphenator.dontselect();
 			while (!!(element = elToProcess[i++])) {
 				Hyphenator.Expando.setDataForElem(element, {donthyphenate: false});
-				process(element, true);
+				process(element, true, undefined);
 			}
 
 		},
 		removehyphenation: function () {
 			var i = 0, elToProcess, element,
-			process = function (element, hide) {
+			process = function (element) {
 				var n, i = 0, wordHyphenChar, urlHyphenChar;
 				switch (Hyphenator.wordHyphenChar) {
 				case '|':
@@ -194,7 +207,7 @@ var Hyphenator = (function (window) {
 			};
 			elToProcess = Hyphenator.select();
 			while (!!(element = elToProcess[i++])) {
-				process(element, true);
+				process(element);
 			}
 			Hyphenator.customEvents.fire('onremovehyphenationdone', 'Hyphenator.removehyphenation()');
 		}
@@ -202,7 +215,7 @@ var Hyphenator = (function (window) {
 
 }(window));
 
-Hyphenator.Worker = new window.Worker(Hyphenator.basePath + 'Hyphenator_worker.js');
+Hyphenator.Wkr = new Worker(Hyphenator.basePath + 'Hyphenator_worker.js');
 Hyphenator.Expando = (function () {
 	var container = {},
 		name = "HyphenatorExpando_" + Math.random(),
@@ -266,7 +279,7 @@ Hyphenator.restorePatterns = (function () {
 			l = arguments[i];
 			if (!restored[l] && Hyphenator.storage.hasOwnProperty('Hyphenator_' + l)) {
 				p = Hyphenator.storage.getItem('Hyphenator_' + l);
-				Hyphenator.Worker.postMessage(JSON.stringify({
+				Hyphenator.Wkr.postMessage(window.JSON.stringify({
 					type: 'pattern',
 					lang: l,
 					patterns: p
@@ -287,7 +300,7 @@ Hyphenator.addExceptions = function (lang, words) {
 	}
 	msg.lang = lang;
 	msg.exceptions = exceptions;
-	Hyphenator.Worker.postMessage(JSON.stringify(msg));
+	Hyphenator.Wkr.postMessage(window.JSON.stringify(msg));
 };
 
 
@@ -343,7 +356,7 @@ Hyphenator.config = function (configObj) {
 			}
 		}
 	}
-	Hyphenator.Worker.postMessage(JSON.stringify(msg));
+	Hyphenator.Wkr.postMessage(window.JSON.stringify(msg));
 };
 
 Hyphenator.customEvents = (function () {
@@ -357,10 +370,12 @@ Hyphenator.customEvents = (function () {
 			events[name](data);
 		},
 		//for use by the client:
-		addEventListener: function (name, action) {
+		addEventListener: function (name, action, overwrite) {
 			var oldEvent = events[name];
 			events[name] = function (data) {
-				oldEvent(data);
+				if (!overwrite) {
+					oldEvent(data);
+				}
 				action(data);
 			};
 		}

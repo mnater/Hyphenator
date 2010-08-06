@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <title>Hyphenator.js &ndash; Test 67</title>
@@ -10,24 +9,20 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
             }
-            pre {border: 1px dotted grey;}
         </style>
     </head>
     <body>
         <h1>Test 67</h1>
-        <p>Testing hyphenator.js applied to a frameset.</p>
+        <p id="desc">Testing hyphenator.js applied to a frameset.</p>
 		<p><a href="test66.html" target="_parent">&lt;- Prev</a> | <a href="test68.html" target="_parent">Next -&gt;</a></p>
         <p>Test bookmarklet.</p>
-		<p class="hyphenate test">Hyphenation</p>
-		<p class="ref">Hy|phen|ation</p>
+		<p id="test" class="hyphenate">Hyphenation</p>
+		<p id="ref">Hy|phen|ation</p>
     </body>
 </html>

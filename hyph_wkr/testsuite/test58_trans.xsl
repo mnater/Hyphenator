@@ -12,16 +12,12 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
             }
-            pre {border: 1px dotted grey;}
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -32,10 +28,9 @@
         </script>
 	</head>
 	<body>
-        <h1>Test 58</h1>
+		<p><a href="test57.html">&lt;- Prev</a> | <a href="test59.html">Next -&gt;</a></p>
         <p>Run Hyphenator with XSLT.<br />
         Some browsers may fail on DOMContentLoaded here...</p>
-		<p><a href="test57.html">&lt;- Prev</a> | <a href="test59.html">Next -&gt;</a></p>
 		<pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
 

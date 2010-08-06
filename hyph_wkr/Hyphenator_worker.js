@@ -26,8 +26,8 @@ var Hyphenator_worker = (function (self) {
 		Hyphenator_worker.languages[lang].patterns = tmp;
 	},
 	storePatterns = function (lang) {
-		var patterns = JSON.stringify(Hyphenator_worker.languages[lang]);
-		self.postMessage(JSON.stringify({
+		var patterns = self.JSON.stringify(Hyphenator_worker.languages[lang]);
+		self.postMessage(self.JSON.stringify({
 			type: 'pattern',
 			lang: lang,
 			patterns: patterns
@@ -46,11 +46,11 @@ var Hyphenator_worker = (function (self) {
 	};
 
 	self.onmessage = function (e) {
-		var msg = JSON.parse(e.data), wordRE;
+		var msg = self.JSON.parse(e.data), wordRE;
 		switch (msg.type) {
 		case 'hyphenate':
 			msg.text = Hyphenator_worker.hyphenateText(msg.text, msg.lang);
-			self.postMessage(JSON.stringify(msg));
+			self.postMessage(self.JSON.stringify(msg));
 			break;
 		case 'config':
 			if (msg.hasOwnProperty('wordHyphenChar')) {
@@ -70,7 +70,7 @@ var Hyphenator_worker = (function (self) {
 			addExceptions(msg.lang, msg.exceptions);
 			break;
 		case 'pattern':
-			Hyphenator_worker.languages[msg.lang] = JSON.parse(msg.patterns);
+			Hyphenator_worker.languages[msg.lang] = self.JSON.parse(msg.patterns);
 			convertPatterns(msg.lang);
 			wordRE = '[\\w' + Hyphenator_worker.languages[msg.lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + Hyphenator_worker.minWordLength + ',}';
 			Hyphenator_worker.languages[msg.lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wordRE + ')', 'gi');
@@ -107,7 +107,7 @@ var Hyphenator_worker = (function (self) {
 				for (i = 0, l = parts.length; i < l; i++) {
 					parts[i] = Hyphenator_worker.hyphenateWord(parts[i], lang);
 				}
-				return parts.join('-');
+				return parts.join('-' + String.fromCharCode(8203));
 			}
 			//finally the core hyphenation algorithm
 			w = '_' + word + '_';
@@ -187,7 +187,7 @@ var Hyphenator_worker = (function (self) {
 				try {
 					self.importScripts(path);
 				} catch (e) {
-					self.postMessage(JSON.stringify({
+					self.postMessage(self.JSON.stringify({
 						type: 'error',
 						sender: 'Hyphenator_worker: importScripts',
 						message: 'Couldn\'t load file: \'' + path + '\''

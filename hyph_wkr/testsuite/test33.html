@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <title>Hyphenator.js &ndash; Test 33</title>
@@ -10,20 +9,11 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
             .test {
             	background-color: #ffd6d6;
             }
             .ref {
             	background-color: #d6ffd6;
-            }
-            pre {
-            	border: 1px dotted grey;
-            }
-            div {
-                text-align:justify;
             }
         </style>
         <script type="text/javascript">
@@ -63,6 +53,7 @@
         <script src="../patterns/tr.js" type="text/javascript"></script>
         <script src="../patterns/uk.js" type="text/javascript"></script>
         <script type="text/javascript">
+        	var total = true;
         	function output(c, t) {
         		var el = document.getElementById('out');
         		var myout = document.createElement('div');
@@ -72,6 +63,9 @@
 				var myTextNode = document.createTextNode(t);
 				myout.appendChild(myTextNode);
 				el.appendChild(myout);
+				if (c === 'test') {
+					total = false;
+				}
         	}
         	
         	function runTest() {        	
@@ -80,6 +74,7 @@
 						var plen, i = 0, anfang, pats, pat, key, shortest = 100, longest = 0;
 						var newlongest = 0;
 						var newshortest = 10;
+						var total = true;
 						pats = Hyphenator_worker.languages[lang].patterns;
 						for (plen in pats) {
 							if (pats.hasOwnProperty(plen)) {
@@ -115,13 +110,23 @@
 			
 			window.onload = function() {
 				runTest();
+				if (parent != window) {
+					var desc = document.getElementById('desc').innerHTML,
+					msg = {
+						desc: 'Check shortestPattern and longestPattern for appropriate values.',
+						index: 33,
+						result: total ? 'passed' : 'failed'
+					};
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				}
+
 			};
         </script>
     </head>
     <body>
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="test32.html">&lt;- Prev</a> | <a href="test34.html">Next -&gt;</a></p>
         <h1>Test 33</h1>
-        <p>Check Hyphenator_worker.shortestPattern[lang] and Hyphenator_worker.longestPattern[lang] for appropriate values. Red lines have to be corrected in the pattern file.</p>
+        <p id="desc">Check Hyphenator_worker.shortestPattern[lang] and Hyphenator_worker.longestPattern[lang] for appropriate values. Red lines have to be corrected in the pattern file.</p>
 		<div id="out"></div>
     </body>
 </html>

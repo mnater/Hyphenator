@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <title>Hyphenator.js &ndash; Test 1</title>
@@ -13,10 +12,10 @@
             .text {
                 text-align:justify;
             }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
             }
             pre {border: 1px dotted grey;}
@@ -25,12 +24,29 @@
     <body>
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="index.html">&lt;- Prev</a> | <a href="test2.html">Next -&gt;</a></p>
         <h1>Test 1</h1>
-        <p>Hyphenate one word.</p>
+        <p id="desc">Hyphenate one word.</p>
 
-        <p class="hyphenate test" lang="en">Hyphenation</p>
-        <p class="ref">Hy|phen|ation</p>
+        <p id="test" class="hyphenate" lang="en">Hyphenation</p>
+        <p id="ref">Hy|phen|ation</p>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.customEvents.addEventListener('onhyphenationdone', function () {
+					var t1 = document.getElementById('test').innerHTML,
+					t2 = document.getElementById('ref').innerHTML,
+					desc = document.getElementById('desc').firstChild.data,
+					msg = {
+						desc: desc,
+						index: 1
+					};
+					if (t1 == t2) {
+						msg.result = 'passed';
+					} else {
+						msg.result = 'failed';
+					}
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				});     	
+			}
         	Hyphenator.run({
         		wordhyphenchar: '|'
         	});

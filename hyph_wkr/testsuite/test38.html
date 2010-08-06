@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <title>Hyphenator.js &ndash; Test 38</title>
@@ -10,17 +9,11 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
-            }
-            pre {
-            	border: 1px dotted grey;
             }
             div {
                 text-align:justify;
@@ -33,7 +26,18 @@
     <body>
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="test37.html">&lt;- Prev</a> | <a href="test39.html">Next -&gt;</a></p>
         <h1>Test 38</h1>
-        <p>Test <a href="javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src=myServerPath+'Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}">bookmarklet</a>.</p>
+        <p id="desc">Test <a href="javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src=myServerPath+'Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}">bookmarklet</a>.</p>
         <p class="test">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+		<script type="text/javascript">
+			if (parent != window) {
+				var desc = document.getElementById('desc').innerHTML,
+				msg = {
+					desc: '(obsolete) ' + desc,
+					index: 38,
+					result: 'obsolete'
+				};
+				parent.postMessage(JSON.stringify(msg), window.location.href);
+			}
+		</script>
     </body>
 </html>

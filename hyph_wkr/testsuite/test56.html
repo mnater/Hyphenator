@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="de">
     <head>
         <title>Hyphenator.js &ndash; Test 56</title>
@@ -10,17 +9,11 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
-            }
-            pre {
-            	border: 1px dotted grey;
             }
             div {
                 text-align:justify;
@@ -47,14 +40,14 @@
         </script>
     </head>
     <body>
-        <h1>Test 56</h1>
-        <p>Hyphenating content that has been loaded by AJAX with Hyphenator.hyphenate().</p>
 		<p><a href="test55.html">&lt;- Prev</a> | <a href="test57.html">Next -&gt;</a></p>
+        <h1>Test 56</h1>
+        <p id="desc">Hyphenating content that has been loaded by AJAX with Hyphenator.hyphenate().</p>
 		<form method="post" action="#">
 		<input type="button" value="load text…" onclick="insert()">
 		</form>
 		<p class="hyphenate">Silbentrennung</p>
         <p id="target" class="hyphenate"></p>
-        <p class="ref">Das eng|li|sche Wort &ldquo;Hy|phen|ation&rdquo; lässt sich nicht un|be|dingt wört|lich mit «Sil|ben|tren|nung» über|set|zen.</p>
+        <p id="ref">Das eng|li|sche Wort &ldquo;Hy|phen|ation&rdquo; lässt sich nicht un|be|dingt wört|lich mit «Sil|ben|tren|nung» über|set|zen.</p>
     </body>
 </html>

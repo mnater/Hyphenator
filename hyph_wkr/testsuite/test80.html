@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="de">
     <head>
         <title>Hyphenator.js &ndash; Test 80</title>
@@ -10,16 +9,12 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
             }
-            pre {border: 1px dotted grey;}
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -32,7 +27,7 @@
     </head>
     <body>
         <h1>Test 80</h1>
-        <p>Orphancontrol level 2</p>
+        <p id="desc">Orphancontrol level 2</p>
 		<p><a href="test79.html">&lt;- Prev</a> | <a href="test81.html">Next -&gt;</a></p>
         <pre>Hyphenator.config({hyphenchar:'|', orphancontrol: 2});
 Hyphenator.run();</pre>

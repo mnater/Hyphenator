@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="fr">
     <head>
         <title>Hyphenator.js &ndash; Test 68</title>
@@ -10,16 +9,12 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
             }
-            pre {border: 1px dotted grey;}
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -29,14 +24,14 @@
     </head>
     <body>
         <h1>Test 68</h1>
-        <p>Hyphenate words with "APOSTROPHE" (Unicode: 0027) and "RIGHT SINGLE QUOTATION MARK" (Unicode: 2019).</p>
+        <p id="desc">Hyphenate words with "APOSTROPHE" (Unicode: 0027) and "RIGHT SINGLE QUOTATION MARK" (Unicode: 2019).</p>
 		<p><a href="test67.html">&lt;- Prev</a> | <a href="test69.html">Next -&gt;</a></p>
 		<pre>Hyphenator.config({hyphenchar:'|'});
 Hyphenator.run();</pre>
-        <p class="hyphenate test">l'argent, l'initiation, l'ami, d'être</p>
-        <p class="ref">l'ar|gent, l'ini|tia|tion, l'ami, d'être</p>
-        <p class="hyphenate test">l’argent, l’initiation, l’ami, d’être</p>
-        <p class="ref">l’ar|gent, l’ini|tia|tion, l’ami, d’être</p>
-        <p class="ref"></p>
+        <p id="test" class="hyphenate">l'argent, l'initiation, l'ami, d'être</p>
+        <p id="ref">l'ar|gent, l'ini|tia|tion, l'ami, d'être</p>
+        <p id="test" class="hyphenate">l’argent, l’initiation, l’ami, d’être</p>
+        <p id="ref">l’ar|gent, l’ini|tia|tion, l’ami, d’être</p>
+        <p id="ref"></p>
     </body>
 </html>

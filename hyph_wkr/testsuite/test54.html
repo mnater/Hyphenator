@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="de">
     <head>
         <title>Hyphenator.js &ndash; Test 54</title>
@@ -10,19 +9,28 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
             }
-            pre {
-            	border: 1px dotted grey;
-            }
         </style>
+    </head>
+    <body>
+		<p><a href="test53.html">&lt;- Prev</a> | <a href="test55.html">Next -&gt;</a></p>
+        <h1>Test 54</h1>
+        <p id="desc">Run Hyphenation with manually preloaded patterns and remoteloading:true.</p>
+        <pre>Hyphenator.config({
+    hyphenchar:'|',
+    remoteloading:false
+});
+Hyphenator.run();</pre>
+
+        <p id="test" class="hyphenate">Silbentrennung</p>
+        <p id="ref">Sil|ben|tren|nung</p>
+        <p class="hyphenate test" lang="en">Hyphenation</p>
+        <p id="ref">Hy|phen|ation</p>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script src="../patterns/de.js" type="text/javascript"></script>
         <script src="../patterns/en-us.js" type="text/javascript"></script>
@@ -33,21 +41,5 @@
                 });
                 Hyphenator.run();
         </script>
-    </head>
-    <body>
-        <h1>Test 54</h1>
-        <p>Run Hyphenation with manually preloaded patterns and remoteloading:true.</p>
-		<p><a href="test53.html">&lt;- Prev</a> | <a href="test55.html">Next -&gt;</a></p>
-        <pre>Hyphenator.config({
-    hyphenchar:'|',
-    remoteloading:false
-});
-Hyphenator.run();</pre>
-
-        <p class="hyphenate test">Silbentrennung</p>
-        <p class="ref">Sil|ben|tren|nung</p>
-        <p class="hyphenate test" lang="en">Hyphenation</p>
-        <p class="ref">Hy|phen|ation</p>
-
      </body>
 </html>

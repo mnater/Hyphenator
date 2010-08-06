@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="de">
     <head>
         <title>Hyphenator.js &ndash; Test 14</title>
@@ -10,27 +9,21 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
-            }
-            pre {
-            	border: 1px dotted grey;
             }
         </style>
     </head>
     <body>
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="test13.html">&lt;- Prev</a> | <a href="test15.html">Next -&gt;</a></p>
         <h1>Test 14</h1>
-        <p>Measuring time to hyphenate a word.</p>
+        <p id="desc">Measuring time to hyphenate a word.</p>
 
 		<p id="output" class="hyphenate test">Silbentrennung</p>
- 		<p class="ref">hyphenateWord('de','Silbentrennung')-> Sil|ben|tren|nung :: 0._ _ _ms</p>
+ 		<p id="ref">hyphenateWord('de','Silbentrennung')-> Sil|ben|tren|nung :: 0._ _ _ms</p>
         <script type="text/javascript">
 				function cb() {
 					var out=document.getElementById('output').firstChild;
@@ -45,6 +38,14 @@
 						if (received === times) {
 							end=new Date().getTime();
 							out.data="hyphenateWord('de','Silbentrennung')-> "+JSON.parse(e.data).text+" :: "+((end-start)/times)+"ms\n";
+							if (parent != window) {
+								var msg = {
+									desc: 'Hyphenating a word took: ' + ((end-start)/times) + 'ms',
+									index: 14,
+									result: 'passed'
+								};
+								parent.postMessage(JSON.stringify(msg), window.location.href);
+							}
 						}
 					};
 					var msg = JSON.stringify({

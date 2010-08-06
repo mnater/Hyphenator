@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="de">
     <head>
         <title>Hyphenator.js &ndash; Test 10</title>
@@ -10,30 +9,33 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
-            }
-            pre {
-            	border: 1px dotted grey;
             }
         </style>
     </head>
     <body>
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="test9.html">&lt;- Prev</a> | <a href="test11.html">Next -&gt;</a></p>
         <h1>Test 10</h1>
-        <p>Run Hyphenation with manually preloaded patterns. But one language isn't loaded.</p>
+        <p id="desc">Run Hyphenation with manually preloaded patterns. But one language isn't loaded.</p>
 
-        <p class="hyphenate test">Das englische Wort <span lang="en">&ldquo;Hyphenation&rdquo;</span> lässt sich nicht unbedingt wörtlich mit &laquo;Silbentrennung&raquo; übersetzen.</p>
-        <p class="ref">Das eng|li|sche Wort “Hyphenation” lässt sich nicht un|be|dingt wört|lich mit «Sil|ben|tren|nung» über|set|zen.</p>
+        <p id="test" class="hyphenate">Das englische Wort <span lang="en">&ldquo;Hyphenation&rdquo;</span> lässt sich nicht unbedingt wörtlich mit &laquo;Silbentrennung&raquo; übersetzen.</p>
+        <p id="ref">Das eng|li|sche Wort “Hyphenation” lässt sich nicht un|be|dingt wört|lich mit «Sil|ben|tren|nung» über|set|zen.</p>
         <script src="../Hyphenator.js" type="text/javascript"></script>
-        <script src="../patterns/de.js" type="text/javascript"></script>
+        <!--<script src="../patterns/de.js" type="text/javascript"></script>-->
         <script type="text/javascript">
+        	if (parent != window) {
+				var desc = document.getElementById('desc').firstChild.data,
+				msg = {
+					desc: '(obsolete)' + desc,
+					index: 10,
+					result: 'obsolete'
+				};
+				parent.postMessage(JSON.stringify(msg), window.location.href);
+			}
         	Hyphenator.run({
         		wordhyphenchar: '|'
         	});

@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="de">
     <head>
         <title>Hyphenator.js &ndash; Test 21</title>
@@ -10,25 +9,30 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
-            }
-            pre {
-            	border: 1px dotted grey;
             }
         </style>
     </head>
     <body>
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="test20.html">&lt;- Prev</a> | <a href="test22.html">Next -&gt;</a></p>
         <h1>Test 21</h1>
-        <p>Check if a <a href="https://bugs.webkit.org/show_bug.cgi?id=17350">WebKit (<=30644) Bug</a> is still there.</p>
+        <p id="desc">Check if a <a href="https://bugs.webkit.org/show_bug.cgi?id=17350">WebKit (<=30644) Bug</a> is still there.</p>
         <pre>//Hyphenator.run();</pre>
 		<p>hy&shy;phen&shy;a&shy;tion hy&shy;phen&shy;a&shy;tion hy&shy;phen&shy;a&shy;tion hy&shy;phen&shy;a&shy;tion hy&shy;phen&shy;a&shy;tion hy&shy;phen&shy;a&shy;tion</p>
+		<script type="text/javascript">
+			if (parent != window) {
+				var desc = document.getElementById('desc').innerHTML,
+				msg = {
+					desc: '(obsolete) ' + desc,
+					index: 21,
+					result: 'obsolete'
+				};
+				parent.postMessage(JSON.stringify(msg), window.location.href);
+			}
+		</script>
      </body>
 </html>
