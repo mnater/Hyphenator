@@ -1,0 +1,85 @@
+<project name="Hyphenator" default="all" basedir=".">
+
+	<property name="version" value="4.0.0beta" />
+	<property name="dist" value="${basedir}/dist"  description="Folder where everthing goes to" />
+
+	<property name="Hs" value="${basedir}/Hyphenator.js" />
+	<property name="HWs" value="${basedir}/Hyphenator_worker.js" />
+	
+	<property name="H" value="${dist}/Hyphenator_debug.js" />
+	<property name="HW" value="${dist}/Hyphenator_worker_debug.js" />
+	<property name="H_MIN" value="${dist}/Hyphenator.js" />
+	<property name="HW_MIN" value="${dist}/Hyphenator_worker.js" />
+
+
+	<target name="all" depends="min" />
+
+	<filter token="version" value="${version}"/>
+
+
+	<target name="Hyphenator" description="Hyphenator build, concatenates source files and replaces @version@">
+		<echo message="Building ${H}" />
+		<mkdir dir="${dist}" />
+		<concat destfile="${H}">
+			<fileset file="${Hs}" />
+		</concat>
+		<echo message="${H} built." />
+	</target>
+
+	<target name="Hyphenator_worker" description="Hyphenator_worker build, concatenates source files and replaces @version@">
+		<echo message="Building ${HW}" />
+		<concat destfile="${HW}">
+			<fileset file="${HWs}" />
+		</concat>
+		<echo message="${HW} built." />
+	</target>
+
+
+	<target name="lint" depends="Hyphenator, Hyphenator_worker" description="Check with JSLint">
+		<exec executable="java">
+			<arg line="-jar build/js.jar build/jslint-check.js" />
+		</exec>
+	</target>
+
+	<target name="min" depends="lint" description="Minify with Google Closure Compiler">
+		<echo message="Building ${H_MIN}" />
+		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
+			<fileset dir="${dist}">
+				<include name="Hyphenator_debug.js" />
+			</fileset>
+			<arg line="-jar" />
+			<arg path="build/compiler.jar" />
+			<arg value="--compilation_level" />
+			<arg value="ADVANCED_OPTIMIZATIONS" />
+			<arg value="--warning_level" />
+			<arg value="VERBOSE" />
+			<arg value="--charset" />
+			<arg value="UTF-8" />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<arg value="--js" />
+			<mapper type="glob" from="Hyphenator_debug.js" to="Hyphenator.js" />
+		</apply>
+		<echo message="${H_MIN} built." />
+		
+		<echo message="Building ${HW_MIN}" />
+		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
+			<fileset dir="${dist}">
+				<include name="Hyphenator_worker_debug.js" />
+			</fileset>
+			<arg line="-jar" />
+			<arg path="build/compiler.jar" />
+			<arg value="--compilation_level" />
+			<arg value="ADVANCED_OPTIMIZATIONS" />
+			<arg value="--warning_level" />
+			<arg value="VERBOSE" />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<arg value="--js" />
+			<mapper type="glob" from="Hyphenator_worker_debug.js" to="Hyphenator_worker.js" />
+		</apply>
+		<echo message="${HW_MIN} built." />
+	</target>
+
+
+</project>
