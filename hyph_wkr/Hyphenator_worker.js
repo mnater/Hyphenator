@@ -95,6 +95,9 @@ var Hyphenator_worker = (function (self) {
 			if (lo.cache.hasOwnProperty(word)) { //the word is in the cache
 				return lo.cache[word];
 			}
+			if (Hyphenator_worker.exceptions[''] && Hyphenator_worker.exceptions[''].hasOwnProperty(word)) { //the word is in the user defined global exceptions list
+				return Hyphenator_worker.exceptions[''][word].replace(/-/g, Hyphenator_worker.wordHyphenChar);
+			}
 			if (Hyphenator_worker.exceptions[lang] && Hyphenator_worker.exceptions[lang].hasOwnProperty(word)) { //the word is in the user defined exceptions list
 				return Hyphenator_worker.exceptions[lang][word].replace(/-/g, Hyphenator_worker.wordHyphenChar);
 			}
