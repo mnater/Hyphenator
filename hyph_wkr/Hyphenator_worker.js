@@ -196,11 +196,15 @@ var Hyphenator_worker = (function (self) {
 						message: 'Couldn\'t load file: \'' + path + '\''
 					}));
 				}
-				storePatterns(lang);
-				convertPatterns(lang);
-				wordRE = '[\\w' + Hyphenator_worker.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + Hyphenator_worker.minWordLength + ',}';
-				Hyphenator_worker.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wordRE + ')', 'gi');
-				Hyphenator_worker.languages[lang].cache = {};
+				if (Hyphenator_worker.languages[lang]) {
+					storePatterns(lang);
+					convertPatterns(lang);
+					wordRE = '[\\w' + Hyphenator_worker.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + Hyphenator_worker.minWordLength + ',}';
+					Hyphenator_worker.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wordRE + ')', 'gi');
+					Hyphenator_worker.languages[lang].cache = {};
+				} else {
+					return text;
+				}
 			}
 			return text.replace(Hyphenator_worker.languages[lang].genRegExp, hyphenate);
 		}

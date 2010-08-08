@@ -15,9 +15,6 @@
             #ref {
             	background-color: #d6ffd6;
             }
-            div {
-                text-align:justify;
-            }
         </style>
         <script src="files/jquery.js" type="text/javascript"></script>
     </head>
@@ -32,20 +29,20 @@
         <p id="target" class="hyphenate"></p>
         <p id="ref">Das eng|li|sche Wort &ldquo;Hy|phen|ation&rdquo; lässt sich nicht un|be|dingt wört|lich mit «Sil|ben|tren|nung» über|set|zen.</p>
         <script src="../Hyphenator.js" type="text/javascript"></script>
-        <script src="../patterns/de.js" type="text/javascript"></script>
         <script type="text/javascript">
+			if (parent != window) {
+				var desc = document.getElementById('desc').innerHTML,
+				msg = {
+					desc: '(obsolete) ' + desc,
+					index: 46,
+					result: 'obsolete'
+				};
+				parent.postMessage(JSON.stringify(msg), window.location.href);
+			}
         	Hyphenator.run({
         		wordhyphenchar:'|'
         	});
-            function insert()  {
- 			    $("#target").load("test44inc.html",'',cb);
-			}
-			function cb () {
-				Hyphenator.select = function () {
-					return $("#target").get();
-				};
-				Hyphenator.run();
-			}
+			
         </script>
     </body>
 </html>

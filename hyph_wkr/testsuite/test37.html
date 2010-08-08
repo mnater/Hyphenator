@@ -12,7 +12,7 @@
             #test {
             	background-color: #ffd6d6;
             }
-            #ref {
+            #ref1, #ref2 {
             	background-color: #d6ffd6;
             }
             div {
@@ -24,19 +24,22 @@
 		<p><a href="index.html">&lt;&lt; index</a> | <a href="test36.html">&lt;- Prev</a> | <a href="test38.html">Next -&gt;</a></p>
         <h1>Test 37</h1>
         <p id="desc">Test error handling.</p>
-        <p class="hyphenate test" lang="tl">Ang pagpapantig ay paraan ng pahahati-hati ng salita sa mga pantig.</p>
-        <p id="ref">Error: Language tl not supported.</p>
+        <p id="test" class="hyphenate" lang="tl">Ang pagpapantig ay paraan ng pahahati-hati ng salita sa mga pantig.</p>
+        <p id="ref1">Ang pagpapantig ay paraan ng pahahati-hati ng salita sa mga pantig.</p>
+        <p id="ref2">Error: Couldn't load file: 'patterns/tl.js'</p>
     </body>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
         	if (parent != window) {
 				Hyphenator.customEvents.addEventListener('onerror', function (e) {
 					var desc = document.getElementById('desc').firstChild.data,
+					t1 = document.getElementById('test').innerHTML,
+					t2 = document.getElementById('ref1').innerHTML,
 					msg = {
 						desc: desc,
 						index: 37
 					};
-					if (e.message === 'Couldn\'t load file: \'patterns/tl.js\'' && e.sender === 'Hyphenator_worker: importScripts') {
+					if (t1 == t2 && e.message === 'Couldn\'t load file: \'patterns/tl.js\'' && e.sender === 'Hyphenator_worker: importScripts') {
 						msg.result = 'passed';
 					} else {
 						msg.result = 'failed';

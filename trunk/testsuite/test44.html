@@ -42,6 +42,7 @@
 			function cb () {
 				Hyphenator.config({
 					selectorfunction: function(){
+						window.console.log($("#target").get());
 						return $("#target").get();
 					}
 				});

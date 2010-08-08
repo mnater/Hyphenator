@@ -74,7 +74,7 @@ var Hyphenator = (function (window) {
 			return r;
 		},
 		run: function (config) {
-			var elToProcess, elNoProcess, element, i = 0, messageCount = 0,
+			var elToProcess, elNoProcess, element, i = 0, messageCount = 0, first = false,
 			process = function (element, hide, lang) {
 				var linkToElement, msg, n, i = -1, j, hyphenateChild;
 				lang = Hyphenator.getLang(element);
@@ -92,9 +92,12 @@ var Hyphenator = (function (window) {
 					Hyphenator.Expando.setDataForElem(element, {isHidden: true});
 					element.style.visibility = 'hidden';
 				}
+				if (!first) {
+					first = element;
+				}
 				while (!!(n = element.childNodes[++i])) {
 					hyphenateChild = true;
-					if (n.nodeType === 3) {
+					if (n.nodeType === 3 && /[\S]/.test(n.data)) {
 						linkToElement = Hyphenator.Expando.setDataForElem(element, {element: element});
 						msg = {
 							type: 'hyphenate',
@@ -147,6 +150,10 @@ var Hyphenator = (function (window) {
 					}
 					messageCount--;
 					if (messageCount === 0) {
+						first.style.visibility = 'visible';
+						//clean up:
+						elToProcess = elNoProcess = element = first = null;
+						Hyphenator.Expando.reset();
 						Hyphenator.customEvents.fire('onhyphenationdone', 'Hyphenator.run()');
 					}
 					break;
@@ -157,11 +164,11 @@ var Hyphenator = (function (window) {
 					Hyphenator.customEvents.fire('onerror', {sender: msg.sender, message: msg.message});
 					break;
 				}
-			};			
+			};
+			
 			elToProcess = Hyphenator.select();
 			elNoProcess = Hyphenator.dontselect();
 			while (!!(element = elToProcess[i++])) {
-				Hyphenator.Expando.setDataForElem(element, {donthyphenate: false});
 				process(element, true, undefined);
 			}
 
@@ -221,6 +228,7 @@ Hyphenator.Expando = (function () {
 		name = "HyphenatorExpando_" + Math.random(),
 		uuid = 1;
 	return {
+		c : container,
 		getDataForElem : function (elem) {
 			return container[elem[name]];
 		},
@@ -245,8 +253,10 @@ Hyphenator.Expando = (function () {
 			}
 			return id;
 		},
-		delDataOfElem : function (elem) {
-			delete container[elem[name]];
+		reset : function () {
+			container = {};
+			name = "HyphenatorExpando_" + Math.random();
+			uuid = 1;
 		}
 	};
 }());
