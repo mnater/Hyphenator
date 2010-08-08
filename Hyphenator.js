@@ -1322,6 +1322,7 @@ var Hyphenator = (function (window) {
 			i = 0;
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
+					alert(n.data);
 					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 					if(orphanControl !== 1) {
 						n.data = n.data.replace(/[\S]+ [\S]+$/, function (part) {
