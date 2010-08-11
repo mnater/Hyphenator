@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Testsuite</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+                font: normal 10px Verdana;
+            }
+            #template {
+                display: none;
+            }
+            #testframe {
+            	display: none;
+            }
+            .passed {
+            	color: green;
+            	background-color: lime;
+            }
+            .failed {
+            	color: maroon;
+            	background-color: red;
+            }
+            .obsolete {
+            	color: black;
+            	background-color: silver;
+            }
+            .visual {
+            	color: olive;
+            	background-color: yellow;
+            }
+            .omitted {
+            	color: grey;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>The Hyphenator (with Web Worker) Testsuite</h1>
+		<table>
+			<tbody id="template">
+				<tr>
+					<td><a href="@file@">@file@</a></td>
+					<td class="@result@">[@result@]</td>
+					<td>@desc@</td>
+				</tr>
+			</tbody>
+		</table>
+		<table>
+			<tbody id="testresults">
+			
+			</tbody>
+		</table>
+		<iframe id="testframe" src=""></iframe>
+        <script type="text/javascript">
+        	var tests = [
+        		{exec: false, path: 'test0.html'}, //dont exec!
+        		{exec: false, path: 'test1.html'}, 
+        		{exec: false, path: 'test2.html'},
+        		{exec: false, path: 'test3.html'},
+        		{exec: false, path: 'test4.html'},
+        		{exec: false, path: 'test5.html'},
+        		{exec: false, path: 'test6.html'},
+        		{exec: false, path: 'test7.html'},
+        		{exec: false, path: 'test8.html'},
+        		{exec: false, path: 'test9.html'},
+        		{exec: false, path: 'test10.html'},
+        		{exec: false, path: 'test11.html'},
+        		{exec: false, path: 'test12.html'},
+        		{exec: false, path: 'test13.html'},
+        		{exec: false, path: 'test14.html'},
+        		{exec: false, path: 'test15.html'},
+        		{exec: false, path: 'test16.html'},
+        		{exec: false, path: 'test17.html'},
+        		{exec: false, path: 'test18.html'},
+        		{exec: false, path: 'test19.html'}/*,
+        		{exec: true, path: 'test20.html'},
+        		{exec: true, path: 'test21.html'},
+        		{exec: true, path: 'test22.html'},
+        		{exec: true, path: 'test23.html'},
+        		{exec: true, path: 'test24.html'},
+        		{exec: true, path: 'test25.html'},
+        		{exec: true, path: 'test26.html'},
+        		{exec: true, path: 'test27.html'},
+        		{exec: true, path: 'test28.html'},
+        		{exec: true, path: 'test29.html'},
+        		{exec: true, path: 'test30.html'},
+        		{exec: true, path: 'test31.html'},
+        		{exec: true, path: 'test32.html'},
+        		{exec: true, path: 'test33.html'},
+        		{exec: true, path: 'test34.html'},
+        		{exec: true, path: 'test35.html'},
+        		{exec: true, path: 'test36.html'},
+        		{exec: true, path: 'test37.html'},
+        		{exec: true, path: 'test38.html'},
+        		{exec: true, path: 'test39.html'},
+        		{exec: true, path: 'test40.html'},
+        		{exec: true, path: 'test41.html'},
+        		{exec: true, path: 'test42.html'},
+        		{exec: true, path: 'test43.html'},
+        		{exec: true, path: 'test44.html'},
+        		{exec: true, path: 'test45.html'},
+        		{exec: true, path: 'test46.html'},
+        		{exec: true, path: 'test47.html'},
+        		{exec: true, path: 'test48.html'},
+        		{exec: true, path: 'test49.html'},
+        		{exec: true, path: 'test50.html'},
+        		{exec: true, path: 'test51.html'},
+        		{exec: true, path: 'test52.html'},
+        		{exec: true, path: 'test53.html'},
+        		{exec: true, path: 'test54.html'},
+        		{exec: false, path: 'test55.html'},
+        		{exec: true, path: 'test56.html'},
+        		{exec: true, path: 'test57.html'},
+        		{exec: true, path: 'test58.xml'},
+        		{exec: true, path: 'test59.html'},
+        		{exec: true, path: 'test60.xml'},
+        		{exec: true, path: 'test61.html'},
+        		{exec: true, path: 'test62.html'},
+        		{exec: true, path: 'test63.xhtml'},
+        		{exec: true, path: 'test64.html'},
+        		{exec: true, path: 'test65.html'},
+        		{exec: false, path: 'test66.html'},
+        		{exec: false, path: 'test67.html'},
+        		{exec: true, path: 'test68.html'},
+        		{exec: true, path: 'test69.html'},
+        		{exec: true, path: 'test70.html'},
+        		{exec: true, path: 'test71.html'},
+        		{exec: true, path: 'test72.html'},
+        		{exec: true, path: 'test73.html'},
+        		{exec: true, path: 'test74.html'},
+        		{exec: true, path: 'test75.html'},
+        		{exec: true, path: 'test76.html'},
+        		{exec: true, path: 'test77.html'},
+        		{exec: true, path: 'test78.html'},
+        		{exec: true, path: 'test79.html'},
+        		{exec: true, path: 'test80.html'},
+        		{exec: true, path: 'test81.html'}*/
+        		
+        	],
+        	testframe = document.getElementById('testframe'),
+        	currentTest = 1, total = 'passed';
+        	
+        	function addTestResult(name, desc, result) {
+        		var dl = document.getElementById('testresults'),
+        		template = document.getElementById('template').innerHTML;
+				template = template.replace(/@file@/g, name);
+				template = template.replace(/@desc@/, desc);
+				template = template.replace(/@result@/g, result);
+				dl.innerHTML = dl.innerHTML + template;
+        	}
+        	
+        	if (window.addEventListener) {
+        		window.addEventListener('message', function (e) {
+					var msg = JSON.parse(e.data);
+					addTestResult(tests[msg.index].path, msg.desc, msg.result);
+					if (msg.result === 'failed') {
+						total = 'failed';
+					}
+					run(msg.index + 1);
+				}, false);
+			} else if (window.attachEvent) {
+				window.attachEvent('0nmessage', function (e) {
+					var msg = JSON.parse(e.data);
+					addTestResult(tests[msg.index].path, msg.desc, msg.result);
+					run(msg.index + 1);
+				});
+			}
+        	
+        	function run(index) {
+        		if (tests[index]) {
+        			currentTest = index;
+        			if (tests[index].exec) {
+						window.setTimeout(function () {
+							testframe.src = tests[index].path;
+						}, 0);
+					} else {
+						addTestResult(tests[index].path, 'omitted', 'omitted');
+						run(index + 1);
+						return;
+					}
+        		} else {
+        			addTestResult('', navigator.userAgent, total);
+        			return;
+        		}
+        	}
+        	run(currentTest);
+        </script>
+  </body>
+</html>

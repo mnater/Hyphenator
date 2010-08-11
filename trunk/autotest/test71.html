@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/transitional.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 71</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                Hyphenator.config({hyphenchar:'|', doframes: true});
+                Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <h1>Test 71</h1>
+        <p id="desc">Run Hyphenator on site with a external site in an iframe.</p>
+		<p><a href="test70.html">&lt;- Prev</a> | <a href="test72.html">Next -&gt;</a></p>
+		<pre>Hyphenator.config({hyphenchar:'|', doframes:true});
+Hyphenator.run();</pre>
+		<iframe width="425" height="350" frameborder="1" scrolling="no" marginheight="0" marginwidth="0" src="http://www.mnn.ch/diversa/ext71.html"></iframe>
+		<p id="test" class="hyphenate" lang="en">Hyphenation</p>
+        <p id="ref">Hy|phen|ation</p>
+
+    </body>
+</html>
