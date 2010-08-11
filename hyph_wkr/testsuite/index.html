@@ -8,229 +8,182 @@
                 width:50%;
                 margin-left:25%;
                 margin-right:25%;
+                font: normal 10px Verdana;
             }
-            #test {
-            	background-color: #ffd6d6;
+            #template {
+                display: none;
             }
-            #ref {
-            	background-color: #d6ffd6;
+            #testframe {
+            	display: none;
             }
-            dl {
-            	margin: 0;
+            .passed {
+            	color: green;
+            	background-color: lime;
             }
-            dt {
-            	display: inline-block;
-            	width: 60px;
+            .failed {
+            	color: maroon;
+            	background-color: red;
             }
-            dd {
-            	display: inline;
+            .obsolete {
+            	color: black;
+            	background-color: silver;
+            }
+            .visual {
+            	color: olive;
+            	background-color: yellow;
+            }
+            .omitted {
+            	color: grey;
             }
         </style>
     </head>
     <body>
         <h1>The Hyphenator (with Web Worker) Testsuite</h1>
-        <p class="hyphenate">Run this tests before releasing a new version! Do the same run with the <a href="http://yui.2clics.net/">packed</a> version of Hyphenator.js.</p>
-		<p><a href="index_auto.html">Autotest</a></p>
-		<p><a href="test1.html">Start -&gt;</a></p>
-		<dl>
-			<dt><a href="test1.html">test1.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a single word.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test2.html">test2.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test3.html">test3.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Raise error, when no language information is set.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test4.html">test4.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph when only mainlanguage is set.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test5.html">test5.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph when language is set in a parent.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test6.html">test6.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph for each latin script language.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test7.html">test7.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph with lots of punctuation.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test8.html">test8.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate a paragraph that contains a word in a different language.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test9.html">test9.html</a></dt>
-			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete) Run Hyphenation with manually preloaded patterns.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test10.html">test10.html</a></dt>
-			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete) Run Hyphenation with manually preloaded patterns. But one language isn't loaded.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test11.html">test11.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Run Hyphenation with a minimal word length of 4.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test12.html">test12.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Run Hyphenation with a minimal word length of 8.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test13.html">test13.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate different styles of URLs.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test14.html">test14.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Measuring time to hyphenate a word.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test15.html">test15.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Measuring time to hyphenate a page, including loading the patterns.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test16.html">test16.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check Hyphenator with JSLint!</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test17.html">test17.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> (obsolete) Test running onContentLoaded (instead of onload).</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test18.html">test18.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check for correctly put Zero Width Spaces. Resize window!</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test19.html">test19.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Do some checks related to german patterns.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test20.html">test20.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Checks if a Bug in Firefox 3 is still here.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test21.html">test21.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> (obsolete) Check if a WebKit (<=30644) Bug is still there.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test22.html">test22.html</a></dt>
-			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete) Check if the ToggleBox is displayed and turning off/on hyphenation works.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test23.html">test23.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Turning of hyphenation for elements specified by Hyphenator.dontselect().</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test24.html">test24.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check some special rules when hyphenating.</dd>
-		</dl>
-		<dl>
-			<dt><a href="test25.html">test25.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Set a proprietary toogle box.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test26.html">test26.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Hyphenate words with a special meaning in JavaScript.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test27.html">test27.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Test of hyphenation in Indian scripts.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test28.html">test28.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check for compatibility with jQuery.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test29.html">test29.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check for compatibility with prototype.js.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test30.html">test30.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check for compatibility with mootools.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test31.html">test31.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check for compatibility with dojotoolkit.</dd>
-		</dl>
-  		<dl>
-			<dt><a href="test32.html">test32.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check for compatibility with yui2.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test33.html">test33.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check shortestPattern[lang] and longestPattern[lang] for appropriate values.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test34.html">test34.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check if everything works if the class="hyphenate" is set to the &lt;body&gt;.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test35.html">test35.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check support for other languages.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test36.html">test36.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Work with exceptions.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test37.html">test37.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Test error handling.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test38.html">test38.html</a></dt>
-			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete?) Test bookmarklet.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test39.html">test39.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Set intermediateState to 'visible' (default is 'hidden').</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test40.html">test40.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Using charset=ISO-8859-1 instead of utf8.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test41.html">test41.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Check what happens if there are many scripts included.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test42.html">test42.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Test global exceptions.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test43.html">test43.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Setting classname:'test'.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test44.html">test44.html</a></dt>
-			<dd><span style="color: maroon; background-color:red;">[KO]</span> Hyphenating content that has been loaded by AJAX.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test45.html">test45.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Test nonexistent config-key.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test46.html">test46.html</a></dt>
-			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete) Hyphenating content that has been loaded by AJAX. This time, de.js is loaded manually.</dd>
-		</dl>
-  		<dl>
-			<dt><a href="test47.html">test47.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> Preserve style-Attribute of hyphenated elements.</dd>
-		</dl>
- 		<dl>
-			<dt><a href="test48.html">test48.html</a></dt>
-			<dd><span style="color: maroon; background-color:red;">[KO]</span> (obsolete?) Test if the bookmarklet preserves styles of elements.</dd>
-		</dl>
-  		<dl>
-			<dt><a href="test49.html">test49.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> The language is set in uppercase: lang="EN"</dd>
-		</dl>
-  		<dl>
-			<dt><a href="test50.html">test50.html</a></dt>
-			<dd><span style="color: green; background-color:lime;">[OK]</span> A FORM contains an element with name="language".</dd>
-		</dl>
+		<table>
+			<tbody id="template">
+				<tr>
+					<td><a href="@file@">@file@</a></td>
+					<td class="@result@">[@result@]</td>
+					<td>@desc@</td>
+				</tr>
+			</tbody>
+		</table>
+		<table>
+			<tbody id="testresults">
+			
+			</tbody>
+		</table>
+		<iframe id="testframe" src=""></iframe>
+        <script type="text/javascript">
+        	var tests = [
+        		{exec: false, path: 'test0.html'}, //dont exec!
+        		{exec: true, path: 'test1.html'},
+        		{exec: true, path: 'test2.html'},
+        		{exec: true, path: 'test3.html'},
+        		{exec: true, path: 'test4.html'},
+        		{exec: true, path: 'test5.html'},
+        		{exec: true, path: 'test6.html'},
+        		{exec: true, path: 'test7.html'},
+        		{exec: true, path: 'test8.html'},
+        		{exec: true, path: 'test9.html'},
+        		{exec: true, path: 'test10.html'},
+        		{exec: true, path: 'test11.html'},
+        		{exec: true, path: 'test12.html'},
+        		{exec: true, path: 'test13.html'},
+        		{exec: true, path: 'test14.html'},
+        		{exec: true, path: 'test15.html'},
+        		{exec: true, path: 'test16.html'},
+        		{exec: true, path: 'test17.html'},
+        		{exec: true, path: 'test18.html'},
+        		{exec: true, path: 'test19.html'},
+        		{exec: true, path: 'test20.html'},
+        		{exec: true, path: 'test21.html'},
+        		{exec: true, path: 'test22.html'},
+        		{exec: true, path: 'test23.html'},
+        		{exec: true, path: 'test24.html'},
+        		{exec: true, path: 'test25.html'},
+        		{exec: true, path: 'test26.html'},
+        		{exec: true, path: 'test27.html'},
+        		{exec: true, path: 'test28.html'},
+        		{exec: true, path: 'test29.html'},
+        		{exec: true, path: 'test30.html'},
+        		{exec: true, path: 'test31.html'},
+        		{exec: true, path: 'test32.html'},
+        		{exec: true, path: 'test33.html'},
+        		{exec: true, path: 'test34.html'},
+        		{exec: true, path: 'test35.html'},
+        		{exec: true, path: 'test36.html'},
+        		{exec: true, path: 'test37.html'},
+        		{exec: true, path: 'test38.html'},
+        		{exec: true, path: 'test39.html'},
+        		{exec: true, path: 'test40.html'},
+        		{exec: true, path: 'test41.html'},
+        		{exec: true, path: 'test42.html'},
+        		{exec: true, path: 'test43.html'},
+        		{exec: true, path: 'test44.html'},
+        		{exec: true, path: 'test45.html'},
+        		{exec: true, path: 'test46.html'},
+        		{exec: true, path: 'test47.html'},
+        		{exec: true, path: 'test48.html'},
+        		{exec: true, path: 'test49.html'},
+        		{exec: true, path: 'test50.html'},
+        		{exec: true, path: 'test51.html'},
+        		{exec: true, path: 'test52.html'},
+        		{exec: true, path: 'test53.html'},
+        		{exec: true, path: 'test54.html'},
+        		{exec: false, path: 'test55.html'},
+        		{exec: true, path: 'test56.html'},
+        		{exec: true, path: 'test57.html'},
+        		{exec: true, path: 'test58.xml'},
+        		{exec: true, path: 'test59.html'},
+        		{exec: true, path: 'test60.xml'},
+        		{exec: true, path: 'test61.html'},
+        		{exec: true, path: 'test62.html'},
+        		{exec: true, path: 'test63.xhtml'},
+        		{exec: true, path: 'test64.html'},
+        		{exec: true, path: 'test65.html'},
+        		{exec: false, path: 'test66.html'},
+        		{exec: false, path: 'test67.html'},
+        		{exec: true, path: 'test68.html'},
+        		{exec: true, path: 'test69.html'},
+        		{exec: true, path: 'test70.html'},
+        		{exec: true, path: 'test71.html'},
+        		{exec: true, path: 'test72.html'},
+        		{exec: true, path: 'test73.html'},
+        		{exec: true, path: 'test74.html'},
+        		{exec: true, path: 'test75.html'},
+        		{exec: true, path: 'test76.html'},
+        		{exec: true, path: 'test77.html'},
+        		{exec: true, path: 'test78.html'},
+        		{exec: true, path: 'test79.html'},
+        		{exec: true, path: 'test80.html'},
+        		{exec: true, path: 'test81.html'}
+        		
+        	],
+        	testframe = document.getElementById('testframe'),
+        	currentTest = 1;
+        	
+        	function addTestResult(name, desc, result) {
+        		var dl = document.getElementById('testresults'),
+        		template = document.getElementById('template').innerHTML;
+				template = template.replace(/@file@/g, name);
+				template = template.replace(/@desc@/, desc);
+				template = template.replace(/@result@/g, result);
+				dl.innerHTML = dl.innerHTML + template;
+        	}
+        	
+        	if (window.addEventListener) {
+        		window.addEventListener('message', function (e) {
+					var msg = JSON.parse(e.data);
+					addTestResult(tests[msg.index].path, msg.desc, msg.result);
+					run(msg.index + 1);
+				}, false);
+			} else if (window.attachEvent) {
+				window.attachEvent('0nmessage', function (e) {
+					var msg = JSON.parse(e.data);
+					addTestResult(tests[msg.index].path, msg.desc, msg.result);
+					run(msg.index + 1);
+				});
+			}
+        	
+        	function run(index) {
+        		if (tests[index]) {
+        			currentTest = index;
+        			if (tests[index].exec) {
+						window.setTimeout(function () {
+							testframe.src = tests[index].path;
+						}, 0);
+					} else {
+						addTestResult(tests[index].path, 'omitted', 'omitted');
+						run(index + 1);
+						return;
+					}
+        		} else {
+        			addTestResult('', navigator.userAgent, 'passed');
+        			return;
+        		}
+        	}
+        	run(currentTest);
+        </script>
   </body>
 </html>

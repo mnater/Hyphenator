@@ -18,17 +18,31 @@
         </style>
     </head>
     <body>
-		<p><a href="test50.html">&lt;- Prev</a> | <a href="test52.html">Next -&gt;</a></p>
+		<p><a href="index.html">&lt;&lt; index</a> | <a href="test50.html">&lt;- Prev</a> | <a href="test52.html">Next -&gt;</a></p>
         <h1>Test 51</h1>
-        <p id="desc">Doing Hyphenation 'manually' by using <code>Hyphenator_worker</code>.</p>
-        <p id="test" class="test">Hyphenation is <span style="font-style:italic;">indeed</span> quite simple.</p>
-        <p id="test" class="ref">Hyphenation is <span style="font-style:italic;">indeed</span> quite simple.</p>
+        <p id="desc">Doing Hyphenation 'manually' by using <code>Hyphenator.run({}, element)</code>.</p>
+        <p id="test">Hyphenation is <span style="font-style:italic;">indeed</span> quite simple.</p>
+        <p id="ref">Hy|phen|ation is <span style="font-style:italic;">in|deed</span> quite sim|ple.</p>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.config({wordhyphenchar:'|'});
-                window.onload = function() {
-                	Hyphenator.hyphenate(document.getElementById('test'), 'en');
-                };
+        	if (parent != window) {
+				Hyphenator.customEvents.addEventListener('onhyphenationdone', function () {
+					var t1 = document.getElementById('test').innerHTML,
+					t2 = document.getElementById('ref').innerHTML,
+					desc = document.getElementById('desc').firstChild.data,
+					msg = {
+						desc: desc,
+						index: 51
+					};
+					if (t1 == t2) {
+						msg.result = 'passed';
+					} else {
+						msg.result = 'failed';
+					}
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				});     	
+			}
+        	Hyphenator.run({wordhyphenchar: '|'}, document.getElementById('test'));
         </script>
     </body>
 </html>

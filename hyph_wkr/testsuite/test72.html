@@ -9,45 +9,18 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .text p {
-                text-align:justify;
-            }
-            .test {
+            #test {
             	background-color: #ffd6d6;
             }
-            .ref {
+            #ref {
             	background-color: #d6ffd6;
             }
-            pre {
-            	border: 1px dotted grey;
-            }
         </style>
-        <script src="../Hyphenator.js" type="text/javascript"></script>
-        <script type="text/javascript">
-			var start,end;
-			function cb() {
-				end = new Date().getTime();
-				var out=document.getElementById('output').firstChild;
-				out.data="hyphenateElement(te,'en') :: "+(end-start)+"ms";
-			}
-			start=new Date().getTime();
-			Hyphenator.config({
-				onhyphenationdonecallback:cb,
-				storagetype:'local'
-			});
-			Hyphenator.run();
-        </script>
     </head>
     <body>
+		<p><a href="index.html">&lt;&lt; index</a> | <a href="test71.html">&lt;- Prev</a> | <a href="test73.html">Next -&gt;</a></p>
         <h1>Test 72</h1>
         <p id="desc">Use localStorage (reload the page!)</p>
-		<p><a href="test71.html">&lt;- Prev</a> | <a href="test73.html">Next -&gt;</a></p>
-        <pre>Hyphenator.config({
-	onhyphenationdonecallback:cb,
-	storagetype:'session'
-});
-Hyphenator.run();
-</pre>
 
 		<p id="output" class="test">Wait 3 seconds...</p>
 
@@ -192,6 +165,18 @@ Hyphenator.run();
 
 <p>&ldquo;Good-bye,&rdquo; I answered, and strolled on to my hotel, considerably interested in my new acquaintance.</p>
 </div>
-
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			if (parent != window) {
+				var desc = document.getElementById('desc').innerHTML,
+				msg = {
+					desc: '(obsolete) ' + desc,
+					index: 72,
+					result: 'obsolete'
+				};
+				parent.postMessage(JSON.stringify(msg), window.location.href);
+			}
+			Hyphenator.run();
+        </script>
      </body>
 </html>

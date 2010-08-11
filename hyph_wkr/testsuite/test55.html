@@ -18,45 +18,31 @@
         </style>
     </head>
     <body>
-		<p><a href="test54.html">&lt;- Prev</a> | <a href="test56.html">Next -&gt;</a></p>
+		<p><a href="index.html">&lt;&lt; index</a> | <a href="test54.html">&lt;- Prev</a> | <a href="test56.html">Next -&gt;</a></p>
         <h1>Test 55</h1>
         <p id="desc">Extending String by String.prototype.hyphenate</p>
         <p id="ref">alerts: Hy|phen|ation</p>
         <script type="text/javascript">
-			String.prototype.hyphenate = function(lang, wordhyphenchar) {
-			
-				var
-				hyphenator = new Worker('../Hyphenator_worker.js'),
-				wordhyphenchar = wordhyphenchar || String.fromCharCode(173),
-				text = this, messageCount = 0, done, wait;
-
-				hyphenator.postMessage(JSON.stringify({
-					type: 'config',
-					wordhyphenchar: wordhyphenchar
-				}));
-	
-				hyphenator.onmessage = function (e) {
-					var msg = JSON.parse(e.data);
-					if (msg.type === 'hyphenate') {
-						text = msg.text;
-						messageCount--;
-					}
-				};
-
-				hyphenator.postMessage(JSON.stringify({
-					type: 'hyphenate',
-					text: text,
-					lang: 'en'
-				}));
-				messageCount++;
+			String.prototype.hyphenate = (function(lang, wordhyphenchar) {
+				var done = false;
 				
-				if (messageCount === 0) {
-					return text;
-				} else {
-					return text;
+				window.setTimeout(function () {
+					done = true;
+				}, 1000);
+				
+				var retfunc = function (lang, wordhyphenchar) {
+					if (!done) {
+						window.setTimeout(function () {
+							retfunc(lang, wordhyphenchar);
+						}, 10);
+					} else {
+						return '<<' + this + '>>';
+					}
 				}
-				alert('exit');
-			}
+				
+				return retfunc;
+				
+			}());
 			alert('Hyphenation'.hyphenate('en', '|'));
         </script>
 

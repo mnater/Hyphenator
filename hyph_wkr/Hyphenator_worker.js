@@ -196,7 +196,7 @@ var Hyphenator_worker = (function (self) {
 						message: 'Couldn\'t load file: \'' + path + '\''
 					}));
 				}
-				if (Hyphenator_worker.languages[lang]) {
+				if (Hyphenator_worker.languages.hasOwnProperty(lang)) {
 					storePatterns(lang);
 					convertPatterns(lang);
 					wordRE = '[\\w' + Hyphenator_worker.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + Hyphenator_worker.minWordLength + ',}';

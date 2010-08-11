@@ -73,7 +73,7 @@ var Hyphenator = (function (window) {
 			r = window.document.getElementsByClassName('donthyphenate');
 			return r;
 		},
-		run: function (config) {
+		run: function (config, DOMElement) {
 			var elToProcess, elNoProcess, element, i = 0, messageCount = 0, first = false,
 			process = function (element, hide, lang) {
 				var linkToElement, msg, n, i = -1, j, hyphenateChild;
@@ -128,7 +128,6 @@ var Hyphenator = (function (window) {
 				Hyphenator.config(config);
 			}
 
-			//do the run
 			Hyphenator.Wkr.onmessage = function (e) {
 				var msg = window.JSON.parse(e.data), element;
 				switch (msg.type) {
@@ -166,12 +165,17 @@ var Hyphenator = (function (window) {
 				}
 			};
 			
-			elToProcess = Hyphenator.select();
-			elNoProcess = Hyphenator.dontselect();
-			while (!!(element = elToProcess[i++])) {
-				process(element, true, undefined);
+			if (DOMElement) {
+				elNoProcess = [];
+				process(DOMElement, true, undefined);
+			} else {			
+				//do the run			
+				elToProcess = Hyphenator.select();
+				elNoProcess = Hyphenator.dontselect();
+				while (!!(element = elToProcess[i++])) {
+					process(element, true, undefined);
+				}
 			}
-
 		},
 		removehyphenation: function () {
 			var i = 0, elToProcess, element,
@@ -395,5 +399,5 @@ Hyphenator.customEvents.add('onhyphenationdone');
 Hyphenator.customEvents.add('onremovehyphenationdone');
 Hyphenator.customEvents.add('onerror');
 Hyphenator.customEvents.addEventListener('onerror', function (e) {
-	window.alert(e.message);
+	window.alert(e.sender + ': ' + e.message);
 });
