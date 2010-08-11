@@ -26,7 +26,7 @@
                 text-align:justify;
             }
         </style>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+        <script src="files/jquery.js" type="text/javascript"></script>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script src="../patterns/de.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -35,7 +35,7 @@
         	});
         	Hyphenator.run();
             function insert()  {
- 			    $("#target").load("test44inc.html",'',cb);
+ 			    $("#target").load("files/test44inc.html",'',cb);
 			}
 			function cb () {
 				Hyphenator.config({
