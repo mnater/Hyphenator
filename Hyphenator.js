@@ -1045,10 +1045,12 @@ var Hyphenator = (function (window) {
 			if (enableReducedPatternSet) {
 				lo.redPatSet = {};
 			}
+			//add exceptions from the pattern file to the local 'exceptions'-obj
 			if (lo.hasOwnProperty('exceptions')) {
 				Hyphenator.addExceptions(lang, lo.exceptions);
 				delete lo.exceptions;
 			}
+			//copy global exceptions to the language specific exceptions
 			if (exceptions.hasOwnProperty('global')) {
 				if (exceptions.hasOwnProperty(lang)) {
 					exceptions[lang] += ', ' + exceptions.global;
@@ -1056,6 +1058,7 @@ var Hyphenator = (function (window) {
 					exceptions[lang] = exceptions.global;
 				}
 			}
+			//move exceptions from the the local 'exceptions'-obj to the 'language'-object
 			if (exceptions.hasOwnProperty(lang)) {
 				lo.exceptions = convertExceptionsToObject(exceptions[lang]);
 				delete exceptions[lang];
@@ -1110,6 +1113,14 @@ var Hyphenator = (function (window) {
 				if (storage) {
 					if (storage.getItem(lang)) {
 						Hyphenator.languages[lang] = JSON.parse(storage.getItem(lang));
+						if (exceptions.hasOwnProperty('global')) {
+							tmp1 = convertExceptionsToObject(exceptions.global);
+							for (tmp2 in tmp1) {
+								if (tmp1.hasOwnProperty(tmp2)) {
+									Hyphenator.languages[lang].exceptions[tmp2] = tmp1[tmp2];
+								}
+							}
+						}
 						//Replace exceptions since they may have been changed:
 						if (exceptions.hasOwnProperty(lang)) {
 							tmp1 = convertExceptionsToObject(exceptions[lang]);
