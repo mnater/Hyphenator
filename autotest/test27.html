@@ -39,15 +39,28 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 27,
+							result: 'visual'
+						};
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
 			Hyphenator.config({minwordlength: 4, displaytogglebox: true});
 			Hyphenator.run();
         </script>
     </head>
     <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test26.html">&lt;- Prev</a> | <a href="test28.html">Next -&gt;</a></p>
         <h1>Test 27</h1>
         <p id="desc">Test of hyphenation in Indian scripts. (Appropriate fonts have to be installed.)<br>
         This page has been created by Santhosh Thottingal, who committed the patterns for these languages.</p>
-		<p><a href="test26.html">&lt;- Prev</a> | <a href="test28.html">Next -&gt;</a></p>
 <div class="multiplecolumns hyphenate chapter" lang="en"> 
 Resize the browser window and check how the column width and number of columns are changing. See how the hyphenation postion changes too&hellip; To toggle between hyphenated and non-hyphenated text, press the hyphenate link at the top right corner of this page.
 </div><hr>
