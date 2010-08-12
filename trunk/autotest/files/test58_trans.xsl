@@ -22,18 +22,35 @@
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
 		<![CDATA[
-                Hyphenator.config({hyphenchar:'|'});
-                Hyphenator.run();
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						t2 = document.getElementById('ref').innerHTML,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 58
+						};
+						if (t1 == t2) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});
+			}
+			Hyphenator.config({hyphenchar:'|'});
+			Hyphenator.run();
 		]]>
         </script>
 	</head>
 	<body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test57.html">&lt;- Prev</a> | <a href="test59.html">Next -&gt;</a></p>
         <h1>Test 58</h1>
         <p id="desc">Run Hyphenator with XSLT.<br />
         Some browsers may fail on DOMContentLoaded here...</p>
-		<p><a href="test57.html">&lt;- Prev</a> | <a href="test59.html">Next -&gt;</a></p>
-		<pre>Hyphenator.config({hyphenchar:'|'});
-Hyphenator.run();</pre>
 
 		<table>
 			<tr>
@@ -42,8 +59,8 @@ Hyphenator.run();</pre>
 			</tr>
 			<xsl:for-each select="wordlist/word">
 			<tr>
-			<td class="hyphenate test"><xsl:value-of select="raw"/></td>
-			<td class="ref"><xsl:value-of select="manhyph"/></td>
+			<td id="test" class="hyphenate"><xsl:value-of select="raw"/></td>
+			<td id="ref"><xsl:value-of select="manhyph"/></td>
 			</tr>
 			</xsl:for-each>
 		</table>

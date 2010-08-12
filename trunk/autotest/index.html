@@ -8,7 +8,8 @@
                 width:50%;
                 margin-left:25%;
                 margin-right:25%;
-                font: normal 10px Verdana;
+                font: normal 11px Verdana;
+                line-height: 18px;
             }
             #template {
                 display: none;
@@ -35,47 +36,54 @@
             .omitted {
             	color: grey;
             }
+            .testname {
+            	display: inline-block;
+            	width: 6em;
+            }
+            .result {
+            	display: inline-block;
+            	width: 5em;
+            }
+            ul {
+            	list-style-type: none;
+            	padding-left: 0px;
+            }
         </style>
     </head>
     <body>
-        <h1>The Hyphenator (with Web Worker) Testsuite</h1>
-		<table>
-			<tbody id="template">
-				<tr>
-					<td><a href="@file@">@file@</a></td>
-					<td class="@result@">[@result@]</td>
-					<td>@desc@</td>
-				</tr>
-			</tbody>
-		</table>
-		<table>
-			<tbody id="testresults">
-			
-			</tbody>
-		</table>
+        <h1>The Hyphenator Testsuite</h1>
+		<ul id="template">
+			<li>
+				<span class="testname"><a href="@file@">@file@</a></span>
+				<span class="result @result@">[@result@]</span>
+				<span class="desc">@desc@</span>
+			</li>
+		</ul>
+		<ul id="testresults">
+		</ul>
 		<iframe id="testframe" src=""></iframe>
         <script type="text/javascript">
         	var tests = [
         		{exec: false, path: 'test0.html'}, //dont exec!
-        		{exec: false, path: 'test1.html'}, 
-        		{exec: false, path: 'test2.html'},
-        		{exec: false, path: 'test3.html'},
-        		{exec: false, path: 'test4.html'},
-        		{exec: false, path: 'test5.html'},
-        		{exec: false, path: 'test6.html'},
-        		{exec: false, path: 'test7.html'},
-        		{exec: false, path: 'test8.html'},
-        		{exec: false, path: 'test9.html'},
-        		{exec: false, path: 'test10.html'},
-        		{exec: false, path: 'test11.html'},
-        		{exec: false, path: 'test12.html'},
-        		{exec: false, path: 'test13.html'},
-        		{exec: false, path: 'test14.html'},
-        		{exec: false, path: 'test15.html'},
-        		{exec: false, path: 'test16.html'},
-        		{exec: false, path: 'test17.html'},
-        		{exec: false, path: 'test18.html'},
-        		{exec: false, path: 'test19.html'}/*,
+        		{exec: true, path: 'test1.html'}, 
+        		{exec: true, path: 'test2.html'},
+        		{exec: true, path: 'test3.html'},
+        		{exec: true, path: 'test4.html'},
+        		{exec: true, path: 'test5.html'},
+        		{exec: true, path: 'test6.html'},
+        		{exec: true, path: 'test7.html'},
+        		{exec: true, path: 'test8.html'},
+        		{exec: true, path: 'test9.html'},
+        		{exec: true, path: 'test10.html'},
+        		{exec: true, path: 'test11.html'},
+        		{exec: true, path: 'test12.html'},
+        		{exec: true, path: 'test13.html'},
+        		{exec: true, path: 'test14.html'},
+        		{exec: true, path: 'test15.html'},
+        		{exec: true, path: 'test16.html'},
+        		{exec: true, path: 'test17.html'},
+        		{exec: true, path: 'test18.html'},
+        		{exec: false, path: 'test19.html'},
         		{exec: true, path: 'test20.html'},
         		{exec: true, path: 'test21.html'},
         		{exec: true, path: 'test22.html'},
@@ -111,11 +119,11 @@
         		{exec: true, path: 'test52.html'},
         		{exec: true, path: 'test53.html'},
         		{exec: true, path: 'test54.html'},
-        		{exec: false, path: 'test55.html'},
+        		{exec: true, path: 'test55.html'},
         		{exec: true, path: 'test56.html'},
         		{exec: true, path: 'test57.html'},
         		{exec: true, path: 'test58.xml'},
-        		{exec: true, path: 'test59.html'},
+        		{exec: true, path: 'test59.html'}/*,
         		{exec: true, path: 'test60.xml'},
         		{exec: true, path: 'test61.html'},
         		{exec: true, path: 'test62.html'},
@@ -150,6 +158,7 @@
 				template = template.replace(/@desc@/, desc);
 				template = template.replace(/@result@/g, result);
 				dl.innerHTML = dl.innerHTML + template;
+					window.scrollBy(0, 20);
         	}
         	
         	if (window.addEventListener) {
@@ -162,7 +171,7 @@
 					run(msg.index + 1);
 				}, false);
 			} else if (window.attachEvent) {
-				window.attachEvent('0nmessage', function (e) {
+				window.attachEvent('onmessage', function (e) {
 					var msg = JSON.parse(e.data);
 					addTestResult(tests[msg.index].path, msg.desc, msg.result);
 					run(msg.index + 1);

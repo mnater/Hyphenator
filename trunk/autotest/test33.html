@@ -16,9 +16,6 @@
             #ref {
             	background-color: #d6ffd6;
             }
-            div {
-                text-align:justify;
-            }
         </style>
         <script type="text/javascript">
 			var Hyphenator = {	languages: {}};
@@ -74,6 +71,7 @@
 						var plen, i = 0, anfang, pats, pat, key, shortest = 100, longest = 0;
 						var newlongest = 0;
 						var newshortest = 10;
+						var r = true;
 						pats = Hyphenator.languages[lang].patterns;
 						for (plen in pats) {
 							if (pats.hasOwnProperty(plen)) {
@@ -95,15 +93,26 @@
 						if (newlongest === Hyphenator.languages[lang].longestPattern) {
 							output('ref', t1);
 						} else {
+							r = false;
 							output('test', t1);
 						}
 						var t2 = 'Hyphenator.shortestPattern['+lang+'] set to '+Hyphenator.languages[lang].shortestPattern+' -- computed: '+newshortest;
 						if (newshortest === Hyphenator.languages[lang].shortestPattern) {
 							output('ref', t2);
 						} else {
+							r = false
 							output('test', t2);
 						}
 					}
+				}
+				if (parent != window) {
+					var desc = document.getElementById('desc').firstChild.data,
+					msg = {
+						desc: desc,
+						index: 33,
+						result: r ? 'passed' : 'failed'
+					};
+					parent.postMessage(JSON.stringify(msg), window.location.href);
 				}
 			}
 			
@@ -113,9 +122,9 @@
         </script>
     </head>
     <body>
-        <h1>Test 33</h1>
-        <p id="desc">Check Hyphenator.shortestPattern[lang] and Hyphenator.longestPattern[lang] for appropriate values. Red lines have to be corrected in the pattern file.</p>
-		<p><a href="test32.html">&lt;- Prev</a> | <a href="test34.html">Next -&gt;</a></p>
+    	<p><a href="index.html">&lt;&lt;- index</a> | <a href="test32.html">&lt;- Prev</a> | <a href="test34.html">Next -&gt;</a></p>
+	    <h1>Test 33</h1>
+        <p id="desc">Check shortestPattern and longestPattern for appropriate values.</p>
 		<div id="out"></div>
     </body>
 </html>
