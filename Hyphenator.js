@@ -664,7 +664,6 @@ var Hyphenator = (function (window) {
 			if (!hyphRunForThis[contextWindow.location.href] && (!documentLoaded || contextWindow != window.parent)) {
 				documentLoaded = true;
 				f();
-				documentCount++;
 				hyphRunForThis[contextWindow.location.href] = true;
 			}
 		}
@@ -1400,7 +1399,7 @@ var Hyphenator = (function (window) {
 		if (hyphenatorSettings.isLast) {
 			state = 3;
 			documentCount--;
-			if (documentCount>(-1000) && documentCount <= 0) {
+			if (documentCount > (-1000) && documentCount <= 0) {
 				documentCount = (-2000);
 				onHyphenationDone();
 			}
@@ -1754,6 +1753,7 @@ var Hyphenator = (function (window) {
 		run: function () {
 			documentCount = 0;
 			var process = function () {
+				documentCount++;
 				try {
 					if (contextWindow.document.getElementsByTagName('frameset').length > 0) {
 						return; //we are in a frameset

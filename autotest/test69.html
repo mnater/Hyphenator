@@ -19,8 +19,25 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.config({hyphenchar: '|'});
-                Hyphenator.run();
+        	if (parent != window) {
+				Hyphenator.config({
+					'onerrorhandler': function () {
+						var desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 69
+						};
+						if (arguments[0].message == 'The language "tl" is not yet supported.') {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.config({hyphenchar: '|'});
+			Hyphenator.run();
         </script>
     </head>
     <body>

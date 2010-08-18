@@ -27,15 +27,11 @@
         </script>
     </head>
     <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test78.html">&lt;- Prev</a> | <a href="test80.html">Next -&gt;</a></p>
         <h1>Test 79</h1>
         <p id="desc">Run Hyphenator on site with an iFrame. The iFrame has no language set…<br>
         The iFrame should inherit the mainlanguage from the parent-page.</p>
-		<p><a href="test78.html">&lt;- Prev</a> | <a href="test80.html">Next -&gt;</a></p>
-		<pre>Hyphenator.config({
-	hyphenchar:'|',
-	doframes: true
-});
-Hyphenator.run();</pre>
+
         <iframe width="600" height="400" src="files/test79_frame.html"></iframe>
 		<p id="test" class="hyphenate" lang="en">Hyphenation</p>
         <p id="ref">Hy|phen|ation</p>
