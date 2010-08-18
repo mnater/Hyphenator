@@ -30,6 +30,14 @@
 				end = new Date().getTime();
 				var out=document.getElementById('output').firstChild;
 				out.data="hyphenateElement(te,'en') :: "+(end-start)+"ms";
+				if (window != parent) {
+					var msg = {
+						desc: "hyphenateElement(te,'en') :: "+(end-start)+"ms",
+						index: 72,
+						result: 'passed'
+					};
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				}
 			}
 			start=new Date().getTime();
 			Hyphenator.config({
@@ -40,15 +48,9 @@
         </script>
     </head>
     <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test71.html">&lt;- Prev</a> | <a href="test73.html">Next -&gt;</a></p>
         <h1>Test 72</h1>
         <p id="desc">Use localStorage (reload the page!)</p>
-		<p><a href="test71.html">&lt;- Prev</a> | <a href="test73.html">Next -&gt;</a></p>
-        <pre>Hyphenator.config({
-	onhyphenationdonecallback:cb,
-	storagetype:'session'
-});
-Hyphenator.run();
-</pre>
 
 		<p id="output" class="test">Wait 3 seconds...</p>
 

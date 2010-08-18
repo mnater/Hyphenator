@@ -19,22 +19,39 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.config({
-                	hyphenchar:'|',
-                	orphancontrol: 2
-                });
-                Hyphenator.run();
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						t2 = document.getElementById('ref').innerHTML,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 80
+						};
+						if (t1 == t2) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.config({
+				hyphenchar:'|',
+				orphancontrol: 2
+			});
+			Hyphenator.run();
         </script>
     </head>
     <body>
         <h1>Test 80</h1>
         <p id="desc">Orphancontrol level 2</p>
 		<p><a href="test79.html">&lt;- Prev</a> | <a href="test81.html">Next -&gt;</a></p>
-        <pre>Hyphenator.config({hyphenchar:'|', orphancontrol: 2});
-Hyphenator.run();</pre>
 
-        <p class="text hyphenate test">&laquo;Wunderschönen guten Tag allerseits&raquo;, rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: &laquo;Himmelherrgott, so viele Leute hatte ich nicht erwartet!&raquo;</p>
-        <p class="text ref">«Wun|der|schö|nen guten Tag al|ler|seits», rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: «Him|mel|herr|gott, so viele Leute hatte ich nicht erwartet!»</p>
+        <p id="test" class="hyphenate">&laquo;Wunderschönen guten Tag allerseits&raquo;, rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: &laquo;Himmelherrgott, so viele Leute hatte ich nicht erwartet!&raquo;</p>
+        <p id="ref">«Wun|der|schö|nen guten Tag al|ler|seits», rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: «Him|mel|herr|gott, so viele Leute hatte ich nicht erwartet!»</p>
 
      </body>
 </html>
