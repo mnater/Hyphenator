@@ -93,7 +93,7 @@
 						
 			function output2String() {
 				var tmp, len;
-				tmp = 'Hyphenator.languages.' + document.getElementsByName('language')[0].value + ' = {\n';
+				tmp = 'Hyphenator.languages[\'' + document.getElementsByName('language')[0].value + '\'] = {\n';
 				tmp += '\tleftmin : ' + document.getElementsByName('leftmin')[0].value + ',\n';
 				tmp += '\trightmin : ' + document.getElementsByName('rightmin')[0].value + ',\n';
 				tmp += '\tshortestPattern : ' + shortestPattern + ',\n';

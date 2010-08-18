@@ -55,6 +55,7 @@ var Hyphenator = (function (window) {
 	 * if (supportedLang.hasOwnProperty(lang))
 	 */
 	supportedLang = {
+		'be': 'be.js',
 		'cs': 'cs.js',
 		'da': 'da.js',
 		'bn': 'bn.js',
@@ -124,6 +125,7 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
 	prompterStrings = {
+		'be': 'Мова гэтага сайта не можа быць вызначаны аўтаматычна. Калі ласка пакажыце мову:',
 		'cs': 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:',
 		'da': 'Denne websides sprog kunne ikke bestemmes. Angiv venligst sprog:',
 		'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:',
@@ -192,8 +194,8 @@ var Hyphenator = (function (window) {
 	 * documentLoaded is true, when the DOM has been loaded. This is set by runOnContentLoaded
 	 */
 	documentLoaded = false,
+	documentCount = 0,
 	
-	hyphRunForThis = {},
 
 	/**
 	 * @name Hyphenator-contextWindow
@@ -651,7 +653,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	runOnContentLoaded = function (w, f) {
-		var DOMContentLoaded, toplevel;
+		var DOMContentLoaded, toplevel, hyphRunForThis = {};
 		if (documentLoaded && !hyphRunForThis[w.location.href]) {
 			f();
 			hyphRunForThis[w.location.href] = true;
@@ -662,6 +664,7 @@ var Hyphenator = (function (window) {
 			if (!hyphRunForThis[contextWindow.location.href] && (!documentLoaded || contextWindow != window.parent)) {
 				documentLoaded = true;
 				f();
+				documentCount++;
 				hyphRunForThis[contextWindow.location.href] = true;
 			}
 		}
@@ -1396,7 +1399,11 @@ var Hyphenator = (function (window) {
 		}
 		if (hyphenatorSettings.isLast) {
 			state = 3;
-			onHyphenationDone();
+			documentCount--;
+			if (documentCount>(-1000) && documentCount <= 0) {
+				documentCount = (-2000);
+				onHyphenationDone();
+			}
 		}
 	},
 	
@@ -1745,6 +1752,7 @@ var Hyphenator = (function (window) {
          * &lt;/script&gt;
          */
 		run: function () {
+			documentCount = 0;
 			var process = function () {
 				try {
 					if (contextWindow.document.getElementsByTagName('frameset').length > 0) {

@@ -19,8 +19,27 @@
         </style>
         <script src="../../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-                Hyphenator.config({hyphenchar:'|'});
-                Hyphenator.run();
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						t2 = document.getElementById('ref').innerHTML,
+						desc = parent.document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 64
+						};
+						if (t1 == t2) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.config({hyphenchar:'|'});
+			Hyphenator.run();
         </script>
     </head>
     <body>
