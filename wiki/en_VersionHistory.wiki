@@ -10,6 +10,7 @@ This minor release brings the following changes:
   * Fixed issue105
   * Fixed issue106
   * Fixed issue108
+  * Fixed an issue with global exceptions not set correctly
   * internal changes to support automated testsuite
   * compatibility with Google Closure Compiler
 </wiki:comment>
