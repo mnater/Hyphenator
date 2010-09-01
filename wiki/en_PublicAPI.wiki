@@ -327,6 +327,27 @@ By default the storage method is `localStorage` but you can change this to `sess
 }}}
 
 ----
+
+<wiki:comment>
+==== property `orphancontrol` ====
+*new in version 3.1.0*
+In some cases it may happen that one single syllable comes to the last line. To prevent this you may set the `orphancontrol`-level to one of the following values:
+  * 1 (default): last word is hyphenated
+  * 2: last word is not hyphenated
+  * 3: last word is not hyphenated and last space is non breaking
+
+===== Example 16 – setting `orphancontrol` to `2` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({orphancontrol: 2});
+	Hyphenator.run();
+</script>
+}}}
+
+----
+</wiki:comment>
+
 === void Hyphenator.run() ===
 Calling this method invokes hyphenation.
 ==== Example ====
