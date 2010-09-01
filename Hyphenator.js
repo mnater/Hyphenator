@@ -23,7 +23,7 @@
  
 /* The following comment is for JSLint: */
 /*global window, ActiveXObject, unescape */
-/*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, regexp: true, newcap: true, immed: true, evil: true, eqeqeq: false */
+/*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, regexp: true, sub: true, newcap: true, immed: true, evil: true, eqeqeq: false */
 
 
 /**
@@ -653,7 +653,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	runOnContentLoaded = function (w, f) {
-		var DOMContentLoaded, toplevel, hyphRunForThis = {};
+		var DOMContentLoaded = function () {}, toplevel, hyphRunForThis = {};
 		if (documentLoaded && !hyphRunForThis[w.location.href]) {
 			f();
 			hyphRunForThis[w.location.href] = true;
@@ -835,8 +835,8 @@ var Hyphenator = (function (window) {
 				}
 			}
 		}
-		if (!mainLanguage && doFrames && contextWindow != parent) {
-			autoSetMainLanguage(parent);
+		if (!mainLanguage && doFrames && contextWindow != window.parent) {
+			autoSetMainLanguage(window.parent);
 		}
 		if (!mainLanguage) {
 			text = '';
@@ -897,7 +897,7 @@ var Hyphenator = (function (window) {
 				if (supportedLang.hasOwnProperty(lang.split('-')[0])) { //try subtag
 					lang = lang.split('-')[0];
 					hyphenatorSettings.language = lang;
-				} else if (!Hyphenator.isBookmarklet()) {
+				} else if (!isBookmarklet) {
 					onError(new Error('Language ' + lang + ' is not yet supported.'));
 				}
 			}
@@ -910,7 +910,7 @@ var Hyphenator = (function (window) {
 				}
 			}
 		};
-		if (Hyphenator.isBookmarklet()) {
+		if (isBookmarklet) {
 			elToProcess = contextWindow.document.getElementsByTagName('body')[0];
 			process(elToProcess, false, mainLanguage);
 		} else {
@@ -1043,6 +1043,8 @@ var Hyphenator = (function (window) {
 		if (!lo.prepared) {	
 			if (enableCache) {
 				lo.cache = {};
+				//Export
+				lo['cache'] = lo.cache;
 			}
 			if (enableReducedPatternSet) {
 				lo.redPatSet = {};
@@ -1074,7 +1076,7 @@ var Hyphenator = (function (window) {
 		}
 		if (storage) {
 			try {
-				storage.setItem(lang, JSON.stringify(lo));
+				storage.setItem(lang, window.JSON.stringify(lo));
 			} catch (e) {
 				//onError(e);
 			}
@@ -1114,7 +1116,7 @@ var Hyphenator = (function (window) {
 				++languagesToLoad;
 				if (storage) {
 					if (storage.getItem(lang)) {
-						Hyphenator.languages[lang] = JSON.parse(storage.getItem(lang));
+						Hyphenator.languages[lang] = window.JSON.parse(storage.getItem(lang));
 						if (exceptions.hasOwnProperty('global')) {
 							tmp1 = convertExceptionsToObject(exceptions.global);
 							for (tmp2 in tmp1) {
@@ -1640,17 +1642,17 @@ var Hyphenator = (function (window) {
 					switch (key) {
 					case 'classname':
 						if (assert('classname', 'string')) {
-							hyphenateClass = obj.classname;
+							hyphenateClass = obj[key];
 						}
 						break;
 					case 'donthyphenateclassname':
 						if (assert('donthyphenateclassname', 'string')) {
-							dontHyphenateClass = obj.donthyphenateclassname;
+							dontHyphenateClass = obj[key];
 						}						
 						break;
 					case 'minwordlength':
 						if (assert('minwordlength', 'number')) {
-							min = obj.minwordlength;
+							min = obj[key];
 						}
 						break;
 					case 'hyphenchar':
@@ -1658,79 +1660,79 @@ var Hyphenator = (function (window) {
 							if (obj.hyphenchar === '&shy;') {
 								obj.hyphenchar = String.fromCharCode(173);
 							}
-							hyphen = obj.hyphenchar;
+							hyphen = obj[key];
 						}
 						break;
 					case 'urlhyphenchar':
 						if (obj.hasOwnProperty('urlhyphenchar')) {
 							if (assert('urlhyphenchar', 'string')) {
-								urlhyphen = obj.urlhyphenchar;
+								urlhyphen = obj[key];
 							}
 						}
 						break;
 					case 'togglebox':
 						if (assert('togglebox', 'function')) {
-							toggleBox = obj.togglebox;
+							toggleBox = obj[key];
 						}
 						break;
 					case 'displaytogglebox':
 						if (assert('displaytogglebox', 'boolean')) {
-							displayToggleBox = obj.displaytogglebox;
+							displayToggleBox = obj[key];
 						}
 						break;
 					case 'remoteloading':
 						if (assert('remoteloading', 'boolean')) {
-							enableRemoteLoading = obj.remoteloading;
+							enableRemoteLoading = obj[key];
 						}
 						break;
 					case 'enablecache':
 						if (assert('enablecache', 'boolean')) {
-							enableCache = obj.enablecache;
+							enableCache = obj[key];
 						}
 						break;
 					case 'enablereducedpatternset':
 						if (assert('enablereducedpatternset', 'boolean')) {
-							enableReducedPatternSet = obj.enablereducedpatternset;
+							enableReducedPatternSet = obj[key];
 						}
 						break;
 					case 'onhyphenationdonecallback':
 						if (assert('onhyphenationdonecallback', 'function')) {
-							onHyphenationDone = obj.onhyphenationdonecallback;
+							onHyphenationDone = obj[key];
 						}
 						break;
 					case 'onerrorhandler':
 						if (assert('onerrorhandler', 'function')) {
-							onError = obj.onerrorhandler;
+							onError = obj[key];
 						}
 						break;
 					case 'intermediatestate':
 						if (assert('intermediatestate', 'string')) {
-							intermediateState = obj.intermediatestate;
+							intermediateState = obj[key];
 						}
 						break;
 					case 'selectorfunction':
 						if (assert('selectorfunction', 'function')) {
-							selectorFunction = obj.selectorfunction;
+							selectorFunction = obj[key];
 						}
 						break;
 					case 'safecopy':
 						if (assert('safecopy', 'boolean')) {
-							safeCopy = obj.safecopy;
+							safeCopy = obj[key];
 						}
 						break;
 					case 'doframes':
 						if (assert('doframes', 'boolean')) {
-							doFrames = obj.doframes;
+							doFrames = obj[key];
 						}
 						break;
 					case 'storagetype':
 						if (assert('storagetype', 'string')) {
-							storageType = obj.storagetype;
+							storageType = obj[key];
 						}						
 						break;
 					case 'orphancontrol':
 						if (assert('orphancontrol', 'number')) {
-							orphanControl = obj.orphancontrol;
+							orphanControl = obj[key];
 						}
 						break;
 					default:
@@ -1758,7 +1760,7 @@ var Hyphenator = (function (window) {
 					if (contextWindow.document.getElementsByTagName('frameset').length > 0) {
 						return; //we are in a frameset
 					}
-					autoSetMainLanguage();
+					autoSetMainLanguage(undefined);
 					gatherDocumentInfos();
 					prepare(hyphenateDocument);
 					if (displayToggleBox) {
@@ -1775,8 +1777,8 @@ var Hyphenator = (function (window) {
 				if (storageType !== 'none' &&
 					typeof(window.localStorage) !== 'undefined' &&
 					typeof(window.sessionStorage) !== 'undefined' &&
-					typeof(JSON.stringify) !== 'undefined' &&
-					typeof(JSON.parse) !== 'undefined') {
+					typeof(window.JSON.stringify) !== 'undefined' &&
+					typeof(window.JSON.parse) !== 'undefined') {
 					switch (storageType) {
 					case 'session':
 						storage = window.sessionStorage;
@@ -1792,10 +1794,10 @@ var Hyphenator = (function (window) {
 			} catch (f) {
 				//FF throws an error if DOM.storage.enabled is set to false
 			}
-			if (!documentLoaded && !Hyphenator.isBookmarklet()) {
+			if (!documentLoaded && !isBookmarklet) {
 				runOnContentLoaded(window, process);
 			}
-			if (Hyphenator.isBookmarklet() || documentLoaded) {
+			if (isBookmarklet || documentLoaded) {
 				if (doFrames && fl > 0) {
 					for (i = 0; i < fl; i++) {
 						haveAccess = undefined;
@@ -1978,6 +1980,19 @@ var Hyphenator = (function (window) {
 		}
 	};
 }(window));
+
+//Export properties/methods (for google closure compiler)
+Hyphenator['languages'] = Hyphenator.languages;
+Hyphenator['config'] = Hyphenator.config;
+Hyphenator['run'] = Hyphenator.run;
+Hyphenator['addExceptions'] = Hyphenator.addExceptions;
+Hyphenator['hyphenate'] = Hyphenator.hyphenate;
+Hyphenator['getRedPatternSet'] = Hyphenator.getRedPatternSet;
+Hyphenator['isBookmarklet'] = Hyphenator.isBookmarklet;
+Hyphenator['getConfigFromURI'] = Hyphenator.getConfigFromURI;
+Hyphenator['toggleHyphenation'] = Hyphenator.toggleHyphenation;
+window['Hyphenator'] = Hyphenator;
+
 if (Hyphenator.isBookmarklet()) {
 	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
 	Hyphenator.config(Hyphenator.getConfigFromURI());
