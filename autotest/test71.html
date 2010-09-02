@@ -19,7 +19,7 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-				if (parent == window) {
+				if (parent != window) {
 					Hyphenator.config({
 						'onhyphenationdonecallback': function () {
 							var t1 = window.document.getElementById('test').innerHTML,

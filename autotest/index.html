@@ -135,22 +135,27 @@
         		{exec: true, path: 'test67.html'},
         		{exec: true, path: 'test68.html'},
         		{exec: true, path: 'test69.html'},
-        		{exec: false, path: 'test70.html'},
-        		{exec: false, path: 'test71.html'},
+        		{exec: true, path: 'test70.html'},
+        		{exec: true, path: 'test71.html'},
         		{exec: true, path: 'test72.html'},
         		{exec: true, path: 'test73.html'},
         		{exec: true, path: 'test74.html'},
-        		{exec: false, path: 'test75.html'},
+        		{exec: true, path: 'test75.html'},
         		{exec: true, path: 'test76.html'},
         		{exec: true, path: 'test77.html'},
         		{exec: true, path: 'test78.html'},
-        		{exec: false, path: 'test79.html'},
+        		{exec: true, path: 'test79.html'},
         		{exec: true, path: 'test80.html'},
         		{exec: true, path: 'test81.html'}
         		
         	],
         	testframe = document.getElementById('testframe'),
         	currentTest = 1, total = 'passed';
+        	if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
+        		tests[58] = {exec: false, path: 'test58.xml'};
+        		tests[60] = {exec: false, path: 'test60.xml'};
+        		tests[63] = {exec: false, path: 'test63.xhtml'};
+        	}
         	
         	function addTestResult(name, desc, result) {
         		var dl = document.getElementById('testresults'),
@@ -196,7 +201,12 @@
         			return;
         		}
         	}
-        	run(currentTest);
+        	
+        	if (window.JSON) {
+				run(currentTest);
+			} else {
+				window.location.href = 'test1.html';
+			}
         </script>
   </body>
 </html>
