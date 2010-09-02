@@ -328,7 +328,6 @@ By default the storage method is `localStorage` but you can change this to `sess
 
 ----
 
-<wiki:comment>
 ==== property `orphancontrol` ====
 *new in version 3.1.0*
 In some cases it may happen that one single syllable comes to the last line. To prevent this you may set the `orphancontrol`-level to one of the following values:
@@ -346,7 +345,6 @@ In some cases it may happen that one single syllable comes to the last line. To 
 }}}
 
 ----
-</wiki:comment>
 
 === void Hyphenator.run() ===
 Calling this method invokes hyphenation.
