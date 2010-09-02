@@ -603,15 +603,15 @@ var Hyphenator = (function (window) {
 			uuid = 0;
 		return {
 			getDataForElem : function (elem) {
-				return container[elem[name]];
+				return container[elem[name].id];
 			},
 			setDataForElem : function (elem, data) {
 				var id;
-				if (elem[name] && elem[name] !== '') {
-					id = elem[name];
+				if (elem[name] && elem[name].id !== '') {
+					id = elem[name].id;
 				} else {
 					id = uuid++;
-					elem[name] = id;
+					elem[name] = {'id': id}; //object needed, otherways it is reflected in HTML in IE
 				}
 				container[id] = data;
 			},
@@ -619,7 +619,7 @@ var Hyphenator = (function (window) {
 				var k;
 				for (k in data) {
 					if (data.hasOwnProperty(k)) {
-						container[elem[name]][k] = data[k];
+						container[elem[name].id][k] = data[k];
 					}
 				}
 			},
@@ -1458,8 +1458,9 @@ var Hyphenator = (function (window) {
 		}
 		var i = 0, el;
 		while (!!(el = elements[i++])) {
-			window.setTimeout(bind(hyphenateElement, el), 0);
-
+			if (el.ownerDocument.location.href === contextWindow.location.href) {
+				window.setTimeout(bind(hyphenateElement, el), 0);
+			}
 		}
 	},
 
@@ -1755,11 +1756,11 @@ var Hyphenator = (function (window) {
 		run: function () {
 			documentCount = 0;
 			var process = function () {
-				documentCount++;
 				try {
 					if (contextWindow.document.getElementsByTagName('frameset').length > 0) {
 						return; //we are in a frameset
 					}
+					documentCount++;
 					autoSetMainLanguage(undefined);
 					gatherDocumentInfos();
 					prepare(hyphenateDocument);
