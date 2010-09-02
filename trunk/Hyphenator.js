@@ -1076,7 +1076,7 @@ var Hyphenator = (function (window) {
 		}
 		if (storage) {
 			try {
-				storage.setItem(lang, window.JSON.stringify(lo));
+				storage.setItem('Hyphenator_' + lang, window.JSON.stringify(lo));
 			} catch (e) {
 				//onError(e);
 			}
@@ -1115,8 +1115,8 @@ var Hyphenator = (function (window) {
 			if (docLanguages.hasOwnProperty(lang)) {
 				++languagesToLoad;
 				if (storage) {
-					if (storage.getItem(lang)) {
-						Hyphenator.languages[lang] = window.JSON.parse(storage.getItem(lang));
+					if (storage.getItem('Hyphenator_' + lang)) {
+						Hyphenator.languages[lang] = window.JSON.parse(storage.getItem('Hyphenator_' + lang));
 						if (exceptions.hasOwnProperty('global')) {
 							tmp1 = convertExceptionsToObject(exceptions.global);
 							for (tmp2 in tmp1) {
