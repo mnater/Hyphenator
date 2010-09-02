@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 59</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						t2 = document.getElementById('ref').innerHTML,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 59
+						};
+						if (t1 == t2) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+                Hyphenator.config({hyphenchar:'|'});
+                Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test58.xml">&lt;- Prev</a> | <a href="test60.xml">Next -&gt;</a></p>
+        <h1>Test 59</h1>
+        <p id="desc">A FORM contains an element with <code>class="hyphenate"</code> and <code>name="lang"</code>.<br>
+        IE&lt;8 has a major bug here…</p>
+
+        <div id="test">
+        	<form action="#" method="post">
+        		<input type="text" name="lang"><span class="hyphenate">Hyphenation</span>
+        	</form>
+        </div>
+        <div id="ref">
+        	<form action="#" method="post">
+        		<input type="text" name="lang"><span class="hyphenate">Hy|phen|ation</span>
+        	</form>
+        </div>
+    </body>
+</html>
