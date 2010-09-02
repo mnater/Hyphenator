@@ -1,8 +1,7 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-<wiki:comment>
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.1.0.zip 3.1.0] (August 18, 2010) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.1.0.zip 3.1.0] (September 2, 2010) ==
 This minor release brings the following changes:
   * Support for Belarusian (Thanks to Olexandr Zhydenko)
   * Updated Patterns for German and Ukrainian
@@ -13,7 +12,7 @@ This minor release brings the following changes:
   * Fixed issue108 (QUOTA_EXCEEDED_ERR)
   * Fixed an issue with global exceptions not set correctly
   * internal changes to support automated testsuite
-</wiki:comment>
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.0.0.zip 3.0.0] (July 1, 2010) ==
 This major release brings a the following new features:
   * remove hyphenation from copied text (issue34)
