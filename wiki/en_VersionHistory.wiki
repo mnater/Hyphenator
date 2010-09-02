@@ -7,12 +7,12 @@ This minor release brings the following changes:
   * Support for Belarusian (Thanks to Olexandr Zhydenko)
   * Updated Patterns for German and Ukrainian
   * Possibilities to control if/how the last words of a paragraph are hyphenated
-  * Fixed issue105
-  * Fixed issue106
-  * Fixed issue108
+  * Fixed issue105 (NS_ERROR_DOM_SECURITY_ERR)
+  * Fixed issue106 (iframe)
+  * Fixed issue107 (compatibility with Google Closure Compiler)
+  * Fixed issue108 (QUOTA_EXCEEDED_ERR)
   * Fixed an issue with global exceptions not set correctly
   * internal changes to support automated testsuite
-  * compatibility with Google Closure Compiler
 </wiki:comment>
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.0.0.zip 3.0.0] (July 1, 2010) ==
 This major release brings a the following new features:
