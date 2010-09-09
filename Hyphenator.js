@@ -1520,14 +1520,7 @@ var Hyphenator = (function (window) {
 				selection.selectAllChildren(shadow);
 				restore = function () {
 					shadow.parentNode.removeChild(shadow);
-					if (targetWindow.getSelection().setBaseAndExtent) {
-						selection.setBaseAndExtent(
-							range.startContainer,
-							range.startOffset,
-							range.endContainer,
-							range.endOffset
-						);
-					}
+					selection.addRange(range);
 				};
 			} else {
 				// IE
