@@ -144,7 +144,7 @@ var Hyphenator = (function (window) {
 		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
 		'sl': 'Jezika te spletne strani ni bilo mogoče samodejno določiti. Prosim navedite jezik:',
 		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:',
-		'tr': 'Bu web sitesinin dilini otomatik olarak tespit edilememiştir. Lütfen ana dili gösterir:',
+		'tr': 'Bu web sitesinin dili otomatik olarak tespit edilememiştir. Lütfen dökümanın dilini seçiniz%A0:',
 		'uk': 'Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:'
 	},
 	
