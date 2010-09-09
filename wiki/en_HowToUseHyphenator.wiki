@@ -12,6 +12,9 @@ javascript:if(document.createElement){void(head=document.getElementsByTagName('h
 When you're on the website to be hyphenated you click on that bookmarklet to start hyphenating the page.
 If the pages language isn't set, you will have to edit it manually in a popping-up prompt.
 
+All [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.config(object_settings) settings] that are not functions (the literals) can be made in the Bookmarklet, too. Append them as query string in the link above (just after `bm=true`):
+E.g. `bm=true&safecopy=false&displaytogglebox=false`
+
 == Using Hyphenator on your website ==
 For a webdeveloper who wishes to hyphenate his website, things are slightly more complicated. You'll need basic knowledge about HTML and !JavaScript to do the following steps.
 
