@@ -79,6 +79,8 @@ var Hyphenator = (function (window) {
 		'la': 'la.js',
 		'lt': 'lt.js',
 		'ml': 'ml.js',
+		'no': 'no.js',
+		'no-nb': 'no.js',
 		'nl': 'nl.js',
 		'or': 'or.js',
 		'pa': 'pa.js',
@@ -140,6 +142,7 @@ var Hyphenator = (function (window) {
 		'lt': 'Nepavyko automatiškai nustatyti šios svetainės kalbos. Prašome įvesti kalbą:',
 		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
 		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
+		'no': 'Nettstedets språk kunne ikke finnes automatisk. Vennligst oppgi språk:',
 		'pt': 'A língua deste site não pôde ser determinada automaticamente. Por favor indique a língua principal:',
 		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
 		'sl': 'Jezika te spletne strani ni bilo mogoče samodejno določiti. Prosim navedite jezik:',
@@ -195,6 +198,23 @@ var Hyphenator = (function (window) {
 	 */
 	documentLoaded = false,
 	documentCount = 0,
+	
+	/**
+	 * @name Hyphenator-persistentConfig
+	 * @description
+	 * if persistentConfig is set to true (defaults to false), config options and the state of the 
+	 * toggleBox are stored in DOM-storage (according to the storage-setting). So they haven't to be
+	 * set for each page.
+	 */	
+	persistentConfig = false,
+
+	/**
+	 * @name Hyphenator-hyphenate
+	 * @description
+	 * If hyphenate is set to false (defaults to true), hyphenateDocument() isn't called.
+	 * All other actions are performed.
+	 */		
+	doHyphenation = true,
 	
 
 	/**
@@ -1184,14 +1204,11 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator.config
 	 * @private
 	 */		
-	toggleBox = function (s) {
-		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute;
+	toggleBox = function () {
+		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
+		text = (doHyphenation ? 'Hy-phe-na-ti-on' : 'Hyphenation');
 		if (!!(myBox = contextWindow.document.getElementById('HyphenatorToggleBox'))) {
-			if (s) {
-				myBox.firstChild.data = 'Hy-phe-na-ti-on';
-			} else {
-				myBox.firstChild.data = 'Hyphenation';
-			}
+			myBox.firstChild.data = text;
 		} else {
 			bdy = contextWindow.document.getElementsByTagName('body')[0];
 			myBox = createElem('div', contextWindow);
@@ -1199,7 +1216,7 @@ var Hyphenator = (function (window) {
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
 			myClassAttribute = contextWindow.document.createAttribute('class');
 			myClassAttribute.nodeValue = dontHyphenateClass;
-			myTextNode = contextWindow.document.createTextNode('Hy-phe-na-ti-on');
+			myTextNode = contextWindow.document.createTextNode(text);
 			myBox.appendChild(myTextNode);
 			myBox.setAttributeNode(myIdAttribute);
 			myBox.setAttributeNode(myClassAttribute);
@@ -1369,7 +1386,9 @@ var Hyphenator = (function (window) {
 			};
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
 			hyphenate = function (word) {
-				if (urlOrMailRE.test(word)) {
+				if (!doHyphenation) {
+					return word;
+				} else if (urlOrMailRE.test(word)) {
 					return hyphenateURL(word);
 				} else {
 					return hyphenateWord(lang, word);
@@ -1456,7 +1475,7 @@ var Hyphenator = (function (window) {
 				return fun(arg);
 			};
 		}
-		var i = 0, el;
+		var i = 0, el;		
 		while (!!(el = elements[i++])) {
 			if (el.ownerDocument.location.href === contextWindow.location.href) {
 				window.setTimeout(bind(hyphenateElement, el), 0);
@@ -1549,6 +1568,64 @@ var Hyphenator = (function (window) {
 			body.attachEvent("oncopy", oncopyHandler);
 		}
 	};
+	
+	createStorage = function () {
+		try {
+			if (storageType !== 'none' &&
+				typeof(window.localStorage) !== 'undefined' &&
+				typeof(window.sessionStorage) !== 'undefined' &&
+				typeof(window.JSON.stringify) !== 'undefined' &&
+				typeof(window.JSON.parse) !== 'undefined') {
+				switch (storageType) {
+				case 'session':
+					storage = window.sessionStorage;
+					break;
+				case 'local':
+					storage = window.localStorage;
+					break;
+				default:
+					storage = undefined;
+					break;
+				}
+			}
+		} catch (f) {
+			//FF throws an error if DOM.storage.enabled is set to false
+		}
+	};
+	
+	storeConfiguration = function () {
+		var settings = {
+			'STORED': true,
+			'classname': hyphenateClass,
+			'donthyphenateclassname': dontHyphenateClass,
+			'minwordlength': min,
+			'hyphenchar': hyphen,
+			'urlhyphenchar': urlhyphen,
+			'togglebox': toggleBox,
+			'displaytogglebox': displayToggleBox,
+			'remoteloading': enableRemoteLoading,
+			'enablecache': enableCache,
+			'onhyphenationdonecallback': onHyphenationDone,
+			'onerrorhandler': onError,
+			'intermediatestate': intermediateState,
+			'selectorfunction': selectorFunction,
+			'safecopy': safeCopy,
+			'doframes': doFrames,
+			'storagetype': storageType,
+			'orphancontrol': orphanControl,
+			'dohyphenation': doHyphenation,
+			'persistentconfig': persistentConfig
+		};
+		storage.setItem('Hyphenator_config', window.JSON.stringify(settings));
+	};
+	
+	restoreConfiguration = function () {
+		var settings;
+		if (storage.getItem('Hyphenator_config')) {
+			settings = window.JSON.parse(storage.getItem('Hyphenator_config'));
+			Hyphenator.config(settings);
+		}
+	};
 
 	return {
 		
@@ -1631,9 +1708,24 @@ var Hyphenator = (function (window) {
 					}
 				},
 				key;
+
+			if (obj.hasOwnProperty('storagetype')) {
+				if (assert('storagetype', 'string')) {
+					storageType = obj.storagetype;
+				}
+				if (!storage) {
+					createStorage();
+				}			
+			}
+			if (!obj.hasOwnProperty('STORED') && storage && obj.hasOwnProperty('persistentconfig') && obj.persistentconfig === true) {
+				restoreConfiguration();
+			}
+			
 			for (key in obj) {
 				if (obj.hasOwnProperty(key)) {
 					switch (key) {
+					case 'STORED':
+						break;
 					case 'classname':
 						if (assert('classname', 'string')) {
 							hyphenateClass = obj[key];
@@ -1729,10 +1821,23 @@ var Hyphenator = (function (window) {
 							orphanControl = obj[key];
 						}
 						break;
+					case 'dohyphenation':
+						if (assert('dohyphenation', 'boolean')) {
+							doHyphenation = obj[key];
+						}
+						break;
+					case 'persistentconfig':
+						if (assert('persistentconfig', 'boolean')) {
+							persistentConfig = obj[key];
+						}
+						break;
 					default:
 						onError(new Error('Hyphenator.config: property ' + key + ' not known.'));
 					}
 				}
+			}
+			if (storage && persistentConfig) {
+				storeConfiguration();
 			}
 		},
 
@@ -1758,7 +1863,7 @@ var Hyphenator = (function (window) {
 					gatherDocumentInfos();
 					prepare(hyphenateDocument);
 					if (displayToggleBox) {
-						toggleBox(true);
+						toggleBox();
 					}
 					if (safeCopy) {
 						registerOnCopy();
@@ -1767,27 +1872,11 @@ var Hyphenator = (function (window) {
 					onError(e);
 				}
 			}, i, haveAccess, fl = window.frames.length;
-			try {
-				if (storageType !== 'none' &&
-					typeof(window.localStorage) !== 'undefined' &&
-					typeof(window.sessionStorage) !== 'undefined' &&
-					typeof(window.JSON.stringify) !== 'undefined' &&
-					typeof(window.JSON.parse) !== 'undefined') {
-					switch (storageType) {
-					case 'session':
-						storage = window.sessionStorage;
-						break;
-					case 'local':
-						storage = window.localStorage;
-						break;
-					default:
-						storage = undefined;
-						break;
-					}
-				}
-			} catch (f) {
-				//FF throws an error if DOM.storage.enabled is set to false
+			
+			if (!storage) {
+				createStorage();
 			}
+
 			if (!documentLoaded && !isBookmarklet) {
 				runOnContentLoaded(window, process);
 			}
@@ -1961,15 +2050,16 @@ var Hyphenator = (function (window) {
 		 * @public
          */
 		toggleHyphenation: function () {
-			switch (state) {
-			case 3:
+			if (doHyphenation) {
 				removeHyphenationFromDocument();
-				toggleBox(false);
-				break;
-			case 4:
+				doHyphenation = false;
+				storeConfiguration();
+				toggleBox();
+			} else {
 				hyphenateDocument();
-				toggleBox(true);
-				break;
+				doHyphenation = true;
+				storeConfiguration();
+				toggleBox();
 			}
 		}
 	};
