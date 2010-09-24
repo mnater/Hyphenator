@@ -22,7 +22,7 @@
         	if (parent != window) {
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
-						var i, last = 17, t1, t2, r = true,
+						var i, last = 18, t1, t2, r = true,
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
@@ -45,7 +45,8 @@
 
 			Hyphenator.config({
 				hyphenchar: '|',
-				storagetype: 'none'
+				storagetype: 'none',
+				safecopy: false
 			});
 			Hyphenator.run();
         </script>
@@ -108,7 +109,8 @@
 		<h2>la</h2>
         <p id="test17" class="hyphenate" lang="la">Typographia disciplina transcribendarum litterarum est, quae propositum formam scripturae usu formae litterarum ac gentis litterarum assequi temptat, ut litterae eius simul elegantes et accomodatae sint.</p>
 		<p id="ref17" lang="la">Ty|po|gra|phia di|sci|pli|na tran|scri|ben|da|rum lit|te|ra|rum est, quae pro|po|si|tum for|mam scrip|tu|rae usu for|mae lit|te|ra|rum ac gen|tis lit|te|ra|rum as|se|qui temp|tat, ut lit|te|rae eius simul ele|gan|tes et ac|co|mo|da|tae sint.</p>
-		
-		
+		<h2>no</h2>
+        <p id="test18" class="hyphenate" lang="no">Typografi er utforming og behandling av skrift, bokstaver og andre grafiske elementer i trykkerfaget og i grafisk design.</p>
+		<p id="ref18" lang="no">Ty|po|gra|fi er ut|for|ming og be|hand|ling av skrift, bok|sta|ver og andre gra|fis|ke ele|men|ter i tryk|ker|fa|get og i gra|fisk de|sign.</p>
 	</body>
 </html>
