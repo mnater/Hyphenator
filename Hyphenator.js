@@ -206,16 +206,7 @@ var Hyphenator = (function (window) {
 	 * toggleBox are stored in DOM-storage (according to the storage-setting). So they haven't to be
 	 * set for each page.
 	 */	
-	persistentConfig = false,
-
-	/**
-	 * @name Hyphenator-hyphenate
-	 * @description
-	 * If hyphenate is set to false (defaults to true), hyphenateDocument() isn't called.
-	 * All other actions are performed.
-	 */		
-	doHyphenation = true,
-	
+	persistentConfig = false,	
 
 	/**
 	 * @name Hyphenator-contextWindow
@@ -1206,7 +1197,7 @@ var Hyphenator = (function (window) {
 	 */		
 	toggleBox = function () {
 		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
-		text = (doHyphenation ? 'Hy-phe-na-ti-on' : 'Hyphenation');
+		text = (Hyphenator.doHyphenation ? 'Hy-phe-na-ti-on' : 'Hyphenation');
 		if (!!(myBox = contextWindow.document.getElementById('HyphenatorToggleBox'))) {
 			myBox.firstChild.data = text;
 		} else {
@@ -1386,7 +1377,7 @@ var Hyphenator = (function (window) {
 			};
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
 			hyphenate = function (word) {
-				if (!doHyphenation) {
+				if (!Hyphenator.doHyphenation) {
 					return word;
 				} else if (urlOrMailRE.test(word)) {
 					return hyphenateURL(word);
@@ -1567,7 +1558,7 @@ var Hyphenator = (function (window) {
 		} else {
 			body.attachEvent("oncopy", oncopyHandler);
 		}
-	};
+	},
 	
 	createStorage = function () {
 		try {
@@ -1591,7 +1582,7 @@ var Hyphenator = (function (window) {
 		} catch (f) {
 			//FF throws an error if DOM.storage.enabled is set to false
 		}
-	};
+	},
 	
 	storeConfiguration = function () {
 		var settings = {
@@ -1613,11 +1604,11 @@ var Hyphenator = (function (window) {
 			'doframes': doFrames,
 			'storagetype': storageType,
 			'orphancontrol': orphanControl,
-			'dohyphenation': doHyphenation,
+			'dohyphenation': Hyphenator.doHyphenation,
 			'persistentconfig': persistentConfig
 		};
 		storage.setItem('Hyphenator_config', window.JSON.stringify(settings));
-	};
+	},
 	
 	restoreConfiguration = function () {
 		var settings;
@@ -1640,6 +1631,14 @@ var Hyphenator = (function (window) {
 		 * @public
          */		
 		version: 'X.Y.Z',
+
+		/**
+		 * @name Hyphenator.doHyphenation
+		 * @description
+		 * If doHyphenation is set to false (defaults to true), hyphenateDocument() isn't called.
+		 * All other actions are performed.
+		 */		
+		doHyphenation: true,
 		
 		/**
 		 * @name Hyphenator.languages
@@ -1823,7 +1822,7 @@ var Hyphenator = (function (window) {
 						break;
 					case 'dohyphenation':
 						if (assert('dohyphenation', 'boolean')) {
-							doHyphenation = obj[key];
+							Hyphenator.doHyphenation = obj[key];
 						}
 						break;
 					case 'persistentconfig':
@@ -2050,14 +2049,14 @@ var Hyphenator = (function (window) {
 		 * @public
          */
 		toggleHyphenation: function () {
-			if (doHyphenation) {
+			if (Hyphenator.doHyphenation) {
 				removeHyphenationFromDocument();
-				doHyphenation = false;
+				Hyphenator.doHyphenation = false;
 				storeConfiguration();
 				toggleBox();
 			} else {
 				hyphenateDocument();
-				doHyphenation = true;
+				Hyphenator.doHyphenation = true;
 				storeConfiguration();
 				toggleBox();
 			}
