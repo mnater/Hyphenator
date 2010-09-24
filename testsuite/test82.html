@@ -13,7 +13,7 @@
             #test {
             	background-color: #ffd6d6;
             }
-            #ref {
+            #ref1, #ref2 {
             	background-color: #d6ffd6;
             }
         </style>
@@ -23,18 +23,31 @@
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
 						var t1 = document.getElementById('test').innerHTML,
-						t2 = document.getElementById('ref').innerHTML,
+						r1 = document.getElementById('ref1').innerHTML,
+						r2 = document.getElementById('ref2').innerHTML,
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
 							index: 82
 						};
-						if (t1 == t2) {
-							msg.result = 'passed';
+						if (Hyphenator.doHyphenation) {
+							if (t1 == r1) {
+								msg.result = 'passed';
+							} else {
+								msg.result = 'failed';
+							}
 						} else {
-							msg.result = 'failed';
+							if (t1 == r2) {
+								msg.result = 'passed';
+							} else {
+								msg.result = 'failed';
+							}
 						}
 						parent.postMessage(JSON.stringify(msg), window.location.href);
+						document.getElementById('HyphenatorToggleBox').onclick();
+						if (Hyphenator.doHyphenation) {
+							window.location.reload();
+						}
 					}
 				});     	
 			}
@@ -43,19 +56,19 @@
 				safecopy:false,
 				storagetype: 'local',
 				persistentconfig: true,
-				dohyphenation: false,
 				displaytogglebox: true
 			});
 			Hyphenator.run();
         </script>
     </head>
     <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test81.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
         <h1>Test 82</h1>
-        <p id="desc">Use persistentConfig.</p>
-		<p><a href="test81.html">&lt;- Prev</a> | <a href="test83.html">Next -&gt;</a></p>
+        <p id="desc">Use persistentConfig. Reload the page to see sticky confguration.</p>
 
         <p id="test" class="hyphenate">&laquo;Wunderschönen guten Tag allerseits&raquo;, rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: &laquo;Himmelherrgott, so viele Leute hatte ich nicht erwartet!&raquo;</p>
-        <p id="ref">«Wun|der|schö|nen guten Tag al|ler|seits», rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: «Him|mel|herr|gott, so viele Leute hatte ich nicht&nbsp;erwartet!»</p>
+        <p id="ref1">«Wun|der|schö|nen guten Tag al|ler|seits», rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: «Him|mel|herr|gott, so viele Leute hatte ich nicht er|war|tet!»</p>
+		<p id="ref2">«Wunderschönen guten Tag allerseits», rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: «Himmelherrgott, so viele Leute hatte ich nicht erwartet!»</p>
 
      </body>
 </html>

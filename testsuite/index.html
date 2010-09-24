@@ -64,6 +64,13 @@
 		</ul>
 		<iframe id="testframe" src=""></iframe>
         <script type="text/javascript">
+  			//clear Storage
+  			if (window.localStorage) {
+  				window.localStorage.clear();
+  			}
+  			if (window.sessionStorage) {
+  				window.sessionStorage.clear();
+  			}
         	var tests = [
         		{exec: false, path: 'test0.html'}, //dont exec!
         		{exec: true, path: 'test1.html'}, 
@@ -146,7 +153,8 @@
         		{exec: true, path: 'test78.html'},
         		{exec: true, path: 'test79.html'},
         		{exec: true, path: 'test80.html'},
-        		{exec: true, path: 'test81.html'}
+        		{exec: true, path: 'test81.html'},
+        		{exec: true, path: 'test82.html'}
         		
         	],
         	testframe = document.getElementById('testframe'),
