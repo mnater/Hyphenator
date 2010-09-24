@@ -51,16 +51,13 @@
 
         	var hyphenatorSettings = {
 				hyphenchar: '|',
-        		togglebox: function (hyphenate) {
-        			var myelem = document.getElementById('hyphenationbutton');
-        			if (hyphenate) {
-        				myelem.style.color = '#00FF00';
-        				myelem.onclick = Hyphenator.toggleHyphenation;
-        			} else {
-        				myelem.style.color = '#FF0000';
-        			}
+        		togglebox: function () {
+        			var myelem = document.getElementById('hyphenationbutton'),
+        			color = Hyphenator.doHyphenation ? '#00FF00' : '#FF0000';
+					myelem.style.color = color;
+					myelem.onclick = Hyphenator.toggleHyphenation;
         		},
-        		displaytogglebox: true
+        		displaytogglebox: true,
         	};
 			Hyphenator.config(hyphenatorSettings);
 			Hyphenator.run();
