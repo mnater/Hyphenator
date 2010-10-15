@@ -912,7 +912,8 @@ var Hyphenator = (function (window) {
 					onError(new Error('Language ' + lang + ' is not yet supported.'));
 				}
 			}
-			Expando.setDataForElem(el, hyphenatorSettings);
+			Expando.setDataForElem(el, hyphenatorSettings);			
+			
 			elements.push(el);
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
@@ -1336,89 +1337,6 @@ var Hyphenator = (function (window) {
 	},
 
 	/**
-	 * @name Hyphenator-hyphenateElement
-	 * @description
-	 * Takes the content of the given element and - if there's text - replaces the words
-	 * by hyphenated words. If there's another element, the function is called recursively.
-	 * When all words are hyphenated, the visibility of the element is set to 'visible'.
-	 * @param {Object} el The element to hyphenate
-	 * @public
-	 */
-	hyphenateElement = function (el) {
-		var hyphenatorSettings = Expando.getDataForElem(el),
-			lang = hyphenatorSettings.language, hyphenate, n, i,
-			controlOrphans = function (part) {
-				var h, r;
-				switch (hyphen) {
-				case '|':
-					h = '\\|';
-					break;
-				case '+':
-					h = '\\+';
-					break;
-				case '*':
-					h = '\\*';
-					break;
-				default:
-					h = hyphen;
-				}
-				if (orphanControl >= 2) {
-					//remove hyphen points from last word
-					r = part.split(' ');
-					r[1] = r[1].replace(new RegExp(h, 'g'), '');
-					r[1] = r[1].replace(new RegExp(zeroWidthSpace, 'g'), '');
-					r = r.join(' ');
-				}
-				if (orphanControl === 3) {
-					//replace spaces by non breaking spaces
-					r = r.replace(/[ ]+/g, String.fromCharCode(160));
-				}
-				return r;
-			};
-		if (Hyphenator.languages.hasOwnProperty(lang)) {
-			hyphenate = function (word) {
-				if (!Hyphenator.doHyphenation) {
-					return word;
-				} else if (urlOrMailRE.test(word)) {
-					return hyphenateURL(word);
-				} else {
-					return hyphenateWord(lang, word);
-				}
-			};
-			i = 0;
-			while (!!(n = el.childNodes[i++])) {
-				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
-					if (orphanControl !== 1) {
-						n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
-					}
-				}
-			}
-		}
-		if (hyphenatorSettings.isHidden && intermediateState === 'hidden') {
-			el.style.visibility = 'visible';
-			if (!hyphenatorSettings.hasOwnStyle) {
-				el.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-				el.removeAttribute('style');
-			} else {
-				if (el.style.removeProperty) {
-					el.style.removeProperty('visibility');
-				} else if (el.style.removeAttribute) { // IE
-					el.style.removeAttribute('visibility');
-				}  
-			}
-		}
-		if (hyphenatorSettings.isLast) {
-			state = 3;
-			documentCount--;
-			if (documentCount > (-1000) && documentCount <= 0) {
-				documentCount = (-2000);
-				onHyphenationDone();
-			}
-		}
-	},
-	
-	/**
 	 * @name Hyphenator-removeHyphenationFromElement
 	 * @description
 	 * Removes all hyphens from the element. If there are other elements, the function is
@@ -1451,42 +1369,7 @@ var Hyphenator = (function (window) {
 			}
 		}
 	},
-
-	/**
-	 * @name Hyphenator-hyphenateDocument
-	 * @description
-	 * Calls hyphenateElement() for all members of elements. This is done with a setTimout
-	 * to prevent a "long running Script"-alert when hyphenating large pages.
-	 * Therefore a tricky bind()-function was necessary.
-	 * @public
-	 */
-	hyphenateDocument = function () {
-		function bind(fun, arg) {
-			return function () {
-				return fun(arg);
-			};
-		}
-		var i = 0, el;		
-		while (!!(el = elements[i++])) {
-			if (el.ownerDocument.location.href === contextWindow.location.href) {
-				window.setTimeout(bind(hyphenateElement, el), 0);
-			}
-		}
-	},
-
-	/**
-	 * @name Hyphenator-removeHyphenationFromDocument
-	 * @description
-	 * Does what it says ;-)
-	 * @public
-	 */
-	removeHyphenationFromDocument = function () {
-		var i = 0, el;
-		while (!!(el = elements[i++])) {
-			removeHyphenationFromElement(el);
-		}
-		state = 4;
-	},
+	
 	
 	/**
 	 * @name Hyphenator-registerOnCopy
@@ -1497,8 +1380,8 @@ var Hyphenator = (function (window) {
 	 * sweet-justice is under BSD-License
 	 * @private
 	 */
-	registerOnCopy = function () {
-		var body = contextWindow.document.getElementsByTagName('body')[0],
+	registerOnCopy = function (el) {
+		var body = el.ownerDocument.getElementsByTagName('body')[0],
 		shadow,
 		selection,
 		range,
@@ -1553,13 +1436,145 @@ var Hyphenator = (function (window) {
 		if (!body) {
 			return;
 		}
+		el = el || body;
 		if (window.addEventListener) {
-			body.addEventListener("copy", oncopyHandler, false);
+			el.addEventListener("copy", oncopyHandler, false);
 		} else {
-			body.attachEvent("oncopy", oncopyHandler);
+			el.attachEvent("oncopy", oncopyHandler);
 		}
 	},
 	
+
+	/**
+	 * @name Hyphenator-hyphenateElement
+	 * @description
+	 * Takes the content of the given element and - if there's text - replaces the words
+	 * by hyphenated words. If there's another element, the function is called recursively.
+	 * When all words are hyphenated, the visibility of the element is set to 'visible'.
+	 * @param {Object} el The element to hyphenate
+	 * @private
+	 */
+	hyphenateElement = function (el) {
+		var hyphenatorSettings = Expando.getDataForElem(el),
+			lang = hyphenatorSettings.language, hyphenate, n, i,
+			controlOrphans = function (part) {
+				var h, r;
+				switch (hyphen) {
+				case '|':
+					h = '\\|';
+					break;
+				case '+':
+					h = '\\+';
+					break;
+				case '*':
+					h = '\\*';
+					break;
+				default:
+					h = hyphen;
+				}
+				if (orphanControl >= 2) {
+					//remove hyphen points from last word
+					r = part.split(' ');
+					r[1] = r[1].replace(new RegExp(h, 'g'), '');
+					r[1] = r[1].replace(new RegExp(zeroWidthSpace, 'g'), '');
+					r = r.join(' ');
+				}
+				if (orphanControl === 3) {
+					//replace spaces by non breaking spaces
+					r = r.replace(/[ ]+/g, String.fromCharCode(160));
+				}
+				return r;
+			};
+		if (Hyphenator.languages.hasOwnProperty(lang)) {
+			hyphenate = function (word) {
+				if (!Hyphenator.doHyphenation) {
+					return word;
+				} else if (urlOrMailRE.test(word)) {
+					return hyphenateURL(word);
+				} else {
+					return hyphenateWord(lang, word);
+				}
+			};
+			if (safeCopy && (el.tagName.toLowerCase() !== 'body')) {
+				registerOnCopy(el);
+			}
+			i = 0;
+			while (!!(n = el.childNodes[i++])) {
+				if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
+					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+					if (orphanControl !== 1) {
+						n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
+					}
+				}
+			}
+		}
+		if (hyphenatorSettings.isHidden && intermediateState === 'hidden') {
+			el.style.visibility = 'visible';
+			if (!hyphenatorSettings.hasOwnStyle) {
+				el.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+				el.removeAttribute('style');
+			} else {
+				if (el.style.removeProperty) {
+					el.style.removeProperty('visibility');
+				} else if (el.style.removeAttribute) { // IE
+					el.style.removeAttribute('visibility');
+				}  
+			}
+		}
+		if (hyphenatorSettings.isLast) {
+			state = 3;
+			documentCount--;
+			if (documentCount > (-1000) && documentCount <= 0) {
+				documentCount = (-2000);
+				onHyphenationDone();
+			}
+		}
+	},
+	
+
+	/**
+	 * @name Hyphenator-hyphenateDocument
+	 * @description
+	 * Calls hyphenateElement() for all members of elements. This is done with a setTimout
+	 * to prevent a "long running Script"-alert when hyphenating large pages.
+	 * Therefore a tricky bind()-function was necessary.
+	 * @private
+	 */
+	hyphenateDocument = function () {
+		function bind(fun, arg) {
+			return function () {
+				return fun(arg);
+			};
+		}
+		var i = 0, el;		
+		while (!!(el = elements[i++])) {
+			if (el.ownerDocument.location.href === contextWindow.location.href) {
+				window.setTimeout(bind(hyphenateElement, el), 0);
+			}
+		}
+	},
+
+	/**
+	 * @name Hyphenator-removeHyphenationFromDocument
+	 * @description
+	 * Does what it says ;-)
+	 * @private
+	 */
+	removeHyphenationFromDocument = function () {
+		var i = 0, el;
+		while (!!(el = elements[i++])) {
+			removeHyphenationFromElement(el);
+		}
+		state = 4;
+	},
+		
+	/**
+	 * @name Hyphenator-createStorage
+	 * @description
+	 * inits the private var storage depending of the setting in storageType
+	 * and the supported features of the system.
+	 * @private
+	 */
 	createStorage = function () {
 		try {
 			if (storageType !== 'none' &&
@@ -1584,6 +1599,12 @@ var Hyphenator = (function (window) {
 		}
 	},
 	
+	/**
+	 * @name Hyphenator-storeConfiguration
+	 * @description
+	 * Stores the current config-options in DOM-Storage
+	 * @private
+	 */
 	storeConfiguration = function () {
 		var settings = {
 			'STORED': true,
@@ -1610,6 +1631,12 @@ var Hyphenator = (function (window) {
 		storage.setItem('Hyphenator_config', window.JSON.stringify(settings));
 	},
 	
+	/**
+	 * @name Hyphenator-restoreConfiguration
+	 * @description
+	 * Retrieves config-options from DOM-Storage and does configuration accordingly
+	 * @private
+	 */
 	restoreConfiguration = function () {
 		var settings;
 		if (storage.getItem('Hyphenator_config')) {
@@ -1863,9 +1890,6 @@ var Hyphenator = (function (window) {
 					prepare(hyphenateDocument);
 					if (displayToggleBox) {
 						toggleBox();
-					}
-					if (safeCopy) {
-						registerOnCopy();
 					}
 				} catch (e) {
 					onError(e);
