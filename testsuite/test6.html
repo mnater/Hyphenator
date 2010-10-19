@@ -22,7 +22,7 @@
         	if (parent != window) {
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
-						var i, last = 18, t1, t2, r = true,
+						var i, last = 19, t1, t2, r = true,
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
@@ -112,5 +112,8 @@
 		<h2>no</h2>
         <p id="test18" class="hyphenate" lang="no">Typografi er utforming og behandling av skrift, bokstaver og andre grafiske elementer i trykkerfaget og i grafisk design.</p>
 		<p id="ref18" lang="no">Ty|po|gra|fi er ut|for|ming og be|hand|ling av skrift, bok|sta|ver og andre gra|fis|ke ele|men|ter i tryk|ker|fa|get og i gra|fisk de|sign.</p>
+		<h2>lv</h2>
+        <p id="test19" class="hyphenate" lang="lv">Šīs lapas valodu nevarēja noteikt automātiski. Lūdzu norādiet pamata valodu:</p>
+		<p id="ref19" lang="no">Šīs lapas va|lodu ne|va|rēja no|teikt au|to|mā|tiski. Lūdzu no|rā|diet pa|mata va|lodu:</p>
 	</body>
 </html>
