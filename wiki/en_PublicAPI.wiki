@@ -53,6 +53,10 @@ The values for the associated keys must be of the defined type:
 <tr><td>safecopy</td><td>boolean</td></tr>
 <tr><td>doframes</td><td>boolean</td></tr>
 <tr><td>storagetype</td><td>string</td></tr>
+<tr><td>orphancontrol</td><td>number</td></tr>
+<tr><td>dohyphenation</td><td>boolean</td></tr>
+<tr><td>persistentconfig</td><td>boolean</td></tr>
+<tr><td>defaultlanguage</td><td>string</td></tr>
 </table>
 
 For detailed description of each property see below.
@@ -340,6 +344,60 @@ In some cases it may happen that one single syllable comes to the last line. To 
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({orphancontrol: 2});
+	Hyphenator.run();
+</script>
+}}}
+
+----
+
+==== property `dohyphenation` ====
+*new in version 3.2.0*
+Sometimes you like to run the script, prepare everything, but not to hyphenate yet. In this case you can set the option `dohyphenation` to false:
+
+===== Example 17 – setting `dohyphenation` to `false` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({dohyphenation: false});
+	Hyphenator.run();
+</script>
+}}}
+
+----
+
+==== property `persistentconfig` ====
+*new in version 3.2.0*
+With the option `persistentconfig` set to true (default is false), all configuration options are stored in a object called `Hyphenator_config` in the storage type defined by the property `storagetype` (if `storagetype is none` or storage isn't supported, nothing is stored).
+By reloading or going to an other page, those settings remain set.
+This is very and specially usefull for the toggle-button.
+Be carefull with this option!
+
+===== Example 18 – setting `persistentconfig` to `true` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({
+		persistentconfig: true,
+		storagetype: 'local'
+	});
+	Hyphenator.run();
+</script>
+}}}
+
+----
+
+==== property `defaultlanguage` ====
+*new in version 3.2.0*
+If you can't set a lang-attribute to the appropriate html-tag it may be interesting to set the default language.
+This language is only taken in count, if no actual lang-tag can be found (i.e. just before the language-prompt occurs). In other words, setting this property prevents the language-prompt to ask you for the language…
+
+===== Example 19 – setting `defaultlanguage` to `de` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+	Hyphenator.config({
+		defaultlanguage: 'de'
+	});
 	Hyphenator.run();
 </script>
 }}}
