@@ -78,9 +78,10 @@ var Hyphenator = (function (window) {
 		'kn': 'kn.js',
 		'la': 'la.js',
 		'lt': 'lt.js',
+		'lv': 'lv.js',
 		'ml': 'ml.js',
-		'no': 'no.js',
-		'no-nb': 'no.js',
+		'no': 'no-nb.js',
+		'no-nb': 'no-nb.js',
 		'nl': 'nl.js',
 		'or': 'or.js',
 		'pa': 'pa.js',
@@ -140,6 +141,7 @@ var Hyphenator = (function (window) {
 		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
 		'kn': 'ಜಾಲ ತಾಣದ ಭಾಷೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಮುಖ್ಯ ಭಾಷೆಯನ್ನು ಸೂಚಿಸಿ:',
 		'lt': 'Nepavyko automatiškai nustatyti šios svetainės kalbos. Prašome įvesti kalbą:',
+		'lv': 'Šīs lapas valodu nevarēja noteikt automātiski. Lūdzu norādiet pamata valodu:',
 		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
 		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
 		'no': 'Nettstedets språk kunne ikke finnes automatisk. Vennligst oppgi språk:',
@@ -383,12 +385,25 @@ var Hyphenator = (function (window) {
 	/**
 	 * @name Hyphenator-mainLanguage
 	 * @description
-	 * The general language of the document
+	 * The general language of the document. In contrast to {@link Hyphenator-defaultLanguage},
+	 * mainLanguage is defined by the client (i.e. by the html or by a prompt).
 	 * @type {string|null}
 	 * @private
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
 	mainLanguage = null,
+
+	/**
+	 * @name Hyphenator-defaultLanguage
+	 * @description
+	 * The language defined by the developper. This language setting is defined by a config option.
+	 * It is overwritten by any html-lang-attribute and only taken in count, when no such attribute can
+	 * be found (i.e. just before the prompt).
+	 * @type {string|null}
+	 * @private
+	 * @see Hyphenator-autoSetMainLanguage
+	 */	
+	defaultLanguage = '',
 
 	/**
 	 * @name Hyphenator-elements
@@ -848,6 +863,9 @@ var Hyphenator = (function (window) {
 		}
 		if (!mainLanguage && doFrames && contextWindow != window.parent) {
 			autoSetMainLanguage(window.parent);
+		}
+		if (!mainLanguage && defaultLanguage !== '') {
+			mainLanguage = defaultLanguage;
 		}
 		if (!mainLanguage) {
 			text = '';
@@ -1404,7 +1422,7 @@ var Hyphenator = (function (window) {
 			shadow.style.top = '-5000px';
 			shadow.style.height = '1px';
 			body.appendChild(shadow);
-			if (window.getSelection) {
+			if (!!window.getSelection) {
 				//FF3, Webkit
 				selection = targetWindow.getSelection();
 				range = selection.getRangeAt(0);
@@ -1626,7 +1644,8 @@ var Hyphenator = (function (window) {
 			'storagetype': storageType,
 			'orphancontrol': orphanControl,
 			'dohyphenation': Hyphenator.doHyphenation,
-			'persistentconfig': persistentConfig
+			'persistentconfig': persistentConfig,
+			'defaultlanguage': defaultLanguage
 		};
 		storage.setItem('Hyphenator_config', window.JSON.stringify(settings));
 	},
@@ -1855,6 +1874,11 @@ var Hyphenator = (function (window) {
 					case 'persistentconfig':
 						if (assert('persistentconfig', 'boolean')) {
 							persistentConfig = obj[key];
+						}
+						break;
+					case 'defaultlanguage':
+						if (assert('defaultlanguage', 'string')) {
+							defaultLanguage = obj[key];
 						}
 						break;
 					default:
