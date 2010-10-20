@@ -1,6 +1,6 @@
 // The norwegian hyphenation patterns were retrieved from 
 // http://www.ctan.org/language/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-no.tex
-// and adapted to hyphenator.js format by Erik E. Seierstad (erik dot seierstad at gmail dot com).
+// and adapted to hyphenator.js format by Erik Erik Seierstad (erik dot seierstad at gmail dot com).
 
 // % This file is part of hyph-utf8 package and resulted from
 // % semi-manual conversions of hyphenation patterns into UTF-8 in June 2008.
