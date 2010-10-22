@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 32</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+            div {
+                text-align:justify;
+            }
+        </style>
+		<script src="files/yui2.js"></script>
+		<script src="files/yui2_selector.js"></script>
+		<script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						t2 = document.getElementById('ref').innerHTML,
+						desc = document.getElementById('desc').innerHTML,
+						msg = {
+							desc: desc,
+							index: 32
+						};
+						if (t1 == t2) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+        	var hyphenatorSettings = {
+        		minwordlength: 4,
+        		hyphenchar: '|',
+        		selectorfunction: function () {
+        			return YAHOO.util.Selector.query('#test');
+        		}
+        	};
+        	Hyphenator.config(hyphenatorSettings);
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test31.html">&lt;- Prev</a> | <a href="test33.html">Next -&gt;</a></p>
+        <h1>Test 32</h1>
+        <p id="desc">Check for compatibility with <a href="http://developer.yahoo.com/yui/">yui2</a>.</p>
+        <p id="test" lang="en">Hyphenation</p>
+        <p id="ref">Hy|phen|ation</p>
+    </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+    <head>
+        <title>Hyphenator.js &ndash; Test 20</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+			table {
+				width:100%;
+				border: 1px solid #555555;
+				border-collapse:collapse
+			}
+			th {
+				text-align:left;
+			}
+			tr {
+				text-align:left;
+				border: 1px solid #555555;
+			}
+			td {border: 1px solid #555555;}
+        </style>
+        <script type="text/javascript">
+        window.onload = function () {
+        	if (parent != window) {
+				var desc = document.getElementById('desc').innerHTML,
+				msg = {
+					desc: desc,
+					index: 20,
+					result: 'visual'
+				};
+				parent.postMessage(JSON.stringify(msg), window.location.href);
+			}
+		};
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test19.html">&lt;- Prev</a> | <a href="test21.html">Next -&gt;</a></p>
+        <h1>Test 20</h1>
+        <p id="desc">Checks if a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=418975">Bug in Firefox 3</a> is still here.</p>
+
+    	<table>
+    	<tr>
+    	<td>Do&shy;nau&shy;dampf&shy;schiff&shy;fahrts&shy;ka&shy;pi&shy;tän ist ein langes Wort.</td>
+    	<td>Das Wort Do&shy;nau&shy;dampf&shy;schiff&shy;fahrt ist ziem&shy;lich lang.</td>
+    	<td>Das Wort Do&shy;nau&shy;dampf&shy;schiff&shy;fahrt ist ziem&shy;lich lang.</td>
+    	</tr>
+    	</table>
+</body>
+</html>
