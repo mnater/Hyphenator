@@ -1301,7 +1301,7 @@ var Hyphenator = (function (window) {
 			for (win = lo.shortestPattern; win <= maxwins; win++) {
 				if (lo.patterns.hasOwnProperty(patk = w.substring(p, p + win))) {
 					pat = lo.patterns[patk];
-					if (enableReducedPatternSet) {
+					if (enableReducedPatternSet && (typeof pat === 'string')) {
 						lo.redPatSet[patk] = pat;
 					}
 					if (typeof pat === 'string') {
