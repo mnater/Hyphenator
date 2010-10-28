@@ -1216,7 +1216,7 @@ var Hyphenator = (function (window) {
 	 */		
 	toggleBox = function () {
 		var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
-		text = (Hyphenator.doHyphenation ? 'Hy-phe-na-ti-on' : 'Hyphenation');
+		text = (Hyphenator.doHyphenation ? 'hy-phen-a-tion' : 'Hyphenation');
 		if (!!(myBox = contextWindow.document.getElementById('HyphenatorToggleBox'))) {
 			myBox.firstChild.data = text;
 		} else {
