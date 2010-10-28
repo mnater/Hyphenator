@@ -77,30 +77,40 @@
 			}
  		</style>
  		<script src="Hyphenator.js" type="text/javascript"></script>
+        <script src="patterns/be.js" type="text/javascript"></script>
         <script src="patterns/bn.js" type="text/javascript"></script>
         <script src="patterns/cs.js" type="text/javascript"></script>
+        <script src="patterns/da.js" type="text/javascript"></script>
         <script src="patterns/de.js" type="text/javascript"></script>
-        <script src="patterns/en.js" type="text/javascript"></script>
+        <script src="patterns/el-monoton.js" type="text/javascript"></script>
+        <script src="patterns/el-polyton.js" type="text/javascript"></script>
+        <script src="patterns/en-gb.js" type="text/javascript"></script>
+        <script src="patterns/en-us.js" type="text/javascript"></script>
         <script src="patterns/es.js" type="text/javascript"></script>
+        <script src="patterns/fi.js" type="text/javascript"></script>
         <script src="patterns/fr.js" type="text/javascript"></script>
         <script src="patterns/gu.js" type="text/javascript"></script>
+        <script src="patterns/grc.js" type="text/javascript"></script>
         <script src="patterns/hi.js" type="text/javascript"></script>
         <script src="patterns/hu.js" type="text/javascript"></script>
         <script src="patterns/hy.js" type="text/javascript"></script>
-        <script src="patterns/ka.js" type="text/javascript"></script>
+        <script src="patterns/it.js" type="text/javascript"></script>
+        <script src="patterns/kn.js" type="text/javascript"></script>
+        <script src="patterns/la.js" type="text/javascript"></script>
         <script src="patterns/lt.js" type="text/javascript"></script>
+        <script src="patterns/lv.js" type="text/javascript"></script>
         <script src="patterns/ml.js" type="text/javascript"></script>
         <script src="patterns/nl.js" type="text/javascript"></script>
+        <script src="patterns/no-nb.js" type="text/javascript"></script>
         <script src="patterns/or.js" type="text/javascript"></script>
         <script src="patterns/pa.js" type="text/javascript"></script>
+        <script src="patterns/pl.js" type="text/javascript"></script>
+        <script src="patterns/pt.js" type="text/javascript"></script>
+        <script src="patterns/ru.js" type="text/javascript"></script>
+        <script src="patterns/sl.js" type="text/javascript"></script>
         <script src="patterns/sv.js" type="text/javascript"></script>
         <script src="patterns/ta.js" type="text/javascript"></script>
         <script src="patterns/te.js" type="text/javascript"></script>
-        <script src="patterns/it.js" type="text/javascript"></script>
-        <script src="patterns/fi.js" type="text/javascript"></script>
-        <script src="patterns/ru.js" type="text/javascript"></script>
-        <script src="patterns/pl.js" type="text/javascript"></script>
-        <script src="patterns/pt.js" type="text/javascript"></script>
         <script src="patterns/tr.js" type="text/javascript"></script>
         <script src="patterns/uk.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -131,7 +141,8 @@
 		Hyphenator.config({
 			remoteloading:false,
 			displaytogglebox: true,
-			enablereducedpatternset: true
+			enablereducedpatternset: true,
+			storagetype: 'none'
 		});
 		Hyphenator.run();
     	</script>
@@ -155,10 +166,10 @@
 					<option value="bn">বাংলা (Bengali)</option>
 					<option value="cs">Česky (Czech)</option>
 					<option value="da">Dansk (Danish)</option>
-					<option value="de">Deutsch (German)</option>
+					<option value="de" selected>Deutsch (German)</option>
 					<option value="el-monoton">monton greek</option>
 					<option value="el-polyton">polyton greek</option>
-					<option value="en-us" selected>American English</option>
+					<option value="en-us">American English</option>
 					<option value="en-gb">British English</option>
 					<option value="es">Español (Spanish)</option>
 					<option value="fi">Suomi (Finnish)</option>					
@@ -175,7 +186,7 @@
 					<option value="lv">latviešu valoda (Latvian)</option>
 					<option value="ml">മലയാളം (Malayalam)</option>
 					<option value="nl">Nederlands (Dutch)</option>
-					<option value="no">Norsk (Norwegian)</option>
+					<option value="no-nb">Norsk (Norwegian)</option>
 					<option value="or">ଓଡ଼ିଆ (Oriya)</option>
 					<option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
 					<option value="pl">Polski (Polish)</option>
