@@ -98,7 +98,7 @@ What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingE
 == Legal ==
 Hyphenator.js and its documentation are published under the [http://www.gnu.org/licenses/lgpl.html LGPL v3]:
 {{{
-//  Hyphenator 2.X.Y - client side hyphenation for webbrowsers
+//  Hyphenator 3.X.Y - client side hyphenation for webbrowsers
 //  Copyright (C) 2009  Mathias Nater, Zürich (mathias at mnn dot ch)
 //  Project and Source hosted on http://code.google.com/p/hyphenator/
 // 
