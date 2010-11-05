@@ -57,7 +57,7 @@
 							}
 						}
 						parent.postMessage(JSON.stringify(msg), window.location.href);
-						document.getElementById('hyphenate').onchange();
+						document.getElementById('hyphenate').onclick();
 						if (Hyphenator.doHyphenation) {
 							window.location.reload();
 						}
@@ -100,14 +100,14 @@
 						classAttr.nodeValue = 'boxwrapper';
 						myBoxWrapper.setAttributeNode(classAttr);
 						
-						myBox.onchange = Hyphenator.toggleHyphenation;
+						myBox.onclick = Hyphenator.toggleHyphenation;
 						
 						bdy.appendChild(myBoxWrapper);
 					}
         		},
         		displaytogglebox: true,
         		storagetype: 'local',
-				persistentconfig: true,
+				persistentconfig: true
         	};
 			Hyphenator.config(hyphenatorSettings);
 			Hyphenator.run();
