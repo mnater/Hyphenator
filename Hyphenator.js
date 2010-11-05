@@ -1624,6 +1624,9 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	storeConfiguration = function () {
+		if(!storage) {
+			return;
+		}
 		var settings = {
 			'STORED': true,
 			'classname': hyphenateClass,
