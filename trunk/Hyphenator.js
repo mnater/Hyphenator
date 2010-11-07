@@ -425,7 +425,16 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */	
 	exceptions = {},
-
+	
+	countObjProps = function (obj) {
+		var k, l = 0;
+		for (k in obj) {
+			if (obj.hasOwnProperty(k)) {
+				l++;
+			}
+		}
+		return l;
+	},
 	/**
 	 * @name Hyphenator-docLanguages
 	 * @description
@@ -861,12 +870,15 @@ var Hyphenator = (function (window) {
 				}
 			}
 		}
+		//get lang for frame from enclosing document
 		if (!mainLanguage && doFrames && contextWindow != window.parent) {
 			autoSetMainLanguage(window.parent);
 		}
+		//fallback to defaultLang if set
 		if (!mainLanguage && defaultLanguage !== '') {
 			mainLanguage = defaultLanguage;
 		}
+		//ask user for lang
 		if (!mainLanguage) {
 			text = '';
 			ul = navigator.language ? navigator.language : navigator.userLanguage;
@@ -1104,7 +1116,7 @@ var Hyphenator = (function (window) {
 			lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 			lo.prepared = true;
 		}
-		if (storage) {
+		if (!!storage) {
 			try {
 				storage.setItem('Hyphenator_' + lang, window.JSON.stringify(lo));
 			} catch (e) {
@@ -1128,7 +1140,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	prepare = function (callback) {
-		var lang, languagesToLoad = 0, interval, tmp1, tmp2;
+		var lang, interval, tmp1, tmp2;
 		if (!enableRemoteLoading) {
 			for (lang in Hyphenator.languages) {
 				if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -1143,55 +1155,50 @@ var Hyphenator = (function (window) {
 		state = 1;
 		for (lang in docLanguages) {
 			if (docLanguages.hasOwnProperty(lang)) {
-				++languagesToLoad;
-				if (storage) {
-					if (storage.getItem('Hyphenator_' + lang)) {
-						Hyphenator.languages[lang] = window.JSON.parse(storage.getItem('Hyphenator_' + lang));
-						if (exceptions.hasOwnProperty('global')) {
-							tmp1 = convertExceptionsToObject(exceptions.global);
-							for (tmp2 in tmp1) {
-								if (tmp1.hasOwnProperty(tmp2)) {
-									Hyphenator.languages[lang].exceptions[tmp2] = tmp1[tmp2];
-								}
+				if (!!storage && storage.getItem('Hyphenator_' + lang)) {
+					Hyphenator.languages[lang] = window.JSON.parse(storage.getItem('Hyphenator_' + lang));
+					if (exceptions.hasOwnProperty('global')) {
+						tmp1 = convertExceptionsToObject(exceptions.global);
+						for (tmp2 in tmp1) {
+							if (tmp1.hasOwnProperty(tmp2)) {
+								Hyphenator.languages[lang].exceptions[tmp2] = tmp1[tmp2];
 							}
 						}
-						//Replace exceptions since they may have been changed:
-						if (exceptions.hasOwnProperty(lang)) {
-							tmp1 = convertExceptionsToObject(exceptions[lang]);
-							for (tmp2 in tmp1) {
-								if (tmp1.hasOwnProperty(tmp2)) {
-									Hyphenator.languages[lang].exceptions[tmp2] = tmp1[tmp2];
-								}
-							}
-							delete exceptions[lang];
-						}
-						//Replace genRegExp since it may have been changed:
-						tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
-						Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
-						
-						delete docLanguages[lang];
-						--languagesToLoad;
-						continue;
 					}
-				} 
-				loadPatterns(lang);
+					//Replace exceptions since they may have been changed:
+					if (exceptions.hasOwnProperty(lang)) {
+						tmp1 = convertExceptionsToObject(exceptions[lang]);
+						for (tmp2 in tmp1) {
+							if (tmp1.hasOwnProperty(tmp2)) {
+								Hyphenator.languages[lang].exceptions[tmp2] = tmp1[tmp2];
+							}
+						}
+						delete exceptions[lang];
+					}
+					//Replace genRegExp since it may have been changed:
+					tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+					Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
+					
+					delete docLanguages[lang];
+					continue;
+				} else {
+					loadPatterns(lang);
+				}
 			}
 		}
-		if (languagesToLoad === 0) {
+		// if all patterns are loaded from storage: callback
+		if (countObjProps(docLanguages) === 0) {
 			state = 2;
 			callback();
 			return;
 		}
-		// wait until they are loaded
+		// else async wait until patterns are loaded, then callback
 		interval = window.setInterval(function () {
-			var finishedLoading = false, lang;
+			var finishedLoading = true, lang;
 			for (lang in docLanguages) {
 				if (docLanguages.hasOwnProperty(lang)) {
-					if (!Hyphenator.languages[lang]) {
-						finishedLoading = false;
-						break;
-					} else {
-						finishedLoading = true;
+					finishedLoading = false;
+					if (!!Hyphenator.languages[lang]) {
 						delete docLanguages[lang];
 						//do conversion while other patterns are loading:
 						prepareLanguagesObj(lang);
@@ -1199,6 +1206,7 @@ var Hyphenator = (function (window) {
 				}
 			}
 			if (finishedLoading) {
+				//console.log('callig callback for ' + contextWindow.location.href);
 				window.clearInterval(interval);
 				state = 2;
 				callback();
@@ -1564,7 +1572,7 @@ var Hyphenator = (function (window) {
 				return fun(arg);
 			};
 		}
-		var i = 0, el;		
+		var i = 0, el;
 		while (!!(el = elements[i++])) {
 			if (el.ownerDocument.location.href === contextWindow.location.href) {
 				window.setTimeout(bind(hyphenateElement, el), 0);
@@ -1624,7 +1632,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	storeConfiguration = function () {
-		if(!storage) {
+		if (!storage) {
 			return;
 		}
 		var settings = {
@@ -1914,6 +1922,7 @@ var Hyphenator = (function (window) {
 					documentCount++;
 					autoSetMainLanguage(undefined);
 					gatherDocumentInfos();
+					//console.log('preparing for ' + contextWindow.location.href);
 					prepare(hyphenateDocument);
 					if (displayToggleBox) {
 						toggleBox();
@@ -1926,7 +1935,6 @@ var Hyphenator = (function (window) {
 			if (!storage) {
 				createStorage();
 			}
-
 			if (!documentLoaded && !isBookmarklet) {
 				runOnContentLoaded(window, process);
 			}
