@@ -288,7 +288,6 @@ By default Hyphenator.js looks for all elements with classname='hyphenate'. If y
 }}}
 ----
 ==== property `safecopy` ====
-*new in version 3.0.0*
 This property this property tells Hyphenator.js if it should remove hyphenation from copied text.
 
 By default this feature is enabled but you can turn it off if you like so.
@@ -302,7 +301,6 @@ By default this feature is enabled but you can turn it off if you like so.
 }}}
 ----
 ==== property `doframes` ====
-*new in version 3.0.0*
 Hyphenator does not automatically hyphenate text in frames nor iframes. But you can turn this feature on.
 Remember: due to the Same Origin Policy scripts can only access frames with the same origin.
 
@@ -317,7 +315,6 @@ By default this feature is turned off.
 }}}
 ----
 ==== property `storagetype` ====
-*new in version 3.0.0*
 To speed up Hyphenator.js the pattern files are stored in [http://en.wikipedia.org/wiki/DOM_storage DOM storage], if the browser supports it.
 
 By default the storage method is `localStorage` but you can change this to `sessionStorage` (option `'session'`)or turn this feature off (by setting `storagetype` to `'none'`.
@@ -333,7 +330,6 @@ By default the storage method is `localStorage` but you can change this to `sess
 ----
 
 ==== property `orphancontrol` ====
-*new in version 3.1.0*
 In some cases it may happen that one single syllable comes to the last line. To prevent this you may set the `orphancontrol`-level to one of the following values:
   * 1 (default): last word is hyphenated
   * 2: last word is not hyphenated
@@ -349,7 +345,6 @@ In some cases it may happen that one single syllable comes to the last line. To 
 }}}
 
 ----
-<wiki:comment>
 ==== property `dohyphenation` ====
 *new in version 3.2.0*
 Sometimes you like to run the script, prepare everything, but not to hyphenate yet. In this case you can set the option `dohyphenation` to false. Hyphenation can later be executed by calling Hyphenator.toggleHyphenation();
@@ -401,7 +396,6 @@ This language is only taken in count, if no actual lang-tag can be found (i.e. j
 	Hyphenator.run();
 </script>
 }}}
-</wiki:comment>
 ----
 
 === void Hyphenator.run() ===
