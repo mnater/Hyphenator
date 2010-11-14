@@ -40,6 +40,8 @@ Further, Hyphenator.js follows the rules of *[http://en.wikipedia.org/wiki/Unobt
 == How about Accessibility? ==
 Following the rules of *[http://en.wikipedia.org/wiki/Unobtrusive_JavaScript unobtrusive JavaScript]* Hyphenator.js has AFAIK no influence on accessibility of your webpage. It just adds a feature that will not be missed by a screen reader.
 
+Some screen readers have issues with words that contain soft hyphens (they read syllables instead of words). Please note that this is not an issue of Hyphenator but a bug in the screen reader. Please contact the makers of the screen reader application.
+
 == How to hyphenate text that has been loaded with AJAX? ==
 The simple answer is: just call Hyphenator.run() again.
 The problem with this is, that Hyphenator.js will process the whole file again (and not just the reloaded text).
