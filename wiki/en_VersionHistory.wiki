@@ -1,17 +1,16 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-<wiki:comment>
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.2.0.zip 3.2.0] (November 1, 2010) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.2.0.zip 3.2.0] (November 14, 2010) ==
 This minor release brings the following changes:
   * Support for Latvian (Thanks to Kristaps Karlsons)
   * Support for Norwegian (Thanks to Erik Erik Seierstad)
   * Added feature to store configuration (issue113)
+  * Added feature to defer Hyphenation (because of issue113)
   * Added feature to set a default language (issue115)
   * Fixed issue110 (oncopy is only registered on elements owned by hyphenator)
   * Fixed issue112 (better prompterString for Turkish)
   * Fixed issue120 (wrong rightmin in en-us)
-</wiki:comment>
 
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.1.0.zip 3.1.0] (September 2, 2010) ==
 This minor release brings the following changes:
