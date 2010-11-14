@@ -352,7 +352,7 @@ In some cases it may happen that one single syllable comes to the last line. To 
 <wiki:comment>
 ==== property `dohyphenation` ====
 *new in version 3.2.0*
-Sometimes you like to run the script, prepare everything, but not to hyphenate yet. In this case you can set the option `dohyphenation` to false:
+Sometimes you like to run the script, prepare everything, but not to hyphenate yet. In this case you can set the option `dohyphenation` to false. Hyphenation can later be executed by calling Hyphenator.toggleHyphenation();
 
 ===== Example 17 – setting `dohyphenation` to `false` =====
 {{{
