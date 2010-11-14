@@ -10,7 +10,7 @@ This minor release brings the following changes:
   * Added feature to set a default language (issue115)
   * Fixed issue110 (oncopy is only registered on elements owned by hyphenator)
   * Fixed issue112 (better prompterString for Turkish)
-  * Fixed issue120 (wrong rightmin in en-us)
+  * Fixed issue121 (wrong rightmin in en-us)
 
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.1.0.zip 3.1.0] (September 2, 2010) ==
 This minor release brings the following changes:
