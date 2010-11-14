@@ -567,6 +567,12 @@ function jsmin(comment, input, level) {
 			$('minwordlength_btn').onclick = function () {
 				toggleInfoBoxDisplay($('minwordlength_box'), this, true);
 			};
+			$('defaultlanguage_btn').onclick = function () {
+				toggleInfoBoxDisplay($('defaultlanguage_box'), this, true);
+			};
+			$('dohyphenation_btn').onclick = function () {
+				toggleInfoBoxDisplay($('dohyphenation_box'), this, true);
+			};
 			$('remoteloading_btn').onclick = function () {
 				toggleInfoBoxDisplay($('remoteloading_box'), this, true);
 			};
@@ -578,6 +584,9 @@ function jsmin(comment, input, level) {
 			};
 			$('doframes_btn').onclick = function () {
 				toggleInfoBoxDisplay($('doframes_box'), this, true);
+			};
+			$('persistentconfig_btn').onclick = function () {
+				toggleInfoBoxDisplay($('persistentconfig_box'), this, true);
 			};
 			$('intermediatestate_btn').onclick = function () {
 				toggleInfoBoxDisplay($('intermediatestate_box'), this, true);
@@ -639,14 +648,17 @@ function jsmin(comment, input, level) {
 				var classname = $('classname').value;
 				var donthyphenateclassname = $('donthyphenateclassname').value;
 				var minwordlength = $('minwordlength').value;
+				var defaultlanguage = $('defaultlanguage').value;
 				var hyphenchar = $('hyphenchar').value;
 				var urlhyphenchar = $('urlhyphenchar').value;
  				var togglebox = $('togglebox').value;
  				var displaytogglebox = $('displaytogglebox').checked;
+ 				var dohyphenation = $('dohyphenation').checked;
  				var remoteloading = $('remoteloading').checked;
  				var enablecache = $('enablecache').checked;
  				var safecopy = $('safecopy').checked;
  				var doframes = $('doframes').checked;
+ 				var persistentconfig = $('persistentconfig').checked;
  				var onhyphenationdonecallback = $('onhyphenationdonecallback').value;
  				var onerrorhandler = $('onerrorhandler').value;
  				var intermediatestate = $('intermediatestate').value;
@@ -670,6 +682,9 @@ function jsmin(comment, input, level) {
 				if(minwordlength !== '') {
 					config += 'minwordlength : '+minwordlength+',\n\t';
 				}
+				if(defaultlanguage !== '') {
+					config += 'defaultlanguage : \''+defaultlanguage+'\',\n\t';
+				}
 				if(hyphenchar !== '') {
 					config += 'hyphenchar : \''+hyphenchar+'\',\n\t';
 				}
@@ -682,6 +697,9 @@ function jsmin(comment, input, level) {
 						config += 'togglebox : '+togglebox+',\n\t';
 					}
 				}
+				if(dohyphenation === false) {
+					config += 'dohyphenation : false,\n\t';
+				}
 				if(remoteloading === false) {
 					config += 'remoteloading : false,\n\t';
 				}
@@ -693,6 +711,9 @@ function jsmin(comment, input, level) {
 				}
 				if(doframes === true) {
 					config += 'doframes : true,\n\t';
+				}
+				if(persistentconfig === true) {
+					config += 'persistentconfig : true,\n\t';
 				}
 				if($('usecb').checked) {
 					config += 'onhyphenationdonecallback : '+onhyphenationdonecallback+',\n\t';
@@ -820,6 +841,16 @@ function jsmin(comment, input, level) {
 				<p>
 				<label><input type="text" id="urlhyphenchar" name="urlhyphenchar" value="" size="10" title="urlhyphenchar"> The hyphen char for URLs and E-Mail (leave empty for zero width space)</label>
 				</p>
+				
+				<p>
+				<label><input type="text" id="defaultlanguage" name="defaultlanguage" value="" size="10" title="defaultlanguage"> Make Hyphenator to use this language as a fallback</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="defaultlanguage_btn" class="info_btn" alt="Show-Info Button">
+				</p>
+				<div id="defaultlanguage_box" class="info_box">At best you define the language by using the lang-Attribute in your HTML-Document. But sometimes this isn't possible. In this case you can set the language here. Use a two-letter language code (e.g. en for English).</div>
+				
+				<p>
+				<label><input type="checkbox" id="dohyphenation" name="dohyphenation" title="dohyphenation" checked> Hyphenate the Document when Hyphenator.run() is called.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="dohyphenation_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="dohyphenation_box" class="info_box">Sometimes you like to run the script, prepare everything, but not to hyphenate yet.<br>Hyphenation can later be executed by calling Hyphenator.toggleHyphenation()</div>
+				
 				<p>
 				<label><input type="checkbox" id="remoteloading" name="remoteloading" title="remoteloading" checked> Enable remote loading of language patterns.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="remoteloading_btn" class="info_btn" alt="Show-Info Button"></p>
 				<div id="remoteloading_box" class="info_box">By enabling remote loading Hyphenator will automatically load language patterns of supported languages when they are needed.<br>
@@ -835,6 +866,10 @@ function jsmin(comment, input, level) {
 				<p>
 				<label><input type="checkbox" id="doframes" name="doframes" title="doframes"> Hyphenate frames and iframes, too</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="doframes_btn" class="info_btn" alt="Show-Info Button"></p>
 				<div id="doframes_box" class="info_box">By default, hyphenator doesn't hyphenate text in frames. You can turn this on, but it will only work on frames that fullfill the same origin policy!
+				</div>
+				<p>
+				<label><input type="checkbox" id="persistentconfig" name="persistentconfig" title="persistentconfig"> Store settings over page reload (only if DOMStorage is available).</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="persistentconfig_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="persistentconfig_box" class="info_box">With this option enabled, all configuration options are stored in a object called `Hyphenator_config` in the storage type defined by the property `storagetype` (if `storagetype is none` or storage isn't supported, nothing is stored).<br>By reloading or going to an other page, those settings remain set. This is very and specially usefull for the toggle-button.<br>Be carefull with this option!
 				</div>
 				<p>
 				<label><select id="intermediatestate" name="intermediatestate" size="1" title="intermediatestate">
