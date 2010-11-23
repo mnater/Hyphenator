@@ -22,32 +22,13 @@
         	if (parent != window) {
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
-						var t1 = document.getElementById('test').innerHTML,
-						r1 = document.getElementById('ref1').innerHTML,
-						r2 = document.getElementById('ref2').innerHTML,
-						desc = document.getElementById('desc').firstChild.data,
+						var desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
-							index: 85
+							index: 85,
+							result: 'visual'
 						};
-						if (Hyphenator.doHyphenation) {
-							if (t1 == r1) {
-								msg.result = 'passed';
-							} else {
-								msg.result = 'failed';
-							}
-						} else {
-							if (t1 == r2) {
-								msg.result = 'passed';
-							} else {
-								msg.result = 'failed';
-							}
-						}
 						parent.postMessage(JSON.stringify(msg), window.location.href);
-						document.getElementById('hyphenate').onclick();
-						if (Hyphenator.doHyphenation) {
-							window.location.reload();
-						}
 					}
 				});     	
 			}
@@ -61,7 +42,7 @@
         </script>
     </head>
     <body>
-		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test83.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test83.html">&lt;- Prev</a> | <a href="test86.html">Next -&gt;</a></p>
         <h1>Test 85</h1>
         <p id="desc">Hyphenate and display text as soon as pattern is available. <span>Don't wait for other patterns to be loaded</span></p>
 
