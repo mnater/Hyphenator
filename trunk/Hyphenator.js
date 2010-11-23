@@ -1112,7 +1112,7 @@ var Hyphenator = (function (window) {
 				lo.exceptions = {};
 			}
 			convertPatterns(lang);
-			wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+			wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
 			lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 			lo.prepared = true;
 		}
@@ -1176,7 +1176,7 @@ var Hyphenator = (function (window) {
 						delete exceptions[lang];
 					}
 					//Replace genRegExp since it may have been changed:
-					tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + '-]{' + min + ',}';
+					tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
 					Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
 					
 					delete docLanguages[lang];
@@ -1294,6 +1294,9 @@ var Hyphenator = (function (window) {
 		}
 		//finally the core hyphenation algorithm
 		w = '_' + word + '_';
+		if (w.indexOf(String.fromCharCode(8204)) !== -1) {
+			w = w.replace(new RegExp(String.fromCharCode(8204), 'g'), '');
+		}
 		wl = w.length;
 		s = w.split('');
 		if (word.indexOf("'") !== -1) {
