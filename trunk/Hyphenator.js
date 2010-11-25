@@ -1354,15 +1354,14 @@ var Hyphenator = (function (window) {
 		}
 		inserted = 0;
 		for (i = lo.leftmin; i <= (wl - 2 - lo.rightmin); i++) {
+			if (ZWNJpos.length > 0 && ZWNJpos[0] === i) {
+				ZWNJpos.shift();
+				s.splice(i + inserted - 1, 0, String.fromCharCode(8204));
+				inserted++;
+			}			
 			if (!!(hypos[i] & 1)) {
-				if (!!ZWNJpos.length && ZWNJpos.length > 0 && ZWNJpos[0] === i) {
-					ZWNJpos.shift();
-					s.splice(i + inserted + 1, 0, String.fromCharCode(8204) + hyphen);
-					inserted = inserted + 2;
-				} else {
-					s.splice(i + inserted + 1, 0, hyphen);
-					inserted++;
-				}
+				s.splice(i + inserted + 1, 0, hyphen);
+				inserted++;
 			}
 		}
 		hyphenatedword = s.slice(1, -1).join('');
