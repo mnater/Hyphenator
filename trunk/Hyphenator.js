@@ -1270,7 +1270,7 @@ var Hyphenator = (function (window) {
 	 */	
 	hyphenateWord = function (lang, word) {
 		var lo = Hyphenator.languages[lang],
-			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, c, t, n, numb3rs, inserted, hyphenatedword, val;
+			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, c, t, n, numb3rs, inserted, hyphenatedword, val, subst, ZWNJpos = [];
 		if (word === '') {
 			return '';
 		}
@@ -1292,18 +1292,31 @@ var Hyphenator = (function (window) {
 			}
 			return parts.join('-');
 		}
-		//finally the core hyphenation algorithm
 		w = '_' + word + '_';
-		if (w.indexOf(String.fromCharCode(8204)) !== -1) {
-			w = w.replace(new RegExp(String.fromCharCode(8204), 'g'), '');
+		if (word.indexOf(String.fromCharCode(8204)) !== -1) {
+			parts = w.split(String.fromCharCode(8204));
+			w = parts.join('');
+			for (i = 0, l = parts.length; i < l; i++) {
+				parts[i] = parts[i].length;
+			}
+			parts.pop();
+			ZWNJpos = parts;
 		}
 		wl = w.length;
 		s = w.split('');
+		if (!!lo.charSubstitution) {
+			for (subst in lo.charSubstitution) {
+				if (lo.charSubstitution.hasOwnProperty(subst)) {
+					w = w.replace(new RegExp(subst, 'g'), lo.charSubstitution[subst]);
+				}
+			}
+		}
 		if (word.indexOf("'") !== -1) {
 			w = w.toLowerCase().replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
 		} else {
 			w = w.toLowerCase();
 		}
+		//finally the core hyphenation algorithm
 		hypos = [];
 		numb3rs = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}; //check for member is faster then isFinite()
 		n = wl - lo.shortestPattern;
@@ -1340,10 +1353,16 @@ var Hyphenator = (function (window) {
 			}
 		}
 		inserted = 0;
-		for (i = lo.leftmin; i <= (word.length - lo.rightmin); i++) {
+		for (i = lo.leftmin; i <= (wl - 2 - lo.rightmin); i++) {
 			if (!!(hypos[i] & 1)) {
-				s.splice(i + inserted + 1, 0, hyphen);
-				inserted++;
+				if (!!ZWNJpos.length && ZWNJpos.length > 0 && ZWNJpos[0] === i) {
+					ZWNJpos.shift();
+					s.splice(i + inserted + 1, 0, String.fromCharCode(8204) + hyphen);
+					inserted = inserted + 2;
+				} else {
+					s.splice(i + inserted + 1, 0, hyphen);
+					inserted++;
+				}
 			}
 		}
 		hyphenatedword = s.slice(1, -1).join('');
