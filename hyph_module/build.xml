@@ -1,0 +1,55 @@
+<project name="Hyphenator" default="finalize" basedir=".">
+
+	<property name="version" value="4.0.0beta" />
+	<property name="src" value="${basedir}/src" />
+	<property name="build" value="${basedir}/build" />
+	<property name="dist" value="${basedir}/dist" />
+	<property name="tmp" value="${basedir}/tmp" />
+	
+	<property name="Hd" value="${basedir}/dist/Hyphenator_debug.js" />
+	
+	<filelist id="srcfiles" dir="${src}">
+		<file name="head.js" />
+		<file name="main.js" />
+		<file name="debug.js" /> 
+		<file name="quirks.js" /> 
+		<file name="DOM.js" /> 
+		<file name="constants.js" /> 
+		<file name="messages.js" /> 
+		<file name="config.js" /> 
+		<file name="languages.js" /> 
+		<file name="loader.js" /> 
+		<file name="hyphenate.js" /> 
+		<file name="i18n.js" /> 
+	</filelist>
+
+	<target name="finalize" depends="concat"> 
+		<delete dir="${tmp}" />
+	</target>
+	
+	<target name="concat" depends="lint">
+		<echo message="Building ${Hd}" />
+		<concat destfile="${Hd}" encoding="UTF8">
+			<filelist refid="srcfiles"/>
+		</concat>
+		<echo message="${Hd} built." />
+	</target>
+
+	<target name="lint" depends="init" description="Check each module with JSLint">
+		<exec executable="java">
+			<arg line="-jar ${build}/js.jar ${build}/jslint-check.js" />
+		</exec>
+	</target>
+
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${dist}"/>
+		<mkdir dir="${tmp}"/>
+		<pathconvert property="srcfiles" refid="srcfiles">
+			<map from="${basedir}/" to="" />
+		</pathconvert>
+		<echo file="${tmp}/files.txt" message="${srcfiles}" />
+		
+	</target>
+
+</project>
