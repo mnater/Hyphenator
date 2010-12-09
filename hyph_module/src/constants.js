@@ -18,7 +18,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 		return re;
 	}()),
-	Expando: (function () {
+	/*Expando: (function () {
 		var container = {},
 			name = "HyphenatorExpando_" + Math.random(),
 			uuid = 0;
@@ -48,7 +48,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				delete container[elem[name]];
 			}
 		};
-	}()),
+	}()),*/
 	dontHyphenate: {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true}
 }));
 Hyphenator.fn.addModule(new Hyphenator.fn.EO({

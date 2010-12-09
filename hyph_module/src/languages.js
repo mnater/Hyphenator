@@ -61,6 +61,18 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		Hyphenator.languages[lang].patterns = tmp;
 		Hyphenator.languages[lang].patternsConverted = true;
 	},
+	convertExceptionsToObject: function (exc) {
+		var w = exc.split(', '),
+			r = {},
+			i, l, key;
+		for (i = 0, l = w.length; i < l; i++) {
+			key = w[i].replace(/-/g, '');
+			if (!r.hasOwnProperty(key)) {
+				r[key] = w[i];
+			}
+		}
+		return r;
+	},
 	prepareLanguagesObj: function (lang) {
 		Hyphenator.fn.supportedLanguages[lang].state = 6;
 		var lo = Hyphenator.languages[lang], wrd;
@@ -72,28 +84,26 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		if (Hyphenator.enableReducedPatternSet) {
 			lo.redPatSet = {};
 		}
-		lo.exceptions = {};
-		/*
 		//add exceptions from the pattern file to the local 'exceptions'-obj
 		if (lo.hasOwnProperty('exceptions')) {
 			Hyphenator.addExceptions(lang, lo.exceptions);
 			delete lo.exceptions;
 		}
 		//copy global exceptions to the language specific exceptions
-		if (exceptions.hasOwnProperty('global')) {
-			if (exceptions.hasOwnProperty(lang)) {
-				exceptions[lang] += ', ' + exceptions.global;
+		if (Hyphenator.fn.exceptions.hasOwnProperty('global')) {
+			if (Hyphenator.fn.exceptions.hasOwnProperty(lang)) {
+				Hyphenator.fn.exceptions[lang] += ', ' + Hyphenator.fn.exceptions.global;
 			} else {
-				exceptions[lang] = exceptions.global;
+				Hyphenator.fn.exceptions[lang] = Hyphenator.fn.exceptions.global;
 			}
 		}
 		//move exceptions from the the local 'exceptions'-obj to the 'language'-object
-		if (exceptions.hasOwnProperty(lang)) {
-			lo.exceptions = convertExceptionsToObject(exceptions[lang]);
-			delete exceptions[lang];
+		if (Hyphenator.fn.exceptions.hasOwnProperty(lang)) {
+			lo.exceptions = Hyphenator.fn.convertExceptionsToObject(Hyphenator.fn.exceptions[lang]);
+			delete Hyphenator.fn.exceptions[lang];
 		} else {
 			lo.exceptions = {};
-		}*/
+		}
 		Hyphenator.fn.convertPatterns(lang);
 		wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + Hyphenator.min + ',}';
 		lo.genRegExp = new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')|(' + wrd + ')', 'gi');
@@ -105,7 +115,8 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			}
 		}*/
 		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared"));
-	}
+	},
+	exceptions: {}
 }));
 
 Hyphenator.fn.addModule(new Hyphenator.fn.EO({
@@ -124,17 +135,19 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 Hyphenator.addModule(new Hyphenator.fn.EO({
 	mainLanguage: null,
 	languages: {},
-	loadLanguages: function () {
-		var supportedLanguages = new Hyphenator.fn.EO(Hyphenator.fn.supportedLanguages);
-		supportedLanguages.each(function (lang, data) {
-			if (data.state === 1) {
-				Hyphenator.fn.load(lang, Hyphenator.fn.basePath + 'patterns/' + data.file);
-			}
-		});
-	},
 	loadLanguage: function (lang) {
 		if (Hyphenator.fn.supportedLanguages[lang].state < 2) {
 			Hyphenator.fn.load(lang, Hyphenator.fn.basePath + 'patterns/' + Hyphenator.fn.supportedLanguages[lang].file);
+		}
+	},
+	addExceptions: function (lang, words) {
+		if (lang === '') {
+			lang = 'global';
+		}
+		if (Hyphenator.fn.exceptions.hasOwnProperty(lang)) {
+			Hyphenator.fn.exceptions[lang] += ", " + words;
+		} else {
+			Hyphenator.fn.exceptions[lang] = words;
 		}
 	}
 }));

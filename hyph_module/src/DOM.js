@@ -1,4 +1,166 @@
 //Hyphenator.DOM.js
+Hyphenator.fn.extend('Element', function (element, hyphenated, data) {
+	this.element = element;
+	this.hyphenated = hyphenated;
+	this.data = data;
+});
+
+Hyphenator.fn.Element.prototype = {
+	hyphenate: function () {
+		var lang = this.data.language, hyphenate, n, i,
+			controlOrphans = function (part) {
+				var h, r;
+				switch (Hyphenator.hyphen) {
+				case '|':
+					h = '\\|';
+					break;
+				case '+':
+					h = '\\+';
+					break;
+				case '*':
+					h = '\\*';
+					break;
+				default:
+					h = Hyphenator.hyphen;
+				}
+				if (Hyphenator.orphanControl >= 2) {
+					//remove hyphen points from last word
+					r = part.split(' ');
+					r[1] = r[1].replace(new RegExp(h, 'g'), '');
+					r[1] = r[1].replace(new RegExp(Hyphenator.zeroWidthSpace, 'g'), '');
+					r = r.join(' ');
+				}
+				if (Hyphenator.orphanControl === 3) {
+					//replace spaces by non breaking spaces
+					r = r.replace(/[ ]+/g, String.fromCharCode(160));
+				}
+				return r;
+			};
+		if (Hyphenator.languages.hasOwnProperty(lang)) {
+			hyphenate = function (word) {
+				//console.log(word);
+				if (!Hyphenator.doHyphenation) {
+					return word;
+				} else if (Hyphenator.fn.urlOrMailRE.test(word)) {
+					return Hyphenator.hyphenateURL(word);
+				} else {
+					return Hyphenator.hyphenateWord(lang, word);
+				}
+			};
+			/*if (Hyphenator.safeCopy && (this.element.tagName.toLowerCase() !== 'body')) {
+				Hyphenator.fn.registerOnCopy(this.element);
+			}*/
+			i = 0;
+			while (!!(n = this.element.childNodes[i++])) {
+				if (n.nodeType === 3 && n.data.length >= Hyphenator.min) { //type 3 = #text -> hyphenate!
+					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+					if (Hyphenator.orphanControl !== 1) {
+						n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
+					}
+				}
+			}
+		}
+		if (this.data.isHidden && Hyphenator.intermediateState === 'hidden') {
+			this.element.style.visibility = 'visible';
+			if (!this.data.hasOwnStyle) {
+				this.element.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+				this.element.removeAttribute('style');
+			} else {
+				if (this.element.style.removeProperty) {
+					this.element.style.removeProperty('visibility');
+				} else if (this.element.style.removeAttribute) { // IE
+					this.element.style.removeAttribute('visibility');
+				}  
+			}
+		}
+		this.hyphenated = true;
+		Hyphenator.fn.collectedElements.runCount++;
+		if (Hyphenator.fn.collectedElements.runCount === Hyphenator.fn.collectedElements.elementCount) {
+			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(6, null, "Hyphenation done."));
+		}
+	},
+	removeHyphenation: function () {
+		var h, i = 0, n;
+		switch (Hyphenator.hyphen) {
+		case '|':
+			h = '\\|';
+			break;
+		case '+':
+			h = '\\+';
+			break;
+		case '*':
+			h = '\\*';
+			break;
+		default:
+			h = Hyphenator.hyphen;
+		}
+		while (!!(n = this.element.childNodes[i++])) {
+			if (n.nodeType === 3) {
+				n.data = n.data.replace(new RegExp(h, 'g'), '');
+				n.data = n.data.replace(new RegExp(Hyphenator.zeroWidthSpace, 'g'), '');
+			}
+		}
+		this.hyphenated = false;
+	}
+};
+
+Hyphenator.fn.extend('LanguageElementsCollection', function (lang) {
+	this.language = lang;
+	this.elementList = [];
+});
+
+Hyphenator.fn.LanguageElementsCollection.prototype = {
+	add: function (el, data) {
+		this.elementList.push(new Hyphenator.fn.Element(el, false, data));
+	},
+	each: function (fn) {
+		var tmp = new Hyphenator.fn.EO(this.elementList);
+		tmp.each(fn);
+	},
+	hyphenateElements: function () {
+		this.each(function (el, content) {
+			content.hyphenate();
+		});
+	},
+	removeHyphenationFromElements: function () {
+		this.each(function (el, content) {
+			content.removeHyphenation();
+		});
+	}
+};
+
+Hyphenator.fn.extend('ElementCollection', function () {
+	this.list = {};
+	this.elementCount = 0;
+	this.runCount = 0;
+	this.addElement = function (el, lang, data) {
+		if (!this.list.hasOwnProperty(lang)) {
+			this.list[lang] = new Hyphenator.fn.LanguageElementsCollection(lang);
+		}
+		this.list[lang].add(el, data);
+		this.elementCount++;
+		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(5, {'element': el, 'lang': lang}, "Element added."));
+	};
+});
+
+Hyphenator.fn.ElementCollection.prototype = {
+	each: function (fn) {
+		var tmp = new Hyphenator.fn.EO(this.list);
+		tmp.each(fn);
+	},
+	removeAllHyphenation: function () {
+		this.each(function (el, content) {
+			content.removeHyphenationFromElements();
+		});
+	},
+	hyphenateAll: function () {
+		this.each(function (el, content) {
+			content.hyphenateElements();
+		});
+	}
+};
+
+
 Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	createElem: function (tagname) {
 		if (window.document.createElementNS) {
@@ -14,7 +176,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		script.text = text;
 		head.appendChild(script);
 	},
-	collectedElements: {},
+	collectedElements: new Hyphenator.fn.ElementCollection(),
 	prepareElements: function () {
 		var tmp, i = 0, elementsToProcess,
 		process = function (el, hide, lang) {
@@ -36,12 +198,11 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				hyphenatorSettings.language = Hyphenator.fn.getLang(el, true);
 			}
 			lang = hyphenatorSettings.language;
-
 			if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
 				if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang.split('-')[0])) { //try subtag
 					lang = lang.split('-')[0];
 					hyphenatorSettings.language = lang;
-				} else if (!isBookmarklet) {
+				} else if (!Hyphenator.fn.isBookmarklet) {
 					Hyphenator.postMessage(new Hyphenator.fn.Message(0, lang, 'Language ' + lang + ' is not yet supported.'));
 				}
 			}
@@ -50,13 +211,8 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 					//load the language
 					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, lang, "language found: " + lang));
 				}
-				if (!Hyphenator.fn.collectedElements.hasOwnProperty(lang)) {
-					Hyphenator.fn.collectedElements[lang] = [];
-				}
 			}
-			Hyphenator.fn.Expando.setDataForElem(el, hyphenatorSettings);			
-			
-			Hyphenator.fn.collectedElements[lang].push(el);
+			Hyphenator.fn.collectedElements.addElement(el, lang, hyphenatorSettings);
 			
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !Hyphenator.fn.dontHyphenate[n.nodeName.toLowerCase()] &&
@@ -69,95 +225,14 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		while (!!(tmp = elementsToProcess[i++])) {
 			process(tmp, true, '');
 		}
+		
 	},
-
-	hyphenateElementsOfLang: function (lang) {
-		var i;
-		for (i = 0; i < Hyphenator.fn.collectedElements[lang].length; i++) {
-			Hyphenator.fn.hyphenateElement(Hyphenator.fn.collectedElements[lang][i]);
-		}
+	removeHyphenationFromDocument: function () {
+		Hyphenator.fn.collectedElements.removeAllHyphenation();
 	},
-
-	hyphenateElement: function (el) {
-		console.log(el);
-		var hyphenatorSettings = Hyphenator.fn.Expando.getDataForElem(el),
-			lang = hyphenatorSettings.language, hyphenate, n, i,
-			controlOrphans = function (part) {
-				var h, r;
-				switch (Hyphenator.hyphen) {
-				case '|':
-					h = '\\|';
-					break;
-				case '+':
-					h = '\\+';
-					break;
-				case '*':
-					h = '\\*';
-					break;
-				default:
-					h = hyphen;
-				}
-				if (Hyphenator.orphanControl >= 2) {
-					//remove hyphen points from last word
-					r = part.split(' ');
-					r[1] = r[1].replace(new RegExp(h, 'g'), '');
-					r[1] = r[1].replace(new RegExp(zeroWidthSpace, 'g'), '');
-					r = r.join(' ');
-				}
-				if (Hyphenator.orphanControl === 3) {
-					//replace spaces by non breaking spaces
-					r = r.replace(/[ ]+/g, String.fromCharCode(160));
-				}
-				return r;
-			};
-		if (Hyphenator.languages.hasOwnProperty(lang)) {
-			hyphenate = function (word) {
-				console.log(Hyphenator.fn.urlOrMailRE);
-				if (!Hyphenator.doHyphenation) {
-					return word;
-				} else if (Hyphenator.fn.urlOrMailRE.test(word)) {
-					return Hyphenator.hyphenateURL(word);
-				} else {
-					return Hyphenator.hyphenateWord(lang, word);
-				}
-			};
-			/*if (Hyphenator.safeCopy && (el.tagName.toLowerCase() !== 'body')) {
-				Hyphenator.fn.registerOnCopy(el);
-			}*/
-			i = 0;
-			while (!!(n = el.childNodes[i++])) {
-				if (n.nodeType === 3 && n.data.length >= Hyphenator.min) { //type 3 = #text -> hyphenate!
-					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
-					if (Hyphenator.orphanControl !== 1) {
-						n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
-					}
-				}
-			}
-		}
-		if (hyphenatorSettings.isHidden && Hyphenator.intermediateState === 'hidden') {
-			el.style.visibility = 'visible';
-			if (!hyphenatorSettings.hasOwnStyle) {
-				el.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-				el.removeAttribute('style');
-			} else {
-				if (el.style.removeProperty) {
-					el.style.removeProperty('visibility');
-				} else if (el.style.removeAttribute) { // IE
-					el.style.removeAttribute('visibility');
-				}  
-			}
-		}
-		/*if (hyphenatorSettings.isLast) {
-			state = 3;
-			documentCount--;
-			if (documentCount > (-1000) && documentCount <= 0) {
-				documentCount = (-2000);
-				onHyphenationDone();
-			}
-		}*/
+	rehyphenateDocument: function () {
+		Hyphenator.fn.collectedElements.hyphenateAll();
 	},
-
-
 	getLang: function (el, fallback) {
 		if (!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').toLowerCase();
@@ -232,6 +307,119 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			}
 		}
 		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, Hyphenator.mainLanguage, "mainLanguage set: " + Hyphenator.mainLanguage));
+	},
+	runOnContentLoaded: function (w, f) {
+		var DOMContentLoaded = function () {}, toplevel, hyphRunForThis = {}, contextWindow;
+		/*if (documentLoaded && !hyphRunForThis[w.location.href]) {
+			f();
+			hyphRunForThis[w.location.href] = true;
+			return;
+		}*/
+		function init(context) {
+			contextWindow = context || window;
+			if (!hyphRunForThis[contextWindow.location.href] /*&& (!documentLoaded || contextWindow != window.parent)*/) {
+				//documentLoaded = true;
+				f();
+				hyphRunForThis[contextWindow.location.href] = true;
+			}
+		}
+		
+		function doScrollCheck() {
+			try {
+				// If IE is used, use the trick by Diego Perini
+				// http://javascript.nwbox.com/IEContentLoaded/
+				document.documentElement.doScroll("left");
+			} catch (error) {
+				setTimeout(doScrollCheck, 1);
+				return;
+			}
+		
+			// and execute any waiting functions
+			init(window);
+		}
+
+		function doOnLoad() {
+			var i, haveAccess, fl = window.frames.length;
+			if (Hyphenator.doFrames && fl > 0) {
+				for (i = 0; i < fl; i++) {
+					haveAccess = undefined;
+					//try catch isn't enough for webkit
+					try {
+						//opera throws only on document.toString-access
+						haveAccess = window.frames[i].document.toString();
+					} catch (e) {
+						haveAccess = undefined;
+					}
+					if (!!haveAccess) {
+						init(window.frames[i]);
+					}
+				}
+				contextWindow = window;
+				f();
+				hyphRunForThis[window.location.href] = true;
+			} else {
+				init(window);
+			}
+		}
+		
+		// Cleanup functions for the document ready method
+		if (document.addEventListener) {
+			DOMContentLoaded = function () {
+				document.removeEventListener("DOMContentLoaded", DOMContentLoaded, false);
+				window.removeEventListener("load", doOnLoad, false);
+				if (Hyphenator.doFrames && window.frames.length > 0) {
+					//we are in a frameset, so do nothing but wait for onload to fire
+					return;
+				} else {
+					init(window);
+				}
+			};
+		
+		} else if (document.attachEvent) {
+			DOMContentLoaded = function () {
+				// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
+				if (document.readyState === "complete") {
+					document.detachEvent("onreadystatechange", DOMContentLoaded);
+					window.detachEvent("onload", doOnLoad);
+					if (Hyphenator.doFrames && window.frames.length > 0) {
+						//we are in a frameset, so do nothing but wait for onload to fire
+						return;
+					} else {
+						init(window);
+					}
+				}
+			};
+		}
+
+		// Mozilla, Opera and webkit nightlies currently support this event
+		if (document.addEventListener) {
+			// Use the handy event callback
+			document.addEventListener("DOMContentLoaded", DOMContentLoaded, false);
+			
+			// A fallback to window.onload, that will always work
+			window.addEventListener("load", doOnLoad, false);
+
+		// If IE event model is used
+		} else if (document.attachEvent) {
+			// ensure firing before onload,
+			// maybe late but safe also for iframes
+			document.attachEvent("onreadystatechange", DOMContentLoaded);
+			
+			// A fallback to window.onload, that will always work
+			window.attachEvent("onload", doOnLoad);
+
+			// If IE and not a frame
+			// continually check to see if the document is ready
+			toplevel = false;
+			try {
+				toplevel = window.frameElement === null;
+			} catch (e) {}
+
+			if (document.documentElement.doScroll && toplevel) {
+				doScrollCheck();
+			}
+		}
+
 	}
 
 }));

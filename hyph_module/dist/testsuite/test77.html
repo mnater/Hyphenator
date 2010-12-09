@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/transitional.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 77</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test1, #test2, #test3 {
+            	background-color: #ffd6d6;
+            }
+            #ref1, #ref2, #ref3 {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var i, last = 3, t1, t2, r = true,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 77
+						};
+						for (i = 1; i <= last; i++) {
+							t1 = document.getElementById('test' + i).innerHTML;
+							t2 = document.getElementById('ref' + i).innerHTML;
+							r = r && (t1 == t2);
+						}
+						if (r) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+                Hyphenator.config({minwordlength: 4, hyphenchar:'|', safecopy:true});
+                Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test76.html">&lt;- Prev</a> | <a href="test78.html">Next -&gt;</a></p>
+        <h1>Test 77</h1>
+        <p id="desc">Do various language tests</p>
+		<p>General outer, special inner</p>
+		<p id="test1" class="hyphenate" lang="en">The british word <span lang="en-gb">colour</span> is written color in american english.</p>
+		<p id="ref1" lang="">The british word <span lang="en-gb">col|our</span> is writ|ten color in amer|i|can eng|lish.</p>
+		<p>Special outer, general inner</p>
+		<p id="test2" class="hyphenate" lang="en-gb">The american word <span lang="en">color</span> is written colour in british english.</p>
+		<p id="ref2" lang="en-gb">The amer|ican word <span lang="en">color</span> is writ|ten col|our in brit|ish eng|lish.</p>
+		<p>Unknown subtag</p>
+		<p id="test3" class="hyphenate" lang="en-xyz">If subtag is unknown we should fall back to the maintag.</p>
+		<p id="ref3" lang="en-xyz">If sub|tag is un|known we should fall back to the main|tag.</p>
+    </body>
+</html>

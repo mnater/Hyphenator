@@ -55,7 +55,14 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		if (!!config) {
 			Hyphenator.config(config);
 		}
-		Hyphenator.fn.autoSetMainLanguage();
-		Hyphenator.fn.prepareElements();
+		var process = function () {
+			Hyphenator.fn.autoSetMainLanguage();
+			Hyphenator.fn.prepareElements();
+			if (Hyphenator.displayToggleBox) {
+				Hyphenator.toggleBox();
+			}
+		};
+		Hyphenator.fn.runOnContentLoaded(window, process);
+		//console.log(Hyphenator);
 	}
 }));

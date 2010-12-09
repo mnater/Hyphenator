@@ -31,7 +31,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			break;
 		case 1: //settings related
 			//do reflow if necessary
-			Hyphenator.postMessage(msg);
+			//Hyphenator.postMessage(msg);
 			break;
 		case 2: //file load related
 			//update supportedLang
@@ -57,19 +57,32 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data.id, 'state': 7}, "Pattern ready"));
 				break;
 			case 7:
-				console.log("Hyphenate " + msg.data.id + Hyphenator.fn.collectedElements[msg.data.id]);
-				Hyphenator.fn.hyphenateElementsOfLang(msg.data.id);
+				if (Hyphenator.fn.collectedElements.list.hasOwnProperty(msg.data.id)) {
+					Hyphenator.fn.collectedElements.list[msg.data.id].hyphenateElements();
+				}
 				break;
 			default:
 				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, null, "Error"));
 			}
 			break;
 		case 4: //language detected
-			//load the language
-			if (Hyphenator.fn.supportedLanguages[msg.data].state === 0) {
-				Hyphenator.fn.supportedLanguages[msg.data].state = 1;
-				Hyphenator.loadLanguage(msg.data);
+			if (Hyphenator.languages.hasOwnProperty(msg.data)) {
+				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data, 'state': 5}, "File added."));
+			} else {
+				//load the language
+				if (Hyphenator.fn.supportedLanguages[msg.data].state === 0 && Hyphenator.enableRemoteLoading) {
+					Hyphenator.fn.supportedLanguages[msg.data].state = 1;
+					Hyphenator.loadLanguage(msg.data);
+				}
 			}
+			break;
+		case 5: //DOM Elements related
+			if (Hyphenator.fn.supportedLanguages[msg.data.lang].state === 7) {
+				Hyphenator.fn.collectedElements.list[msg.data.lang].hyphenateElements();
+			} //else: wait for language to be loaded
+			break;
+		case 6: //runtime message: hyphenation done! Yupee!
+			Hyphenator.onHyphenationDoneCallback();
 			break;
 		default:
 			Hyphenator.postMessage(new Hyphenator.fn.Message(0, msg.toString(), 'Internally received unknown message.'));

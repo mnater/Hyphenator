@@ -22,5 +22,5 @@
  */
  
 /* The following comment is for JSLint: */
-/*jslint white: true, browser: true, devel: true, onevar: true, undef: true, nomen: true, eqeqeq: true, bitwise: false, regexp: true, newcap: true, immed: true */
-/*global Hyphenator: true, window: true, ActiveXObject: true*/
+/*jslint white: true, browser: true, devel: true, onevar: true, undef: true, nomen: true, eqeqeq: false, bitwise: false, regexp: true, newcap: true, immed: true */
+/*global Hyphenator: true, window: true, ActiveXObject: true, unescape: true*/

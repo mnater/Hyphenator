@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/transitional.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 76</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 76,
+							result: 'visual'
+						};
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.config({minwordlength: 4, hyphenchar:'|'});
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test75.html">&lt;- Prev</a> | <a href="test77.html">Next -&gt;</a></p>
+        <h1>Test 76</h1>
+        <p id="desc">Test hyphenation of greek.</p>
+		<table>
+			<tr>
+				<th>monoton greek (el-monoton)</th>
+				<th>polyton greek (el-polyton)</th>
+				<th>ancient greek (grc)</th>
+			</tr>
+			<tr>
+				<td class="hyphenate" lang="el-monoton">Πάτερ ημών ο εν τοις ουρανοίς αγιασθήτω το όνομά σου·
+				ελθέτω η βασιλεία σου· γεννηθήτω το θέλημά σου, ως εν ουρανώ και επί της γης·
+				τον άρτον ημών τον επιούσιον δος ημίν σήμερον·
+				και άφες ημίν τα οφειλήματα ημών, ως και ημείς αφίεμεν τοις οφειλέταις ημών·
+				και μη εισενέγκης ημάς εις πειρασμόν, αλλά ρύσαι ημάς από του πονηρού.
+				αμήν.</td>
+				<td class="hyphenate" lang="el-polyton">Πάτερ ἡμῶν ὁ ἐν τοῖς οὐρανοῖς ἁγιασθήτω τὸ ὄνομά σου·
+				ἐλθέτω ἡ βασιλεία σου· γεννηθήτω τὸ θέλημά σου, ὡς ἐν οὐρανῷ καὶ ἐπὶ τῆς γῆς·
+				τὸν ἄρτον ἡμῶν τὸν ἐπιούσιον δὸς ἡμῖν σήμερον·
+				καὶ ἄφες ἡμῖν τὰ ὀφειλήματα ἡμῶν, ὡς καὶ ἡμεῖς ἀφίεμεν τοῖς ὀφειλέταις ἡμῶν·
+				καὶ μὴ εἰσενέγκῃς ἡμᾶς εἰς πειρασμόν, ἀλλὰ ῥῦσαι ἡμᾶς ἀπὸ τοῦ πονηροῦ.
+				ἀμήν.</td>
+				<td class="hyphenate" lang="grc">Ὅτι μὲν ὑμεῖς, ὦ ἄνδρες Άθηναῖοι, πεπόνθατε ὑπὸ τῶν ἐμῶν κατηγόρων, οὐκ οἶδα: ἐγὼ δ' οὖν καὶ αὐτὸς ὑπ' αὐτῶν ὀλίγου ἐμαυτοῦ ἐπελαθόμην, οὕτω πιθανῶς ἔλεγον. Καίτοι ἀληθές γε ὡς ἔπος εἰπεῖν οὐδὲν εἰρήκασιν.</td>
+			</tr>
+		</table>
+    </body>
+</html>

@@ -1,5 +1,38 @@
 //begin Hyphenator_hyphenate.js
 Hyphenator.addModule(new Hyphenator.fn.EO({
+	hyphenate: function (target, lang) {
+		var hyphenate, n, i;
+		if (Hyphenator.languages.hasOwnProperty(lang)) {
+			/*if (!Hyphenator.languages[lang].prepared) {
+				prepareLanguagesObj(lang);
+			}*/
+			hyphenate = function (word) {
+				if (Hyphenator.fn.urlOrMailRE.test(word)) {
+					return Hyphenator.hyphenateURL(word);
+				} else {
+					return Hyphenator.hyphenateWord(lang, word);
+				}
+			};
+			if (typeof target === 'string' || target.constructor === String) {
+				return target.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+			} else if (typeof target === 'object') {
+				i = 0;
+				while (!!(n = target.childNodes[i++])) {
+					if (n.nodeType === 3 && n.data.length >= Hyphenator.min) { //type 3 = #text -> hyphenate!
+						n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+					} else if (n.nodeType === 1) {
+						if (n.lang !== '') {
+							Hyphenator.hyphenate(n, n.lang);
+						} else {
+							Hyphenator.hyphenate(n, lang);
+						}
+					}
+				}
+			}
+		} else {
+			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, lang, "Language " + lang + "is not loaded."));
+		}
+	},
 	hyphenateWord: function (lang, word) {
 		var lo = Hyphenator.languages[lang],
 			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, c, t, n, numb3rs, inserted, hyphenatedword, val, subst, ZWNJpos = [];

@@ -69,7 +69,10 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			'orphancontrol': 'orphanControl',
 			'dohyphenation': 'doHyphenation',
 			'persistentconfig': 'persistentConfig',
-			'defaultlanguage': 'defaultLanguage'		
+			'defaultlanguage': 'defaultLanguage',
+			'togglebox': 'toggleBox',
+			'selectorfunction': 'selectorFunction',
+			'onhyphenationdonecallback': 'onHyphenationDoneCallback'
 		}, changes = [], key;
 		for (key in obj) {
 			if (obj.hasOwnProperty(key)) {
@@ -87,7 +90,8 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(1, changes, "settings changed."));
 		}
 
-	}
+	},
+	onHyphenationDoneCallback: function () {}
 }));
 
 
@@ -108,5 +112,8 @@ Hyphenator.fn.settings.add('orphanControl', 1, 'number', '1|2|3');
 Hyphenator.fn.settings.add('doHyphenation', true, 'boolean', 'true|false');
 Hyphenator.fn.settings.add('persistentConfig', true, 'boolean', 'true|false');
 Hyphenator.fn.settings.add('defaultLanguage', '', 'string', '.');
+Hyphenator.fn.settings.add('toggleBox', Hyphenator.toggleBox, 'function', '.');
+Hyphenator.fn.settings.add('selectorFunction', Hyphenator.selectorFunction, 'function', '.');
+Hyphenator.fn.settings.add('onHyphenationDoneCallback', Hyphenator.onHyphenationDoneCallback, 'function', '.');
 Hyphenator.fn.settings.expose('*');
 //end Hyphenator_config.js

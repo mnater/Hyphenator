@@ -6,7 +6,8 @@
 	<property name="dist" value="${basedir}/dist" />
 	<property name="tmp" value="${basedir}/tmp" />
 	
-	<property name="Hd" value="${basedir}/dist/Hyphenator_debug.js" />
+	<property name="Hd" value="${basedir}/dist/Hyphenator.js" />
+	
 	
 	<filelist id="srcfiles" dir="${src}">
 		<file name="head.js" />
@@ -20,7 +21,8 @@
 		<file name="languages.js" /> 
 		<file name="loader.js" /> 
 		<file name="hyphenate.js" /> 
-		<file name="i18n.js" /> 
+		<file name="i18n.js" />
+		<file name="toggleBox.js" /> 
 	</filelist>
 
 	<target name="finalize" depends="concat"> 
@@ -35,7 +37,7 @@
 		<echo message="${Hd} built." />
 	</target>
 
-	<target name="lint" depends="init" description="Check each module with JSLint">
+	<target name="lint" depends="init" description="Check each module with JSLint" if="runlint">
 		<exec executable="java">
 			<arg line="-jar ${build}/js.jar ${build}/jslint-check.js" />
 		</exec>
