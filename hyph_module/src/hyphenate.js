@@ -3,9 +3,11 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 	hyphenate: function (target, lang) {
 		var hyphenate, n, i;
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
-			/*if (!Hyphenator.languages[lang].prepared) {
-				prepareLanguagesObj(lang);
-			}*/
+			
+			if (Hyphenator.fn.supportedLanguages[lang].state === 0) {
+				Hyphenator.fn.prepareLanguagesObj(lang);
+			}
+			
 			hyphenate = function (word) {
 				if (Hyphenator.fn.urlOrMailRE.test(word)) {
 					return Hyphenator.hyphenateURL(word);
@@ -30,7 +32,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 				}
 			}
 		} else {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, lang, "Language " + lang + "is not loaded."));
+			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, lang, "Language '" + lang + "' is not loaded."));
 		}
 	},
 	hyphenateWord: function (lang, word) {

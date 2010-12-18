@@ -72,7 +72,8 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			'defaultlanguage': 'defaultLanguage',
 			'togglebox': 'toggleBox',
 			'selectorfunction': 'selectorFunction',
-			'onhyphenationdonecallback': 'onHyphenationDoneCallback'
+			'onhyphenationdonecallback': 'onHyphenationDoneCallback',
+			'onerrorhandler': 'onErrorHandler'
 		}, changes = [], key;
 		for (key in obj) {
 			if (obj.hasOwnProperty(key)) {
@@ -91,7 +92,10 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		}
 
 	},
-	onHyphenationDoneCallback: function () {}
+	onHyphenationDoneCallback: function () {},
+	onErrorHandler: function (e) {
+		window.alert(e.text);
+	}
 }));
 
 
@@ -115,5 +119,6 @@ Hyphenator.fn.settings.add('defaultLanguage', '', 'string', '.');
 Hyphenator.fn.settings.add('toggleBox', Hyphenator.toggleBox, 'function', '.');
 Hyphenator.fn.settings.add('selectorFunction', Hyphenator.selectorFunction, 'function', '.');
 Hyphenator.fn.settings.add('onHyphenationDoneCallback', Hyphenator.onHyphenationDoneCallback, 'function', '.');
+Hyphenator.fn.settings.add('onErrorHandler', Hyphenator.onErrorHandler, 'function', '.');
 Hyphenator.fn.settings.expose('*');
 //end Hyphenator_config.js

@@ -24,7 +24,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 	},
 	onmessage: function (msg) {
-		//console.log(msg.toString());
+		//console.log(msg.text);
 		switch (msg.type) {
 		case 0: //Error
 			Hyphenator.postMessage(msg);
@@ -76,13 +76,16 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				}
 			}
 			break;
-		case 5: //DOM Elements related
-			if (Hyphenator.fn.supportedLanguages[msg.data.lang].state === 7) {
+		case 5: //DOM Element added
+			if (Hyphenator.fn.supportedLanguages[msg.data.lang].state === 7 || Hyphenator.enableRemoteLoading === false) {
 				Hyphenator.fn.collectedElements.list[msg.data.lang].hyphenateElements();
 			} //else: wait for language to be loaded
 			break;
 		case 6: //runtime message: hyphenation done! Yupee!
 			Hyphenator.onHyphenationDoneCallback();
+			break;
+		case 7: //document added
+			Hyphenator.fn.prepareElements(msg.data);
 			break;
 		default:
 			Hyphenator.postMessage(new Hyphenator.fn.Message(0, msg.toString(), 'Internally received unknown message.'));
@@ -104,7 +107,6 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		to be overwritten by
 		Hyphenator.onmessage = function (msg) {};
 		*/
-		Hyphenator.log('received message: ' + msg.text);
-		Hyphenator.log(msg);
+		Hyphenator.onErrorHandler(msg);
 	}
 }));

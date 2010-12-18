@@ -1,22 +1,25 @@
 //Hyphenator_toggleBox.js
 Hyphenator.addModule(new Hyphenator.fn.EO({
-	toggleBox: function () {
-		var contextWindow = window, myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
+	toggleBox: function (w) {
+		w = w || window;
+		var  myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
 		text = (Hyphenator.doHyphenation ? 'Hy-phen-a-tion' : 'Hyphenation');
-		if (!!(myBox = contextWindow.document.getElementById('HyphenatorToggleBox'))) {
+		if (!!(myBox = w.document.getElementById('HyphenatorToggleBox'))) {
 			myBox.firstChild.data = text;
 		} else {
-			bdy = contextWindow.document.getElementsByTagName('body')[0];
-			myBox = Hyphenator.fn.createElem('div', contextWindow);
-			myIdAttribute = contextWindow.document.createAttribute('id');
+			bdy = w.document.getElementsByTagName('body')[0];
+			myBox = Hyphenator.fn.createElem('div', w);
+			myIdAttribute = w.document.createAttribute('id');
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
-			myClassAttribute = contextWindow.document.createAttribute('class');
+			myClassAttribute = w.document.createAttribute('class');
 			myClassAttribute.nodeValue = Hyphenator.dontHyphenateClass;
-			myTextNode = contextWindow.document.createTextNode(text);
+			myTextNode = w.document.createTextNode(text);
 			myBox.appendChild(myTextNode);
 			myBox.setAttributeNode(myIdAttribute);
 			myBox.setAttributeNode(myClassAttribute);
-			myBox.onclick =  Hyphenator.toggleHyphenation;
+			myBox.onclick =  function () {
+				Hyphenator.toggleHyphenation(w);
+			};
 			myBox.style.position = 'absolute';
 			myBox.style.top = '0px';
 			myBox.style.right = '0px';
@@ -35,17 +38,18 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 }));
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
-	toggleHyphenation: function () {
+	toggleHyphenation: function (w) {
 		if (Hyphenator.doHyphenation) {
 			Hyphenator.doHyphenation = false;
 			Hyphenator.fn.removeHyphenationFromDocument();
 			//storeConfiguration();
-			Hyphenator.toggleBox();
+			Hyphenator.toggleBox(w);
 		} else {
 			Hyphenator.doHyphenation = true;
 			Hyphenator.fn.rehyphenateDocument();
 			//storeConfiguration();
-			Hyphenator.toggleBox();
+			Hyphenator.toggleBox(w);
 		}
 	}
 }));
+

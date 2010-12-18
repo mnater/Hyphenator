@@ -133,7 +133,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 }));
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
-	mainLanguage: null,
+	mainLanguage: {},
 	languages: {},
 	loadLanguage: function (lang) {
 		if (Hyphenator.fn.supportedLanguages[lang].state < 2) {

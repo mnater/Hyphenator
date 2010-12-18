@@ -23,6 +23,7 @@
 		<file name="hyphenate.js" /> 
 		<file name="i18n.js" />
 		<file name="toggleBox.js" /> 
+		<file name="bookmarklet.js" /> 
 	</filelist>
 
 	<target name="finalize" depends="concat"> 
