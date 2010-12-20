@@ -21,5 +21,22 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	dontHyphenate: {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true}
 }));
 Hyphenator.fn.addModule(new Hyphenator.fn.EO({
-	urlOrMailRE: new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')', 'i')
+	urlOrMailRE: new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')', 'i'),
+	getEscapedHyphenChar: function () {
+		var h;
+		switch (Hyphenator.hyphen) {
+		case '|':
+			h = '\\|';
+			break;
+		case '+':
+			h = '\\+';
+			break;
+		case '*':
+			h = '\\*';
+			break;
+		default:
+			h = Hyphenator.hyphen;
+		}
+		return h;
+	}
 }));

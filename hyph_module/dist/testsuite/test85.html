@@ -10,7 +10,7 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            #test {
+            #test_hu, #test_en, #test_mix1 {
             	background-color: #ffd6d6;
             }
             #ref1, #ref2 {
@@ -46,7 +46,9 @@
         <h1>Test 85</h1>
         <p id="desc">Hyphenate and display text as soon as pattern is available. <span>Don't wait for other patterns to be loaded</span></p>
 
-        <p id="test" class="hyphenate">This text is english (english patterns are just 29kb), whereas the hungarian word <span lang="hu">magyar</span> requests a patternfile of 500kb…</p>
-        <p id="test" class="hyphenate">This text is english only and could be displayed as soon as en-patterns are available.</p>
+        <p id="test_hu" class="hyphenate" lang="hu">A weboldal nyelvét nem sikerült automatikusan megállapítani. Kérem adja meg a nyelvet.</p>
+        <p id="test_en" class="hyphenate" lang="en">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+		<p id="test_mix1" class="hyphenate" lang="en">This text is english whereas the word <span lang="hu">"magyar"</span> is Hungarian.</p>
+
     </body>
 </html>

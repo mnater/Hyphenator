@@ -1,7 +1,7 @@
 //begin Hyphenator_languages.js
 Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	supportedLanguages: {
-		 /* 0: init, 1:to be loaded, 2:request sent, 3:loading, 4:loaded, 5:added, 6:preparing, 7:ready 42: failed*/
+		 /* 0: init, 1:to be loaded, 2:request sent, 3:loading, 4:loaded, 5:added, 6:preparing, 7:ready, 8: will not load (remoteLoading disabled), 42: failed*/
 		'be': {file: 'be.js', state: 0},
 		'cs': {file: 'cs.js', state: 0},
 		'da': {file: 'da.js', state: 0},
@@ -43,21 +43,19 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		'uk': {file: 'uk.js', state: 0}
 	},
 	convertPatterns: function (lang) {
-		var plen, anfang, ende, pats, pat, key, tmp = {};
-		pats = Hyphenator.languages[lang].patterns;
-		for (plen in pats) {
-			if (pats.hasOwnProperty(plen)) {
-				plen = parseInt(plen, 10);
-				anfang = 0;
-				ende = plen;
-				while (!!(pat = pats[plen].substring(anfang, ende))) {
-					key = pat.replace(/\d/g, '');
-					tmp[key] = pat;
-					anfang = ende;
-					ende += plen;
-				}
+		var tmp = {}, patterns = new Hyphenator.fn.EO(Hyphenator.languages[lang].patterns);
+		patterns.each(function (plen, pats) {
+			var anfang, ende, pat, key;
+			plen = parseInt(plen, 10);
+			anfang = 0;
+			ende = plen;
+			while (!!(pat = pats.substring(anfang, ende))) {
+				key = pat.replace(/\d/g, '');
+				tmp[key] = pat;
+				anfang = ende;
+				ende += plen;
 			}
-		}
+		});
 		Hyphenator.languages[lang].patterns = tmp;
 		Hyphenator.languages[lang].patternsConverted = true;
 	},
@@ -114,7 +112,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				//onError(e);
 			}
 		}*/
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared"));
+		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared: " + lang));
 	},
 	exceptions: {}
 }));

@@ -1,4 +1,17 @@
 //Hyphenator_toggleBox.js
+Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+	removeHyphenationFromDocuments: function () {
+		Hyphenator.fn.collectedDocuments.each(function (href, data) {
+			data.removeHyphenation();
+		});
+	},
+	rehyphenateDocuments: function () {
+		Hyphenator.fn.collectedDocuments.each(function (href, data) {
+			data.rehyphenate();
+		});
+	}
+}));
+
 Hyphenator.addModule(new Hyphenator.fn.EO({
 	toggleBox: function (w) {
 		w = w || window;
@@ -41,12 +54,12 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 	toggleHyphenation: function (w) {
 		if (Hyphenator.doHyphenation) {
 			Hyphenator.doHyphenation = false;
-			Hyphenator.fn.removeHyphenationFromDocument();
+			Hyphenator.fn.removeHyphenationFromDocuments();
 			//storeConfiguration();
 			Hyphenator.toggleBox(w);
 		} else {
 			Hyphenator.doHyphenation = true;
-			Hyphenator.fn.rehyphenateDocument();
+			Hyphenator.fn.rehyphenateDocuments();
 			//storeConfiguration();
 			Hyphenator.toggleBox(w);
 		}

@@ -38,54 +38,84 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			Hyphenator.fn.supportedLanguages[msg.data.id].state = msg.data.readyState;
 			if (msg.data.state === 42) {
 				//error
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg.data.url, "failed to load file."));
+				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg.data.url, "failed to load file: " + msg.data.url));
 			}
 			if (msg.data.state === 4) {
 				//insert script
 				Hyphenator.fn.insertScript(msg.data.content);
 				Hyphenator.fn.supportedLanguages[msg.data.id].state = 5;
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data.id, 'state': 5}, "File added."));
+				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data.id, 'state': 5}, "File added: " + msg.data.url));
 			}
 			break;
 		case 3: //pattern related
 			switch (msg.data.state) {
-			case 5:
+			case 5: //patterns loaded
 				Hyphenator.fn.prepareLanguagesObj(msg.data.id);
 				break;
-			case 6:
+			case 6: //patterns prepared
 				Hyphenator.fn.supportedLanguages[msg.data.id].state = 7;
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data.id, 'state': 7}, "Pattern ready"));
+				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data.id, 'state': 7}, "Pattern ready: " + msg.data.id));
 				break;
-			case 7:
-				if (Hyphenator.fn.collectedElements.list.hasOwnProperty(msg.data.id)) {
-					Hyphenator.fn.collectedElements.list[msg.data.id].hyphenateElements();
-				}
+			case 7: //patterns ready
+				Hyphenator.fn.collectedDocuments.each(function (href, data) {
+					if (data.elementCollection.list.hasOwnProperty(msg.data.id)) {
+						data.elementCollection.list[msg.data.id].hyphenateElements();
+					}
+				});
 				break;
 			default:
 				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, null, "Error"));
 			}
 			break;
 		case 4: //language detected
-			if (Hyphenator.languages.hasOwnProperty(msg.data)) {
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data, 'state': 5}, "File added."));
+			if (Hyphenator.languages.hasOwnProperty(msg.data) && (Hyphenator.fn.supportedLanguages[msg.data].state < 5)) {
+				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data, 'state': 5}, "File added: " + msg.data));
 			} else {
 				//load the language
 				if (Hyphenator.fn.supportedLanguages[msg.data].state === 0 && Hyphenator.enableRemoteLoading) {
 					Hyphenator.fn.supportedLanguages[msg.data].state = 1;
 					Hyphenator.loadLanguage(msg.data);
+				} else if (!Hyphenator.enableRemoteLoading) {
+					Hyphenator.fn.supportedLanguages[msg.data].state = 8;
 				}
 			}
 			break;
-		case 5: //DOM Element added
-			if (Hyphenator.fn.supportedLanguages[msg.data.lang].state === 7 || Hyphenator.enableRemoteLoading === false) {
-				Hyphenator.fn.collectedElements.list[msg.data.lang].hyphenateElements();
-			} //else: wait for language to be loaded
+		case 5: //some elements have been hyphenated -> check if all done
+			Hyphenator.fn.collectedDocuments.allDone();
 			break;
-		case 6: //runtime message: hyphenation done! Yupee!
+		case 6: //storage
+
+			break;
+		case 7: //document updated
+			switch (msg.data.state) {
+			case 0: //error
+				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg.data.id, "Error in Document."));
+				break;
+			case 1: //init
+			
+				break;
+			case 2: //ready
+				Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].setMainLanguage();
+				Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].prepareElements();
+				break;
+			case 3: //elements collected
+				Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.each(function (lang, data) {
+					if (Hyphenator.fn.supportedLanguages[lang].state === 7) {
+						data.hyphenateElements();
+					} else if (Hyphenator.fn.supportedLanguages[lang].state === 8) { //language will not load -> delete Elements of that lang
+						delete Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.list[lang];
+						Hyphenator.fn.collectedDocuments.allDone();
+					}//else wait for language to be loaded
+				});
+				break;
+			case 4: //hyphenated
+
+				break;
+			}
+			break;
+		case 42: //runtime message: hyphenation done! Yupee!
 			Hyphenator.onHyphenationDoneCallback();
-			break;
-		case 7: //document added
-			Hyphenator.fn.prepareElements(msg.data);
+			//console.log(Hyphenator.fn.collectedDocuments);
 			break;
 		default:
 			Hyphenator.postMessage(new Hyphenator.fn.Message(0, msg.toString(), 'Internally received unknown message.'));

@@ -9,20 +9,7 @@ Hyphenator.fn.Element.prototype = {
 	hyphenate: function () {
 		var lang = this.data.language, hyphenate, n, i,
 			controlOrphans = function (part) {
-				var h, r;
-				switch (Hyphenator.hyphen) {
-				case '|':
-					h = '\\|';
-					break;
-				case '+':
-					h = '\\+';
-					break;
-				case '*':
-					h = '\\*';
-					break;
-				default:
-					h = Hyphenator.hyphen;
-				}
+				var r, h = Hyphenator.fn.getEscapedHyphenChar();
 				if (Hyphenator.orphanControl >= 2) {
 					//remove hyphen points from last word
 					r = part.split(' ');
@@ -36,65 +23,49 @@ Hyphenator.fn.Element.prototype = {
 				}
 				return r;
 			};
-		if (Hyphenator.languages.hasOwnProperty(lang)) {
-			hyphenate = function (word) {
-				//console.log(word);
-				if (!Hyphenator.doHyphenation) {
-					return word;
-				} else if (Hyphenator.fn.urlOrMailRE.test(word)) {
-					return Hyphenator.hyphenateURL(word);
-				} else {
-					return Hyphenator.hyphenateWord(lang, word);
-				}
-			};
-			/*if (Hyphenator.safeCopy && (this.element.tagName.toLowerCase() !== 'body')) {
-				Hyphenator.fn.registerOnCopy(this.element);
-			}*/
-			i = 0;
-			while (!!(n = this.element.childNodes[i++])) {
-				if (n.nodeType === 3 && n.data.length >= Hyphenator.min) { //type 3 = #text -> hyphenate!
-					n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
-					if (Hyphenator.orphanControl !== 1) {
-						n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
+		if (!this.hyphenated) {
+			if (Hyphenator.languages.hasOwnProperty(lang)) {
+				hyphenate = function (word) {
+					//console.log(word);
+					if (!Hyphenator.doHyphenation) {
+						return word;
+					} else if (Hyphenator.fn.urlOrMailRE.test(word)) {
+						return Hyphenator.hyphenateURL(word);
+					} else {
+						return Hyphenator.hyphenateWord(lang, word);
+					}
+				};
+				/*if (Hyphenator.safeCopy && (this.element.tagName.toLowerCase() !== 'body')) {
+					Hyphenator.fn.registerOnCopy(this.element);
+				}*/
+				i = 0;
+				while (!!(n = this.element.childNodes[i++])) {
+					if (n.nodeType === 3 && n.data.length >= Hyphenator.min) { //type 3 = #text -> hyphenate!
+						n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+						if (Hyphenator.orphanControl !== 1) {
+							n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
+						}
 					}
 				}
 			}
-		}
-		if (this.data.isHidden && Hyphenator.intermediateState === 'hidden') {
-			this.element.style.visibility = 'visible';
-			if (!this.data.hasOwnStyle) {
-				this.element.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-				this.element.removeAttribute('style');
-			} else {
-				if (this.element.style.removeProperty) {
-					this.element.style.removeProperty('visibility');
-				} else if (this.element.style.removeAttribute) { // IE
-					this.element.style.removeAttribute('visibility');
-				}  
+			if (this.data.isHidden && Hyphenator.intermediateState === 'hidden') {
+				this.element.style.visibility = 'visible';
+				if (!this.data.hasOwnStyle) {
+					this.element.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+					this.element.removeAttribute('style');
+				} else {
+					if (this.element.style.removeProperty) {
+						this.element.style.removeProperty('visibility');
+					} else if (this.element.style.removeAttribute) { // IE
+						this.element.style.removeAttribute('visibility');
+					}  
+				}
 			}
-		}
-		this.hyphenated = true;
-		Hyphenator.fn.collectedElements.runCount++;
-		//console.log(Hyphenator.fn.collectedElements);
-		if (Hyphenator.fn.collectedElements.complete && (Hyphenator.fn.collectedElements.runCount === Hyphenator.fn.collectedElements.elementCount)) {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(6, null, "Hyphenation done."));
+			this.hyphenated = true;
 		}
 	},
 	removeHyphenation: function () {
-		var h, i = 0, n;
-		switch (Hyphenator.hyphen) {
-		case '|':
-			h = '\\|';
-			break;
-		case '+':
-			h = '\\+';
-			break;
-		case '*':
-			h = '\\*';
-			break;
-		default:
-			h = Hyphenator.hyphen;
-		}
+		var h = Hyphenator.fn.getEscapedHyphenChar(), i = 0, n;
 		while (!!(n = this.element.childNodes[i++])) {
 			if (n.nodeType === 3) {
 				n.data = n.data.replace(new RegExp(h, 'g'), '');
@@ -122,6 +93,7 @@ Hyphenator.fn.LanguageElementsCollection.prototype = {
 		this.each(function (el, content) {
 			content.hyphenate();
 		});
+		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(5, this.language, "Some elements have been hyphenated: " + this.language));
 	},
 	removeHyphenationFromElements: function () {
 		this.each(function (el, content) {
@@ -132,24 +104,14 @@ Hyphenator.fn.LanguageElementsCollection.prototype = {
 
 Hyphenator.fn.extend('ElementCollection', function () {
 	this.list = {};
-	this.elementCount = 0;
-	this.runCount = 0;
-	this.complete = false;
 });
 
 Hyphenator.fn.ElementCollection.prototype = {
-	reset: function () {
-		this.list = {};
-		this.elementCount = this.runCount = 0;
-		this.complete = false;
-	},
 	addElement: function (el, lang, data) {
 		if (!this.list.hasOwnProperty(lang)) {
 			this.list[lang] = new Hyphenator.fn.LanguageElementsCollection(lang);
 		}
 		this.list[lang].add(el, data);
-		this.elementCount++;
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(5, {'element': el, 'lang': lang}, "Element added."));
 	},
 	each: function (fn) {
 		var tmp = new Hyphenator.fn.EO(this.list);
@@ -167,21 +129,197 @@ Hyphenator.fn.ElementCollection.prototype = {
 	}
 };
 
+
+Hyphenator.fn.extend('Document', function (w, p) {
+	this.w = w || window;
+	this.parent = p || null;
+	this.href = w.location.href;
+	this.state = 1; //(0: Error, 1: init, 2: ready, 3:elements collected, 4: hyphenated)
+	this.mainLanguage = null;
+	this.elementCollection = new Hyphenator.fn.ElementCollection();
+});
+
+Hyphenator.fn.Document.prototype = {
+	setMainLanguage: function () {
+		var el = this.w.document.getElementsByTagName('html')[0],
+			m = this.w.document.getElementsByTagName('meta'),
+			i, text, e, ul;
+		if (!!this.mainLanguage) {
+			return;
+		}
+		this.mainLanguage = Hyphenator.fn.getLang(this.w, el, false);
+		if (!this.mainLanguage) {
+			for (i = 0; i < m.length; i++) {
+				//<meta http-equiv = "content-language" content="xy">	
+				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv').toLowerCase() === 'content-language')) {
+					this.mainLanguage = m[i].getAttribute('content').toLowerCase();
+				}
+				//<meta name = "DC.Language" content="xy">
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'dc.language')) {
+					this.mainLanguage = m[i].getAttribute('content').toLowerCase();
+				}			
+				//<meta name = "language" content = "xy">
+				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'language')) {
+					this.mainLanguage = m[i].getAttribute('content').toLowerCase();
+				}
+			}
+		}
+		//get lang for frame from enclosing document
+		if (!this.mainLanguage && this.parent !== null) {
+			this.mainLanguage = Hyphenator.fn.collectedDocuments.list[this.parent.location.href].mainLanguage;
+		}
+		//fallback to defaultLang if set
+		if (!this.mainLanguage && Hyphenator.defaultLanguage !== '') {
+			this.mainLanguage = Hyphenator.defaultLanguage;
+		}
+		//ask user for lang
+		if (!this.mainLanguage) {
+			text = '';
+			ul = navigator.language ? navigator.language : navigator.userLanguage;
+			ul = ul.substring(0, 2);
+			if (Hyphenator.fn.prompterStrings.hasOwnProperty(ul)) {
+				text = Hyphenator.fn.prompterStrings[ul];
+			} else {
+				text = Hyphenator.fn.prompterStrings.en;
+			}
+			text += ' (ISO 639-1)\n\n' + Hyphenator.fn.languageHint;
+			this.mainLanguage = window.prompt(unescape(text), ul).toLowerCase();
+		}
+		if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage)) {
+			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage.split('-')[0])) { //try subtag
+				this.mainLanguage = this.mainLanguage.split('-')[0];
+			} else {
+				e = 'The language "' + this.mainLanguage + '" is not yet supported.';
+				Hyphenator.postMessage(new Hyphenator.fn.Message(0, this.mainLanguage, e));
+			}
+		}
+		if (Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage)) {
+			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, this.mainLanguage, "mainLanguage found: " + this.mainLanguage));
+		}
+	},
+	removeHyphenation: function () {
+		this.elementCollection.removeAllHyphenation();
+	},
+	rehyphenate: function () {
+		this.elementCollection.hyphenateAll();
+	},
+	prepareElements: function () {
+		var tmp, i = 0, elementsToProcess, that = this,
+		process = function (el, hide, lang) {
+			var n, i = 0, hyphenatorSettings = {};
+			//get the language of the element
+			if (el.lang && typeof(el.lang) === 'string') {
+				hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
+			} else if (lang) {
+				hyphenatorSettings.language = lang.toLowerCase(); //else get submitted lang
+			} else {
+				hyphenatorSettings.language = Hyphenator.fn.getLang(that.w, el, true); //or try to find lang in a parent
+			}
+			lang = hyphenatorSettings.language;
+			if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
+				if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang.split('-')[0])) { //try subtag
+					lang = lang.split('-')[0];
+					hyphenatorSettings.language = lang;
+				} else if (!Hyphenator.fn.isBookmarklet) {
+					Hyphenator.postMessage(new Hyphenator.fn.Message(0, lang, 'Language ' + lang + ' is not yet supported.'));
+				}
+			}
+			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
+				//hide it
+				if (hide && Hyphenator.intermediateState === 'hidden') {
+					if (!!el.getAttribute('style')) {
+						hyphenatorSettings.hasOwnStyle = true;
+					} else {
+						hyphenatorSettings.hasOwnStyle = false;					
+					}
+					hyphenatorSettings.isHidden = true;
+					el.style.visibility = 'hidden';
+				}
+				if (Hyphenator.fn.supportedLanguages[lang].state === 0) {
+					//load the language
+					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, lang, "language found: " + lang));
+				}
+				//add it to the list
+				that.elementCollection.addElement(el, lang, hyphenatorSettings);
+			}
+			
+			while (!!(n = el.childNodes[i++])) {
+				if (n.nodeType === 1 && !Hyphenator.fn.dontHyphenate[n.nodeName.toLowerCase()] &&
+					n.className.indexOf(Hyphenator.dontHyphenateClass) === -1 && !(n in that.elementCollection)) {
+					process(n, false, lang);
+				}
+			}
+		};
+		
+		if (Hyphenator.fn.isBookmarklet) {
+			elementsToProcess = this.w.document.getElementsByTagName('body')[0];
+			process(elementsToProcess, false, this.mainLanguage);
+		} else {
+			elementsToProcess = Hyphenator.selectorFunction(this.w);
+			while (!!(tmp = elementsToProcess[i++])) {
+				process(tmp, true, '');
+			}
+		}
+		this.updateDocumentState(3);
+	},
+	updateDocumentState: function (state) {
+		this.state = state;
+		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, {'id': this.w, 'state': this.state}, "Document state updated (" + this.state + "): " + this.href));
+	},
+	checkIfAllDone: function () {
+		var allDone = true;
+		this.elementCollection.each(function (lang, elOfLang) {
+			elOfLang.each(function (k, data) {
+				allDone = allDone && data.hyphenated;
+			});
+		});
+		if (allDone) {
+			this.updateDocumentState(4);
+			return true;
+		}
+	}
+};
+
 Hyphenator.fn.extend('DocumentCollection', function () {
-	this.list = {};
-	this.documentCount = 0;
+	this.list = {}; //href: Hyphenator.fn.Document
 });
 
 Hyphenator.fn.DocumentCollection.prototype = {
-	addDocument: function (w, loaded) {
+	each: function (fn) {
+		var tmp = new Hyphenator.fn.EO(this.list);
+		tmp.each(fn);
+	},
+	addDocument: function (w, p) {
 		var href = w.location.href;
 		if (!this.list.hasOwnProperty(href)) {
-			this.documentCount++;
+			//add document
+			this.list[href] = new Hyphenator.fn.Document(w, p);
+			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, {'id': w, 'state': 1}, "Document added: " + href));
+		} else {
+			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, {'id': w, 'state': 0}, "Error: Document already added: " + href));
 		}
-		this.list[href] = loaded;
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, w, "Document added: " + href));
+	},
+	allDone: function () {
+		var allDone = true;
+		this.each(function (href, docdata) {
+			if (docdata.state === 4) {
+				allDone = allDone && true;
+			} else {
+				allDone = allDone && docdata.checkIfAllDone();
+			}
+		});
+		if (allDone) {
+			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(42, null, "Hyphenation done"));
+		}
 	}
 };
+
+
+
+
+
+
+
 
 Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	createElem: function (tagname, w) {
@@ -192,6 +330,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			return w.document.createElement(tagname);
 		}
 	},
+	
 	insertScript: function (text) {
 		var script, head = window.document.getElementsByTagName('head').item(0);
 		script = Hyphenator.fn.createElem('script');
@@ -199,19 +338,20 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		script.text = text;
 		head.appendChild(script);
 	},
+	
 	collectedDocuments: new Hyphenator.fn.DocumentCollection(),
+
 	prepareDocuments: function (w) {
 		w = w || window;
-		
 		var DOMContentLoaded, toplevel,
 		process = function (w) {
+			//console.log('in ' + w.location.href);
 			var i, fl = w.frames.length, haveAccess;
 			if (w.document.getElementsByTagName('frameset').length === 0) { //this is no frameset -> hyphenate
 				if (Hyphenator.displayToggleBox) {
 					Hyphenator.toggleBox(w);
 				}
-				Hyphenator.mainLanguage[w.location.href] = Hyphenator.fn.getMainLanguage(w);
-				Hyphenator.fn.collectedDocuments.addDocument(w, true);
+				Hyphenator.fn.collectedDocuments.list[w.location.href].updateDocumentState(2); //ready
 			}
 			if (fl > 0) {
 				for (i = 0; i < fl; i++) {
@@ -224,7 +364,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 						haveAccess = undefined;
 					}
 					if (!!haveAccess) {
-						Hyphenator.fn.prepareDocuments(w.frames[i]);
+						//console.log('goto frame ', w.frames[i].location.href);
+						Hyphenator.fn.collectedDocuments.addDocument(w.frames[i], w);
+						Hyphenator.fn.collectedDocuments.list[w.frames[i].location.href].updateDocumentState(2); //ready
 					}
 				}
 			}
@@ -237,32 +379,50 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				setTimeout(doScrollCheck, 1);
 				return;
 			}
-		
+			
 			// and execute any waiting functions
 			process(w);
 		},
 		doOnLoad = function () {
-			var i, haveAccess, fl = window.frames.length;
-			process(w);
+			if (document.addEventListener) {
+				w.removeEventListener("load", doOnLoad, false);
+			} else if (document.attachEvent) {
+				w.detachEvent("onload", doOnLoad);
+			}
+			if (Hyphenator.fn.collectedDocuments.list[w.location.href].state < 2) {
+				process(w);
+			}
 		};
 		
-		if (Hyphenator.fn.isBookmarklet || Hyphenator.fn.collectedDocuments.list[w.location.href]) {
+		//check for re-run:
+		if (Hyphenator.fn.collectedDocuments.list.hasOwnProperty(w.location.href) && (Hyphenator.fn.collectedDocuments.list[w.location.href].state === 4)) {
+			Hyphenator.fn.collectedDocuments.list[w.location.href].state = 1;
 			process(w);
+			return;
 		}
+
+		Hyphenator.fn.collectedDocuments.addDocument(w, null);		
 		
+		if (Hyphenator.fn.isBookmarklet || (Hyphenator.fn.collectedDocuments.list[w.location.href].state === 2)) {
+			process(w);
+			return;
+		}
+				
 		// Cleanup functions for the document ready method
 		if (document.addEventListener) {
 			DOMContentLoaded = function () {
 				w.document.removeEventListener("DOMContentLoaded", DOMContentLoaded, false);
-				w.removeEventListener("load", doOnLoad, false);
-				process(w);
+				if (w.frames.length === 0) {
+					process(w);					
+				} // else: wait for onLoad
 			};
 		} else if (document.attachEvent) {
 			DOMContentLoaded = function () {
 				if (w.document.readyState === "complete") {
 					w.document.detachEvent("onreadystatechange", DOMContentLoaded);
-					w.detachEvent("onload", doOnLoad);
-					process(w);
+					if (w.frames.length === 0) {
+						process(w);					
+					} // else: wait for onLoad
 				}
 			};
 		}
@@ -290,77 +450,6 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 
 	},
-	
-	collectedElements: new Hyphenator.fn.ElementCollection(),
-	prepareElements: function (w) {
-		var tmp, i = 0, elementsToProcess,
-		process = function (el, hide, lang) {
-			var n, i = 0, hyphenatorSettings = {};
-			//get the language of the element
-			if (el.lang && typeof(el.lang) === 'string') {
-				hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
-			} else if (lang) {
-				hyphenatorSettings.language = lang.toLowerCase(); //else get submitted lang
-			} else {
-				hyphenatorSettings.language = Hyphenator.fn.getLang(w, el, true); //or try to find lang in a parent
-			}
-			lang = hyphenatorSettings.language;
-			if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
-				if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang.split('-')[0])) { //try subtag
-					lang = lang.split('-')[0];
-					hyphenatorSettings.language = lang;
-				} else if (!Hyphenator.fn.isBookmarklet) {
-					Hyphenator.postMessage(new Hyphenator.fn.Message(0, lang, 'Language ' + lang + ' is not yet supported.'));
-				}
-			}
-
-			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
-				//hide it
-				if (hide && Hyphenator.intermediateState === 'hidden') {
-					if (!!el.getAttribute('style')) {
-						hyphenatorSettings.hasOwnStyle = true;
-					} else {
-						hyphenatorSettings.hasOwnStyle = false;					
-					}
-					hyphenatorSettings.isHidden = true;
-					el.style.visibility = 'hidden';
-				}
-				if (Hyphenator.fn.supportedLanguages[lang].state === 0) {
-					//load the language
-					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, lang, "language found: " + lang));
-				}
-				//add it to the list
-				Hyphenator.fn.collectedElements.addElement(el, lang, hyphenatorSettings);
-			}
-			
-			while (!!(n = el.childNodes[i++])) {
-				if (n.nodeType === 1 && !Hyphenator.fn.dontHyphenate[n.nodeName.toLowerCase()] &&
-					n.className.indexOf(Hyphenator.dontHyphenateClass) === -1 && !(n in Hyphenator.fn.collectedElements)) {
-					process(n, false, lang);
-				}
-			}
-		};
-		
-		if (Hyphenator.fn.isBookmarklet) {
-			elementsToProcess = w.document.getElementsByTagName('body')[0];
-			process(elementsToProcess, false, Hyphenator.mainLanguage[w.location.href]);
-		} else {
-			elementsToProcess = Hyphenator.selectorFunction(w);
-			while (!!(tmp = elementsToProcess[i++])) {
-				process(tmp, true, '');
-			}
-		}
-		Hyphenator.fn.collectedElements.complete = true;
-		if (Hyphenator.fn.collectedElements.runCount === Hyphenator.fn.collectedElements.elementCount) {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(6, null, "Hyphenation done."));
-		}
-	},
-	removeHyphenationFromDocument: function () {
-		Hyphenator.fn.collectedElements.removeAllHyphenation();
-	},
-	rehyphenateDocument: function () {
-		Hyphenator.fn.collectedElements.hyphenateAll();
-	},
 	getLang: function (w, el, fallback) {
 		if (!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').toLowerCase();
@@ -379,68 +468,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			return Hyphenator.fn.getLang(w, el.parentNode, true);
 		}
 		if (fallback) {
-			return Hyphenator.mainLanguage[w.location.href];
+			return Hyphenator.fn.collectedDocuments.list[w.location.href].mainLanguage;
 		}
 		return null;
-	},
-	getMainLanguage: function (w) {
-		w = w || window;
-		var el = w.document.getElementsByTagName('html')[0],
-			m = w.document.getElementsByTagName('meta'),
-			i, text, e, ul, mainLanguage;
-		if (!!Hyphenator.mainLanguage[w.location.href]) {
-			return Hyphenator.mainLanguage[w.location.href];
-		}
-		mainLanguage = Hyphenator.fn.getLang(w, el, false);
-		if (!mainLanguage) {
-			for (i = 0; i < m.length; i++) {
-				//<meta http-equiv = "content-language" content="xy">	
-				if (!!m[i].getAttribute('http-equiv') && (m[i].getAttribute('http-equiv').toLowerCase() === 'content-language')) {
-					mainLanguage = m[i].getAttribute('content').toLowerCase();
-				}
-				//<meta name = "DC.Language" content="xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'dc.language')) {
-					mainLanguage = m[i].getAttribute('content').toLowerCase();
-				}			
-				//<meta name = "language" content = "xy">
-				if (!!m[i].getAttribute('name') && (m[i].getAttribute('name').toLowerCase() === 'language')) {
-					mainLanguage = m[i].getAttribute('content').toLowerCase();
-				}
-			}
-		}
-		//get lang for frame from enclosing document
-		if (!mainLanguage && Hyphenator.doFrames && w != w.parent) {
-			mainLanguage = Hyphenator.fn.getMainLanguage(w.parent);
-		}
-		//fallback to defaultLang if set
-		if (!mainLanguage && Hyphenator.defaultLanguage !== '') {
-			mainLanguage = Hyphenator.defaultLanguage;
-		}
-		//ask user for lang
-		if (!mainLanguage) {
-			text = '';
-			ul = navigator.language ? navigator.language : navigator.userLanguage;
-			ul = ul.substring(0, 2);
-			if (Hyphenator.fn.prompterStrings.hasOwnProperty(ul)) {
-				text = Hyphenator.fn.prompterStrings[ul];
-			} else {
-				text = Hyphenator.fn.prompterStrings.en;
-			}
-			text += ' (ISO 639-1)\n\n' + Hyphenator.fn.languageHint;
-			mainLanguage = window.prompt(unescape(text), ul).toLowerCase();
-		}
-		if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(mainLanguage)) {
-			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
-				mainLanguage = mainLanguage.split('-')[0];
-			} else {
-				e = 'The language "' + mainLanguage + '" is not yet supported.';
-				Hyphenator.postMessage(new Hyphenator.fn.Message(0, mainLanguage, e));
-			}
-		}
-		if (Hyphenator.fn.supportedLanguages.hasOwnProperty(mainLanguage)) {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, mainLanguage, "mainLanguage found: " + mainLanguage));
-			return mainLanguage;
-		}
 	}
 }));
 

@@ -33,9 +33,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 					xhr.abort();
 					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(2, {'id': id, 'url': url, state: 42}, "failed to load file."));					
 				} else if (xhr.readyState < 4) {
-					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(2, {'id': id, 'url': url, state: xhr.readyState}, "readyState changed."));					
+					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(2, {'id': id, 'url': url, state: xhr.readyState}, "readyState changed: " + url));					
 				} else if (xhr.readyState === 4 && xhr.status === 200) {
-					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(2, {'id': id, 'url': url, state: xhr.readyState, content: xhr.responseText}, "file loaded."));					
+					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(2, {'id': id, 'url': url, state: xhr.readyState, content: xhr.responseText}, "file loaded: " + url));					
 				}
 			};
 			xhr.send(null);
