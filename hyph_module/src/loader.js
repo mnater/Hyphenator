@@ -40,17 +40,6 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			};
 			xhr.send(null);
 		}
-
-		/*for bookmarklet:
-		head = window.document.getElementsByTagName('head').item(0);
-		script = createElem('script');
-		script.src = url;
-		script.type = 'text/javascript';
-		head.appendChild(script);
-		*/
-	},
-	storageLoad: function (url) {
-	
 	},
 	load: function (id, url, watcher, callback) {
 		Hyphenator.fn.remoteLoad(id, url);

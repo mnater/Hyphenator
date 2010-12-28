@@ -16,13 +16,14 @@
 		<file name="quirks.js" /> 
 		<file name="DOM.js" /> 
 		<file name="constants.js" /> 
-		<file name="messages.js" /> 
+		<file name="messages.js" />
+		<file name="storage.js" /> 
+		<file name="toggleBox.js" /> 
 		<file name="config.js" /> 
 		<file name="languages.js" /> 
 		<file name="loader.js" /> 
 		<file name="hyphenate.js" /> 
 		<file name="i18n.js" />
-		<file name="toggleBox.js" /> 
 		<file name="bookmarklet.js" /> 
 	</filelist>
 

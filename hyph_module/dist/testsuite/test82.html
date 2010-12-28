@@ -30,7 +30,7 @@
 							desc: desc,
 							index: 82
 						};
-						if (Hyphenator.doHyphenation) {
+						if (Hyphenator.dohyphenation) {
 							if (t1 == r1) {
 								msg.result = 'passed';
 							} else {
@@ -45,7 +45,7 @@
 						}
 						parent.postMessage(JSON.stringify(msg), window.location.href);
 						document.getElementById('HyphenatorToggleBox').onclick();
-						if (Hyphenator.doHyphenation) {
+						if (Hyphenator.dohyphenation) {
 							window.location.reload();
 						}
 					}

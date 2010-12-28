@@ -1,4 +1,4 @@
-//Hyphenator_toggleBox.js
+//Hyphenator_togglebox.js
 Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	removeHyphenationFromDocuments: function () {
 		Hyphenator.fn.collectedDocuments.each(function (href, data) {
@@ -13,10 +13,10 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 }));
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
-	toggleBox: function (w) {
+	togglebox: function (w) {
 		w = w || window;
 		var  myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
-		text = (Hyphenator.doHyphenation ? 'Hy-phen-a-tion' : 'Hyphenation');
+		text = (Hyphenator.dohyphenation ? 'Hy-phen-a-tion' : 'Hyphenation');
 		if (!!(myBox = w.document.getElementById('HyphenatorToggleBox'))) {
 			myBox.firstChild.data = text;
 		} else {
@@ -25,7 +25,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			myIdAttribute = w.document.createAttribute('id');
 			myIdAttribute.nodeValue = 'HyphenatorToggleBox';
 			myClassAttribute = w.document.createAttribute('class');
-			myClassAttribute.nodeValue = Hyphenator.dontHyphenateClass;
+			myClassAttribute.nodeValue = Hyphenator.donthyphenateclassname;
 			myTextNode = w.document.createTextNode(text);
 			myBox.appendChild(myTextNode);
 			myBox.setAttributeNode(myIdAttribute);
@@ -52,16 +52,18 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
 	toggleHyphenation: function (w) {
-		if (Hyphenator.doHyphenation) {
-			Hyphenator.doHyphenation = false;
+		if (Hyphenator.dohyphenation) {
+			Hyphenator.config({
+				dohyphenation: false
+			});
 			Hyphenator.fn.removeHyphenationFromDocuments();
-			//storeConfiguration();
-			Hyphenator.toggleBox(w);
+			Hyphenator.togglebox(w);
 		} else {
-			Hyphenator.doHyphenation = true;
+			Hyphenator.config({
+				dohyphenation: true
+			});
 			Hyphenator.fn.rehyphenateDocuments();
-			//storeConfiguration();
-			Hyphenator.toggleBox(w);
+			Hyphenator.togglebox(w);
 		}
 	}
 }));

@@ -24,7 +24,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	urlOrMailRE: new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')', 'i'),
 	getEscapedHyphenChar: function () {
 		var h;
-		switch (Hyphenator.hyphen) {
+		switch (Hyphenator.hyphenchar) {
 		case '|':
 			h = '\\|';
 			break;
@@ -35,7 +35,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			h = '\\*';
 			break;
 		default:
-			h = Hyphenator.hyphen;
+			h = Hyphenator.hyphenchar;
 		}
 		return h;
 	}

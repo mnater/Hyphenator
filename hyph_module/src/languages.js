@@ -74,12 +74,12 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	prepareLanguagesObj: function (lang) {
 		Hyphenator.fn.supportedLanguages[lang].state = 6;
 		var lo = Hyphenator.languages[lang], wrd;
-		if (Hyphenator.enableCache) {
+		if (Hyphenator.enablecache) {
 			lo.cache = {};
 			//Export
 			//lo['cache'] = lo.cache;
 		}
-		if (Hyphenator.enableReducedPatternSet) {
+		if (Hyphenator.enablereducedpatternset) {
 			lo.redPatSet = {};
 		}
 		//add exceptions from the pattern file to the local 'exceptions'-obj
@@ -103,15 +103,8 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			lo.exceptions = {};
 		}
 		Hyphenator.fn.convertPatterns(lang);
-		wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + Hyphenator.min + ',}';
+		wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + Hyphenator.minwordlength + ',}';
 		lo.genRegExp = new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')|(' + wrd + ')', 'gi');
-		/*if (!!storage) {
-			try {
-				storage.setItem('Hyphenator_' + lang, window.JSON.stringify(lo));
-			} catch (e) {
-				//onError(e);
-			}
-		}*/
 		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared: " + lang));
 	},
 	exceptions: {}

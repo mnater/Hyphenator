@@ -10,14 +10,14 @@ Hyphenator.fn.Element.prototype = {
 		var lang = this.data.language, hyphenate, n, i,
 			controlOrphans = function (part) {
 				var r, h = Hyphenator.fn.getEscapedHyphenChar();
-				if (Hyphenator.orphanControl >= 2) {
+				if (Hyphenator.orphancontrol >= 2) {
 					//remove hyphen points from last word
 					r = part.split(' ');
 					r[1] = r[1].replace(new RegExp(h, 'g'), '');
 					r[1] = r[1].replace(new RegExp(Hyphenator.zeroWidthSpace, 'g'), '');
 					r = r.join(' ');
 				}
-				if (Hyphenator.orphanControl === 3) {
+				if (Hyphenator.orphancontrol === 3) {
 					//replace spaces by non breaking spaces
 					r = r.replace(/[ ]+/g, String.fromCharCode(160));
 				}
@@ -27,7 +27,7 @@ Hyphenator.fn.Element.prototype = {
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				hyphenate = function (word) {
 					//console.log(word);
-					if (!Hyphenator.doHyphenation) {
+					if (!Hyphenator.dohyphenation) {
 						return word;
 					} else if (Hyphenator.fn.urlOrMailRE.test(word)) {
 						return Hyphenator.hyphenateURL(word);
@@ -40,15 +40,15 @@ Hyphenator.fn.Element.prototype = {
 				}*/
 				i = 0;
 				while (!!(n = this.element.childNodes[i++])) {
-					if (n.nodeType === 3 && n.data.length >= Hyphenator.min) { //type 3 = #text -> hyphenate!
+					if (n.nodeType === 3 && n.data.length >= Hyphenator.minwordlength) { //type 3 = #text -> hyphenate!
 						n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
-						if (Hyphenator.orphanControl !== 1) {
+						if (Hyphenator.orphancontrol !== 1) {
 							n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
 						}
 					}
 				}
 			}
-			if (this.data.isHidden && Hyphenator.intermediateState === 'hidden') {
+			if (this.data.isHidden && Hyphenator.intermediatestate === 'hidden') {
 				this.element.style.visibility = 'visible';
 				if (!this.data.hasOwnStyle) {
 					this.element.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
@@ -134,7 +134,7 @@ Hyphenator.fn.extend('Document', function (w, p) {
 	this.w = w || window;
 	this.parent = p || null;
 	this.href = w.location.href;
-	this.state = 1; //(0: Error, 1: init, 2: ready, 3:elements collected, 4: hyphenated)
+	this.state = 1; //(0: Error, 1: init, 2: ready, 3:elements collected, 4: hyphenated, 5: frameset)
 	this.mainLanguage = null;
 	this.elementCollection = new Hyphenator.fn.ElementCollection();
 });
@@ -169,8 +169,8 @@ Hyphenator.fn.Document.prototype = {
 			this.mainLanguage = Hyphenator.fn.collectedDocuments.list[this.parent.location.href].mainLanguage;
 		}
 		//fallback to defaultLang if set
-		if (!this.mainLanguage && Hyphenator.defaultLanguage !== '') {
-			this.mainLanguage = Hyphenator.defaultLanguage;
+		if (!this.mainLanguage && Hyphenator.defaultlanguage !== '') {
+			this.mainLanguage = Hyphenator.defaultlanguage;
 		}
 		//ask user for lang
 		if (!this.mainLanguage) {
@@ -226,7 +226,7 @@ Hyphenator.fn.Document.prototype = {
 			}
 			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
 				//hide it
-				if (hide && Hyphenator.intermediateState === 'hidden') {
+				if (hide && Hyphenator.intermediatestate === 'hidden') {
 					if (!!el.getAttribute('style')) {
 						hyphenatorSettings.hasOwnStyle = true;
 					} else {
@@ -245,7 +245,7 @@ Hyphenator.fn.Document.prototype = {
 			
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !Hyphenator.fn.dontHyphenate[n.nodeName.toLowerCase()] &&
-					n.className.indexOf(Hyphenator.dontHyphenateClass) === -1 && !(n in that.elementCollection)) {
+					n.className.indexOf(Hyphenator.donthyphenateclassname) === -1 && !(n in that.elementCollection)) {
 					process(n, false, lang);
 				}
 			}
@@ -255,7 +255,7 @@ Hyphenator.fn.Document.prototype = {
 			elementsToProcess = this.w.document.getElementsByTagName('body')[0];
 			process(elementsToProcess, false, this.mainLanguage);
 		} else {
-			elementsToProcess = Hyphenator.selectorFunction(this.w);
+			elementsToProcess = Hyphenator.selectorfunction(this.w);
 			while (!!(tmp = elementsToProcess[i++])) {
 				process(tmp, true, '');
 			}
@@ -268,11 +268,17 @@ Hyphenator.fn.Document.prototype = {
 	},
 	checkIfAllDone: function () {
 		var allDone = true;
-		this.elementCollection.each(function (lang, elOfLang) {
-			elOfLang.each(function (k, data) {
-				allDone = allDone && data.hyphenated;
+		if (this.state === 3) {
+			this.elementCollection.each(function (lang, elOfLang) {
+				elOfLang.each(function (k, data) {
+					allDone = allDone && data.hyphenated;
+				});
 			});
-		});
+		} else {
+			//elements not yet collected
+			allDone = false;
+			return false;
+		}
 		if (allDone) {
 			this.updateDocumentState(4);
 			return true;
@@ -302,13 +308,14 @@ Hyphenator.fn.DocumentCollection.prototype = {
 	allDone: function () {
 		var allDone = true;
 		this.each(function (href, docdata) {
-			if (docdata.state === 4) {
+			if (docdata.state === 4 || docdata.state === 5) {
 				allDone = allDone && true;
 			} else {
 				allDone = allDone && docdata.checkIfAllDone();
 			}
 		});
 		if (allDone) {
+			
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(42, null, "Hyphenation done"));
 		}
 	}
@@ -345,30 +352,13 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		w = w || window;
 		var DOMContentLoaded, toplevel,
 		process = function (w) {
-			//console.log('in ' + w.location.href);
-			var i, fl = w.frames.length, haveAccess;
 			if (w.document.getElementsByTagName('frameset').length === 0) { //this is no frameset -> hyphenate
-				if (Hyphenator.displayToggleBox) {
-					Hyphenator.toggleBox(w);
+				if (Hyphenator.displaytogglebox) {
+					Hyphenator.togglebox(w);
 				}
 				Hyphenator.fn.collectedDocuments.list[w.location.href].updateDocumentState(2); //ready
-			}
-			if (fl > 0) {
-				for (i = 0; i < fl; i++) {
-					haveAccess = undefined;
-					//try catch isn't enough for webkit
-					try {
-						//opera throws only on document.toString-access
-						haveAccess = w.frames[i].document.toString();
-					} catch (e) {
-						haveAccess = undefined;
-					}
-					if (!!haveAccess) {
-						//console.log('goto frame ', w.frames[i].location.href);
-						Hyphenator.fn.collectedDocuments.addDocument(w.frames[i], w);
-						Hyphenator.fn.collectedDocuments.list[w.frames[i].location.href].updateDocumentState(2); //ready
-					}
-				}
+			} else {
+				Hyphenator.fn.collectedDocuments.list[w.location.href].updateDocumentState(5); //frameset
 			}
 		},
 		doScrollCheck = function () {
@@ -383,6 +373,33 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			// and execute any waiting functions
 			process(w);
 		},
+		processFrames = function (pw) {
+			var fl = pw.frames.length,
+			execOnAccessible = function (fn) {
+				var i, haveAccess;
+				for (i = 0; i < fl; i++) {
+					haveAccess = undefined;
+					//try catch isn't enough for webkit
+					try {
+						//opera throws only on document.toString-access
+						haveAccess = pw.frames[i].document.toString();
+					} catch (e) {
+						haveAccess = undefined;
+					}
+					if (!!haveAccess) {
+						fn(pw.frames[i], pw);
+					}
+				}				
+			};
+			if (fl > 0) {
+				execOnAccessible(function (fr, par) {
+					Hyphenator.fn.collectedDocuments.addDocument(fr, par);
+				});
+				execOnAccessible(function (fr, par) {
+					Hyphenator.fn.collectedDocuments.list[fr.location.href].updateDocumentState(2); //ready
+				});
+			}
+		},
 		doOnLoad = function () {
 			if (document.addEventListener) {
 				w.removeEventListener("load", doOnLoad, false);
@@ -392,6 +409,8 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			if (Hyphenator.fn.collectedDocuments.list[w.location.href].state < 2) {
 				process(w);
 			}
+			//go down the frame-tree
+			processFrames(w);
 		};
 		
 		//check for re-run:
@@ -405,6 +424,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		
 		if (Hyphenator.fn.isBookmarklet || (Hyphenator.fn.collectedDocuments.list[w.location.href].state === 2)) {
 			process(w);
+			processFrames(w);
 			return;
 		}
 				
@@ -476,17 +496,17 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
-	selectorFunction: function (w) {
+	selectorfunction: function (w) {
 		w = w || window;
 		var tmp, el = [], i, l;
 		if (document.getElementsByClassName) {
-			el = w.document.getElementsByClassName(Hyphenator.hyphenateClass);
+			el = w.document.getElementsByClassName(Hyphenator.classname);
 		} else {
 			tmp = w.document.getElementsByTagName('*');
 			l = tmp.length;
 			for (i = 0; i < l; i++)
 			{
-				if (tmp[i].className.indexOf(Hyphenator.hyphenateClass) !== -1 && tmp[i].className.indexOf(Hyphenator.dontHyphenateClass) === -1) {
+				if (tmp[i].className.indexOf(Hyphenator.classname) !== -1 && tmp[i].className.indexOf(Hyphenator.donthyphenateclassname) === -1) {
 					el.push(tmp[i]);
 				}
 			}

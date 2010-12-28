@@ -20,7 +20,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			} else if (typeof target === 'object') {
 				i = 0;
 				while (!!(n = target.childNodes[i++])) {
-					if (n.nodeType === 3 && n.data.length >= Hyphenator.min) { //type 3 = #text -> hyphenate!
+					if (n.nodeType === 3 && n.data.length >= Hyphenator.minwordlength) { //type 3 = #text -> hyphenate!
 						n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
 					} else if (n.nodeType === 1) {
 						if (n.lang !== '') {
@@ -41,15 +41,15 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		if (word === '') {
 			return '';
 		}
-		if (word.indexOf(Hyphenator.hyphen) !== -1) {
+		if (word.indexOf(Hyphenator.hyphenchar) !== -1) {
 			//word already contains shy; -> leave at it is!
 			return word;
 		}
-		if (Hyphenator.enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
+		if (Hyphenator.enablecache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
 			return lo.cache[word];
 		}
 		if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
-			return lo.exceptions[word].replace(/-/g, Hyphenator.hyphen);
+			return lo.exceptions[word].replace(/-/g, Hyphenator.hyphenchar);
 		}
 		if (word.indexOf('-') !== -1) {
 			//word contains '-' -> hyphenate the parts separated with '-'
@@ -92,7 +92,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			for (win = lo.shortestPattern; win <= maxwins; win++) {
 				if (lo.patterns.hasOwnProperty(patk = w.substring(p, p + win))) {
 					pat = lo.patterns[patk];
-					if (Hyphenator.enableReducedPatternSet && (typeof pat === 'string')) {
+					if (Hyphenator.enablereducedpatternset && (typeof pat === 'string')) {
 						lo.redPatSet[patk] = pat;
 					}
 					if (typeof pat === 'string') {
@@ -127,18 +127,18 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 				inserted++;
 			}			
 			if (!!(hypos[i] & 1)) {
-				s.splice(i + inserted + 1, 0, Hyphenator.hyphen);
+				s.splice(i + inserted + 1, 0, Hyphenator.hyphenchar);
 				inserted++;
 			}
 		}
 		hyphenatedword = s.slice(1, -1).join('');
-		if (Hyphenator.enableCache) {
+		if (Hyphenator.enablecache) {
 			lo.cache[word] = hyphenatedword;
 		}
 		return hyphenatedword;
 	},
 	hyphenateURL: function (url) {
-		return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + Hyphenator.urlhyphen);
+		return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + Hyphenator.urlhyphenchar);
 	}
 
 }));

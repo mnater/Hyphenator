@@ -23,6 +23,7 @@
 						} else {
 							msg.result = 'failed';
 						}
+						console.log(JSON.stringify(msg), window.location.href);
 						parent.postMessage(JSON.stringify(msg), window.location.href);
 					}
 				});     	
