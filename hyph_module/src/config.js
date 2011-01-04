@@ -72,17 +72,22 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
 	config: function (obj) {
-		var changes = [];
-		//console.log('config: ', obj);
-		if (!obj.hasOwnProperty('FROMSTORAGE') &&
-			obj.hasOwnProperty('persistentconfig') &&
+		var changes = [], stopStorage = false;
+
+		if (obj.hasOwnProperty('STOPSTORAGE')) {
+			stopStorage = true;
+			delete obj.STOPSTORAGE;
+		} else if (obj.hasOwnProperty('persistentconfig') && 
 			obj.persistentconfig === true &&
-			(new Hyphenator.fn.Storage()).inStorage('config')) {
+			obj.hasOwnProperty('storagetype') &&
+			obj.storagetype !== '') {
+			Hyphenator.config({
+				persistentconfig: true,
+				storagetype: obj.storagetype,
+				STOPSTORAGE: true
+			});
 			(new Hyphenator.fn.Storage()).restoreSettings();
-		}
-		if (obj.hasOwnProperty('FROMSTORAGE')) {
-			delete obj.FROMSTORAGE;
-		}
+		}		
 		obj = new Hyphenator.fn.EO(obj);
 		obj.each(function (key, value) {
 			if (Hyphenator.fn.settings.data.hasOwnProperty(key)) {
@@ -99,7 +104,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.fn.settings.expose(changes);
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(1, changes, "settings changed."));
 		}
-		if (Hyphenator.persistentconfig) {
+		if (Hyphenator.persistentconfig && !stopStorage) {
 			(new Hyphenator.fn.Storage()).storeSettings(Hyphenator.fn.settings.exportConfigObj());
 		}
 

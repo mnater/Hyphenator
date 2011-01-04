@@ -30,7 +30,7 @@
 	<target name="finalize" depends="concat"> 
 		<delete dir="${tmp}" />
 	</target>
-	
+
 	<target name="concat" depends="lint">
 		<echo message="Building ${Hd}" />
 		<concat destfile="${Hd}" encoding="UTF8">
