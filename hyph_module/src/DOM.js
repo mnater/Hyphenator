@@ -143,7 +143,7 @@ Hyphenator.fn.Document.prototype = {
 	setMainLanguage: function () {
 		var el = this.w.document.getElementsByTagName('html')[0],
 			m = this.w.document.getElementsByTagName('meta'),
-			i, text, e, ul;
+			i, text, e, ul, resp;
 		if (!!this.mainLanguage) {
 			return;
 		}
@@ -183,9 +183,14 @@ Hyphenator.fn.Document.prototype = {
 				text = Hyphenator.fn.prompterStrings.en;
 			}
 			text += ' (ISO 639-1)\n\n' + Hyphenator.fn.languageHint;
-			this.mainLanguage = window.prompt(unescape(text), ul).toLowerCase();
+			resp = window.prompt(unescape(text), ul);
+			if (resp !== null) {
+				this.mainLanguage = resp.toLowerCase();
+			} else {
+				Hyphenator.postMessage(new Hyphenator.fn.Message(0, this.mainLanguage, "Language unknown. Can't hyphenate."));	
+			}
 		}
-		if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage)) {
+		if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage) && !!this.mainLanguage) {
 			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage.split('-')[0])) { //try subtag
 				this.mainLanguage = this.mainLanguage.split('-')[0];
 			} else {
