@@ -35,9 +35,9 @@ Hyphenator.fn.Element.prototype = {
 						return Hyphenator.hyphenateWord(lang, word);
 					}
 				};
-				/*if (Hyphenator.safeCopy && (this.element.tagName.toLowerCase() !== 'body')) {
+				if (Hyphenator.safecopy && (this.element.tagName.toLowerCase() !== 'body')) {
 					Hyphenator.fn.registerOnCopy(this.element);
-				}*/
+				}
 				i = 0;
 				while (!!(n = this.element.childNodes[i++])) {
 					if (n.nodeType === 3 && n.data.length >= Hyphenator.minwordlength) { //type 3 = #text -> hyphenate!

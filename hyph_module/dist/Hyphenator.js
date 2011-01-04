@@ -108,7 +108,72 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			zws = ''; //opera 10 on XP doesn't support zws
 		}
 		return zws;
-	}())
+	}()),
+	registerOnCopy: function (el) {
+		var body = el.ownerDocument.getElementsByTagName('body')[0],
+		shadow,
+		selection,
+		range,
+		rangeShadow,
+		restore,
+		oncopyHandler = function (e) {
+			e = e || window.event;
+			var target = e.target || e.srcElement,
+			currDoc = target.ownerDocument,
+			body = currDoc.getElementsByTagName('body')[0],
+			targetWindow = 'defaultView' in currDoc ? currDoc.defaultView : currDoc.parentWindow;
+			if (target.tagName && Hyphenator.fn.dontHyphenate[target.tagName.toLowerCase()]) {
+				//Safari needs this
+				return;
+			}
+			//create a hidden shadow element
+			shadow = currDoc.createElement('div');
+			shadow.style.overflow = 'hidden';
+			shadow.style.position = 'absolute';
+			shadow.style.top = '-5000px';
+			shadow.style.height = '1px';
+			body.appendChild(shadow);
+			if (!!window.getSelection) {
+				//FF3, Webkit
+				selection = targetWindow.getSelection();
+				range = selection.getRangeAt(0);
+				shadow.appendChild(range.cloneContents());
+				(new Hyphenator.fn.Element(shadow, true, {})).removeHyphenation();
+			//	removeHyphenationFromElement(shadow);
+				selection.selectAllChildren(shadow);
+				restore = function () {
+					shadow.parentNode.removeChild(shadow);
+					selection.addRange(range);
+				};
+			} else {
+				// IE
+				selection = targetWindow.document.selection;
+				range = selection.createRange();
+				shadow.innerHTML = range.htmlText;
+				(new Hyphenator.fn.Element(shadow, true, {})).removeHyphenation();
+			//	removeHyphenationFromElement(shadow);
+				rangeShadow = body.createTextRange();
+				rangeShadow.moveToElementText(shadow);
+				rangeShadow.select();
+				restore = function () {
+					shadow.parentNode.removeChild(shadow);
+					if (range.text !== "") {
+						range.select();
+					}
+				};
+			}
+			window.setTimeout(restore, 0);
+		};
+		if (!body) {
+			return;
+		}
+		el = el || body;
+		if (window.addEventListener) {
+			el.addEventListener("copy", oncopyHandler, false);
+		} else {
+			el.attachEvent("oncopy", oncopyHandler);
+		}
+	}
 }));
 //Hyphenator.DOM.js
 Hyphenator.fn.extend('Element', function (element, hyphenated, data) {
@@ -147,9 +212,9 @@ Hyphenator.fn.Element.prototype = {
 						return Hyphenator.hyphenateWord(lang, word);
 					}
 				};
-				/*if (Hyphenator.safeCopy && (this.element.tagName.toLowerCase() !== 'body')) {
+				if (Hyphenator.safecopy && (this.element.tagName.toLowerCase() !== 'body')) {
 					Hyphenator.fn.registerOnCopy(this.element);
-				}*/
+				}
 				i = 0;
 				while (!!(n = this.element.childNodes[i++])) {
 					if (n.nodeType === 3 && n.data.length >= Hyphenator.minwordlength) { //type 3 = #text -> hyphenate!
@@ -871,9 +936,11 @@ Hyphenator.fn.Storage.prototype = {
 	},
 
 	restoreSettings: function () {
-		var storedSettings =  window.JSON.parse(this.storage.getItem(this.storagePrefix + "config"));
-		storedSettings.FROMSTORAGE = true;
-		Hyphenator.config(storedSettings);
+		if (this.storage !== null && this.inStorage('config')) {
+			var storedSettings =  window.JSON.parse(this.storage.getItem(this.storagePrefix + "config"));
+			storedSettings.STOPSTORAGE = true;
+			Hyphenator.config(storedSettings);
+		}
 	},
 	storePatterns: function (lang, langObj) {
 		var tmp;
@@ -1060,17 +1127,22 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
 	config: function (obj) {
-		var changes = [];
-		//console.log('config: ', obj);
-		if (!obj.hasOwnProperty('FROMSTORAGE') &&
-			obj.hasOwnProperty('persistentconfig') &&
+		var changes = [], stopStorage = false;
+
+		if (obj.hasOwnProperty('STOPSTORAGE')) {
+			stopStorage = true;
+			delete obj.STOPSTORAGE;
+		} else if (obj.hasOwnProperty('persistentconfig') && 
 			obj.persistentconfig === true &&
-			(new Hyphenator.fn.Storage()).inStorage('config')) {
+			obj.hasOwnProperty('storagetype') &&
+			obj.storagetype !== '') {
+			Hyphenator.config({
+				persistentconfig: true,
+				storagetype: obj.storagetype,
+				STOPSTORAGE: true
+			});
 			(new Hyphenator.fn.Storage()).restoreSettings();
-		}
-		if (obj.hasOwnProperty('FROMSTORAGE')) {
-			delete obj.FROMSTORAGE;
-		}
+		}		
 		obj = new Hyphenator.fn.EO(obj);
 		obj.each(function (key, value) {
 			if (Hyphenator.fn.settings.data.hasOwnProperty(key)) {
@@ -1087,7 +1159,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.fn.settings.expose(changes);
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(1, changes, "settings changed."));
 		}
-		if (Hyphenator.persistentconfig) {
+		if (Hyphenator.persistentconfig && !stopStorage) {
 			(new Hyphenator.fn.Storage()).storeSettings(Hyphenator.fn.settings.exportConfigObj());
 		}
 
