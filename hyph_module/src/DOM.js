@@ -1,7 +1,8 @@
 //Hyphenator.DOM.js
-Hyphenator.fn.extend('Element', function (element, hyphenated, data) {
+Hyphenator.fn.extend('Element', function (element, data) {
 	this.element = element;
-	this.hyphenated = hyphenated;
+	this.hyphenated = false;
+	this.treated = false; //collected but not hyphenated (dohyphenation is off)
 	this.data = data;
 });
 
@@ -23,13 +24,11 @@ Hyphenator.fn.Element.prototype = {
 				}
 				return r;
 			};
-		if (!this.hyphenated) {
+		if (!this.hyphenated && Hyphenator.dohyphenation) {
 			if (Hyphenator.languages.hasOwnProperty(lang)) {
 				hyphenate = function (word) {
 					//console.log(word);
-					if (!Hyphenator.dohyphenation) {
-						return word;
-					} else if (Hyphenator.fn.urlOrMailRE.test(word)) {
+					if (Hyphenator.fn.urlOrMailRE.test(word)) {
 						return Hyphenator.hyphenateURL(word);
 					} else {
 						return Hyphenator.hyphenateWord(lang, word);
@@ -62,6 +61,8 @@ Hyphenator.fn.Element.prototype = {
 				}
 			}
 			this.hyphenated = true;
+		} else {
+			this.treated = true;
 		}
 	},
 	removeHyphenation: function () {
@@ -83,7 +84,7 @@ Hyphenator.fn.extend('LanguageElementsCollection', function (lang) {
 
 Hyphenator.fn.LanguageElementsCollection.prototype = {
 	add: function (el, data) {
-		this.elementList.push(new Hyphenator.fn.Element(el, false, data));
+		this.elementList.push(new Hyphenator.fn.Element(el, data));
 	},
 	each: function (fn) {
 		var tmp = new Hyphenator.fn.EO(this.elementList);
@@ -205,7 +206,7 @@ Hyphenator.fn.Document.prototype = {
 	removeHyphenation: function () {
 		this.elementCollection.removeAllHyphenation();
 	},
-	rehyphenate: function () {
+	hyphenate: function () {
 		this.elementCollection.hyphenateAll();
 	},
 	prepareElements: function () {
@@ -231,7 +232,7 @@ Hyphenator.fn.Document.prototype = {
 			}
 			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
 				//hide it
-				if (hide && Hyphenator.intermediatestate === 'hidden') {
+				if (Hyphenator.dohyphenation && hide && Hyphenator.intermediatestate === 'hidden') {
 					if (!!el.getAttribute('style')) {
 						hyphenatorSettings.hasOwnStyle = true;
 					} else {
@@ -276,7 +277,7 @@ Hyphenator.fn.Document.prototype = {
 		if (this.state === 3) {
 			this.elementCollection.each(function (lang, elOfLang) {
 				elOfLang.each(function (k, data) {
-					allDone = allDone && data.hyphenated;
+					allDone = allDone && (data.hyphenated || data.treated);
 				});
 			});
 		} else {

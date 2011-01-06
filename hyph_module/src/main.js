@@ -31,8 +31,6 @@ var Hyphenator = (function (window) {
 
 
 Hyphenator.fn.extend('EO', function (obj) {
-	/*var that = this;
-	this.src = obj;*/
 	this.each = function (fn) {
 		var k;
 		for (k in obj) {
@@ -41,13 +39,6 @@ Hyphenator.fn.extend('EO', function (obj) {
 			}
 		}
 	};
-	/*this.getLength = function () {
-		var l = 0;
-		that.each(function () {
-			l++;
-		});
-		return l;
-	};*/
 });
 
 Hyphenator.addModule(new Hyphenator.fn.EO({
@@ -56,7 +47,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.config(config);
 		}
 		Hyphenator.fn.prepareDocuments(window);
-		//console.log(Hyphenator.fn.collectedDocuments);
+		console.log(Hyphenator);
 	}
 }));
 

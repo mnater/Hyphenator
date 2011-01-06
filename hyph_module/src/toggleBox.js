@@ -5,9 +5,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			data.removeHyphenation();
 		});
 	},
-	rehyphenateDocuments: function () {
+	hyphenateDocuments: function () {
 		Hyphenator.fn.collectedDocuments.each(function (href, data) {
-			data.rehyphenate();
+			data.hyphenate();
 		});
 	}
 }));
@@ -62,7 +62,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.config({
 				dohyphenation: true
 			});
-			Hyphenator.fn.rehyphenateDocuments();
+			Hyphenator.fn.hyphenateDocuments();
 			Hyphenator.togglebox(w);
 		}
 	}

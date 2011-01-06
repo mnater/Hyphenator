@@ -64,7 +64,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			parts = w.split(String.fromCharCode(8204));
 			w = parts.join('');
 			for (i = 0, l = parts.length; i < l; i++) {
-				parts[i] = parts[i].length;
+				parts[i] = parts[i].length.toString();
 			}
 			parts.pop();
 			ZWNJpos = parts;

@@ -35,7 +35,7 @@ Hyphenator.fn.Storage.prototype = {
 	storeSettings: function (settings) {
 		if (this.storage !== null) {
 			try {
-				console.log('store: ', settings);
+				//console.log('store: ', settings);
 				this.storage.setItem(this.storagePrefix + "config", window.JSON.stringify(settings));
 				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(6, settings, "Settings stored."));
 			} catch (e) {

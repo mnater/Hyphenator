@@ -24,7 +24,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 	},
 	onmessage: function (msg) {
-		console.log(msg.text);
+		//console.log(msg.text);
 		switch (msg.type) {
 		case 0: //Error
 			Hyphenator.postMessage(msg);

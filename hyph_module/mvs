@@ -44,6 +44,7 @@ set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set scrolloff=2
 set termencoding=utf-8
+set window=60
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -414,12 +415,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 59 - ((52 * winheight(0) + 29) / 59)
+let s:l = 41 - ((37 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-59
-normal! 0
+41
+normal! 02l
 tabedit src/debug.js
 set splitbelow splitright
 set nosplitbelow
@@ -663,7 +664,7 @@ argglobal
 5argu
 setlocal keymap=
 setlocal noarabic
-setlocal noautoindent
+setlocal autoindent
 setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
@@ -763,12 +764,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 277 - ((2 * winheight(0) + 29) / 59)
+let s:l = 4 - ((3 * winheight(0) + 30) / 60)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-277
-normal! 0
+4
+normal! 023l
 tabedit src/constants.js
 set splitbelow splitright
 set nosplitbelow
@@ -995,12 +996,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 3 - ((2 * winheight(0) + 29) / 59)
+let s:l = 58 - ((57 * winheight(0) + 30) / 60)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
-normal! 03l
+58
+normal! 02l
 tabedit src/storage.js
 set splitbelow splitright
 set nosplitbelow
@@ -1112,12 +1113,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 57 - ((49 * winheight(0) + 29) / 59)
+let s:l = 38 - ((30 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-57
-normal! 02l
+38
+normal! 05l
 tabedit src/toggleBox.js
 set splitbelow splitright
 set nosplitbelow
@@ -1129,7 +1130,7 @@ argglobal
 edit src/toggleBox.js
 setlocal keymap=
 setlocal noarabic
-setlocal noautoindent
+setlocal autoindent
 setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
@@ -1229,12 +1230,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 29) / 59)
+let s:l = 10 - ((2 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+10
+normal! 03l
 tabedit src/config.js
 set splitbelow splitright
 set nosplitbelow
@@ -2043,12 +2044,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 746 - ((29 * winheight(0) + 29) / 59)
+let s:l = 198 - ((29 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-746
-normal! 022l
+198
+normal! 021l
 tabedit ~/Sites/hyph/hyph_module/dist/testsuite/index.html
 set splitbelow splitright
 set nosplitbelow
@@ -2165,7 +2166,7 @@ exe s:l
 normal! zt
 146
 normal! 0
-tabnext 1
+tabnext 6
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
