@@ -12,7 +12,10 @@ After you've written the text, set hyphenChar to something visible (I prefer the
 {{{
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
-	Hyphenator.config({urlhyphenchar : '|'});
+	Hyphenator.config({
+            urlhyphenchar : '|',
+            hyphenchar : '|'
+        });
 	Hyphenator.run();
 </script>
 }}}
