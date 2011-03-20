@@ -26,6 +26,7 @@
 		<file name="hyphenate.js" /> 
 		<file name="i18n.js" />
 		<file name="bookmarklet.js" /> 
+		<file name="exports.js" /> 
 	</filelist>
 
 	<target name="finalize" depends="min"> 

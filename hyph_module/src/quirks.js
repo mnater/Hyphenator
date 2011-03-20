@@ -1,5 +1,5 @@
 //Hyphenator_quirks.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	zeroWidthSpace: (function () {
 		var zws, ua = window.navigator.userAgent.toLowerCase();
 		zws = String.fromCharCode(8203); //Unicode zero width space
@@ -40,7 +40,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				selection = targetWindow.getSelection();
 				range = selection.getRangeAt(0);
 				shadow.appendChild(range.cloneContents());
-				(new Hyphenator.fn.Element(shadow, true, {})).removeHyphenation();
+				(new Hyphenator.fn.Element(shadow, {})).removeHyphenation();
 			//	removeHyphenationFromElement(shadow);
 				selection.selectAllChildren(shadow);
 				restore = function () {
@@ -52,7 +52,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				selection = targetWindow.document.selection;
 				range = selection.createRange();
 				shadow.innerHTML = range.htmlText;
-				(new Hyphenator.fn.Element(shadow, true, {})).removeHyphenation();
+				(new Hyphenator.fn.Element(shadow, {})).removeHyphenation();
 			//	removeHyphenationFromElement(shadow);
 				rangeShadow = body.createTextRange();
 				rangeShadow.moveToElementText(shadow);
@@ -76,4 +76,4 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			el.attachEvent("oncopy", oncopyHandler);
 		}
 	}
-}));
+});

@@ -1,4 +1,4 @@
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	prompterStrings: {
 		'be': 'Мова гэтага сайта не можа быць вызначаны аўтаматычна. Калі ласка пакажыце мову:',
 		'cs': 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:',
@@ -24,5 +24,5 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		'tr': 'Bu web sitesinin dili otomatik olarak tespit edilememiştir. Lütfen dökümanın dilini seçiniz%A0:',
 		'uk': 'Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:'
 	}	
-}));
+});
 

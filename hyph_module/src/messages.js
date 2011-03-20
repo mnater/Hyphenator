@@ -6,16 +6,19 @@ Message types:
 2: file loaded
 3: pattern available
 */
-Hyphenator.fn.extend('Message', function (type, data, text) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Message = function (type, data, text) {
 	this.type = type || 0;
 	this.data = data || null;
 	this.text = text || '';
 	this.toString = function () {
 		return "Message:\n\ttype: " + type + ":\n\tdata: " + window.JSON.stringify(data) + ":\n\ttext: " + text; 
 	};
-});
+};
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	postMessage: function (msg) {
 		if (msg.constructor !== Hyphenator.fn.Message) {
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg, "Received non-conforming message"));
@@ -134,10 +137,10 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			Hyphenator.postMessage(new Hyphenator.fn.Message(0, msg.toString(), 'Internally received unknown message.'));
 		}
 	}
-}));
+});
 
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	postMessage: function (msg) {
 		if (msg.constructor !== Hyphenator.fn.Message) {
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg, "Received non-conforming message"));
@@ -152,4 +155,4 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		*/
 		Hyphenator.onerrorhandler(msg);
 	}
-}));
+});

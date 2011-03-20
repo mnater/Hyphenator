@@ -1,10 +1,13 @@
 //Hyphenator.DOM.js
-Hyphenator.fn.extend('Element', function (element, data) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Element = function (element, data) {
 	this.element = element;
 	this.hyphenated = false;
 	this.treated = false; //collected but not hyphenated (dohyphenation is off)
 	this.data = data;
-});
+};
 
 Hyphenator.fn.Element.prototype = {
 	hyphenate: function () {
@@ -76,11 +79,13 @@ Hyphenator.fn.Element.prototype = {
 		this.hyphenated = false;
 	}
 };
-
-Hyphenator.fn.extend('LanguageElementsCollection', function (lang) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.LanguageElementsCollection = function (lang) {
 	this.language = lang;
 	this.elementList = [];
-});
+};
 
 Hyphenator.fn.LanguageElementsCollection.prototype = {
 	add: function (el, data) {
@@ -102,10 +107,12 @@ Hyphenator.fn.LanguageElementsCollection.prototype = {
 		});
 	}
 };
-
-Hyphenator.fn.extend('ElementCollection', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.ElementCollection = function () {
 	this.list = {};
-});
+};
 
 Hyphenator.fn.ElementCollection.prototype = {
 	addElement: function (el, lang, data) {
@@ -130,15 +137,17 @@ Hyphenator.fn.ElementCollection.prototype = {
 	}
 };
 
-
-Hyphenator.fn.extend('Document', function (w, p) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Document = function (w, p) {
 	this.w = w || window;
 	this.parent = p || null;
 	this.href = w.location.href;
 	this.state = 1; //(0: Error, 1: init, 2: ready, 3:elements collected, 4: hyphenated, 5: frameset)
 	this.mainLanguage = null;
 	this.elementCollection = new Hyphenator.fn.ElementCollection();
-});
+};
 
 Hyphenator.fn.Document.prototype = {
 	setMainLanguage: function () {
@@ -292,9 +301,12 @@ Hyphenator.fn.Document.prototype = {
 	}
 };
 
-Hyphenator.fn.extend('DocumentCollection', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.DocumentCollection = function () {
 	this.list = {}; //href: Hyphenator.fn.Document
-});
+};
 
 Hyphenator.fn.DocumentCollection.prototype = {
 	each: function (fn) {
@@ -334,7 +346,7 @@ Hyphenator.fn.DocumentCollection.prototype = {
 
 
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	createElem: function (tagname, w) {
 		w = w || window;
 		if (window.document.createElementNS) {
@@ -498,10 +510,10 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 		return null;
 	}
-}));
+});
 
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	selectorfunction: function (w) {
 		w = w || window;
 		var tmp, el = [], i, l;
@@ -519,5 +531,5 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		}
 		return el;
 	}
-}));
+});
 

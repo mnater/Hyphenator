@@ -1,5 +1,5 @@
 //begin Hyphenator_loader.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	basePath: (function () {
 		var s = document.getElementsByTagName('script'), i = 0, p, src, t;
 		while (!!(t = s[i++])) {
@@ -44,4 +44,4 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	load: function (id, url, watcher, callback) {
 		Hyphenator.fn.remoteLoad(id, url);
 	}
-}));
+});

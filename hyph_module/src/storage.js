@@ -1,5 +1,8 @@
 //Hyphenator_storage.js
-Hyphenator.fn.extend('Storage', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Storage = function () {
 	this.storage = (function () {
 		try {
 			if (Hyphenator.storagetype !== 'none' &&
@@ -21,7 +24,7 @@ Hyphenator.fn.extend('Storage', function () {
 		}
 		return null;
 	}());
-});
+};
 
 Hyphenator.fn.Storage.prototype = {
 	storagePrefix: "Hyphenator_",

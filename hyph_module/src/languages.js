@@ -1,5 +1,5 @@
 //begin Hyphenator_languages.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	supportedLanguages: (function () {
 		var tmp = new Hyphenator.fn.EO({
 			'be': 'be.js',
@@ -113,9 +113,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared: " + lang));
 	},
 	exceptions: {}
-}));
+});
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	languageHint: (function () {
 		var k, r = '';
 		for (k in Hyphenator.fn.supportedLanguages) {
@@ -126,9 +126,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		r = r.substring(0, r.length - 2);
 		return r;
 	}())
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	mainLanguage: {},
 	languages: {},
 	loadLanguage: function (lang) {
@@ -146,5 +146,5 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.fn.exceptions[lang] = words;
 		}
 	}
-}));
+});
 //end Hyphenator_languages.js

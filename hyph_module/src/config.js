@@ -1,10 +1,13 @@
 //begin Hyphenator_config.js
-Hyphenator.fn.extend('Setting', function (type, assert) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Setting = function (type, assert) {
 	this.defaultValue = null;
 	this.currentValue = null;
 	this.type = type;
 	this.assert = assert;
-});
+};
 
 Hyphenator.fn.Setting.prototype = {
 	setDefaultValue: function (val) {
@@ -26,9 +29,12 @@ Hyphenator.fn.Setting.prototype = {
 	}
 };
 
-Hyphenator.fn.extend('Settings', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Settings = function () {
 	this.data = {};
-});
+};
 
 Hyphenator.fn.Settings.prototype = {
 	expose: function (settings) {
@@ -47,8 +53,8 @@ Hyphenator.fn.Settings.prototype = {
 				tmp[settings[i]] = this.data[settings[i]].currentValue;
 			}
 		}
-		Hyphenator.addModule(new Hyphenator.fn.EO(tmp));
-		//console.log(Hyphenator);
+		Hyphenator.addModule(tmp);
+		//Hyphenator.log(Hyphenator);
 	},
 	add: function (name, defaultValue, type, assert) {
 		this.data[name] = new Hyphenator.fn.Setting(type, new RegExp(assert));
@@ -66,11 +72,11 @@ Hyphenator.fn.Settings.prototype = {
 	}
 };
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	settings: new Hyphenator.fn.Settings()
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	config: function (obj) {
 		var changes = [], stopStorage = false;
 
@@ -113,7 +119,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 	onerrorhandler: function (e) {
 		window.alert(e.text);
 	}
-}));
+});
 
 
 Hyphenator.fn.settings.add('classname', 'hyphenate', 'string', '^[a-zA-Z_]+[a-zA-Z0-9_]+$');

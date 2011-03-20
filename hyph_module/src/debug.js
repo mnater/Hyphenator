@@ -1,5 +1,5 @@
 //Hyphenator_debug.js
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	log: function (msg) {
 		if (window.console && window.console.log) {
 			window.console.log(msg);
@@ -7,4 +7,4 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			alert(msg);
 		}
 	}
-}));
+});

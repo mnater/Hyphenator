@@ -1,5 +1,5 @@
 //Hyphenator_togglebox.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	removeHyphenationFromDocuments: function () {
 		Hyphenator.fn.collectedDocuments.each(function (href, data) {
 			data.removeHyphenation();
@@ -10,9 +10,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			data.hyphenate();
 		});
 	}
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	togglebox: function (w) {
 		w = w || window;
 		var  myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
@@ -48,9 +48,9 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			bdy.appendChild(myBox);
 		}
 	}
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	toggleHyphenation: function (w) {
 		if (Hyphenator.dohyphenation) {
 			Hyphenator.config({
@@ -66,5 +66,5 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.togglebox(w);
 		}
 	}
-}));
+});
 

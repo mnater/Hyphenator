@@ -1,4 +1,4 @@
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	getConfigFromURI: function () {
 		var loc = null, re = {}, jsArray = document.getElementsByTagName('script'), i, j, l, s, gp, option;
 		for (i = 0, l = jsArray.length; i < l; i++) {
@@ -37,7 +37,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 		return re;
 	}
-}));
+});
 
 if (Hyphenator.fn.isBookmarklet) {
 	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});

@@ -1,5 +1,5 @@
 //begin Hyphenator_hyphenate.js
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	hyphenate: function (target, lang) {
 		var hyphenate, n, i;
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -141,4 +141,4 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + Hyphenator.urlhyphenchar);
 	}
 
-}));
+});

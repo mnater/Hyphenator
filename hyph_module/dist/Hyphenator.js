@@ -26,7 +26,13 @@
 /*global Hyphenator: true, window: true, ActiveXObject: true, unescape: true*/
 //main.js
 var Hyphenator = (function (window) {
+	/**
+	 * @constructor
+	 */
 	var Hyphenator = function () {
+		/**
+		 * @constructor
+		 */
 		var F = function () {
 			this.addModule = Hyphenator.fn.addModule;
 		};
@@ -39,11 +45,22 @@ var Hyphenator = (function (window) {
 		getProto: function () {
 			this.fn = Hyphenator.fn;
 		},
-		extend: function (name, fnproto) {
+		/*extend: function (name, fnproto) {
 			this[name] = fnproto;
+		},*/
+		EO: function (obj) {
+			this.each = function (fn) {
+				var k;
+				for (k in obj) {
+					if (obj.hasOwnProperty(k)) {
+						fn(k, obj[k]);
+					}
+				}
+			};
 		},
 		addModule: function (module) {
 			var that = this;
+			module = new Hyphenator.fn.EO(module);
 			module.each(function (k, v) {
 				that[k] = v;
 			});
@@ -56,29 +73,18 @@ var Hyphenator = (function (window) {
 }(window));
 
 
-Hyphenator.fn.extend('EO', function (obj) {
-	this.each = function (fn) {
-		var k;
-		for (k in obj) {
-			if (obj.hasOwnProperty(k)) {
-				fn(k, obj[k]);
-			}
-		}
-	};
-});
-
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	run: function (config) {
 		if (!!config) {
 			Hyphenator.config(config);
 		}
 		Hyphenator.fn.prepareDocuments(window);
-		window.console.log(Hyphenator);
+		//window.console.log(Hyphenator);
 	}
-}));
+});
 
 //Hyphenator_debug.js
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	log: function (msg) {
 		if (window.console && window.console.log) {
 			window.console.log(msg);
@@ -86,9 +92,9 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			alert(msg);
 		}
 	}
-}));
+});
 //Hyphenator_quirks.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	zeroWidthSpace: (function () {
 		var zws, ua = window.navigator.userAgent.toLowerCase();
 		zws = String.fromCharCode(8203); //Unicode zero width space
@@ -129,7 +135,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				selection = targetWindow.getSelection();
 				range = selection.getRangeAt(0);
 				shadow.appendChild(range.cloneContents());
-				(new Hyphenator.fn.Element(shadow, true, {})).removeHyphenation();
+				(new Hyphenator.fn.Element(shadow, {})).removeHyphenation();
 			//	removeHyphenationFromElement(shadow);
 				selection.selectAllChildren(shadow);
 				restore = function () {
@@ -141,7 +147,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 				selection = targetWindow.document.selection;
 				range = selection.createRange();
 				shadow.innerHTML = range.htmlText;
-				(new Hyphenator.fn.Element(shadow, true, {})).removeHyphenation();
+				(new Hyphenator.fn.Element(shadow, {})).removeHyphenation();
 			//	removeHyphenationFromElement(shadow);
 				rangeShadow = body.createTextRange();
 				rangeShadow.moveToElementText(shadow);
@@ -165,14 +171,17 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			el.attachEvent("oncopy", oncopyHandler);
 		}
 	}
-}));
+});
 //Hyphenator.DOM.js
-Hyphenator.fn.extend('Element', function (element, data) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Element = function (element, data) {
 	this.element = element;
 	this.hyphenated = false;
 	this.treated = false; //collected but not hyphenated (dohyphenation is off)
 	this.data = data;
-});
+};
 
 Hyphenator.fn.Element.prototype = {
 	hyphenate: function () {
@@ -244,11 +253,13 @@ Hyphenator.fn.Element.prototype = {
 		this.hyphenated = false;
 	}
 };
-
-Hyphenator.fn.extend('LanguageElementsCollection', function (lang) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.LanguageElementsCollection = function (lang) {
 	this.language = lang;
 	this.elementList = [];
-});
+};
 
 Hyphenator.fn.LanguageElementsCollection.prototype = {
 	add: function (el, data) {
@@ -270,10 +281,12 @@ Hyphenator.fn.LanguageElementsCollection.prototype = {
 		});
 	}
 };
-
-Hyphenator.fn.extend('ElementCollection', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.ElementCollection = function () {
 	this.list = {};
-});
+};
 
 Hyphenator.fn.ElementCollection.prototype = {
 	addElement: function (el, lang, data) {
@@ -298,15 +311,17 @@ Hyphenator.fn.ElementCollection.prototype = {
 	}
 };
 
-
-Hyphenator.fn.extend('Document', function (w, p) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Document = function (w, p) {
 	this.w = w || window;
 	this.parent = p || null;
 	this.href = w.location.href;
 	this.state = 1; //(0: Error, 1: init, 2: ready, 3:elements collected, 4: hyphenated, 5: frameset)
 	this.mainLanguage = null;
 	this.elementCollection = new Hyphenator.fn.ElementCollection();
-});
+};
 
 Hyphenator.fn.Document.prototype = {
 	setMainLanguage: function () {
@@ -460,9 +475,12 @@ Hyphenator.fn.Document.prototype = {
 	}
 };
 
-Hyphenator.fn.extend('DocumentCollection', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.DocumentCollection = function () {
 	this.list = {}; //href: Hyphenator.fn.Document
-});
+};
 
 Hyphenator.fn.DocumentCollection.prototype = {
 	each: function (fn) {
@@ -502,7 +520,7 @@ Hyphenator.fn.DocumentCollection.prototype = {
 
 
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	createElem: function (tagname, w) {
 		w = w || window;
 		if (window.document.createElementNS) {
@@ -666,10 +684,10 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 		return null;
 	}
-}));
+});
 
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	selectorfunction: function (w) {
 		w = w || window;
 		var tmp, el = [], i, l;
@@ -687,10 +705,10 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		}
 		return el;
 	}
-}));
+});
 
 //Hyphenator_constants.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	url: '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([a-z]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
 	//      protocoll     usr     pwd                    ip               or                          host                 tld        port               path
 	mail: '[\\w-\\.]+@[\\w\\.]+',
@@ -710,8 +728,8 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		return re;
 	}()),
 	dontHyphenate: {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true}
-}));
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+});
+Hyphenator.fn.addModule({
 	urlOrMailRE: new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')', 'i'),
 	getEscapedHyphenChar: function () {
 		var h;
@@ -730,7 +748,7 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 		return h;
 	}
-}));
+});
 //Hyphenator_messages.js
 /*
 Message types:
@@ -739,16 +757,19 @@ Message types:
 2: file loaded
 3: pattern available
 */
-Hyphenator.fn.extend('Message', function (type, data, text) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Message = function (type, data, text) {
 	this.type = type || 0;
 	this.data = data || null;
 	this.text = text || '';
 	this.toString = function () {
 		return "Message:\n\ttype: " + type + ":\n\tdata: " + window.JSON.stringify(data) + ":\n\ttext: " + text; 
 	};
-});
+};
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	postMessage: function (msg) {
 		if (msg.constructor !== Hyphenator.fn.Message) {
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg, "Received non-conforming message"));
@@ -867,10 +888,10 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			Hyphenator.postMessage(new Hyphenator.fn.Message(0, msg.toString(), 'Internally received unknown message.'));
 		}
 	}
-}));
+});
 
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	postMessage: function (msg) {
 		if (msg.constructor !== Hyphenator.fn.Message) {
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg, "Received non-conforming message"));
@@ -885,9 +906,12 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		*/
 		Hyphenator.onerrorhandler(msg);
 	}
-}));
+});
 //Hyphenator_storage.js
-Hyphenator.fn.extend('Storage', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Storage = function () {
 	this.storage = (function () {
 		try {
 			if (Hyphenator.storagetype !== 'none' &&
@@ -909,7 +933,7 @@ Hyphenator.fn.extend('Storage', function () {
 		}
 		return null;
 	}());
-});
+};
 
 Hyphenator.fn.Storage.prototype = {
 	storagePrefix: "Hyphenator_",
@@ -981,7 +1005,7 @@ Hyphenator.fn.Storage.prototype = {
 	}
 };
 //Hyphenator_togglebox.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	removeHyphenationFromDocuments: function () {
 		Hyphenator.fn.collectedDocuments.each(function (href, data) {
 			data.removeHyphenation();
@@ -992,9 +1016,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 			data.hyphenate();
 		});
 	}
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	togglebox: function (w) {
 		w = w || window;
 		var  myBox, bdy, myIdAttribute, myTextNode, myClassAttribute,
@@ -1030,9 +1054,9 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			bdy.appendChild(myBox);
 		}
 	}
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	toggleHyphenation: function (w) {
 		if (Hyphenator.dohyphenation) {
 			Hyphenator.config({
@@ -1048,15 +1072,18 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.togglebox(w);
 		}
 	}
-}));
+});
 
 //begin Hyphenator_config.js
-Hyphenator.fn.extend('Setting', function (type, assert) {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Setting = function (type, assert) {
 	this.defaultValue = null;
 	this.currentValue = null;
 	this.type = type;
 	this.assert = assert;
-});
+};
 
 Hyphenator.fn.Setting.prototype = {
 	setDefaultValue: function (val) {
@@ -1078,9 +1105,12 @@ Hyphenator.fn.Setting.prototype = {
 	}
 };
 
-Hyphenator.fn.extend('Settings', function () {
+/**
+ * @constructor
+ */
+Hyphenator.fn.Settings = function () {
 	this.data = {};
-});
+};
 
 Hyphenator.fn.Settings.prototype = {
 	expose: function (settings) {
@@ -1099,8 +1129,8 @@ Hyphenator.fn.Settings.prototype = {
 				tmp[settings[i]] = this.data[settings[i]].currentValue;
 			}
 		}
-		Hyphenator.addModule(new Hyphenator.fn.EO(tmp));
-		//console.log(Hyphenator);
+		Hyphenator.addModule(tmp);
+		//Hyphenator.log(Hyphenator);
 	},
 	add: function (name, defaultValue, type, assert) {
 		this.data[name] = new Hyphenator.fn.Setting(type, new RegExp(assert));
@@ -1118,11 +1148,11 @@ Hyphenator.fn.Settings.prototype = {
 	}
 };
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	settings: new Hyphenator.fn.Settings()
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	config: function (obj) {
 		var changes = [], stopStorage = false;
 
@@ -1165,7 +1195,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 	onerrorhandler: function (e) {
 		window.alert(e.text);
 	}
-}));
+});
 
 
 Hyphenator.fn.settings.add('classname', 'hyphenate', 'string', '^[a-zA-Z_]+[a-zA-Z0-9_]+$');
@@ -1192,7 +1222,7 @@ Hyphenator.fn.settings.add('onerrorhandler', Hyphenator.onerrorhandler, 'functio
 Hyphenator.fn.settings.expose('*');
 //end Hyphenator_config.js
 //begin Hyphenator_languages.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	supportedLanguages: (function () {
 		var tmp = new Hyphenator.fn.EO({
 			'be': 'be.js',
@@ -1306,9 +1336,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared: " + lang));
 	},
 	exceptions: {}
-}));
+});
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	languageHint: (function () {
 		var k, r = '';
 		for (k in Hyphenator.fn.supportedLanguages) {
@@ -1319,9 +1349,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		r = r.substring(0, r.length - 2);
 		return r;
 	}())
-}));
+});
 
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	mainLanguage: {},
 	languages: {},
 	loadLanguage: function (lang) {
@@ -1339,10 +1369,10 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.fn.exceptions[lang] = words;
 		}
 	}
-}));
+});
 //end Hyphenator_languages.js
 //begin Hyphenator_loader.js
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	basePath: (function () {
 		var s = document.getElementsByTagName('script'), i = 0, p, src, t;
 		while (!!(t = s[i++])) {
@@ -1387,9 +1417,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 	load: function (id, url, watcher, callback) {
 		Hyphenator.fn.remoteLoad(id, url);
 	}
-}));
+});
 //begin Hyphenator_hyphenate.js
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	hyphenate: function (target, lang) {
 		var hyphenate, n, i;
 		if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -1531,8 +1561,8 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + Hyphenator.urlhyphenchar);
 	}
 
-}));
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+});
+Hyphenator.fn.addModule({
 	prompterStrings: {
 		'be': 'Мова гэтага сайта не можа быць вызначаны аўтаматычна. Калі ласка пакажыце мову:',
 		'cs': 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:',
@@ -1558,9 +1588,9 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		'tr': 'Bu web sitesinin dili otomatik olarak tespit edilememiştir. Lütfen dökümanın dilini seçiniz%A0:',
 		'uk': 'Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:'
 	}	
-}));
+});
 
-Hyphenator.fn.addModule(new Hyphenator.fn.EO({
+Hyphenator.fn.addModule({
 	getConfigFromURI: function () {
 		var loc = null, re = {}, jsArray = document.getElementsByTagName('script'), i, j, l, s, gp, option;
 		for (i = 0, l = jsArray.length; i < l; i++) {
@@ -1599,11 +1629,24 @@ Hyphenator.fn.addModule(new Hyphenator.fn.EO({
 		}
 		return re;
 	}
-}));
+});
 
 if (Hyphenator.fn.isBookmarklet) {
 	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
 	Hyphenator.config(Hyphenator.fn.getConfigFromURI());
 	Hyphenator.run();
 }
+
+//Export properties/methods (for google closure compiler)
+
+Hyphenator['languages'] = Hyphenator.languages;
+Hyphenator['config'] = Hyphenator.config;
+Hyphenator['run'] = Hyphenator.run;
+Hyphenator['addExceptions'] = Hyphenator.addExceptions;
+Hyphenator['hyphenate'] = Hyphenator.hyphenate;
+Hyphenator['getRedPatternSet'] = Hyphenator.getRedPatternSet;
+Hyphenator['isBookmarklet'] = Hyphenator.isBookmarklet;
+Hyphenator['getConfigFromURI'] = Hyphenator.getConfigFromURI;
+Hyphenator['toggleHyphenation'] = Hyphenator.toggleHyphenation;
+window['Hyphenator'] = Hyphenator;
 

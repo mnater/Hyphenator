@@ -5,7 +5,7 @@ var Hyphenator = (function (window) {
 	 */
 	var Hyphenator = function () {
 		/**
-	 	 * @constructor
+		 * @constructor
 		 */
 		var F = function () {
 			this.addModule = Hyphenator.fn.addModule;
@@ -19,11 +19,22 @@ var Hyphenator = (function (window) {
 		getProto: function () {
 			this.fn = Hyphenator.fn;
 		},
-		extend: function (name, fnproto) {
+		/*extend: function (name, fnproto) {
 			this[name] = fnproto;
+		},*/
+		EO: function (obj) {
+			this.each = function (fn) {
+				var k;
+				for (k in obj) {
+					if (obj.hasOwnProperty(k)) {
+						fn(k, obj[k]);
+					}
+				}
+			};
 		},
 		addModule: function (module) {
 			var that = this;
+			module = new Hyphenator.fn.EO(module);
 			module.each(function (k, v) {
 				that[k] = v;
 			});
@@ -36,18 +47,7 @@ var Hyphenator = (function (window) {
 }(window));
 
 
-Hyphenator.fn.extend('EO', function (obj) {
-	this.each = function (fn) {
-		var k;
-		for (k in obj) {
-			if (obj.hasOwnProperty(k)) {
-				fn(k, obj[k]);
-			}
-		}
-	};
-});
-
-Hyphenator.addModule(new Hyphenator.fn.EO({
+Hyphenator.addModule({
 	run: function (config) {
 		if (!!config) {
 			Hyphenator.config(config);
@@ -55,5 +55,5 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 		Hyphenator.fn.prepareDocuments(window);
 		//window.console.log(Hyphenator);
 	}
-}));
+});
 
