@@ -1,6 +1,12 @@
 //main.js
 var Hyphenator = (function (window) {
+	/**
+	 * @constructor
+	 */
 	var Hyphenator = function () {
+		/**
+	 	 * @constructor
+		 */
 		var F = function () {
 			this.addModule = Hyphenator.fn.addModule;
 		};
@@ -47,7 +53,7 @@ Hyphenator.addModule(new Hyphenator.fn.EO({
 			Hyphenator.config(config);
 		}
 		Hyphenator.fn.prepareDocuments(window);
-		console.log(Hyphenator);
+		//window.console.log(Hyphenator);
 	}
 }));
 

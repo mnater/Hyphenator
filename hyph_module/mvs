@@ -14,8 +14,8 @@ noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 map! <D-v> *
 nmap gx <Plug>NetrwBrowseX
-map <F2> :wa:tabfirst:!ant:!open -a Safari
 map <F3> :wa:tabfirst:!ant -Drunlint=true:!open -a Safari
+map <F2> :wa:tabfirst:!ant:!open -a Safari
 map <M-Down> }
 noremap <D-Down> <C-End>
 map <M-Up> {
@@ -44,7 +44,6 @@ set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set scrolloff=2
 set termencoding=utf-8
-set window=60
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -182,12 +181,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 59 - ((58 * winheight(0) + 29) / 59)
+let s:l = 59 - ((19 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 59
-normal! 09l
+normal! 08l
 tabedit src/head.js
 set splitbelow splitright
 set nosplitbelow
@@ -315,7 +314,7 @@ argglobal
 edit src/main.js
 setlocal keymap=
 setlocal noarabic
-setlocal noautoindent
+setlocal autoindent
 setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
@@ -415,12 +414,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 41 - ((37 * winheight(0) + 29) / 59)
+let s:l = 3 - ((2 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-41
-normal! 02l
+3
+normal! 01l
 tabedit src/debug.js
 set splitbelow splitright
 set nosplitbelow
@@ -764,7 +763,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 4 - ((3 * winheight(0) + 30) / 60)
+let s:l = 4 - ((2 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -996,12 +995,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 58 - ((57 * winheight(0) + 30) / 60)
+let s:l = 14 - ((12 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-58
-normal! 02l
+14
+normal! 062l
 tabedit src/storage.js
 set splitbelow splitright
 set nosplitbelow
@@ -2166,7 +2165,7 @@ exe s:l
 normal! zt
 146
 normal! 0
-tabnext 6
+tabnext 3
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

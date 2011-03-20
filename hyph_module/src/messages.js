@@ -11,7 +11,7 @@ Hyphenator.fn.extend('Message', function (type, data, text) {
 	this.data = data || null;
 	this.text = text || '';
 	this.toString = function () {
-		return "Message:\n\ttype: " + type + ":\n\tdata: " + JSON.stringify(data) + ":\n\ttext: " + text; 
+		return "Message:\n\ttype: " + type + ":\n\tdata: " + window.JSON.stringify(data) + ":\n\ttext: " + text; 
 	};
 });
 
