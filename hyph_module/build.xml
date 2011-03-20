@@ -7,6 +7,7 @@
 	<property name="tmp" value="${basedir}/tmp" />
 	
 	<property name="Hd" value="${basedir}/dist/Hyphenator.js" />
+	<property name="Hdm" value="${basedir}/dist/Hyphenator_min.js" />
 	
 	
 	<filelist id="srcfiles" dir="${src}">
@@ -27,8 +28,35 @@
 		<file name="bookmarklet.js" /> 
 	</filelist>
 
-	<target name="finalize" depends="concat"> 
+	<target name="finalize" depends="min"> 
 		<delete dir="${tmp}" />
+	</target>
+
+	<target name="min" depends="concat" description="Minify with Google Closure Compiler" if="runGCC">
+		<echo message="Building ${Hdm}" />
+		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
+			<fileset dir="${dist}">
+				<include name="Hyphenator.js" />
+			</fileset>
+			<arg line="-jar" />
+			<arg path="build/compiler.jar" />
+		
+			<arg value="--compilation_level" />
+			<arg value="ADVANCED_OPTIMIZATIONS" />
+			
+			<arg value="--warning_level" />
+			<arg value="VERBOSE" />
+
+			<arg value="--charset" />
+			<arg value="UTF-8" />
+
+			<arg value="--js_output_file" />
+			<targetfile />
+
+			<arg value="--js" />
+			<mapper type="glob" from="Hyphenator.js" to="Hyphenator_min.js" />
+		</apply>
+		<echo message="${Hdm} built." />
 	</target>
 
 	<target name="concat" depends="lint">
@@ -57,3 +85,9 @@
 	</target>
 
 </project>
+<!--
+run with:
+:!ant
+:!ant -Drunlint=true
+:!ant -Drunlint=true -DrunGCC=true > log.txt
+--> 
