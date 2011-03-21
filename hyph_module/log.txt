@@ -3,44 +3,95 @@ Buildfile: /Users/mnater/Sites/hyph/hyph_module/build.xml
 init:
 
 lint:
+     [exec] constants.js passed JSLint check.
+     [exec] storage.js passed JSLint check.
+     [exec] config.js passed JSLint check.
+     [exec] DOM.js passed JSLint check.
+     [exec] languages.js passed JSLint check.
+     [exec] loader.js passed JSLint check.
+     [exec] messages.js passed JSLint check.
+     [exec] i18n.js passed JSLint check.
+     [exec] bookmarklet.js passed JSLint check.
+     [exec] quirks.js passed JSLint check.
+     [exec] toggleBox.js passed JSLint check.
+     [exec] hyphenate.js passed JSLint check.
+     [exec] main.js passed JSLint check.
+     [exec] head.js passed JSLint check.
+     [exec] debug.js passed JSLint check.
+     [exec] cs.js passed JSLint check.
+     [exec] el-monoton.js passed JSLint check.
+     [exec] de.js passed JSLint check.
+     [exec] ta.js passed JSLint check.
+     [exec] lt.js passed JSLint check.
+     [exec] tr.js passed JSLint check.
+     [exec] pt.js passed JSLint check.
+     [exec] sv.js passed JSLint check.
+     [exec] uk.js passed JSLint check.
+     [exec] it.js passed JSLint check.
+     [exec] lv.js passed JSLint check.
+     [exec] fr.js passed JSLint check.
+     [exec] kn.js passed JSLint check.
+     [exec] sl.js passed JSLint check.
+     [exec] gu.js passed JSLint check.
+     [exec] ru.js passed JSLint check.
+     [exec] te.js passed JSLint check.
+     [exec] pl.js passed JSLint check.
+     [exec] be.js passed JSLint check.
+     [exec] hi.js passed JSLint check.
+     [exec] grc.js passed JSLint check.
+     [exec] en-us.js passed JSLint check.
+     [exec] el-polyton.js passed JSLint check.
+     [exec] es.js passed JSLint check.
+     [exec] hu.js passed JSLint check.
+     [exec] ml.js passed JSLint check.
+     [exec] da.js passed JSLint check.
+     [exec] en-gb.js passed JSLint check.
+     [exec] or.js passed JSLint check.
+     [exec] bn.js passed JSLint check.
+     [exec] la.js passed JSLint check.
+     [exec] nl.js passed JSLint check.
+     [exec] no-nb.js passed JSLint check.
+     [exec] hy.js passed JSLint check.
+     [exec] fi.js passed JSLint check.
+     [exec] pa.js passed JSLint check.
 
 assemble:
-     [echo] Building Hyphenator_debug.js
-     [echo] Hyphenator_debug.js built.
+     [echo] Building Hyphenator.js
+     [echo] Hyphenator.js built.
      [echo] Copying pattern files
      [echo] Copying testsuite
 
 min:
-     [echo] Building Hyphenator.js
-    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:370: WARNING - Property userLanguage never defined on Navigator
+     [echo] Building Hyphenator_min.js
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator.js:374: WARNING - Property userLanguage never defined on Navigator
     [apply] 			ul = navigator.language ? navigator.language : navigator.userLanguage;
     [apply] 			                                               ^
     [apply] 
-    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1366: WARNING - Property specialChars never defined on lo
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator.js:1370: WARNING - Property specialChars never defined on lo
     [apply] 		wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + Hyphenator.minwordlength + ',}';
     [apply] 		               ^
     [apply] 
-    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1531: WARNING - Property charSubstitution never defined on lo
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator.js:1535: WARNING - Property charSubstitution never defined on lo
     [apply] 		if (!!lo.charSubstitution) {
     [apply] 		      ^
     [apply] 
-    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1547: WARNING - Property shortestPattern never defined on lo
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator.js:1551: WARNING - Property shortestPattern never defined on lo
     [apply] 		n = wl - lo.shortestPattern;
     [apply] 		         ^
     [apply] 
-    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1549: WARNING - Property longestPattern never defined on lo
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator.js:1553: WARNING - Property longestPattern never defined on lo
     [apply] 			maxwins = Math.min((wl - p), lo.longestPattern);
     [apply] 			                             ^
     [apply] 
-    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1581: WARNING - Property rightmin never defined on lo
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator.js:1585: WARNING - Property rightmin never defined on lo
     [apply] 		for (i = lo.leftmin; i <= (wl - 2 - lo.rightmin); i++) {
     [apply] 		                                    ^
     [apply] 
     [apply] 0 error(s), 6 warning(s), 57,7% typed
     [apply] Applied java to 1 file and 0 directories.
-     [echo] Hyphenator.js built.
+     [echo] Hyphenator_min.js built.
 
 finalize:
 
 BUILD SUCCESSFUL
-Total time: 6 seconds
+Total time: 1 minute 2 seconds
