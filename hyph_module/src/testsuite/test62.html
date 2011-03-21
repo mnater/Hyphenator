@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 62</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+            div {
+                text-align:justify;
+            }
+        </style>
+        <script type="text/javascript">
+            var myServerPath = window.location.href.slice(0,-11) + '../';
+        	if (parent != window) {
+				window.onload = function () {
+					var t, r1 = document.getElementById('ref').innerHTML,
+					desc = document.getElementById('desc').innerHTML,
+					msg = {
+						desc: desc,
+						index: 62
+					}, r = true;
+					window.location.href = document.getElementById('bml').href;
+					window.setTimeout(function () {
+						t = document.getElementById('test').innerHTML;
+						if (t == r1) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}, 500);
+				};     	
+			}
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test61.html">&lt;- Prev</a> | <a href="test63.xhtml">Next -&gt;</a></p>
+        <h1>Test 62</h1>
+        <p id="desc">Test <a id="bml" href="javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src=myServerPath+'Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}">bookmarklet</a> on unsupported languages.</p>
+        <p id="test" lang="xy">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+        <p id="ref">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+    </body>
+</html>

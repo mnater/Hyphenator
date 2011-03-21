@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 26</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						t2 = document.getElementById('ref').innerHTML,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 26
+						};
+						if (t1 == t2) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.config({minwordlength: 4, hyphenchar: '|', safecopy: false});
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test25.html">&lt;- Prev</a> | <a href="test27.html">Next -&gt;</a></p>
+        <h1>Test 26</h1>
+        <p id="desc">Hyphenate words with a special meaning in JavaScript.</p>
+
+        <p id="test" class="hyphenate">caller, constructor, length, name, unwatch, watch, abstract, as, boolean, break, byte, case, catch, char, class, continue, const, debugger, default, delete, do, double, else, enum, export, extends, false, final, finally, float, for, function, goto, if, implements, import, in, instanceof, int, interface, is, long, namespace, native, new, null, package, private, protected, public, return, short, static, super, switch, synchronized, this, throw, throws, transient, true, try, typeof, use, var, void, volatile, while, with</p>
+        <p id="ref">caller, con|struc|tor, length, name, un|watch, watch, ab|stract, as, boolean, break, byte, case, catch, char, class, con|tinue, const, de|bug|ger, de|fault, delete, do, dou|ble, else, enum, ex|port, ex|tends, false, fi|nal, fi|nally, float, for, func|tion, goto, if, im|ple|ments, im|port, in, in|stanceof, int, in|ter|face, is, long, name|space, na|tive, new, null, pack|age, pri|vate, pro|tected, pub|lic, re|turn, short, sta|tic, su|per, switch, syn|chro|nized, this, throw, throws, tran|sient, true, try, typeof, use, var, void, volatile, while, with</p>
+    </body>
+</html>
