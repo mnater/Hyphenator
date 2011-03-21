@@ -1,4 +1,5 @@
 //Hyphenator_togglebox.js
+/*jslint sub: true */
 Hyphenator.fn.addModule({
 	removeHyphenationFromDocuments: function () {
 		Hyphenator.fn.collectedDocuments.each(function (href, data) {
@@ -49,6 +50,7 @@ Hyphenator.addModule({
 		}
 	}
 });
+window['Hyphenator']['togglebox'] = Hyphenator.togglebox;
 
 Hyphenator.addModule({
 	toggleHyphenation: function (w) {
@@ -67,4 +69,5 @@ Hyphenator.addModule({
 		}
 	}
 });
+window['Hyphenator']['toggleHyphenation'] = Hyphenator.toggleHyphenation;
 

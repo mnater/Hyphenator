@@ -1,4 +1,4 @@
-﻿// For questions about the Hindi hyphenation patterns
+// For questions about the Hindi hyphenation patterns
 // ask Santhosh Thottingal (santhosh dot thottingal at gmail dot com)
 Hyphenator.languages['hi'] = {
 	leftmin : 2,

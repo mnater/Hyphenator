@@ -1,4 +1,5 @@
 //begin Hyphenator_languages.js
+/*jslint sub: true */
 Hyphenator.fn.addModule({
 	supportedLanguages: (function () {
 		var tmp = new Hyphenator.fn.EO({
@@ -147,4 +148,7 @@ Hyphenator.addModule({
 		}
 	}
 });
-//end Hyphenator_languages.js
+window['Hyphenator']['mainLanguage'] = Hyphenator.mainLanguage;
+window['Hyphenator']['languages'] = Hyphenator.languages;
+window['Hyphenator']['loadLanguage'] = Hyphenator.loadLanguage;
+window['Hyphenator']['addExceptions'] = Hyphenator.addExceptions;

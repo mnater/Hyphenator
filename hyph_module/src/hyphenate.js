@@ -1,4 +1,6 @@
 //begin Hyphenator_hyphenate.js
+/*jslint sub: true */
+
 Hyphenator.addModule({
 	hyphenate: function (target, lang) {
 		var hyphenate, n, i;
@@ -78,6 +80,7 @@ Hyphenator.addModule({
 				}
 			}
 		}
+		
 		if (word.indexOf("'") !== -1) {
 			w = w.toLowerCase().replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
 		} else {
@@ -142,3 +145,6 @@ Hyphenator.addModule({
 	}
 
 });
+window['Hyphenator']['hyphenate'] = Hyphenator.hyphenate;
+window['Hyphenator']['hyphenateWord'] = Hyphenator.hyphenateWord;
+window['Hyphenator']['hyphenateURL'] = Hyphenator.hyphenateURL;

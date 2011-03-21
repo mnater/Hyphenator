@@ -1,4 +1,5 @@
 //Hyphenator_quirks.js
+/*jslint sub: true */
 Hyphenator.fn.addModule({
 	zeroWidthSpace: (function () {
 		var zws, ua = window.navigator.userAgent.toLowerCase();

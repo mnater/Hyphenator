@@ -1,4 +1,5 @@
 //Hyphenator.DOM.js
+/*jslint sub: true */
 /**
  * @constructor
  */
@@ -532,4 +533,4 @@ Hyphenator.addModule({
 		return el;
 	}
 });
-
+window['Hyphenator']['selectorfunction'] = Hyphenator.selectorfunction;

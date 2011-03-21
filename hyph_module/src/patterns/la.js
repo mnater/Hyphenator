@@ -1,4 +1,4 @@
-﻿// Latin hyphenation patterns converted by
+// Latin hyphenation patterns converted by
 // Pablo Rodríguez (hyphenator at pragmata dot tk)
 // based on LaTeX Latin hyphenation patterns by Claudio Beccari
 // (http://tug.ctan.org/tex-archive/language/hyphenation/lahyph.tex)

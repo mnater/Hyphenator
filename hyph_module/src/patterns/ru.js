@@ -1,4 +1,4 @@
-﻿// For questions about the russian hyphenation patterns ask
+// For questions about the russian hyphenation patterns ask
 // crymos at yandex dot ru
 // Вопросы по русскоязычным таблицам переноса отправлять на адрес
 // crymos точка yandex собака ru

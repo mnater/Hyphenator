@@ -1,7 +1,7 @@
 load("build/jslint.js");
 
 
-var  files = readFile("tmp/files.txt"), fileList = {},
+var  files = readFile("tmp/srcfiles.txt"), fileList = {},
 fileName, i, name, path;
 	//'Hyphenator_debug.js': readFile("dist/Hyphenator_debug.js")
 
@@ -23,7 +23,7 @@ function run (filename, src) {
 			print("    Problem in file " + filename + " at line " + errors[i].line + " character " + errors[i].character + ": " + errors[i].reason);
 		}
 	} else {
-		print(filename + " has JSLint check passed." );
+		print(filename + " passed JSLint check." );
 	}
 }
 

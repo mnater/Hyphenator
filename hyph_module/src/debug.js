@@ -1,4 +1,5 @@
 //Hyphenator_debug.js
+/*jslint sub: true */
 Hyphenator.addModule({
 	log: function (msg) {
 		if (window.console && window.console.log) {
@@ -8,3 +9,4 @@ Hyphenator.addModule({
 		}
 	}
 });
+window['Hyphenator']['log'] = Hyphenator.log;

@@ -1,4 +1,4 @@
-﻿// For questions about the Slovenian hyphenation patterns
+// For questions about the Slovenian hyphenation patterns
 // ask Mojca Miklavec (mojca dot miklavec dot lists at gmail dot com)
 Hyphenator.languages['sl'] = {
 	leftmin : 2,

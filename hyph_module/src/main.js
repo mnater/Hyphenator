@@ -1,14 +1,18 @@
 //main.js
+/*jslint sub: true */
 var Hyphenator = (function (window) {
 	/**
+	 * Internal Hyphenator object
+	 * Is returned from the outer function
 	 * @constructor
 	 */
 	var Hyphenator = function () {
 		/**
+		 * Constructor
 		 * @constructor
 		 */
 		var F = function () {
-			this.addModule = Hyphenator.fn.addModule;
+			this.addModule = Hyphenator.fn.addModule; 
 		};
 		F.prototype = new Hyphenator.fn.getProto();
 		return new F();
@@ -16,12 +20,13 @@ var Hyphenator = (function (window) {
 
 			
 	Hyphenator.fn = {
+		/**
+		 * Constructor for the Hyphenator.fn methods subcollection
+		 * @constructor
+		 */
 		getProto: function () {
 			this.fn = Hyphenator.fn;
 		},
-		/*extend: function (name, fnproto) {
-			this[name] = fnproto;
-		},*/
 		EO: function (obj) {
 			this.each = function (fn) {
 				var k;
@@ -45,6 +50,8 @@ var Hyphenator = (function (window) {
 	// Expose Hyphenator to the global object
 	return new Hyphenator();	
 }(window));
+//export
+window['Hyphenator'] = Hyphenator;
 
 
 Hyphenator.addModule({
@@ -53,7 +60,8 @@ Hyphenator.addModule({
 			Hyphenator.config(config);
 		}
 		Hyphenator.fn.prepareDocuments(window);
-		//window.console.log(Hyphenator);
+		//Hyphenator.log(Hyphenator);
 	}
 });
 
+window['Hyphenator']['run'] = Hyphenator.run;

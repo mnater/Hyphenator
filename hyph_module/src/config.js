@@ -1,4 +1,5 @@
 //begin Hyphenator_config.js
+/*jslint sub: true */
 /**
  * @constructor
  */
@@ -34,34 +35,41 @@ Hyphenator.fn.Setting.prototype = {
  */
 Hyphenator.fn.Settings = function () {
 	this.data = {};
+	this.fields = {};
 };
 
 Hyphenator.fn.Settings.prototype = {
 	expose: function (settings) {
-		var tmp = {}, data, i;
+		var tmp = {}, data, i, that = this;
 		if (typeof settings === 'string') {
 			if (settings === '*') {
 				data = new Hyphenator.fn.EO(this.data);
-				data.each(function (k, v) {
-					tmp[k] = v.currentValue;
+				data.each(function (iname, v) {
+					tmp[iname] = that.data[iname].currentValue;
 				});
 			} else {
-				tmp[settings] = this.data[settings].currentValue;
+				tmp[this.fields[settings]] = this.data[this.fields[settings]].currentValue;
 			}
 		} else if (typeof settings === 'object') {
 			for (i = 0; i < settings.length; i++) {
-				tmp[settings[i]] = this.data[settings[i]].currentValue;
+				tmp[this.fields[settings[i]]] = this.data[this.fields[settings[i]]].currentValue;
 			}
 		}
 		Hyphenator.addModule(tmp);
 		//Hyphenator.log(Hyphenator);
 	},
-	add: function (name, defaultValue, type, assert) {
-		this.data[name] = new Hyphenator.fn.Setting(type, new RegExp(assert));
-		this.data[name].setDefaultValue(defaultValue);
+	add: function (obj) {
+		var that = this;
+		obj = new Hyphenator.fn.EO(obj);
+		obj.each(function (iname, v) {
+			//[0=>eName, 1=>default ,2=>type, 3=>assert]
+			that.data[iname] = new Hyphenator.fn.Setting(v[2], new RegExp(v[3]));
+			that.data[iname].setDefaultValue(v[1]);
+			that.fields[v[0]] = iname;
+		});
 	},
-	change: function (name, value) {
-		return (this.data[name].setCurrValue(value));
+	change: function (ename, value) {
+		return (this.data[this.fields[ename]].setCurrValue(value));
 	},
 	exportConfigObj: function () {
 		var data = new Hyphenator.fn.EO(this.data), tmp = {};
@@ -95,13 +103,13 @@ Hyphenator.addModule({
 			(new Hyphenator.fn.Storage()).restoreSettings();
 		}		
 		obj = new Hyphenator.fn.EO(obj);
-		obj.each(function (key, value) {
-			if (Hyphenator.fn.settings.data.hasOwnProperty(key)) {
-				if (Hyphenator.fn.settings.change(key, value)) {
-					changes.push(key);
+		obj.each(function (ename, value) {
+			if (Hyphenator.fn.settings.fields.hasOwnProperty(ename)) {
+				if (Hyphenator.fn.settings.change(ename, value)) {
+					changes.push(ename);
 				}
 			} else {
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, key, "Error: configuration option '" + key + "' doesn't exist."));
+				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, ename, "Error: configuration option '" + ename + "' doesn't exist."));
 			}
 
 		});
@@ -113,35 +121,44 @@ Hyphenator.addModule({
 		if (Hyphenator.persistentconfig && !stopStorage) {
 			(new Hyphenator.fn.Storage()).storeSettings(Hyphenator.fn.settings.exportConfigObj());
 		}
-
+	},
+	getSetting: function (name) {
+		return Hyphenator.fn.settings.data[name].currentValue;	
 	},
 	onhyphenationdonecallback: function () {},
 	onerrorhandler: function (e) {
 		window.alert(e.text);
 	}
 });
+window['Hyphenator']['config'] = Hyphenator.config;
+window['Hyphenator']['onhyphenationdonecallback'] = Hyphenator.onhyphenationdonecallback;
+window['Hyphenator']['onerrorhandler'] = Hyphenator.onerrorhandler;
 
-
-Hyphenator.fn.settings.add('classname', 'hyphenate', 'string', '^[a-zA-Z_]+[a-zA-Z0-9_]+$');
-Hyphenator.fn.settings.add('donthyphenateclassname', 'donthyphenate', 'string', '^[a-zA-Z_]+[a-zA-Z0-9_]+$');
-Hyphenator.fn.settings.add('minwordlength', 6, 'number', '\\d+');
-Hyphenator.fn.settings.add('hyphenchar', String.fromCharCode(173), 'string', '.');
-Hyphenator.fn.settings.add('urlhyphenchar', Hyphenator.fn.zeroWidthSpace, 'string', '.');
-Hyphenator.fn.settings.add('displaytogglebox', false, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('remoteloading', true, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('enablecache', true, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('enablereducedpatternset', false, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('intermediatestate', 'hidden', 'string', 'hidden|visible|progressive');
-Hyphenator.fn.settings.add('safecopy', true, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('doframes', false, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('storagetype', 'none', 'string', 'none|local|session');
-Hyphenator.fn.settings.add('orphancontrol', 1, 'number', '1|2|3');
-Hyphenator.fn.settings.add('dohyphenation', true, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('persistentconfig', false, 'boolean', 'true|false');
-Hyphenator.fn.settings.add('defaultlanguage', '', 'string', '.*');
-Hyphenator.fn.settings.add('togglebox', Hyphenator.togglebox, 'function', '.');
-Hyphenator.fn.settings.add('selectorfunction', Hyphenator.selectorfunction, 'function', '.');
-Hyphenator.fn.settings.add('onhyphenationdonecallback', Hyphenator.onhyphenationdonecallback, 'function', '.');
-Hyphenator.fn.settings.add('onerrorhandler', Hyphenator.onerrorhandler, 'function', '.');
+Hyphenator.fn.settings.add({
+	//iname: [ename, default, type, assert]
+	classname: ['classname', 'hyphenate', 'string', '^[a-zA-Z_]+[a-zA-Z0-9_]+$'],
+	donthyphenateclassname: ['donthyphenateclassname', 'donthyphenate', 'string', '^[a-zA-Z_]+[a-zA-Z0-9_]+$'],
+	minwordlength: ['minwordlength', 6, 'number', '\\d+'],
+	hyphenchar: ['hyphenchar', String.fromCharCode(173), 'string', '.'],
+	urlhyphenchar: ['urlhyphenchar', Hyphenator.fn.zeroWidthSpace, 'string', '.'],
+	displaytogglebox: ['displaytogglebox', false, 'boolean', 'true|false'],
+	remoteloading: ['remoteloading', true, 'boolean', 'true|false'],
+	enablecache: ['enablecache', true, 'boolean', 'true|false'],
+	enablereducedpatternset: ['enablereducedpatternset', false, 'boolean', 'true|false'],
+	intermediatestate: ['intermediatestate', 'hidden', 'string', 'hidden|visible|progressive'],
+	safecopy: ['safecopy', true, 'boolean', 'true|false'],
+	doframes: ['doframes', false, 'boolean', 'true|false'],
+	storagetype: ['storagetype', 'none', 'string', 'none|local|session'],
+	orphancontrol: ['orphancontrol', 1, 'number', '1|2|3'],
+	dohyphenation: ['dohyphenation', true, 'boolean', 'true|false'],
+	persistentconfig: ['persistentconfig', false, 'boolean', 'true|false'],
+	defaultlanguage: ['defaultlanguage', '', 'string', '.*'],
+	togglebox: ['togglebox', Hyphenator.togglebox, 'function', '.'],
+	selectorfunction: ['selectorfunction', Hyphenator.selectorfunction, 'function', '.'],
+	onhyphenationdonecallback: ['onhyphenationdonecallback', Hyphenator.onhyphenationdonecallback, 'function', '.'],
+	onerrorhandler: ['onerrorhandler', Hyphenator.onerrorhandler, 'function', '.']
+});
 Hyphenator.fn.settings.expose('*');
+
+
 //end Hyphenator_config.js

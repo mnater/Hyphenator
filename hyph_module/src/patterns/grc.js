@@ -1,7 +1,7 @@
 // Hyphenation patterns for Ancient Greek.
 // Created by Dimitrios Filippou with some ideas borrowed from 
 // Yannis Haralambous, Kostis Dryllerakis and Claudio Beccari.
-﻿// From http://tug.org/svn/texhyphen/branches/ptex/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-grc.tex
+// From http://tug.org/svn/texhyphen/branches/ptex/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-grc.tex
 // Converted by Pablo Rodríguez (hyphenator at pragmata dot tk)
 Hyphenator.languages['grc'] = {
 	leftmin : 2,

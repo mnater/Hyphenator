@@ -2,12 +2,16 @@
 
 	<property name="version" value="4.0.0beta" />
 	<property name="src" value="${basedir}/src" />
+	<property name="src_patterns" value="${src}/patterns" />
+	<property name="src_testsuite" value="${src}/testsuite" />
 	<property name="build" value="${basedir}/build" />
 	<property name="dist" value="${basedir}/dist" />
+	<property name="dist_patterns" value="${dist}/patterns" />
+	<property name="dist_testsuite" value="${dist}/testsuite" />
 	<property name="tmp" value="${basedir}/tmp" />
 	
-	<property name="Hd" value="${basedir}/dist/Hyphenator.js" />
-	<property name="Hdm" value="${basedir}/dist/Hyphenator_min.js" />
+	<property name="Hd" value="Hyphenator.js" />
+	<property name="Hdm" value="Hyphenator_min.js" />
 	
 	
 	<filelist id="srcfiles" dir="${src}">
@@ -25,25 +29,27 @@
 		<file name="loader.js" /> 
 		<file name="hyphenate.js" /> 
 		<file name="i18n.js" />
-		<file name="bookmarklet.js" /> 
-		<file name="exports.js" /> 
-	</filelist>
+		<file name="bookmarklet.js" />
+		</filelist>
+
+	<fileset id="patternfiles" dir="${src_patterns}" />
+
 
 	<target name="finalize" depends="min"> 
-		<delete dir="${tmp}" />
+		<!--<delete dir="${tmp}" />-->
 	</target>
-
-	<target name="min" depends="concat" description="Minify with Google Closure Compiler" if="runGCC">
+	
+	<target name="min" depends="assemble" description="Minify with Google Closure Compiler" if="runGCC">
 		<echo message="Building ${Hdm}" />
 		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
 			<fileset dir="${dist}">
-				<include name="Hyphenator.js" />
+				<include name="${Hd}" />
 			</fileset>
 			<arg line="-jar" />
 			<arg path="build/compiler.jar" />
 		
 			<arg value="--compilation_level" />
-			<arg value="ADVANCED_OPTIMIZATIONS" />
+			<arg value="SIMPLE_OPTIMIZATIONS" />
 			
 			<arg value="--warning_level" />
 			<arg value="VERBOSE" />
@@ -55,33 +61,52 @@
 			<targetfile />
 
 			<arg value="--js" />
-			<mapper type="glob" from="Hyphenator.js" to="Hyphenator_min.js" />
+			<mapper type="glob" from="${Hd}" to="${Hdm}" />
 		</apply>
 		<echo message="${Hdm} built." />
 	</target>
 
-	<target name="concat" depends="lint">
+	<target name="assemble" depends="lint">
 		<echo message="Building ${Hd}" />
-		<concat destfile="${Hd}" encoding="UTF8">
-			<filelist refid="srcfiles"/>
+		<concat destfile="${dist}/${Hd}" encoding="UTF8">
+			<filelist refid="srcfiles" />
 		</concat>
 		<echo message="${Hd} built." />
+		<echo message="Copying pattern files" />
+		<copy todir="${dist_patterns}">
+			<fileset dir="${src_patterns}" />
+		</copy>
+		<echo message="Copying testsuite" />
+		<copy todir="${dist_testsuite}">
+			<fileset dir="${src_testsuite}" />
+		</copy>
 	</target>
 
 	<target name="lint" depends="init" description="Check each module with JSLint" if="runlint">
 		<exec executable="java">
-			<arg line="-jar ${build}/js.jar ${build}/jslint-check.js" />
+			<arg line="-jar ${build}/js.jar ${build}/jslint-check-src.js" />
+		</exec>
+		<exec executable="java">
+			<arg line="-jar ${build}/js.jar ${build}/jslint-check-pattern.js" />
 		</exec>
 	</target>
 
 	<target name="init">
 		<tstamp/>
 		<mkdir dir="${dist}"/>
+		<mkdir dir="${dist_patterns}" />
+		<mkdir dir="${dist_testsuite}" />
 		<mkdir dir="${tmp}"/>
+
 		<pathconvert property="srcfiles" refid="srcfiles">
 			<map from="${basedir}/" to="" />
 		</pathconvert>
-		<echo file="${tmp}/files.txt" message="${srcfiles}" />
+		<echo file="${tmp}/srcfiles.txt" message="${srcfiles}" />
+
+		<pathconvert property="patternfiles" refid="patternfiles">
+			<map from="${basedir}/" to="" />
+		</pathconvert>
+		<echo file="${tmp}/patternfiles.txt" message="${patternfiles}" />
 		
 	</target>
 

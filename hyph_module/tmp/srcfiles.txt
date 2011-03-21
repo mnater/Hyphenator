@@ -1,0 +1,1 @@
+src/head.js:src/main.js:src/debug.js:src/quirks.js:src/DOM.js:src/constants.js:src/messages.js:src/storage.js:src/toggleBox.js:src/config.js:src/languages.js:src/loader.js:src/hyphenate.js:src/i18n.js:src/bookmarklet.js

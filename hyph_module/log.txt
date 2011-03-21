@@ -1,0 +1,46 @@
+Buildfile: /Users/mnater/Sites/hyph/hyph_module/build.xml
+
+init:
+
+lint:
+
+assemble:
+     [echo] Building Hyphenator_debug.js
+     [echo] Hyphenator_debug.js built.
+     [echo] Copying pattern files
+     [echo] Copying testsuite
+
+min:
+     [echo] Building Hyphenator.js
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:370: WARNING - Property userLanguage never defined on Navigator
+    [apply] 			ul = navigator.language ? navigator.language : navigator.userLanguage;
+    [apply] 			                                               ^
+    [apply] 
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1366: WARNING - Property specialChars never defined on lo
+    [apply] 		wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + Hyphenator.minwordlength + ',}';
+    [apply] 		               ^
+    [apply] 
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1531: WARNING - Property charSubstitution never defined on lo
+    [apply] 		if (!!lo.charSubstitution) {
+    [apply] 		      ^
+    [apply] 
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1547: WARNING - Property shortestPattern never defined on lo
+    [apply] 		n = wl - lo.shortestPattern;
+    [apply] 		         ^
+    [apply] 
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1549: WARNING - Property longestPattern never defined on lo
+    [apply] 			maxwins = Math.min((wl - p), lo.longestPattern);
+    [apply] 			                             ^
+    [apply] 
+    [apply] /Users/mnater/Sites/hyph/hyph_module/dist/Hyphenator_debug.js:1581: WARNING - Property rightmin never defined on lo
+    [apply] 		for (i = lo.leftmin; i <= (wl - 2 - lo.rightmin); i++) {
+    [apply] 		                                    ^
+    [apply] 
+    [apply] 0 error(s), 6 warning(s), 57,7% typed
+    [apply] Applied java to 1 file and 0 directories.
+     [echo] Hyphenator.js built.
+
+finalize:
+
+BUILD SUCCESSFUL
+Total time: 6 seconds

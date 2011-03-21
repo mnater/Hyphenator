@@ -1,4 +1,4 @@
-﻿Hyphenator.languages['fi'] = {
+Hyphenator.languages['fi'] = {
 	leftmin : 2,
 	rightmin : 2,
 	shortestPattern : 2,

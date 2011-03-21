@@ -1,4 +1,4 @@
-﻿// For questions about the Ukrainian hyphenation patterns
+// For questions about the Ukrainian hyphenation patterns
 // ask Alexey Grekov (athens at ukr dot net)
 Hyphenator.languages['uk'] = {
 	leftmin : 2,

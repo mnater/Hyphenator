@@ -1,4 +1,4 @@
-﻿// For questions about the spanish hyphenation patterns
+// For questions about the spanish hyphenation patterns
 // ask Luis Pabon (lpabon at metagrama dot es)
 Hyphenator.languages['es'] = {
 	leftmin : 2,

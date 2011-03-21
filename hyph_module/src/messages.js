@@ -1,4 +1,5 @@
 //Hyphenator_messages.js
+/*jslint sub: true */
 /*
 Message types:
 0: Error
@@ -27,7 +28,7 @@ Hyphenator.fn.addModule({
 		}
 	},
 	onmessage: function (msg) {
-		//console.log(msg.text);
+		//Hyphenator.log(msg.text);
 		switch (msg.type) {
 		case 0: //Error
 			Hyphenator.postMessage(msg);
@@ -156,3 +157,5 @@ Hyphenator.addModule({
 		Hyphenator.onerrorhandler(msg);
 	}
 });
+window['Hyphenator']['postMessage'] = Hyphenator.postMessage;
+window['Hyphenator']['onmessage'] = Hyphenator.onmessage;

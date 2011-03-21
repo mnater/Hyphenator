@@ -1,4 +1,4 @@
-﻿// For questions about the latvian hyphenation patterns
+// For questions about the latvian hyphenation patterns
 // ask Kristaps Karlsons (kristaps dot karlsons at gmail dot com)
 Hyphenator.languages['lv'] = {
 	leftmin : 2,
