@@ -44,6 +44,7 @@
 		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
 			<fileset dir="${dist}">
 				<include name="${Hd}" />
+				<!--<include name="/patterns/de.js" />-->
 			</fileset>
 			<arg line="-jar" />
 			<arg path="build/compiler.jar" />
@@ -83,12 +84,14 @@
 	</target>
 
 	<target name="lint" depends="init" description="Check each module with JSLint" if="runlint">
-		<exec executable="java">
-			<arg line="-jar ${build}/js.jar ${build}/jslint-check-src.js" />
-		</exec>
-		<exec executable="java">
-			<arg line="-jar ${build}/js.jar ${build}/jslint-check-pattern.js" />
-		</exec>
+		<parallel>
+		<java jar="${build}/js.jar" fork="true">
+			<arg value= "${build}/jslint-check-src.js" />
+		</java>
+		<!--<java jar="${build}/js.jar" fork="true">
+			<arg value= "${build}/jslint-check-pattern.js" />
+		</java>-->
+		</parallel>
 	</target>
 
 	<target name="init">
