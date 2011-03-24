@@ -40,7 +40,7 @@ Hyphenator.fn.addModule({
 });
 
 if (Hyphenator.fn.isBookmarklet) {
-	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
+	Hyphenator.config({'displaytogglebox': true, 'intermediatestate': 'visible', 'doframes': true});
 	Hyphenator.config(Hyphenator.fn.getConfigFromURI());
 	Hyphenator.run();
 }

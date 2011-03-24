@@ -1,33 +1,56 @@
 //main.js
 /*jslint sub: true */
+
+/**
+ * The Hyphenator Class is the one and only object exposed to the global object.
+ * @class Hyphenator
+ */
 var Hyphenator = (function (window) {
 	/**
-	 * Internal Hyphenator object
-	 * Is returned from the outer function
-	 * @constructor
+	 * Factory for the Hyphenator object
+	 * @returns {Object}
 	 */
-	var Hyphenator = function () {
+	var factory = function () {
 		/**
-		 * Constructor
+		 * Constructor for intermediate class
 		 * @constructor
 		 */
 		var F = function () {
-			this.addModule = Hyphenator.fn.addModule; 
+			/**
+			 * Method addModule(object) allows to add properties to the Hyphenator-Object
+			 * The keys are the names of the properties and the values are the properties.
+			 * @param {Object} module
+			 */		
+			this.addModule = factory.fn.addModule; 
 		};
-		F.prototype = new Hyphenator.fn.getProto();
+		F.prototype = new factory.fn.getProto();
 		return new F();
 	};
 
-			
-	Hyphenator.fn = {
+	/**
+	 * Object that is stored in the prototype of the Hyphenator-Class
+	 * Using Hyphenator.fn as namespace allows us to quasi extend the prototype and
+	 * not to clutter the Hyphenator-Class with internal properties.
+	 * @namespace  Holds internal properties and methods
+	 */
+	factory.fn = {
 		/**
 		 * Constructor for the Hyphenator.fn methods subcollection
 		 * @constructor
 		 */
 		getProto: function () {
-			this.fn = Hyphenator.fn;
+			this.fn = factory.fn;
 		},
+		/**
+		 * Constructor to create Extended Objects
+		 * @constructor
+		 * @param {Object} obj The object to be extended
+		 */
 		EO: function (obj) {
+			/**
+			 * Method each(fn) lets us cycle through each property of the object and apply a function to it
+			 * @param {function(*, *)} fn A function that takes a key and a value as arguments
+			 */
 			this.each = function (fn) {
 				var k;
 				for (k in obj) {
@@ -37,6 +60,11 @@ var Hyphenator = (function (window) {
 				}
 			};
 		},
+		/**
+		 * Method addModule(object) allows to add properties to the Hyphenator.fn-Object
+		 * The keys are the names of the properties and the values are the properties.
+		 * @param {Object} module
+		 */
 		addModule: function (module) {
 			var that = this;
 			module = new Hyphenator.fn.EO(module);
@@ -48,20 +76,27 @@ var Hyphenator = (function (window) {
 	};
 	
 	// Expose Hyphenator to the global object
-	return new Hyphenator();	
+	return factory();	
 }(window));
 //export
 window['Hyphenator'] = Hyphenator;
 
 
 Hyphenator.addModule({
+	/**
+	 * Method run(config) takes an (optional) config object and runs Hyphenator
+	 * @lends Hyphenator
+	 * @param {Object=} config Configurations
+	 * @memberOf Hyphenator
+	 * @function
+	 * @public
+	 */
 	run: function (config) {
 		if (!!config) {
 			Hyphenator.config(config);
 		}
 		Hyphenator.fn.prepareDocuments(window);
-		//Hyphenator.log(Hyphenator);
 	}
 });
-
+//export
 window['Hyphenator']['run'] = Hyphenator.run;

@@ -1,6 +1,12 @@
 //Hyphenator_quirks.js
 /*jslint sub: true */
 Hyphenator.fn.addModule({
+	/**
+	 * zeroWidthSpace stores the ZWS character if available
+	 * @field
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 */
 	zeroWidthSpace: (function () {
 		var zws, ua = window.navigator.userAgent.toLowerCase();
 		zws = String.fromCharCode(8203); //Unicode zero width space
@@ -12,6 +18,16 @@ Hyphenator.fn.addModule({
 		}
 		return zws;
 	}()),
+	/**
+	 * registerOnCopy(el) registers oncopy on the given element that removes hyphens from copied text
+	 * Because of accessing the copied text isn't allways possible or other bugs huge shadow element trickery is necessary
+	 * The idea behind this code has been provided by http://github.com/aristus/sweet-justice
+	 * sweet-justice is under BSD-License
+	 * @param {Element} el The (hyphenated) element to treat.
+	 * @function
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 */
 	registerOnCopy: function (el) {
 		var body = el.ownerDocument.getElementsByTagName('body')[0],
 		shadow,
@@ -73,7 +89,7 @@ Hyphenator.fn.addModule({
 		el = el || body;
 		if (window.addEventListener) {
 			el.addEventListener("copy", oncopyHandler, false);
-		} else {
+		} else if (el.attachEvent) {
 			el.attachEvent("oncopy", oncopyHandler);
 		}
 	}

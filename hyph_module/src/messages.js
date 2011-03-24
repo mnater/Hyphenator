@@ -35,7 +35,7 @@ Hyphenator.fn.addModule({
 			break;
 		case 1: //settings related
 			//do reflow if necessary
-			//Hyphenator.postMessage(msg);
+			Hyphenator.log(msg);
 			break;
 		case 2: //file load related
 			//update supportedLang

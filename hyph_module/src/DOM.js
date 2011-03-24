@@ -1,6 +1,11 @@
 //Hyphenator.DOM.js
 /*jslint sub: true */
 /**
+ * A wrapper for DOMElements:
+ * this.elements {Element} hold a pointer to the DOMElement
+ * this.hyphenated {boolean} is set to true as soon as the element is hyphenated
+ * this.treated {boolean} is set to true, when the element is read out and the language registered
+ * this.data {object} holds settings of hyphenator for the element (lang, visibility, style, ...) 
  * @constructor
  */
 Hyphenator.fn.Element = function (element, data) {
@@ -11,6 +16,12 @@ Hyphenator.fn.Element = function (element, data) {
 };
 
 Hyphenator.fn.Element.prototype = {
+	/**
+	 * method hyphenate() hyphenates the text contained in the element and marks it as hyphenated
+	 * @function
+	 * @memberOf Hyphenator.fn.Element.prototype
+	 * @private
+	 */
 	hyphenate: function () {
 		var lang = this.data.language, hyphenate, n, i,
 			controlOrphans = function (part) {
@@ -38,9 +49,11 @@ Hyphenator.fn.Element.prototype = {
 						return Hyphenator.hyphenateWord(lang, word);
 					}
 				};
+				//registerOnCopy
 				if (Hyphenator.safecopy && (this.element.tagName.toLowerCase() !== 'body')) {
 					Hyphenator.fn.registerOnCopy(this.element);
 				}
+				//cycle through child nodes
 				i = 0;
 				while (!!(n = this.element.childNodes[i++])) {
 					if (n.nodeType === 3 && n.data.length >= Hyphenator.minwordlength) { //type 3 = #text -> hyphenate!
@@ -51,6 +64,7 @@ Hyphenator.fn.Element.prototype = {
 					}
 				}
 			}
+			//handle style of the element
 			if (this.data.isHidden && Hyphenator.intermediatestate === 'hidden') {
 				this.element.style.visibility = 'visible';
 				if (!this.data.hasOwnStyle) {
@@ -69,6 +83,12 @@ Hyphenator.fn.Element.prototype = {
 			this.treated = true;
 		}
 	},
+	/**
+	 * method removeHyphenation() deletes hyphen characters from elements text and marks it as unhyphenated
+	 * @function
+	 * @memberOf Hyphenator.fn.Element.prototype
+	 * @private
+	 */
 	removeHyphenation: function () {
 		var h = Hyphenator.fn.getEscapedHyphenChar(), i = 0, n;
 		while (!!(n = this.element.childNodes[i++])) {
@@ -81,6 +101,9 @@ Hyphenator.fn.Element.prototype = {
 	}
 };
 /**
+ * A container for Hyphentator.fn.Elements of a given language
+ * this.language {string} the language of the elements
+ * this.elementList {Array.<Hyphenator.fn.Element>} The elements of the given language 
  * @constructor
  */
 Hyphenator.fn.LanguageElementsCollection = function (lang) {
@@ -109,6 +132,8 @@ Hyphenator.fn.LanguageElementsCollection.prototype = {
 	}
 };
 /**
+ * A container for Hyphentator.fn.LanguageElementsCollections
+ * this.list {Object} where key is the language and value the Hyphenator.fn.LanguageElementsCollection
  * @constructor
  */
 Hyphenator.fn.ElementCollection = function () {
@@ -138,7 +163,14 @@ Hyphenator.fn.ElementCollection.prototype = {
 	}
 };
 
-/**
+ /**
+ * A wrapper for Documents:
+ * this.w {window} holds a pointer to the DOMWindow
+ * this.parent {window | null} pointer to the parent window (for frames) or null if top
+ * this.href {string} the URI of the window (is used as identifier)
+ * this.state {number} the state of the window
+ * this.mainLanguage {string} the language found in meta-tags or attributes
+ * this.elementCollection {Hyphenator.fn.ElementCollection} The Elements in this window that will be hyphenated
  * @constructor
  */
 Hyphenator.fn.Document = function (w, p) {
@@ -186,7 +218,7 @@ Hyphenator.fn.Document.prototype = {
 		//ask user for lang
 		if (!this.mainLanguage) {
 			text = '';
-			ul = navigator.language ? navigator.language : navigator.userLanguage;
+			ul = navigator.userLanguage ? navigator.userLanguage : navigator.language;
 			ul = ul.substring(0, 2);
 			if (Hyphenator.fn.prompterStrings.hasOwnProperty(ul)) {
 				text = Hyphenator.fn.prompterStrings[ul];

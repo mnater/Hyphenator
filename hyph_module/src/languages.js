@@ -1,49 +1,69 @@
 //begin Hyphenator_languages.js
 /*jslint sub: true */
+/**
+ * @constructor
+ */
+Hyphenator.fn.Language = function (lo) {
+	this.leftmin = lo.leftmin;
+	this.rightmin = lo.rightmin;
+	this.shortestPattern = lo.shortestPattern;
+	this.longestPattern = lo.longestPattern;
+	this.specialChars = lo.specialChars;
+	this.patterns = lo.patterns;
+	this.charSubstitution = lo.charSubstitution;
+	this.exceptions = lo.exceptions || null;
+	this.cache = null;
+	this.redPatSet = null;
+	this.genRegExp = null;
+};
+
 Hyphenator.fn.addModule({
 	supportedLanguages: (function () {
 		var tmp = new Hyphenator.fn.EO({
-			'be': 'be.js',
-			'cs': 'cs.js',
-			'da': 'da.js',
-			'bn': 'bn.js',
-			'de': 'de.js',
+			'be': '',
+			'cs': '',
+			'da': '',
+			'bn': '',
+			'de': '',
 			'el': 'el-monoton.js',
 			'el-monoton': 'el-monoton.js',
 			'el-polyton': 'el-polyton.js',
 			'en': 'en-us.js',
 			'en-gb': 'en-gb.js',
 			'en-us': 'en-us.js',
-			'es': 'es.js',
-			'fi': 'fi.js',
-			'fr': 'fr.js',
-			'grc': 'grc.js',
-			'gu': 'gu.js',
-			'hi': 'hi.js',
-			'hu': 'hu.js',
-			'hy': 'hy.js',
-			'it': 'it.js',
-			'kn': 'kn.js',
-			'la': 'la.js',
-			'lt': 'lt.js',
-			'lv': 'lv.js',
-			'ml': 'ml.js',
+			'es': '',
+			'fi': '',
+			'fr': '',
+			'grc': '',
+			'gu': '',
+			'hi': '',
+			'hu': '',
+			'hy': '',
+			'it': '',
+			'kn': '',
+			'la': '',
+			'lt': '',
+			'lv': '',
+			'ml': '',
 			'no': 'no-nb.js',
 			'no-nb': 'no-nb.js',
-			'nl': 'nl.js',
-			'or': 'or.js',
-			'pa': 'pa.js',
-			'pl': 'pl.js',
-			'pt': 'pt.js',
-			'ru': 'ru.js',
-			'sl': 'sl.js',
-			'sv': 'sv.js',
-			'ta': 'ta.js',
-			'te': 'te.js',
-			'tr': 'tr.js',
-			'uk': 'uk.js'
+			'nl': '',
+			'or': '',
+			'pa': '',
+			'pl': '',
+			'pt': '',
+			'ru': '',
+			'sl': '',
+			'sv': '',
+			'ta': '',
+			'te': '',
+			'tr': '',
+			'uk': ''
 		}), r = {};
 		tmp.each(function (k, v) {
+			if (v === '') {
+				v = k + '.js';
+			}
 			r[k] = {'file': v, 'state': 0};
 		});
 		return r;
@@ -79,7 +99,8 @@ Hyphenator.fn.addModule({
 	},
 	prepareLanguagesObj: function (lang) {
 		Hyphenator.fn.supportedLanguages[lang].state = 6;
-		var lo = Hyphenator.languages[lang], wrd;
+		var lo = Hyphenator.languages[lang] = new Hyphenator.fn.Language(Hyphenator.languages[lang]),
+			wrd;
 		if (Hyphenator.enablecache) {
 			lo.cache = {};
 			//Export
@@ -89,7 +110,7 @@ Hyphenator.fn.addModule({
 			lo.redPatSet = {};
 		}
 		//add exceptions from the pattern file to the local 'exceptions'-obj
-		if (lo.hasOwnProperty('exceptions')) {
+		if (lo.exceptions !== null) {
 			Hyphenator.addExceptions(lang, lo.exceptions);
 			delete lo.exceptions;
 		}
@@ -113,10 +134,7 @@ Hyphenator.fn.addModule({
 		lo.genRegExp = new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')|(' + wrd + ')', 'gi');
 		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared: " + lang));
 	},
-	exceptions: {}
-});
-
-Hyphenator.fn.addModule({
+	exceptions: {},
 	languageHint: (function () {
 		var k, r = '';
 		for (k in Hyphenator.fn.supportedLanguages) {

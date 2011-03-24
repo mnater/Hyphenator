@@ -46,6 +46,7 @@ Hyphenator.addModule({
 			myBox.style.cursor = 'pointer';
 			myBox.style.WebkitBorderBottomLeftRadius = '4px';
 			myBox.style.MozBorderRadiusBottomleft = '4px';
+			myBox.style.borderBottomLeftRadius = '4px';
 			bdy.appendChild(myBox);
 		}
 	}
@@ -56,13 +57,13 @@ Hyphenator.addModule({
 	toggleHyphenation: function (w) {
 		if (Hyphenator.dohyphenation) {
 			Hyphenator.config({
-				dohyphenation: false
+				'dohyphenation': false
 			});
 			Hyphenator.fn.removeHyphenationFromDocuments();
 			Hyphenator.togglebox(w);
 		} else {
 			Hyphenator.config({
-				dohyphenation: true
+				'dohyphenation': true
 			});
 			Hyphenator.fn.hyphenateDocuments();
 			Hyphenator.togglebox(w);
