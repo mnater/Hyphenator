@@ -20,8 +20,10 @@
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
         	if (parent != window) {
+        		var runs = 0;
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
+						runs++;
 						var t1 = document.getElementById('test').innerHTML,
 						r1 = document.getElementById('ref1').innerHTML,
 						r2 = document.getElementById('ref2').innerHTML,
@@ -44,9 +46,11 @@
 							}
 						}
 						parent.postMessage(JSON.stringify(msg), window.location.href);
-						document.getElementById('HyphenatorToggleBox').onclick();
-						if (Hyphenator.dohyphenation) {
-							window.location.reload();
+						if (runs === 1) {
+							document.getElementById('HyphenatorToggleBox').onclick();
+							if (Hyphenator.dohyphenation) {
+								window.location.reload();
+							}
 						}
 					}
 				});     	

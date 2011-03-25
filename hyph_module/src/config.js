@@ -122,6 +122,23 @@ Hyphenator.addModule({
 			(new Hyphenator.fn.Storage()).storeSettings(Hyphenator.fn.settings.exportConfigObj());
 		}
 	},
+	update: function (obj, w) {
+		w = w || 'all';
+		Hyphenator.config(obj);
+		Hyphenator.fn.collectedDocuments.each(function (href, data) {
+			data.removeHyphenation();
+		});
+		Hyphenator.fn.collectedDocuments.each(function (href, data) {
+			data.hyphenate();
+		});
+		if (Hyphenator.displaytogglebox) {
+			if (w === 'all') {
+				//cycle
+			} else {
+				Hyphenator.togglebox(w);
+			}
+		}	
+	},
 	getSetting: function (name) {
 		return Hyphenator.fn.settings.data[name].currentValue;	
 	},
@@ -131,6 +148,7 @@ Hyphenator.addModule({
 	}
 });
 window['Hyphenator']['config'] = Hyphenator.config;
+window['Hyphenator']['update'] = Hyphenator.update;
 window['Hyphenator']['onhyphenationdonecallback'] = Hyphenator.onhyphenationdonecallback;
 window['Hyphenator']['onerrorhandler'] = Hyphenator.onerrorhandler;
 

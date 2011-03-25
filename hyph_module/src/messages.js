@@ -29,13 +29,14 @@ Hyphenator.fn.addModule({
 	},
 	onmessage: function (msg) {
 		//Hyphenator.log(msg.text);
+		//Hyphenator.log(msg);
 		switch (msg.type) {
 		case 0: //Error
 			Hyphenator.postMessage(msg);
 			break;
 		case 1: //settings related
 			//do reflow if necessary
-			Hyphenator.log(msg);
+			//Hyphenator.log(msg);
 			break;
 		case 2: //file load related
 			//update supportedLang
