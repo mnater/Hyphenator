@@ -34,7 +34,7 @@ Hyphenator.addModule({
 				}
 			}
 		} else {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, lang, "Language '" + lang + "' is not loaded."));
+			Hyphenator.fn.postMessage([0, lang, "Language '" + lang + "' is not loaded."]);
 		}
 	},
 	hyphenateWord: function (lang, word) {

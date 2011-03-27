@@ -15,7 +15,7 @@ Hyphenator.fn.Setting.prototype = {
 		if (typeof val === this.type && this.assert.test(val)) {
 			this.currentValue = this.defaultValue = val;
 		} else {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, val, "default setting '" + val + "' doesn't fit (" + this.type + "/" + this.assert + ")"));
+			Hyphenator.fn.postMessage([0, val, "default setting '" + val + "' doesn't fit (" + this.type + "/" + this.assert + ")"]);
 		}
 
 	},
@@ -24,7 +24,7 @@ Hyphenator.fn.Setting.prototype = {
 			this.currentValue = val;
 			return true;
 		} else {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, val, "setting '" + val + "' doesn't fit (" + this.assert + ")"));
+			Hyphenator.fn.postMessage([0, val, "setting '" + val + "' doesn't fit (" + this.assert + ")"]);
 			return false;
 		}
 	}
@@ -109,14 +109,14 @@ Hyphenator.addModule({
 					changes.push(ename);
 				}
 			} else {
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, ename, "Error: configuration option '" + ename + "' doesn't exist."));
+				Hyphenator.fn.postMessage([0, ename, "Error: configuration option '" + ename + "' doesn't exist."]);
 			}
 
 		});
 
 		if (changes.length > 0) {
 			Hyphenator.fn.settings.expose(changes);
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(1, changes, "settings changed."));
+			Hyphenator.fn.postMessage([1, changes, "settings changed."]);
 		}
 		if (Hyphenator.persistentconfig && !stopStorage) {
 			(new Hyphenator.fn.Storage()).storeSettings(Hyphenator.fn.settings.exportConfigObj());

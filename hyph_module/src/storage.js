@@ -40,7 +40,7 @@ Hyphenator.fn.Storage.prototype = {
 			try {
 				//console.log('store: ', settings);
 				this.storage.setItem(this.storagePrefix + "config", window.JSON.stringify(settings));
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(6, settings, "Settings stored."));
+				Hyphenator.fn.postMessage([6, settings, "Settings stored."]);
 			} catch (e) {
 				//onError(e);
 			}
@@ -59,7 +59,7 @@ Hyphenator.fn.Storage.prototype = {
 		if (this.storage !== null) {
 			try {
 				this.storage.setItem(this.storagePrefix + lang, window.JSON.stringify(langObj));
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(6, lang, "Lang " + lang + " stored."));
+				Hyphenator.fn.postMessage([6, lang, "Lang " + lang + " stored."]);
 			} catch (e) {
 				//onError(e);
 			}
@@ -92,6 +92,6 @@ Hyphenator.fn.Storage.prototype = {
 		tmp1 = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + Hyphenator.minwordlength + ',}';
 		lo.genRegExp = new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')|(' + tmp1 + ')', 'gi');
 		Hyphenator.languages[lang] = lo;
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(6, lang, "Lang " + lang + " retrieved from storage."));
+		Hyphenator.fn.postMessage([6, lang, "Lang " + lang + " retrieved from storage."]);
 	}
 };

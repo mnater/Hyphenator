@@ -1,36 +1,19 @@
 //Hyphenator_messages.js
 /*jslint sub: true */
-/*
-Message types:
-0: Error
-1: Updated settings
-2: file loaded
-3: pattern available
-*/
-/**
- * @constructor
- */
-Hyphenator.fn.Message = function (type, data, text) {
-	this.type = type || 0;
-	this.data = data || null;
-	this.text = text || '';
-	this.toString = function () {
-		return "Message:\n\ttype: " + type + ":\n\tdata: " + window.JSON.stringify(data) + ":\n\ttext: " + text; 
-	};
-};
+//Message format: [0=>type, 1=>data, 2=>text]
 
 Hyphenator.fn.addModule({
 	postMessage: function (msg) {
-		if (msg.constructor !== Hyphenator.fn.Message) {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg, "Received non-conforming message"));
+		if (msg.constructor !== Array && msg.length !== 3) {
+			Hyphenator.fn.postMessage([0, msg, "Received non-conforming message"]);
 		} else {
 			Hyphenator.fn.onmessage(msg);
 		}
 	},
 	onmessage: function (msg) {
-		//Hyphenator.log(msg.text);
+		//Hyphenator.log(msg[2]);
 		//Hyphenator.log(msg);
-		switch (msg.type) {
+		switch (msg[0]) {
 		case 0: //Error
 			Hyphenator.postMessage(msg);
 			break;
@@ -40,56 +23,56 @@ Hyphenator.fn.addModule({
 			break;
 		case 2: //file load related
 			//update supportedLang
-			Hyphenator.fn.supportedLanguages[msg.data.id].state = msg.data.readyState;
-			if (msg.data.state === 42) {
+			Hyphenator.fn.supportedLanguages[msg[1].id].state = msg[1].readyState;
+			if (msg[1].state === 42) {
 				//error
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg.data.url, "failed to load file: " + msg.data.url));
+				Hyphenator.fn.postMessage([0, msg[1].url, "failed to load file: " + msg[1].url]);
 			}
-			if (msg.data.state === 4) {
+			if (msg[1].state === 4) {
 				//insert script
-				Hyphenator.fn.insertScript(msg.data.content);
-				Hyphenator.fn.supportedLanguages[msg.data.id].state = 5;
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data.id, 'state': 5}, "File added: " + msg.data.url));
+				Hyphenator.fn.insertScript(msg[1].content);
+				Hyphenator.fn.supportedLanguages[msg[1].id].state = 5;
+				Hyphenator.fn.postMessage([3, {'id': msg[1].id, 'state': 5}, "File added: " + msg[1].url]);
 			}
 			break;
 		case 3: //pattern related
-			switch (msg.data.state) {
+			switch (msg[1].state) {
 			case 5: //patterns loaded
-				Hyphenator.fn.prepareLanguagesObj(msg.data.id);
+				Hyphenator.fn.prepareLanguagesObj(msg[1].id);
 				break;
 			case 6: //patterns prepared
-				Hyphenator.fn.supportedLanguages[msg.data.id].state = 7;
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data.id, 'state': 7}, "Pattern ready: " + msg.data.id));
-				(new Hyphenator.fn.Storage()).storePatterns(msg.data.id, Hyphenator.languages[msg.data.id]);
+				Hyphenator.fn.supportedLanguages[msg[1].id].state = 7;
+				Hyphenator.fn.postMessage([3, {'id': msg[1].id, 'state': 7}, "Pattern ready: " + msg[1].id]);
+				(new Hyphenator.fn.Storage()).storePatterns(msg[1].id, Hyphenator.languages[msg[1].id]);
 				break;
 			case 7: //patterns ready
 				Hyphenator.fn.collectedDocuments.each(function (href, data) {
-					if (data.elementCollection.list.hasOwnProperty(msg.data.id)) {
-						data.elementCollection.hyphenate(msg.data.id);
+					if (data.elementCollection.list.hasOwnProperty(msg[1].id)) {
+						data.elementCollection.hyphenate(msg[1].id);
 					}
 				});
 				break;
 			default:
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, null, "Error"));
+				Hyphenator.fn.postMessage([0, null, "Error"]);
 			}
 			break;
 		case 4: //language detected
-			if (Hyphenator.languages.hasOwnProperty(msg.data) && (Hyphenator.fn.supportedLanguages[msg.data].state < 5)) {
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data, 'state': 5}, "File added: " + msg.data));
+			if (Hyphenator.languages.hasOwnProperty(msg[1]) && (Hyphenator.fn.supportedLanguages[msg[1]].state < 5)) {
+				Hyphenator.fn.postMessage([3, {'id': msg[1], 'state': 5}, "File added: " + msg[1]]);
 			} else {
 				//load the language
-				if ((new Hyphenator.fn.Storage()).inStorage(msg.data)) {
+				if ((new Hyphenator.fn.Storage()).inStorage(msg[1])) {
 					//from storage?
-					(new Hyphenator.fn.Storage()).restorePatterns(msg.data);
-					Hyphenator.fn.supportedLanguages[msg.data].state = 7;
-					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': msg.data, 'state': 7}, "Pattern restored: " + msg.data));
-				} else if (Hyphenator.fn.supportedLanguages[msg.data].state === 0 && Hyphenator.remoteloading) {
+					(new Hyphenator.fn.Storage()).restorePatterns(msg[1]);
+					Hyphenator.fn.supportedLanguages[msg[1]].state = 7;
+					Hyphenator.fn.postMessage([3, {'id': msg[1], 'state': 7}, "Pattern restored: " + msg[1]]);
+				} else if (Hyphenator.fn.supportedLanguages[msg[1]].state === 0 && Hyphenator.remoteloading) {
 					//remotely?
-					Hyphenator.fn.supportedLanguages[msg.data].state = 1;
-					Hyphenator.loadLanguage(msg.data);
+					Hyphenator.fn.supportedLanguages[msg[1]].state = 1;
+					Hyphenator.loadLanguage(msg[1]);
 				} else if (!Hyphenator.remoteloading) {
 					//will not load!
-					Hyphenator.fn.supportedLanguages[msg.data].state = 8;
+					Hyphenator.fn.supportedLanguages[msg[1]].state = 8;
 				}
 			}
 			break;
@@ -97,12 +80,12 @@ Hyphenator.fn.addModule({
 			Hyphenator.fn.collectedDocuments.allDone();
 			break;
 		case 6: //storage
-			//console.log('storage: ', msg.data);
+			//console.log('storage: ', msg[1]);
 			break;
 		case 7: //document updated
-			switch (msg.data.state) {
+			switch (msg[1].state) {
 			case 0: //error
-				Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg.data.id, "Error in Document."));
+				Hyphenator.fn.postMessage([0, msg[1].id, "Error in Document."]);
 				break;
 			case 1: //init
 			
@@ -110,16 +93,16 @@ Hyphenator.fn.addModule({
 			case 2: //ready
 				//handle each document in a single "thread"
 				window.setTimeout(function () {
-					Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].setMainLanguage();
-					Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].prepareElements();
+					Hyphenator.fn.collectedDocuments.list[msg[1].id.location.href].setMainLanguage();
+					Hyphenator.fn.collectedDocuments.list[msg[1].id.location.href].prepareElements();
 				}, 0);
 				break;
 			case 3: //elements collected
-				Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.each(function (lang, data) {
+				Hyphenator.fn.collectedDocuments.list[msg[1].id.location.href].elementCollection.each(function (lang, data) {
 					if (Hyphenator.fn.supportedLanguages[lang].state === 7) {
-						Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.hyphenate(lang);
+						Hyphenator.fn.collectedDocuments.list[msg[1].id.location.href].elementCollection.hyphenate(lang);
 					} else if (Hyphenator.fn.supportedLanguages[lang].state === 8) { //language will not load -> delete Elements of that lang
-						delete Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.list[lang];
+						delete Hyphenator.fn.collectedDocuments.list[msg[1].id.location.href].elementCollection.list[lang];
 						Hyphenator.fn.collectedDocuments.allDone();
 					}//else wait for language to be loaded
 				});
@@ -136,7 +119,7 @@ Hyphenator.fn.addModule({
 			Hyphenator.onhyphenationdonecallback();
 			break;
 		default:
-			Hyphenator.postMessage(new Hyphenator.fn.Message(0, msg.toString(), 'Internally received unknown message.'));
+			Hyphenator.postMessage([0, msg.toString(), 'Internally received unknown message.']);
 		}
 	}
 });
@@ -144,18 +127,19 @@ Hyphenator.fn.addModule({
 
 Hyphenator.addModule({
 	postMessage: function (msg) {
-		if (msg.constructor !== Hyphenator.fn.Message) {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(0, msg, "Received non-conforming message"));
+		if (msg.constructor !== Array && msg.length !== 3) {
+			Hyphenator.fn.postMessage([0, msg, "Received non-conforming message"]);
 		} else {
 			Hyphenator.onmessage(msg);
 		}
 	},
 	onmessage: function (msg) {
-		/*
-		to be overwritten by
-		Hyphenator.onmessage = function (msg) {};
-		*/
-		Hyphenator.onerrorhandler(msg);
+		var tmp = {
+			type: msg[0],
+			data: msg[1],
+			text: msg[2]
+		};
+		Hyphenator.onerrorhandler(tmp);
 	}
 });
 window['Hyphenator']['postMessage'] = Hyphenator.postMessage;

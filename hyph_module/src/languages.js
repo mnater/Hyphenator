@@ -132,7 +132,7 @@ Hyphenator.fn.addModule({
 		Hyphenator.fn.convertPatterns(lang);
 		wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + Hyphenator.minwordlength + ',}';
 		lo.genRegExp = new RegExp('(' + Hyphenator.fn.url + ')|(' + Hyphenator.fn.mail + ')|(' + wrd + ')', 'gi');
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(3, {'id': lang, state: 6}, "Pattern object prepared: " + lang));
+		Hyphenator.fn.postMessage([3, {'id': lang, state: 6}, "Pattern object prepared: " + lang]);
 	},
 	exceptions: {},
 	languageHint: (function () {

@@ -172,7 +172,7 @@ Hyphenator.fn.ElementCollection.prototype = {
 				element.hyphenate();
 			});
 		}
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(5, lang, "Some elements have been hyphenated: " + lang));
+		Hyphenator.fn.postMessage([5, lang, "Some elements have been hyphenated: " + lang]);
 	}
 };
 
@@ -251,7 +251,7 @@ Hyphenator.fn.Document.prototype = {
 			if (resp !== null) {
 				this.mainLanguage = resp.toLowerCase();
 			} else {
-				Hyphenator.postMessage(new Hyphenator.fn.Message(0, this.mainLanguage, "Language unknown. Can't hyphenate."));	
+				Hyphenator.postMessage([0, this.mainLanguage, "Language unknown. Can't hyphenate."]);	
 			}
 		}
 		if (!Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage) && !!this.mainLanguage) {
@@ -259,11 +259,11 @@ Hyphenator.fn.Document.prototype = {
 				this.mainLanguage = this.mainLanguage.split('-')[0];
 			} else {
 				e = 'The language "' + this.mainLanguage + '" is not yet supported.';
-				Hyphenator.postMessage(new Hyphenator.fn.Message(0, this.mainLanguage, e));
+				Hyphenator.postMessage([0, this.mainLanguage, e]);
 			}
 		}
 		if (Hyphenator.fn.supportedLanguages.hasOwnProperty(this.mainLanguage)) {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, this.mainLanguage, "mainLanguage found: " + this.mainLanguage));
+			Hyphenator.fn.postMessage([4, this.mainLanguage, "mainLanguage found: " + this.mainLanguage]);
 		}
 	},
 	/**
@@ -308,7 +308,7 @@ Hyphenator.fn.Document.prototype = {
 					lang = lang.split('-')[0];
 					hyphenatorSettings.language = lang;
 				} else if (!Hyphenator.fn.isBookmarklet) {
-					Hyphenator.postMessage(new Hyphenator.fn.Message(0, lang, 'Language ' + lang + ' is not yet supported.'));
+					Hyphenator.postMessage([0, lang, 'Language ' + lang + ' is not yet supported.']);
 				}
 			}
 			if (Hyphenator.fn.supportedLanguages.hasOwnProperty(lang)) {
@@ -324,7 +324,7 @@ Hyphenator.fn.Document.prototype = {
 				}
 				if (Hyphenator.fn.supportedLanguages[lang].state === 0) {
 					//load the language
-					Hyphenator.fn.postMessage(new Hyphenator.fn.Message(4, lang, "language found: " + lang));
+					Hyphenator.fn.postMessage([4, lang, "language found: " + lang]);
 				}
 				//add it to the list
 				that.elementCollection.addElement(el, lang, hyphenatorSettings);
@@ -358,7 +358,7 @@ Hyphenator.fn.Document.prototype = {
 	 */
 	updateDocumentState: function (state) {
 		this.state = state;
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, {'id': this.w, 'state': this.state}, "Document state updated (" + this.state + "): " + this.href));
+		Hyphenator.fn.postMessage([7, {'id': this.w, 'state': this.state}, "Document state updated (" + this.state + "): " + this.href]);
 	},
 	/**
 	 * Checks if all elements are hyphenated, sets state to 4, when all done
@@ -421,9 +421,9 @@ Hyphenator.fn.DocumentCollection.prototype = {
 		if (!this.list.hasOwnProperty(href)) {
 			//add document
 			this.list[href] = new Hyphenator.fn.Document(w, p);
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, {'id': w, 'state': 1}, "Document added: " + href));
+			Hyphenator.fn.postMessage([7, {'id': w, 'state': 1}, "Document added: " + href]);
 		} else {
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, {'id': w, 'state': 0}, "Error: Document already added: " + href));
+			Hyphenator.fn.postMessage([7, {'id': w, 'state': 0}, "Error: Document already added: " + href]);
 		}
 	},
 	/**
@@ -443,7 +443,7 @@ Hyphenator.fn.DocumentCollection.prototype = {
 		});
 		if (allDone) {
 			
-			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(42, null, "Hyphenation done"));
+			Hyphenator.fn.postMessage([42, null, "Hyphenation done"]);
 		}
 	}
 };
