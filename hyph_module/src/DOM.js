@@ -101,64 +101,6 @@ Hyphenator.fn.Element.prototype = {
 	}
 };
 /**
- * A container for Hyphentator.fn.Elements of a given language
- * this.language {string} the language of the elements
- * this.elementList {Array.<Hyphenator.fn.Element>} The elements of the given language 
- * @constructor
- */
-Hyphenator.fn.LanguageElementsCollection = function (lang) {
-	this.language = lang;
-	this.elementList = [];
-};
-
-Hyphenator.fn.LanguageElementsCollection.prototype = {
-	/**
-	 * Adds an Element to the list
-	 * @param {Element} el The DOMElement
-	 * @param {Object} data Additional data for that element
-	 * @function
-	 * @memberOf Hyphenator.fn.LanguageElementsCollection.prototype
-	 * @private
-	 */
-	add: function (el, data) {
-		this.elementList.push(new Hyphenator.fn.Element(el, data));
-	},
-	/**
-	 * Go through each element in the list and apply fn to it
-	 * @param {function(*, *)} fn The function to apply, takes key and value as arguments
-	 * @function
-	 * @memberOf Hyphenator.fn.LanguageElementsCollection.prototype
-	 * @private
-	 */
-	each: function (fn) {
-		var tmp = new Hyphenator.fn.EO(this.elementList);
-		tmp.each(fn);
-	},
-	/**
-	 * Hyphenate all elements in the list
-	 * @function
-	 * @memberof Hyphenator.fn.LanguageElementsCollection.prototype
-	 * @private
-	 */
-	hyphenateElements: function () {
-		this.each(function (el, content) {
-			content.hyphenate();
-		});
-		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(5, this.language, "Some elements have been hyphenated: " + this.language));
-	},
-	/**
-	 * Remove hyphenation from all elements in the list
-	 * @function
-	 * @memberof Hyphenator.fn.LanguageElementsCollection.prototype
-	 * @private
-	 */
-	removeHyphenationFromElements: function () {
-		this.each(function (el, content) {
-			content.removeHyphenation();
-		});
-	}
-};
-/**
  * A container for Hyphentator.fn.LanguageElementsCollections
  * this.list {Object} where key is the language and value the Hyphenator.fn.LanguageElementsCollection
  * @constructor
@@ -179,9 +121,9 @@ Hyphenator.fn.ElementCollection.prototype = {
 	 */
 	addElement: function (el, lang, data) {
 		if (!this.list.hasOwnProperty(lang)) {
-			this.list[lang] = new Hyphenator.fn.LanguageElementsCollection(lang);
+			this.list[lang] = [];
 		}
-		this.list[lang].add(el, data);
+		this.list[lang].push(new Hyphenator.fn.Element(el, data));
 	},
 	/**
 	 * Go through each element in the list and apply fn to it
@@ -201,20 +143,36 @@ Hyphenator.fn.ElementCollection.prototype = {
 	 * @private
 	 */
 	removeAllHyphenation: function () {
-		this.each(function (el, content) {
-			content.removeHyphenationFromElements();
+		this.each(function (lang, content) {
+			var tmp = new Hyphenator.fn.EO(content);
+			tmp.each(function (k, element) {
+				element.removeHyphenation();
+			});
 		});
 	},
 	/**
-	 * Hyphenate all elements in the list
+	 * Hyphenate elements in the list either all of the given language or all, if lang === '*'
+	 * @param {string} lang The language to hyphenate or '*' for all languages
 	 * @function
 	 * @memberOf Hyphenator.fn.ElementCollection.prototype
 	 * @private
 	 */
-	hyphenateAll: function () {
-		this.each(function (el, content) {
-			content.hyphenateElements();
-		});
+	hyphenate: function (lang) {
+		lang = lang || null;
+		if (lang === '*') {
+			this.each(function (lang, content) {
+				var tmp = new Hyphenator.fn.EO(content);
+				tmp.each(function (k, element) {
+					element.hyphenate();
+				});
+			});
+		} else {
+			var tmp = new Hyphenator.fn.EO(this.list[lang]);
+			tmp.each(function (k, element) {
+				element.hyphenate();
+			});
+		}
+		Hyphenator.fn.postMessage(new Hyphenator.fn.Message(5, lang, "Some elements have been hyphenated: " + lang));
 	}
 };
 
@@ -324,7 +282,7 @@ Hyphenator.fn.Document.prototype = {
 	 * @private
 	 */
 	hyphenate: function () {
-		this.elementCollection.hyphenateAll();
+		this.elementCollection.hyphenate('*');
 	},
 	/**
 	 * Prepares the elements: gets their language, initiate languae load, hides the element, add it to the collection
@@ -412,6 +370,7 @@ Hyphenator.fn.Document.prototype = {
 		var allDone = true;
 		if (this.state === 3) {
 			this.elementCollection.each(function (lang, elOfLang) {
+				elOfLang = new Hyphenator.fn.EO(elOfLang);
 				elOfLang.each(function (k, data) {
 					allDone = allDone && (data.hyphenated || data.treated);
 				});

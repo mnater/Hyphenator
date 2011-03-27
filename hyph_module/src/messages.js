@@ -65,7 +65,7 @@ Hyphenator.fn.addModule({
 			case 7: //patterns ready
 				Hyphenator.fn.collectedDocuments.each(function (href, data) {
 					if (data.elementCollection.list.hasOwnProperty(msg.data.id)) {
-						data.elementCollection.list[msg.data.id].hyphenateElements();
+						data.elementCollection.hyphenate(msg.data.id);
 					}
 				});
 				break;
@@ -117,7 +117,7 @@ Hyphenator.fn.addModule({
 			case 3: //elements collected
 				Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.each(function (lang, data) {
 					if (Hyphenator.fn.supportedLanguages[lang].state === 7) {
-						data.hyphenateElements();
+						Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.hyphenate(lang);
 					} else if (Hyphenator.fn.supportedLanguages[lang].state === 8) { //language will not load -> delete Elements of that lang
 						delete Hyphenator.fn.collectedDocuments.list[msg.data.id.location.href].elementCollection.list[lang];
 						Hyphenator.fn.collectedDocuments.allDone();
