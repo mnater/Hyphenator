@@ -29,13 +29,14 @@ Hyphenator.fn.addModule({
 		if (xhr) {
 			xhr.open('GET', url, true);
 			xhr.onreadystatechange = function () {
-				if (xhr.status === 404) {
-					xhr.abort();
-					Hyphenator.fn.postMessage([2, {'id': id, 'url': url, state: 42}, "failed to load file."]);					
-				} else if (xhr.readyState < 4) {
+				//!!! don't check status before readyState or IE sucks (again!)
+				if (xhr.readyState < 4) {
 					Hyphenator.fn.postMessage([2, {'id': id, 'url': url, state: xhr.readyState}, "readyState changed: " + url]);					
 				} else if (xhr.readyState === 4 && xhr.status === 200) {
 					Hyphenator.fn.postMessage([2, {'id': id, 'url': url, state: xhr.readyState, content: xhr.responseText}, "file loaded: " + url]);					
+				} else {
+					xhr.abort();
+					Hyphenator.fn.postMessage([2, {'id': id, 'url': url, state: 42}, "failed to load file."]);					
 				}
 			};
 			xhr.send(null);

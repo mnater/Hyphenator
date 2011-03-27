@@ -158,7 +158,7 @@ Hyphenator.fn.settings.add({
 	donthyphenateclassname: ['donthyphenateclassname', 'donthyphenate', 'string', '^[a-zA-Z_]+[a-zA-Z0-9_]+$'],
 	minwordlength: ['minwordlength', 6, 'number', '\\d+'],
 	hyphenchar: ['hyphenchar', String.fromCharCode(173), 'string', '.'],
-	urlhyphenchar: ['urlhyphenchar', Hyphenator.fn.zeroWidthSpace, 'string', '.'],
+	urlhyphenchar: ['urlhyphenchar', Hyphenator.fn.zeroWidthSpace, 'string', '.?'],
 	displaytogglebox: ['displaytogglebox', false, 'boolean', 'true|false'],
 	remoteloading: ['remoteloading', true, 'boolean', 'true|false'],
 	enablecache: ['enablecache', true, 'boolean', 'true|false'],

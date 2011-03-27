@@ -468,7 +468,7 @@ Hyphenator.fn.addModule({
 		w = w || window;
 		if (window.document.createElementNS) {
 			return w.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
-		} else if (window.createElement) {
+		} else if (window.document.createElement) {
 			return w.document.createElement(tagname);
 		}
 	},
@@ -520,7 +520,7 @@ Hyphenator.fn.addModule({
 		w = w || window;
 		var DOMContentLoaded = function () {}, toplevel,
 		process = function (w) {
-			if (w.document.getElementsByTagName('frameset').length === 0) { //this is no frameset -> hyphenate
+			if (w.document.getElementsByTagName('frameset').length === 0 && Hyphenator.fn.collectedDocuments.list[w.location.href].state < 2) { //this is no frameset -> hyphenate
 				if (Hyphenator.displaytogglebox) {
 					Hyphenator.togglebox(w);
 				}
