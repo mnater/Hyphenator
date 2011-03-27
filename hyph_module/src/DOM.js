@@ -269,7 +269,7 @@ Hyphenator.fn.Document.prototype = {
 	/**
 	 * Remove hyphenation from all elements of this document
 	 * @function
-	 * @memberof Hyphenator.fn.Document.prototype
+	 * @memberOf Hyphenator.fn.Document.prototype
 	 * @private
 	 */
 	removeHyphenation: function () {

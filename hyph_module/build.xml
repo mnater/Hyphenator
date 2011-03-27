@@ -10,8 +10,10 @@
 	<property name="dist_testsuite" value="${dist}/testsuite" />
 	<property name="tmp" value="${basedir}/tmp" />
 	
-	<property name="Hd" value="Hyphenator.js" />
-	<property name="Hdm" value="Hyphenator_min.js" />
+	<property name="H_debug" value="Hyphenator_debug.js" />
+	<property name="H_deploy_0" value="Hyphenator.js" />
+	<property name="H_deploy_1" value="Hyphenator_min.js" />
+	<property name="H_deploy_2" value="Hyphenator_min2.js" />
 	
 	
 	<filelist id="srcfiles" dir="${src}">
@@ -40,11 +42,39 @@
 	</target>
 	
 	<target name="min" depends="assemble" description="Minify with Google Closure Compiler" if="runGCC">
-		<echo message="Building ${Hdm}" />
+		<echo message="Building ${H_deploy_0}" />
 		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
 			<fileset dir="${dist}">
-				<include name="${Hd}" />
-				<!--<include name="/patterns/de.js" />-->
+				<include name="${H_debug}" />
+			</fileset>
+			<arg line="-jar" />
+			<arg path="build/compiler.jar" />
+		
+			<arg value="--compilation_level" />
+			<arg value="WHITESPACE_ONLY" />
+
+			<arg value="--formatting" />
+			<arg value="PRETTY_PRINT" />
+
+			
+			<arg value="--warning_level" />
+			<arg value="VERBOSE" />
+
+			<arg value="--charset" />
+			<arg value="UTF-8" />
+
+			<arg value="--js_output_file" />
+			<targetfile />
+
+			<arg value="--js" />
+			<mapper type="glob" from="${H_debug}" to="${H_deploy_0}" />
+		</apply>
+		<echo message="${H_deploy_0} built." />
+
+		<echo message="Building ${H_deploy_1}" />
+		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
+			<fileset dir="${dist}">
+				<include name="${H_debug}" />
 			</fileset>
 			<arg line="-jar" />
 			<arg path="build/compiler.jar" />
@@ -62,17 +92,49 @@
 			<targetfile />
 
 			<arg value="--js" />
-			<mapper type="glob" from="${Hd}" to="${Hdm}" />
+			<mapper type="glob" from="${H_debug}" to="${H_deploy_1}" />
 		</apply>
-		<echo message="${Hdm} built." />
+		<echo message="${H_deploy_1} built." />
+
+		<echo message="Building ${H_deploy_2}" />
+		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
+			<fileset dir="${dist}">
+				<include name="${H_debug}" />
+			</fileset>
+			<arg line="-jar" />
+			<arg path="build/compiler.jar" />
+		
+			<arg value="--compilation_level" />
+			<arg value="ADVANCED_OPTIMIZATIONS" />
+			
+			<arg value="--warning_level" />
+			<arg value="VERBOSE" />
+
+			<arg value="--charset" />
+			<arg value="UTF-8" />
+
+			<arg value="--js_output_file" />
+			<targetfile />
+
+			<arg value="--js" />
+			<mapper type="glob" from="${H_debug}" to="${H_deploy_2}" />
+		</apply>
+		<echo message="${H_deploy_2} built." />
 	</target>
 
 	<target name="assemble" depends="lint">
-		<echo message="Building ${Hd}" />
-		<concat destfile="${dist}/${Hd}" encoding="UTF8">
+		<echo message="Building ${H_debug}" />
+		<concat destfile="${tmp}/${H_debug}" encoding="UTF8">
 			<filelist refid="srcfiles" />
 		</concat>
-		<echo message="${Hd} built." />
+
+		<copy file="${tmp}/${H_debug}" tofile="${dist}/${H_debug}">
+			<filterset>
+				<filter token="VERSION" value="${version}"/>
+			</filterset>
+		</copy>
+		
+		<echo message="${H_debug} built." />
 		<echo message="Copying pattern files" />
 		<copy todir="${dist_patterns}">
 			<fileset dir="${src_patterns}" />

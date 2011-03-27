@@ -4,6 +4,8 @@
 /**
  * The Hyphenator Class is the one and only object exposed to the global object.
  * @class Hyphenator
+ * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
+ * @version @VERSION@
  */
 var Hyphenator = (function (window) {
 	/**
@@ -96,7 +98,8 @@ Hyphenator.addModule({
 			Hyphenator.config(config);
 		}
 		Hyphenator.fn.prepareDocuments(window);
-	}
+	},
+	version : '@VERSION@'
 });
 //export
 window['Hyphenator']['run'] = Hyphenator.run;
