@@ -220,8 +220,8 @@ Hyphenator.fn.ElementCollection.prototype = {
 
  /**
  * A wrapper for Documents:
- * this.w {window} holds a pointer to the DOMWindow
- * this.parent {window | null} pointer to the parent window (for frames) or null if top
+ * this.w {Window} holds a pointer to the DOMWindow
+ * this.parent {Window | null} pointer to the parent window (for frames) or null if top
  * this.href {string} the URI of the window (is used as identifier)
  * this.state {number} the state of the window
  * this.mainLanguage {string} the language found in meta-tags or attributes
@@ -438,10 +438,25 @@ Hyphenator.fn.DocumentCollection = function () {
 };
 
 Hyphenator.fn.DocumentCollection.prototype = {
+	/**
+	 * Cycles throuch each Document in the collection and calls a function on it
+	 * @function
+	 * @memberOf Hyphenator.fn.DocumentCollection.prototype
+	 * @private
+	 * @param {function(*, *)} fn The function to apply
+	 */
 	each: function (fn) {
 		var tmp = new Hyphenator.fn.EO(this.list);
 		tmp.each(fn);
 	},
+	/**
+	 * Adds a document to the collection and throws a message
+	 * @function
+	 * @memberOf Hyphenator.fn.DocumentCollection.prototype
+	 * @private
+	 * @param {Window} w The document (default: window)
+	 * @param {Window} p The parent windo of the document (default: null)
+	 */
 	addDocument: function (w, p) {
 		var href = w.location.href;
 		if (!this.list.hasOwnProperty(href)) {
@@ -452,6 +467,12 @@ Hyphenator.fn.DocumentCollection.prototype = {
 			Hyphenator.fn.postMessage(new Hyphenator.fn.Message(7, {'id': w, 'state': 0}, "Error: Document already added: " + href));
 		}
 	},
+	/**
+	 * Checks if all documents are hyphenated and throws a message
+	 * @function
+	 * @memberOf Hyphenator.fn.DocumentCollection.prototype
+	 * @private
+	 */
 	allDone: function () {
 		var allDone = true;
 		this.each(function (href, docdata) {
@@ -476,6 +497,14 @@ Hyphenator.fn.DocumentCollection.prototype = {
 
 
 Hyphenator.fn.addModule({
+	/**
+	 * Custom method for creating DOM elements
+	 * @function
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 * @param {string} tagname The tag to create
+	 * @param {Window} w The window where the Element has to be created
+	 */
 	createElem: function (tagname, w) {
 		w = w || window;
 		if (window.document.createElementNS) {
@@ -484,7 +513,13 @@ Hyphenator.fn.addModule({
 			return w.document.createElement(tagname);
 		}
 	},
-	
+	/**
+	 * Custom method for creating script elements
+	 * @function
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 * @param {string} text The script to be appended
+	 */
 	insertScript: function (text) {
 		var script, head = window.document.getElementsByTagName('head').item(0);
 		script = Hyphenator.fn.createElem('script');
@@ -493,11 +528,38 @@ Hyphenator.fn.addModule({
 		head.appendChild(script);
 	},
 	
+	/**
+	 * Property that holds the collected documents
+	 * @field
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 */
 	collectedDocuments: new Hyphenator.fn.DocumentCollection(),
 
+	/*
+	 */
+	/**
+	 * A crossbrowser solution for the DOMContentLoaded-Event
+	 * prepareDocuments is originaly based od jQuery.bindReady()
+	 * see jQuery JavaScript Library v1.3.2 http://jquery.com/
+	 *
+	 * Copyright (c) 2009 John Resig
+	 * Dual licensed under the MIT and GPL licenses.
+	 * http://docs.jquery.com/License
+	 *
+	 * Date: 2009-02-19 17:34:21 -0500 (Thu, 19 Feb 2009)
+	 * Revision: 6246
+	 *
+	 * I added some functionality: e.g. support for frames and iframes…
+	 * This method throws many messages and collects documents in Hyphenator.fn.collectedDocuments
+	 * @param {Window} w the window-object
+	 * @function
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 */
 	prepareDocuments: function (w) {
 		w = w || window;
-		var DOMContentLoaded, toplevel,
+		var DOMContentLoaded = function () {}, toplevel,
 		process = function (w) {
 			if (w.document.getElementsByTagName('frameset').length === 0) { //this is no frameset -> hyphenate
 				if (Hyphenator.displaytogglebox) {
@@ -617,6 +679,18 @@ Hyphenator.fn.addModule({
 		}
 
 	},
+	/**
+	 * This method collects the language from a given element. If no language can be found,
+	 * it goes up one level and tries it on the parent node.
+	 * Lastly there's a fallback to the mainLanguage of the document
+	 * @function
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 * @param {Window} w The window
+	 * @param {Element} el The DOMElement to handle
+	 * @param {boolean} fallback Fallback to mainLanguage if set to true, else return null
+	 * @return {string|null} Return the language or null
+	 */
 	getLang: function (w, el, fallback) {
 		if (!!el.getAttribute('lang')) {
 			return el.getAttribute('lang').toLowerCase();
@@ -643,11 +717,25 @@ Hyphenator.fn.addModule({
 
 
 Hyphenator.addModule({
+	/**
+	 * This method returns an array of elements of the given window.document
+	 * This method may be overridden by the user
+	 * @function
+	 * @memberOf Hyphenator
+	 * @private
+	 * @param {Window} w The window
+	 * @return {Array} The collected elements
+	 */
 	selectorfunction: function (w) {
 		w = w || window;
 		var tmp, el = [], i, l;
 		if (document.getElementsByClassName) {
-			el = w.document.getElementsByClassName(Hyphenator.classname);
+			tmp = w.document.getElementsByClassName(Hyphenator.classname); //returns a NodeList
+			//convert to array
+			l = tmp.length;
+			for (i = 0; i < l; i++) {
+				el.push(tmp[i]);
+			}
 		} else {
 			tmp = w.document.getElementsByTagName('*');
 			l = tmp.length;
@@ -661,4 +749,5 @@ Hyphenator.addModule({
 		return el;
 	}
 });
+//export
 window['Hyphenator']['selectorfunction'] = Hyphenator.selectorfunction;
