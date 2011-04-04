@@ -562,8 +562,9 @@ Hyphenator.fn.addModule({
 			if (fl > 0) {
 				execOnAccessible(function (fr, par) {
 					Hyphenator.fn.collectedDocuments.addDocument(fr, par);
-				});
-				execOnAccessible(function (fr, par) {
+					if (Hyphenator.displaytogglebox) {
+						Hyphenator.togglebox(fr);
+					}
 					Hyphenator.fn.collectedDocuments.list[fr.location.href].updateDocumentState(2); //ready
 				});
 			}
@@ -681,7 +682,7 @@ Hyphenator.addModule({
 	 * This method may be overridden by the user
 	 * @function
 	 * @memberOf Hyphenator
-	 * @private
+	 * @public
 	 * @param {Window} w The window
 	 * @return {Array} The collected elements
 	 */

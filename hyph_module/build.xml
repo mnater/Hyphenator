@@ -10,8 +10,8 @@
 	<property name="dist_testsuite" value="${dist}/testsuite" />
 	<property name="tmp" value="${basedir}/tmp" />
 	
-	<property name="H_debug" value="Hyphenator_debug.js" />
-	<property name="H_deploy_0" value="Hyphenator.js" />
+	<property name="H_debug" value="Hyphenator.js" />
+	<property name="H_deploy_0" value="Hyphenator_m.js" />
 	<property name="H_deploy_1" value="Hyphenator_min.js" />
 	<property name="H_deploy_2" value="Hyphenator_min2.js" />
 	

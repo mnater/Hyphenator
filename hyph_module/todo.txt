@@ -1,0 +1,15 @@
+Todos:
+
+Hyphenator:
+- Make settings per window (e.g. togglebox)
+- Make documents update if settings change
+
+Build-System:
+- Make parts of Hyphenator optional:
+	- Bookmarklet
+	- Support for frames
+	- Log
+	- Storage
+	- Togglebox
+	- i18n
+	- safeCopy

@@ -1,6 +1,11 @@
 //begin Hyphenator_config.js
 /*jslint sub: true */
 /**
+ * A wrapper for Settings:
+ * this.defaultValue {*} The default value of this option
+ * this.currentValue {*} set by config
+ * this.type {String} The type of the option (for assertion)
+ * this.assert {String} a Regular Expression that can be used to assert the option
  * @constructor
  */
 Hyphenator.fn.Setting = function (type, assert) {
@@ -11,6 +16,14 @@ Hyphenator.fn.Setting = function (type, assert) {
 };
 
 Hyphenator.fn.Setting.prototype = {
+	/**
+	 * method setDefaultValue(val) asserts the value and sets it in default AND current
+	 * If assertion fails an error message is thrown
+	 * @param {*} val The value
+	 * @function
+	 * @memberOf Hyphenator.fn.Setting.prototype
+	 * @private
+	 */
 	setDefaultValue: function (val) {
 		if (typeof val === this.type && this.assert.test(val)) {
 			this.currentValue = this.defaultValue = val;
@@ -19,6 +32,14 @@ Hyphenator.fn.Setting.prototype = {
 		}
 
 	},
+	/**
+	 * method setCurrValue(val) asserts the value and sets it in current
+	 * If assertion fails an error message is thrown
+	 * @param {*} val The value
+	 * @function
+	 * @memberOf Hyphenator.fn.Setting.prototype
+	 * @private
+	 */
 	setCurrValue: function (val) {
 		if (typeof val === this.type && this.assert.test(val.toString())) {
 			this.currentValue = val;
@@ -31,6 +52,9 @@ Hyphenator.fn.Setting.prototype = {
 };
 
 /**
+ * A container for Hyphentator.fn.Setting
+ * this.data {Object} where key is the internal name of the setting and value its value
+ * this.fields {Object} where key is the external name of the setting and value its internal name
  * @constructor
  */
 Hyphenator.fn.Settings = function () {
@@ -39,6 +63,14 @@ Hyphenator.fn.Settings = function () {
 };
 
 Hyphenator.fn.Settings.prototype = {
+	/**
+	 * method expose(settings) exposes either all settings or a subset to Hyphenators namespace, using its external names
+	 * If assertion fails an error message is thrown
+	 * @param {(string|Array)} settings Either a string to export a setting ('*' for all settings) or an array of setting names
+	 * @function
+	 * @memberOf Hyphenator.fn.Settings.prototype
+	 * @private
+	 */
 	expose: function (settings) {
 		var tmp = {}, data, i, that = this;
 		if (typeof settings === 'string') {
@@ -58,6 +90,13 @@ Hyphenator.fn.Settings.prototype = {
 		Hyphenator.addModule(tmp);
 		//Hyphenator.log(Hyphenator);
 	},
+	/**
+	 * method add(obj) adds one or multiple Settings to the collection
+	 * @param {Object} obj An object where the keys are the internal names of the settings and value an array of the format [0=>eName, 1=>default ,2=>type, 3=>assert]
+	 * @function
+	 * @memberOf Hyphenator.fn.Settings.prototype
+	 * @private
+	 */
 	add: function (obj) {
 		var that = this;
 		obj = new Hyphenator.fn.EO(obj);
@@ -68,9 +107,25 @@ Hyphenator.fn.Settings.prototype = {
 			that.fields[v[0]] = iname;
 		});
 	},
+	/**
+	 * method change(ename, value) changes the currentValue of the given Setting
+	 * @param {String} ename The external name of the Setting to change
+	 * @param {*} value The new value for that Setting
+	 * @returns {boolean} returns true on success (assertion) or false on fail
+	 * @function
+	 * @memberOf Hyphenator.fn.Settings.prototype
+	 * @private
+	 */	
 	change: function (ename, value) {
 		return (this.data[this.fields[ename]].setCurrValue(value));
 	},
+	/**
+	 * method exportConfigObj() returns an object containing all settings (for storage)
+	 * @returns {Object} Object where keys are the internal names and values the currentValue
+	 * @function
+	 * @memberOf Hyphenator.fn.Settings.prototype
+	 * @private
+	 */	
 	exportConfigObj: function () {
 		var data = new Hyphenator.fn.EO(this.data), tmp = {};
 		data.each(function (k, v) {
@@ -81,10 +136,25 @@ Hyphenator.fn.Settings.prototype = {
 };
 
 Hyphenator.fn.addModule({
+	/**
+	 * Contains the settings (these settings are not used by Hyphenator, only their exports!)
+	 * @field
+	 * @memberOf Hyphenator.fn
+	 * @private
+	 */
 	settings: new Hyphenator.fn.Settings()
 });
 
 Hyphenator.addModule({
+	/**
+	 * This method configures Hyphenator and throws a "Settings changed" message
+	 * If the object contains storage information, settings are restored from storage.
+	 * If necessary the new options are stored in storage.
+	 * @function
+	 * @memberOf Hyphenator
+	 * @public
+	 * @param {Object} obj A configuration object where key is the options name and value its value
+	 */
 	config: function (obj) {
 		var changes = [], stopStorage = false;
 
@@ -113,7 +183,6 @@ Hyphenator.addModule({
 			}
 
 		});
-
 		if (changes.length > 0) {
 			Hyphenator.fn.settings.expose(changes);
 			Hyphenator.fn.postMessage([1, changes, "settings changed."]);
@@ -122,18 +191,28 @@ Hyphenator.addModule({
 			(new Hyphenator.fn.Storage()).storeSettings(Hyphenator.fn.settings.exportConfigObj());
 		}
 	},
+	/**
+	 * This method updates settings for the given window
+	 * @function
+	 * @memberOf Hyphenator
+	 * @public
+	 * @param {Object} obj The settings to be updated
+	 * @param {(Window|string)} w The window, where this applies to or a string ('all'), when it applies to all windows
+	 */
 	update: function (obj, w) {
 		w = w || 'all';
-		Hyphenator.config(obj);
 		Hyphenator.fn.collectedDocuments.each(function (href, data) {
 			data.removeHyphenation();
 		});
+		Hyphenator.config(obj);
 		Hyphenator.fn.collectedDocuments.each(function (href, data) {
 			data.hyphenate();
 		});
 		if (Hyphenator.displaytogglebox) {
 			if (w === 'all') {
-				//cycle
+				Hyphenator.fn.collectedDocuments.each(function (href, data) {
+					Hyphenator.togglebox(data.w);
+				});
 			} else {
 				Hyphenator.togglebox(w);
 			}

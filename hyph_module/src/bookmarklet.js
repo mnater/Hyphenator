@@ -1,4 +1,12 @@
 Hyphenator.fn.addModule({
+	/**
+	 * Gets options from the bookmarklets GET-String and returns them as an object
+	 * This only works for options that are a boolean, a number or a string (not for functions!)
+	 * @returns {Object} The configuration options
+	 * @memberOf Hyphenator.fn
+	 * @function
+	 * @public
+	 */
 	getConfigFromURI: function () {
 		var loc = null, re = {}, jsArray = document.getElementsByTagName('script'), i, j, l, s, gp, option;
 		for (i = 0, l = jsArray.length; i < l; i++) {
@@ -39,6 +47,9 @@ Hyphenator.fn.addModule({
 	}
 });
 
+/**
+ * Checks if Hyphenator is loaded as a Bookmarklet and runs it
+ */
 if (Hyphenator.fn.isBookmarklet) {
 	Hyphenator.config({'displaytogglebox': true, 'intermediatestate': 'visible', 'doframes': true});
 	Hyphenator.config(Hyphenator.fn.getConfigFromURI());
