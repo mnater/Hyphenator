@@ -8,6 +8,7 @@ But I believe that hyphenation belongs to the client:
   * A html file that has been hyphenated on the server would be full of &shy;'s. That's ugly and nobody knows how that would be treated by search engines…
   * Hyphenation on the client can be turned off to work around copy&paste- and search-bugs in most browsers.
   * as JavaScript-engines are in focus of development, they become faster and faster.
+  * there are billions of mostly underworked clients vs. millions of often overloaded servers.
 
 == Hyphenator breaks the search functionality of my browser ==
 Your browser has a bug (currently, only Firefox3 finds hyphenated words). So I don't want/can't fix this in Hyphenator.js.
