@@ -77,5 +77,15 @@ There is one thing you HAVE to change and one thing you SHOULD change in Hyphena
   
 Make some tests to see, if it works!
 
-== send in changings and patterns ==
+=== send in changings and patterns ===
 If you like to support Hyphenator, you may send in the work you've done. You'll get full attribution. I will ask you to put your Mail in the header of the pattern file (see nl.js for example).
+<wiki:comment>
+== The pattern files format ==
+Pattern files include a JavaScript-Object that is directly stored in an other object of Hyphenator:
+{{{
+Hyphenator.languages['lang'] = { … };
+}}}
+(Therefore the patterns have to be loaded after the Hyphenator-Script.)
+
+The object
+</wiki:comment>
