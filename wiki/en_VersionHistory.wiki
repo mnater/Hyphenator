@@ -1,6 +1,15 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
+<wiki:comment>
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.3.0.zip 3.3.0] (April 6, 2011) ==
+This minor release brings the following changes:
+  * Support for Catalan (Thanks to Jordi Rosell)
+  * Fixed issue125 (Words containing ZWNJ are hyphenated now)
+  * Fixed issue126 (support for substituted chars: e.g. long s in german fraktur)
+  * Fixed issue131 (fixed version number)
+</wiki:comment> 
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.2.0.zip 3.2.0] (November 14, 2010) ==
 This minor release brings the following changes:
   * Support for Latvian (Thanks to Kristaps Karlsons)
