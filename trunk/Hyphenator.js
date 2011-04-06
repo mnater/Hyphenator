@@ -56,6 +56,7 @@ var Hyphenator = (function (window) {
 	 */
 	supportedLang = {
 		'be': 'be.js',
+		'ca': 'ca.js',
 		'cs': 'cs.js',
 		'da': 'da.js',
 		'bn': 'bn.js',
