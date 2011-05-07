@@ -1446,13 +1446,18 @@ var Hyphenator = (function (window) {
 			}
 			//create a hidden shadow element
 			shadow = currDoc.createElement('div');
-			shadow.style.overflow = 'hidden';
-			shadow.style.position = 'absolute';
-			shadow.style.top = '-5000px';
-			shadow.style.height = '1px';
+			//Moving the element out of the screen doesn't work for IE9 (https://connect.microsoft.com/IE/feedback/details/663981/)
+			//shadow.style.overflow = 'hidden';
+			//shadow.style.position = 'absolute';
+			//shadow.style.top = '-5000px';
+			//shadow.style.height = '1px';
+			//doing this instead:
+			shadow.style.color = window.getComputedStyle ? targetWindow.getComputedStyle(body).backgroundColor : '#FFFFFF';
+			shadow.style.fontSize = '0px';
 			body.appendChild(shadow);
 			if (!!window.getSelection) {
-				//FF3, Webkit
+				//FF3, Webkit, IE9
+				e.stopPropagation();
 				selection = targetWindow.getSelection();
 				range = selection.getRangeAt(0);
 				shadow.appendChild(range.cloneContents());
@@ -1460,10 +1465,12 @@ var Hyphenator = (function (window) {
 				selection.selectAllChildren(shadow);
 				restore = function () {
 					shadow.parentNode.removeChild(shadow);
+					selection.removeAllRanges(); //IE9 needs that
 					selection.addRange(range);
 				};
 			} else {
-				// IE
+				// IE<9
+				e.cancelBubble = true;
 				selection = targetWindow.document.selection;
 				range = selection.createRange();
 				shadow.innerHTML = range.htmlText;
@@ -1485,7 +1492,7 @@ var Hyphenator = (function (window) {
 		}
 		el = el || body;
 		if (window.addEventListener) {
-			el.addEventListener("copy", oncopyHandler, false);
+			el.addEventListener("copy", oncopyHandler, true);
 		} else {
 			el.attachEvent("oncopy", oncopyHandler);
 		}
