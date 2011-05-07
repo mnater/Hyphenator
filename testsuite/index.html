@@ -167,12 +167,13 @@
         	],
         	testframe = document.getElementById('testframe'),
         	currentTest = 1, total = 'passed';
-        	if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
+
+        	if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent) && !/msie 9/i.test(navigator.userAgent)) {
         		tests[58] = {exec: false, path: 'test58.xml'};
         		tests[60] = {exec: false, path: 'test60.xml'};
         		tests[63] = {exec: false, path: 'test63.xhtml'};
         	}
-        	
+        	        	
         	function addTestResult(name, desc, result) {
         		var dl = document.getElementById('testresults'),
         		template = document.getElementById('template').innerHTML;
