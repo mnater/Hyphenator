@@ -19,23 +19,16 @@
             .hyphenate {
             	width:30px;
             }
-            .enhyph {
+            .hyph {
             	width:30px;
             	-Moz-hyphens:auto;
             	-webkit-hyphens:auto;
-            	-webkit-locale: en;
-            }
-            .dehyph {
-            	width:30px;
-            	-Moz-hyphens:auto;
-            	-webkit-hyphens:auto;
-            	-webkit-locale: de;
             }
             
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-			if (parent == window) {
+			if (parent != window) {
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
 						var msg = {
@@ -62,17 +55,17 @@
         <p id="desc">Test CSS3 property "hyphenate"</p>
 		<h2>Hyphenated by Hyphenator:</h2>
 		<p class="hyphenate" lang="en">
-			A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.
+			taken possession
 		</p>
 		<p class="hyphenate" lang="de">
-			Eine wunderbare Heiterkeit hat meine ganze Seele eingenommen, gleich den süßen Frühlingsmorgen, die ich mit ganzem Herzen genieße.
+			meine gleich
 		</p>
 		<h2>Hyphenated by CSS3:</h2>
-		<p class="enhyph" lang="en">
-			A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.
+		<p class="hyph" lang="en">
+			taken possession
 		</p>
-		<p class="dehyph" lang="de">
-			Eine wunderbare Heiterkeit hat meine ganze Seele eingenommen, gleich den süßen Frühlingsmorgen, die ich mit ganzem Herzen genieße.
+		<p class="hyph" lang="de">
+			meine gleich
 		</p>
     </body>
 </html>
