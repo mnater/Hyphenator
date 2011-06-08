@@ -334,7 +334,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 * @see Hyphenator-css3_gethsupport
 	 */
-	css3_h9n = undefined,
+	css3_h9n,
 	/**
 	 * @name Hyphenator-css3_gethsupport
 	 * @description
@@ -364,14 +364,14 @@ var Hyphenator = (function (window) {
 				//Desktop Safari only hyphenates english
 				r.languages = {
 					en: true
-				}
+				};
 			}
 		} else if ((ua.indexOf('Firefox') !== -1) && (s['MozHyphens'] !== undefined)) {
 			r.support = true;
 			r.property = 'MozHyphens';
 			r.languages = {
 				en: true
-			}
+			};
 		}
 		css3_h9n = r;
 	},
@@ -471,6 +471,7 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator-autoSetMainLanguage
 	 */	
 	defaultLanguage = '',
+	
 
 	/**
 	 * @name Hyphenator-elements
@@ -480,7 +481,38 @@ var Hyphenator = (function (window) {
 	 * @type {Array}
 	 * @private
 	 */	
-	elements = [],
+	elements = (function () {
+		var Element = function (element, data) {
+			this.element = element;
+			this.hyphenated = false;
+			this.treated = false; //collected but not hyphenated (dohyphenation is off)
+			this.data = data;
+		},
+		ElementCollection = function () {
+			this.count = 0;
+			this.hyCount = 0;
+			this.list = {};
+		};
+		ElementCollection.prototype = {
+			add: function (el, lang, data) {
+				if (!this.list.hasOwnProperty(lang)) {
+					this.list[lang] = [];
+				}
+				this.list[lang].push(new Element(el, data));
+				this.count += 1;
+			},
+			each: function (fn) {
+				var k;
+				for (k in this.list) {
+					if (this.list.hasOwnProperty(k)) {
+						fn(k, this.list[k]);
+					}
+				}
+			}
+		};
+		return new ElementCollection();
+	}()),
+
 	
 	/**
 	 * @name Hyphenator-exceptions
@@ -686,50 +718,6 @@ var Hyphenator = (function (window) {
 	 */
 	safeCopy = true,
 	
-	/**
-	 * @name Hyphenator-Expando
-	 * @description
-	 * This custom object stores data for elements: storing data directly in elements
-	 * (DomElement.customData = foobar;) isn't a good idea. It would lead to conflicts
-	 * in form elements, when the form has a child with name="foobar". Therefore, this
-	 * solution follows the approach of jQuery: the data is stored in an object and
-	 * referenced by a unique attribute of the element. The attribute has a name that 
-	 * is built by the prefix "HyphenatorExpando_" and a random number, so if the very
-	 * very rare case occurs, that there's already an attribute with the same name, a
-	 * simple reload is enough to make it function.
-	 * @private
-	 */		
-	Expando = (function () {
-		var container = {},
-			name = "HyphenatorExpando_" + Math.random(),
-			uuid = 0;
-		return {
-			getDataForElem : function (elem) {
-				return container[elem[name].id];
-			},
-			setDataForElem : function (elem, data) {
-				var id;
-				if (elem[name] && elem[name].id !== '') {
-					id = elem[name].id;
-				} else {
-					id = uuid++;
-					elem[name] = {'id': id}; //object needed, otherways it is reflected in HTML in IE
-				}
-				container[id] = data;
-			},
-			appendDataForElem : function (elem, data) {
-				var k;
-				for (k in data) {
-					if (data.hasOwnProperty(k)) {
-						container[elem[name].id][k] = data[k];
-					}
-				}
-			},
-			delDataOfElem : function (elem) {
-				delete container[elem[name]];
-			}
-		};
-	}()),
 		
 	/*
 	 * runOnContentLoaded is based od jQuery.bindReady()
@@ -981,40 +969,29 @@ var Hyphenator = (function (window) {
 	gatherDocumentInfos = function () {
 		var elToProcess, tmp, i = 0,
 		process = function (el, hide, lang) {
-			var n, i = 0, hyphenatorSettings = {},
-			unhide = function () {
-				if (hide) {
-					el.style.visibility = 'visible';
-					if (el.style.removeProperty) {
-						el.style.removeProperty('visibility');
-					} else if (el.style.removeAttribute) { // IE
-						el.style.removeAttribute('visibility');
-					}  
-				}
-			};
-			if (hide && intermediateState === 'hidden') {
-				if (!!el.getAttribute('style')) {
-					hyphenatorSettings.hasOwnStyle = true;
-				} else {
-					hyphenatorSettings.hasOwnStyle = false;					
-				}
-				hyphenatorSettings.isHidden = true;
-				el.style.visibility = 'hidden';
-			}
+			var n, i = 0, hyphenatorSettings = {};
+
 			if (el.lang && typeof(el.lang) === 'string') {
-				hyphenatorSettings.language = el.lang.toLowerCase(); //copy attribute-lang to internal lang
+				lang = el.lang.toLowerCase(); //copy attribute-lang to internal lang
 			} else if (lang) {
-				hyphenatorSettings.language = lang.toLowerCase();
+				lang = lang.toLowerCase();
 			} else {
-				hyphenatorSettings.language = getLang(el, true);
+				lang = getLang(el, true);
 			}
-			lang = hyphenatorSettings.language;
 			
 			//if css3-hyphenation is supported: use it!
-			if (css3_h9n.support && !!css3_h9n.languages[lang]) {
+			if (css3 && css3_h9n.support && !!css3_h9n.languages[lang]) {
 				el.style[css3_h9n.property] = "auto";
-				unhide();
 			} else {
+				if (hide && intermediateState === 'hidden') {
+					if (!!el.getAttribute('style')) {
+						hyphenatorSettings.hasOwnStyle = true;
+					} else {
+						hyphenatorSettings.hasOwnStyle = false;					
+					}
+					hyphenatorSettings.isHidden = true;
+					el.style.visibility = 'hidden';
+				}
 				if (supportedLang[lang]) {
 					docLanguages[lang] = true;
 				} else {
@@ -1024,10 +1001,8 @@ var Hyphenator = (function (window) {
 					} else if (!isBookmarklet) {
 						onError(new Error('Language ' + lang + ' is not yet supported.'));
 					}
-				}
-				Expando.setDataForElem(el, hyphenatorSettings);			
-				
-				elements.push(el);
+				}				
+				elements.add(el, lang, hyphenatorSettings);
 			}
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
@@ -1049,7 +1024,7 @@ var Hyphenator = (function (window) {
 				process(tmp, true, '');
 			}			
 		}
-		if (!Hyphenator.languages.hasOwnProperty(mainLanguage)) {
+		/*if (!Hyphenator.languages.hasOwnProperty(mainLanguage)) {
 			docLanguages[mainLanguage] = true;
 		} else if (!Hyphenator.languages[mainLanguage].prepared) {
 			docLanguages[mainLanguage] = true;
@@ -1057,10 +1032,7 @@ var Hyphenator = (function (window) {
 		if (css3 && css3_h9n.languages[mainLanguage]) {
 			//prevent languages from loading if hyphenated by CSS3
 			delete docLanguages[mainLanguage];
-		}
-		if (elements.length > 0) {
-			Expando.appendDataForElem(elements[elements.length - 1], {isLast : true});
-		}
+		}*/
 	},
 		 
 	/**
@@ -1227,7 +1199,6 @@ var Hyphenator = (function (window) {
 	 * by repeatedly checking Hyphenator.languages. If a patterfile is loaded the patterns are
 	 * converted to their object style and the lang-object extended.
 	 * Finally the callback is called.
-	 * @param {function()} callback to call, when all patterns are loaded
 	 * @private
 	 */
 	prepare = function (callback) {
@@ -1239,7 +1210,7 @@ var Hyphenator = (function (window) {
 				}
 			}
 			state = 2;
-			callback();
+			callback('*');
 			return;
 		}
 		// get all languages that are used and preload the patterns
@@ -1271,19 +1242,14 @@ var Hyphenator = (function (window) {
 					Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
 					
 					delete docLanguages[lang];
+					callback(lang);
 					continue;
 				} else {
 					loadPatterns(lang);
 				}
 			}
 		}
-		// if all patterns are loaded from storage: callback
-		if (countObjProps(docLanguages) === 0) {
-			state = 2;
-			callback();
-			return;
-		}
-		// else async wait until patterns are loaded, then callback
+		// else async wait until patterns are loaded, then hyphenate
 		interval = window.setInterval(function () {
 			var finishedLoading = true, lang;
 			for (lang in docLanguages) {
@@ -1293,6 +1259,7 @@ var Hyphenator = (function (window) {
 						delete docLanguages[lang];
 						//do conversion while other patterns are loading:
 						prepareLanguagesObj(lang);
+						callback(lang);
 					}
 				}
 			}
@@ -1300,7 +1267,6 @@ var Hyphenator = (function (window) {
 				//console.log('callig callback for ' + contextWindow.location.href);
 				window.clearInterval(interval);
 				state = 2;
-				callback();
 			}
 		}, 100);
 	},
@@ -1588,6 +1554,20 @@ var Hyphenator = (function (window) {
 		}
 	},
 	
+	checkIfAllDone = function () {
+		var allDone = true;
+		elements.each(function (lang, list) {
+			var i, l = list.length;
+			for (i = 0; i < l; i++) {
+				allDone = allDone && list[i].hyphenated;
+			}
+		});
+		if (allDone) {
+			state = 3;
+			onHyphenationDone();
+		}
+	},
+
 
 	/**
 	 * @name Hyphenator-hyphenateElement
@@ -1598,9 +1578,10 @@ var Hyphenator = (function (window) {
 	 * @param {Object} el The element to hyphenate
 	 * @private
 	 */
-	hyphenateElement = function (el) {
-		var hyphenatorSettings = Expando.getDataForElem(el),
-			lang = hyphenatorSettings.language, hyphenate, n, i,
+	hyphenateElement = function (lang, elo) {
+		var hyphenatorSettings = elo.data,
+			el = elo.element,
+			hyphenate, n, i,
 			controlOrphans = function (part) {
 				var h, r;
 				switch (hyphen) {
@@ -1665,13 +1646,10 @@ var Hyphenator = (function (window) {
 				}  
 			}
 		}
-		if (hyphenatorSettings.isLast) {
-			state = 3;
-			documentCount--;
-			if (documentCount > (-1000) && documentCount <= 0) {
-				documentCount = (-2000);
-				onHyphenationDone();
-			}
+		elo.hyphenated = true;
+		elements.hyCount += 1;
+		if (elements.count === elements.hyCount) {
+			checkIfAllDone();
 		}
 	},
 	
@@ -1684,6 +1662,30 @@ var Hyphenator = (function (window) {
 	 * Therefore a tricky bind()-function was necessary.
 	 * @private
 	 */
+	hyphenateLanguageElements = function (lang) {
+		function bind(fun, arg1, arg2) {
+			return function () {
+				return fun(arg1, arg2);
+			};
+		}
+		var el, i, l;
+		if (lang === '*') {
+			elements.each(function (lang, langels) {
+				var i, l = langels.length;
+				for (i = 0; i < l; i++) {
+					window.setTimeout(bind(hyphenateElement, lang, langels[i]), 0);
+				}
+			});
+		} else {
+			if (elements.list.hasOwnProperty(lang)) {
+				l = elements.list[lang].length;
+				for (i = 0; i < l; i++) {
+					window.setTimeout(bind(hyphenateElement, lang, elements.list[lang][i]), 0);
+				}
+			}
+		}
+	},
+	
 	hyphenateDocument = function () {
 		function bind(fun, arg) {
 			return function () {
@@ -1705,10 +1707,13 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	removeHyphenationFromDocument = function () {
-		var i = 0, el;
-		while (!!(el = elements[i++])) {
-			removeHyphenationFromElement(el);
-		}
+		elements.each(function (lang, elo) {
+			var i, l = elo.length, el;
+			for (i = 0; i < l; i++) {
+				removeHyphenationFromElement(elo[i].element);
+				elo[i].hyphenated = false;
+			}
+		});
 		state = 4;
 	},
 		
@@ -2046,7 +2051,7 @@ var Hyphenator = (function (window) {
 					autoSetMainLanguage(undefined);
 					gatherDocumentInfos();
 					//console.log('preparing for ' + contextWindow.location.href);
-					prepare(hyphenateDocument);
+					prepare(hyphenateLanguageElements);
 					if (displayToggleBox) {
 						toggleBox();
 					}
@@ -2237,7 +2242,7 @@ var Hyphenator = (function (window) {
 				storeConfiguration();
 				toggleBox();
 			} else {
-				hyphenateDocument();
+				hyphenateLanguageElements('*');
 				Hyphenator.doHyphenation = true;
 				storeConfiguration();
 				toggleBox();
