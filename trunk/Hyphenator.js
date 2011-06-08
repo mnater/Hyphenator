@@ -1648,16 +1648,18 @@ var Hyphenator = (function (window) {
 		}
 		elo.hyphenated = true;
 		elements.hyCount += 1;
-		if (elements.count === elements.hyCount) {
+		if (elements.count <= elements.hyCount) {
 			checkIfAllDone();
 		}
 	},
 	
 
 	/**
-	 * @name Hyphenator-hyphenateDocument
+	 * @name Hyphenator-hyphenateLanguageElements
 	 * @description
-	 * Calls hyphenateElement() for all members of elements. This is done with a setTimout
+	 * Calls hyphenateElement() for all elements of the specified language.
+	 * If the language is '*' then all elements are hyphenated.
+	 * This is done with a setTimout
 	 * to prevent a "long running Script"-alert when hyphenating large pages.
 	 * Therefore a tricky bind()-function was necessary.
 	 * @private
@@ -1686,20 +1688,6 @@ var Hyphenator = (function (window) {
 		}
 	},
 	
-	hyphenateDocument = function () {
-		function bind(fun, arg) {
-			return function () {
-				return fun(arg);
-			};
-		}
-		var i = 0, el;
-		while (!!(el = elements[i++])) {
-			if (el.ownerDocument.location.href === contextWindow.location.href) {
-				window.setTimeout(bind(hyphenateElement, el), 0);
-			}
-		}
-	},
-
 	/**
 	 * @name Hyphenator-removeHyphenationFromDocument
 	 * @description
