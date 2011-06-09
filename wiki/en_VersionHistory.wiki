@@ -7,6 +7,7 @@ This major release brings the following new features:
   * Faster execution (less DOM interactions and better implementation of the hyphenation algorithm)
   * Support for CSS3-Hyphenation (issue133)
   * progressive unhiding of hyphenated elements (issue123)
+  * Added support for Slovak (thanks to Zdenko Podobny)
 And some bugfixes:
   * fixed issue with oncopy and IE9
   * fixed issue138 (HTML5 Elements)
