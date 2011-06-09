@@ -90,6 +90,7 @@ var Hyphenator = (function (window) {
 		'pl': 'pl.js',
 		'pt': 'pt.js',
 		'ru': 'ru.js',
+		'sk': 'sk.js',
 		'sl': 'sl.js',
 		'sv': 'sv.js',
 		'ta': 'ta.js',
