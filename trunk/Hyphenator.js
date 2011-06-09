@@ -345,13 +345,20 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator-css3_h9n
 	 */
 	css3_gethsupport = function () {
-		var s = window.getComputedStyle(window.document.getElementsByTagName('body')[0]),
+		var s,
 		ua = navigator.userAgent,
 		r = {
 			support: false,
 			property: '',
 			languages: {}
 		};
+		if (window.getComputedStyle) {
+			s = window.getComputedStyle(window.document.getElementsByTagName('body')[0]);
+		} else {
+			//ancient Browser don't support CSS3 anyway
+			css3_h9n = r;
+			return;
+		}
 		if (ua.indexOf('Chrome') !== -1) {
 			//Chrome actually knows -webkit-hyphens but does no hyphenation
 			r.support = false;
@@ -684,6 +691,18 @@ var Hyphenator = (function (window) {
 	intermediateState = 'hidden',
 	
 	/**
+	 * @name Hyphenator-unhide
+	 * @description
+	 * How hidden elements unhide: either simultaneous (default: 'wait') or progressively.
+	 * 'wait' makes Hyphenator.js to wait until all elements are hyphenated (one redraw)
+	 * With 'progressiv' Hyphenator.js unhides elements as soon as they are hyphenated.
+	 * @see Hyphenator.config
+	 * @type {string}
+	 * @private
+	 */		
+	unhide = 'wait',
+	
+	/**
 	 * @name Hyphenator-hyphen
 	 * @description
 	 * A string containing the character for in-word-hyphenation
@@ -984,7 +1003,7 @@ var Hyphenator = (function (window) {
 			if (css3 && css3_h9n.support && !!css3_h9n.languages[lang]) {
 				el.style[css3_h9n.property] = "auto";
 			} else {
-				if (hide && intermediateState === 'hidden') {
+				if (intermediateState === 'hidden') {
 					if (!!el.getAttribute('style')) {
 						hyphenatorSettings.hasOwnStyle = true;
 					} else {
@@ -1555,12 +1574,45 @@ var Hyphenator = (function (window) {
 		}
 	},
 	
+	/**
+	 * @name Hyphenator-unhideElement
+	 * @description
+	 * Unhides an element and removes the visibility attr if set by hyphenator
+	 * @param Object The Element object from ElementCollection
+	 * @private
+	 */	
+	unhideElement = function (elo) {
+		var el = elo.element,
+		hyphenatorSettings = elo.data;
+		el.style.visibility = 'visible';
+		elo.data.isHidden = false;
+		if (!hyphenatorSettings.hasOwnStyle) {
+			el.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
+			el.removeAttribute('style');
+		} else {
+			if (el.style.removeProperty) {
+				el.style.removeProperty('visibility');
+			} else if (el.style.removeAttribute) { // IE
+				el.style.removeAttribute('visibility');
+			}  
+		}
+	},
+
+	/**
+	 * @name Hyphenator-checkIfAllDone
+	 * @description
+	 * Checks if all Elements are hyphenated, unhides them and fires onHyphenationDone()
+	 * @private
+	 */		
 	checkIfAllDone = function () {
 		var allDone = true;
 		elements.each(function (lang, list) {
 			var i, l = list.length;
 			for (i = 0; i < l; i++) {
 				allDone = allDone && list[i].hyphenated;
+				if (intermediateState === 'hidden' && unhide === 'wait') {
+					unhideElement(list[i]);
+				}
 			}
 		});
 		if (allDone) {
@@ -1634,18 +1686,8 @@ var Hyphenator = (function (window) {
 				}
 			}
 		}
-		if (hyphenatorSettings.isHidden && intermediateState === 'hidden') {
-			el.style.visibility = 'visible';
-			if (!hyphenatorSettings.hasOwnStyle) {
-				el.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-				el.removeAttribute('style');
-			} else {
-				if (el.style.removeProperty) {
-					el.style.removeProperty('visibility');
-				} else if (el.style.removeAttribute) { // IE
-					el.style.removeAttribute('visibility');
-				}  
-			}
+		if (hyphenatorSettings.isHidden && intermediateState === 'hidden' && unhide === 'progressive') {
+			unhideElement(elo);
 		}
 		elo.hyphenated = true;
 		elements.hyCount += 1;
@@ -2007,6 +2049,11 @@ var Hyphenator = (function (window) {
 					case 'useCSS3hyphenation':
 						if (assert('useCSS3hyphenation', 'boolean')) {
 							css3 = obj[key];
+						}
+						break;
+					case 'unhide':
+						if (assert('unhide', 'string')) {
+							unhide = obj[key];
 						}
 						break;
 					default:
