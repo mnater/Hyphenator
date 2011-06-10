@@ -1065,18 +1065,16 @@ var Hyphenator = (function (window) {
 	 * @param {string} lang the language whose patterns shall be converted
 	 */		
 	convertPatterns = function (lang) {
-		var plen, anfang, ende, pats, pat, key, tmp = {};
+		var plen, pats, pat, key, tmp = {}, i, patArr;
 		pats = Hyphenator.languages[lang].patterns;
 		for (plen in pats) {
 			if (pats.hasOwnProperty(plen)) {
 				plen = parseInt(plen, 10);
-				anfang = 0;
-				ende = plen;
-				while (!!(pat = pats[plen].substring(anfang, ende))) {
+				patArr = pats[plen].match(new RegExp('.{1,' + plen + '}', 'g'));
+				i = 0;
+				while (!!(pat = patArr[i++])) {
 					key = pat.replace(/\d/g, '');
 					tmp[key] = pat;
-					anfang = ende;
-					ende += plen;
 				}
 			}
 		}
