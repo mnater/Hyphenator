@@ -25,18 +25,12 @@
         	if (parent != window) {
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
-						var t1 = document.getElementById('test').innerHTML,
-						t2 = document.getElementById('ref').innerHTML,
-						desc = document.getElementById('desc').firstChild.data,
+						var desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
-							index: 47
+							index: 47,
+							result: 'visual'
 						};
-						if (t1 == t2) {
-							msg.result = 'passed';
-						} else {
-							msg.result = 'failed';
-						}
 						parent.postMessage(JSON.stringify(msg), window.location.href);
 					}
 				});     	
