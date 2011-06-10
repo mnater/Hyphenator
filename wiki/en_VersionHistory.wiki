@@ -4,7 +4,9 @@
 <wiki:comment>
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.0.0.zip 4.0.0] (June 10, 2011) ==
 This major release brings the following new features:
-  * Faster execution (less DOM interactions and better implementation of the hyphenation algorithm)
+  * Faster hyphenation algorithm based on a trie (thanks to Bram Stein)
+  * Faster DOM traversal
+  * Overall: 30% less execution time
   * Support for CSS3-Hyphenation (issue133)
   * progressive unhiding of hyphenated elements (issue123)
   * Added support for Slovak (thanks to Zdenko Podobny)
