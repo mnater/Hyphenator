@@ -1090,22 +1090,50 @@ var Hyphenator = (function (window) {
 			},
 			patterns, pattern, i, j, k,
 			patternObject = Hyphenator.languages[lang].patterns,
-			c, chars, points, t, p, codePoint;
+			c, chars, points, t, p, codePoint,
+			getPoints = (function () {
+				//IE<9 doesn't act like other browsers
+				if ('in3se'.split(/\D/).length === 1) {
+					return function (pattern) {
+						var chars = pattern.split(''), c, i, r = [],
+						numb3rs = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}, lastWasNum = false;
+						i = 0;
+						while (!!(c = chars[i])) {
+							if (numb3rs.hasOwnProperty(c)) {
+								r.push(c);
+								i += 2;
+								lastWasNum = true;
+							} else {
+								r.push('');
+								i += 1;
+								lastWasNum = false;
+							}
+						}
+						if (!lastWasNum) {
+							r.push('');
+						}
+						return r;
+					};
+				} else {
+					return function (pattern) {
+						return pattern.split(/\D/);
+					};
+				}
+			}());
 	
 		for (size in patternObject) {
 			if (patternObject.hasOwnProperty(size)) {
 				patterns = patternObject[size].match(new RegExp('.{1,' + (+size) + '}', 'g'));
-	
 				i = 0;
 				while (!!(pattern = patterns[i++])) {
 					chars = pattern.replace(/[\d]/g, '').split('');
-					points = pattern.split(/\D/);
+					points = getPoints(pattern);
 					t = tree;
 
 					j = 0;
 					while (!!(c = chars[j++])) {
 						codePoint = c.charCodeAt(0);
-	
+						
 						if (!t[codePoint]) {
 							t[codePoint] = {};
 						}
@@ -1126,7 +1154,19 @@ var Hyphenator = (function (window) {
 		 */
 	},
 
-
+	recreatePattern = function (pattern, nodePoints) {
+		var r = [], c = pattern.split(''), i;
+		for (i = 0; i < nodePoints.length; i++) {
+			if (nodePoints[i] !== 0) {
+				r.push(nodePoints[i]);
+			}
+			if (c[i]) {
+				r.push(c[i]);
+			}
+		}
+		return r.join('');
+	},
+	
 	/**
 	 * @name Hyphenator-convertExceptionsToObject
 	 * @description
@@ -1393,7 +1433,7 @@ var Hyphenator = (function (window) {
 		var lo = Hyphenator.languages[lang], parts, l, subst,
 			w, characters, originalCharacters, wordLength, i, j, k, node, points = [],
 			characterPoints = [], nodePoints, nodePointsLength, m = Math.max, trie,
-			result = [''];
+			result = [''], pattern;
 		if (word === '') {
 			return '';
 		}
@@ -1439,13 +1479,20 @@ var Hyphenator = (function (window) {
 			characterPoints[i] = characters[i].charCodeAt(0);
 		}
 		for (i = 0; i < wordLength; i += 1) {
+			pattern = '';
 			node = trie;
 			for (j = i; j < wordLength; j += 1) {
 				node = node[characterPoints[j]];
-	
 				if (node) {
+					pattern += String.fromCharCode(characterPoints[j]);
 					nodePoints = node.tpoints;
 					if (nodePoints) {
+						if (enableReducedPatternSet) {
+							if (!lo.redPatSet) {
+								lo.redPatSet = {};
+							}
+							lo.redPatSet[pattern] = recreatePattern(pattern, nodePoints);
+						}
 						for (k = 0, nodePointsLength = nodePoints.length; k < nodePointsLength; k += 1) {
 							points[i + k] = m(points[i + k], nodePoints[k]);
 						}
