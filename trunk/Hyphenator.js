@@ -15,6 +15,40 @@
  *  that code without the copy of the GNU GPL normally required by
  *  section 4, provided you include this license notice and a URL
  *  through which recipients can access the Corresponding Source.
+ *
+ * 
+ *  Hyphenator.js contains code from Bram Steins hypher.js-Project:
+ *  https://github.com/bramstein/Hypher
+ *  
+ *  Code from this project is marked in the source and belongs 
+ *  to the following license:
+ *  
+ *  Copyright (c) 2011, Bram Stein
+ *  All rights reserved.
+ *  
+ *  Redistribution and use in source and binary forms, with or without 
+ *  modification, are permitted provided that the following conditions 
+ *  are met:
+ *   
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer. 
+ *   2. Redistributions in binary form must reproduce the above copyright 
+ *      notice, this list of conditions and the following disclaimer in the 
+ *      documentation and/or other materials provided with the distribution. 
+ *   3. The name of the author may not be used to endorse or promote products 
+ *      derived from this software without specific prior written permission. 
+ *  
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED 
+ *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+ *  EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+ *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+ *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+ *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  
  */
  
 /* 
@@ -1045,42 +1079,63 @@ var Hyphenator = (function (window) {
 				process(tmp, true, '');
 			}			
 		}
-		/*if (!Hyphenator.languages.hasOwnProperty(mainLanguage)) {
-			docLanguages[mainLanguage] = true;
-		} else if (!Hyphenator.languages[mainLanguage].prepared) {
-			docLanguages[mainLanguage] = true;
-		}
-		if (css3 && css3_h9n.languages[mainLanguage]) {
-			//prevent languages from loading if hyphenated by CSS3
-			delete docLanguages[mainLanguage];
-		}*/
 	},
 		 
+	
 	/**
-	 * @name Hyphenator-convertPatterns
+	 * @name Hyphenator-createTrie
 	 * @description
-	 * Converts the patterns from string '_a6' to object '_a':'_a6'.
-	 * The result is stored in the {@link Hyphenator-patterns}-object.
+	 * converts patterns of the given language in a trie
 	 * @private
 	 * @param {string} lang the language whose patterns shall be converted
 	 */		
-	convertPatterns = function (lang) {
-		var plen, pats, pat, key, tmp = {}, i, patArr;
-		pats = Hyphenator.languages[lang].patterns;
-		for (plen in pats) {
-			if (pats.hasOwnProperty(plen)) {
-				plen = parseInt(plen, 10);
-				patArr = pats[plen].match(new RegExp('.{1,' + plen + '}', 'g'));
+	convertPatterns2Trie = function (lang) {
+		/** @license BSD licenced code
+		 * The following code is based on code from hypher.js
+		 * Copyright (c) 2011, Bram Stein
+		 */
+		var size = 0,
+			tree = {
+				tpoints: []
+			},
+			patterns, pattern, i, j, k,
+			patternObject = Hyphenator.languages[lang].patterns,
+			c, chars, points, t, p, codePoint;
+	
+		for (size in patternObject) {
+			if (patternObject.hasOwnProperty(size)) {
+				patterns = patternObject[size].match(new RegExp('.{1,' + (+size) + '}', 'g'));
+	
 				i = 0;
-				while (!!(pat = patArr[i++])) {
-					key = pat.replace(/\d/g, '');
-					tmp[key] = pat;
+				while (!!(pattern = patterns[i++])) {
+					chars = pattern.replace(/[\d]/g, '').split('');
+					points = pattern.split(/\D/);
+					t = tree;
+
+					j = 0;
+					while (!!(c = chars[j++])) {
+						codePoint = c.charCodeAt(0);
+	
+						if (!t[codePoint]) {
+							t[codePoint] = {};
+						}
+						t = t[codePoint];
+					}
+
+					t.tpoints = [];
+					for (k = 0; k < points.length; k++) {
+						p = points[k];
+						t.tpoints.push((p == "") ? 0 : p);
+					}
 				}
 			}
 		}
-		Hyphenator.languages[lang].patterns = tmp;
-		Hyphenator.languages[lang].patternsConverted = true;
+		Hyphenator.languages[lang].patterns = tree;
+		/**
+		 * end of BSD licenced code from hypher.js
+		 */
 	},
+
 
 	/**
 	 * @name Hyphenator-convertExceptionsToObject
@@ -1193,7 +1248,7 @@ var Hyphenator = (function (window) {
 			} else {
 				lo.exceptions = {};
 			}
-			convertPatterns(lang);
+			convertPatterns2Trie(lang);
 			wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
 			lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 			lo.prepared = true;
@@ -1330,6 +1385,7 @@ var Hyphenator = (function (window) {
 		}
 	},
 
+
 	/**
 	 * @name Hyphenator-hyphenateWord
 	 * @description
@@ -1344,8 +1400,10 @@ var Hyphenator = (function (window) {
 	 * @public
 	 */	
 	hyphenateWord = function (lang, word) {
-		var lo = Hyphenator.languages[lang],
-			parts, i, l, w, wl, s, hypos, p, maxwins, win, pat = false, patk, c, t, n, numb3rs, inserted, hyphenatedword, val, subst, ZWNJpos = [];
+		var lo = Hyphenator.languages[lang], parts, l, subst,
+			w, characters, originalCharacters, wordLength, i, j, k, node, points = [],
+			characterPoints = [], nodePoints, nodePointsLength, m = Math.max, trie,
+			result = [''];
 		if (word === '') {
 			return '';
 		}
@@ -1367,18 +1425,7 @@ var Hyphenator = (function (window) {
 			}
 			return parts.join('-');
 		}
-		w = '_' + word + '_';
-		if (word.indexOf(String.fromCharCode(8204)) !== -1) {
-			parts = w.split(String.fromCharCode(8204));
-			w = parts.join('');
-			for (i = 0, l = parts.length; i < l; i++) {
-				parts[i] = parts[i].length.toString();
-			}
-			parts.pop();
-			ZWNJpos = parts;
-		}
-		wl = w.length;
-		s = w.split('');
+		w = word = '_' + word + '_';
 		if (!!lo.charSubstitution) {
 			for (subst in lo.charSubstitution) {
 				if (lo.charSubstitution.hasOwnProperty(subst)) {
@@ -1387,63 +1434,48 @@ var Hyphenator = (function (window) {
 			}
 		}
 		if (word.indexOf("'") !== -1) {
-			w = w.toLowerCase().replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
-		} else {
-			w = w.toLowerCase();
+			w = w.replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
 		}
-		//finally the core hyphenation algorithm
-		hypos = [];
-		numb3rs = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}; //check for member is faster then isFinite()
-		n = wl - lo.shortestPattern;
-		for (p = 0; p <= n; p++) {
-			maxwins = Math.min((wl - p), lo.longestPattern);
-			for (win = lo.shortestPattern; win <= maxwins; win++) {
-				if (lo.patterns.hasOwnProperty(patk = w.substring(p, p + win))) {
-					pat = lo.patterns[patk];
-					if (enableReducedPatternSet && (typeof pat === 'string')) {
-						lo.redPatSet[patk] = pat;
-					}
-					if (typeof pat === 'string') {
-						//convert from string 'a5b' to array [1,5] (pos,value)
-						t = 0;
-						val = [];
-						for (i = 0; i < pat.length; i++) {
-							if (!!(c = numb3rs[pat.charAt(i)])) {
-								val.push(i - t, c);
-								t++;								
-							}
+		/** @license BSD licenced code
+		 * The following code is based on code from hypher.js
+		 * Copyright (c) 2011, Bram Stein
+		 */
+		characters = w.toLowerCase().split('');
+		originalCharacters = word.split('');
+		wordLength = characters.length;
+		trie = lo.patterns;
+		for (i = 0; i < wordLength; i += 1) {
+			points[i] = 0;
+			characterPoints[i] = characters[i].charCodeAt(0);
+		}
+		for (i = 0; i < wordLength; i += 1) {
+			node = trie;
+			for (j = i; j < wordLength; j += 1) {
+				node = node[characterPoints[j]];
+	
+				if (node) {
+					nodePoints = node.tpoints;
+					if (nodePoints) {
+						for (k = 0, nodePointsLength = nodePoints.length; k < nodePointsLength; k += 1) {
+							points[i + k] = m(points[i + k], nodePoints[k]);
 						}
-						pat = lo.patterns[patk] = val;
 					}
 				} else {
-					continue;
-				}
-				for (i = 0; i < pat.length; i++) {
-					c = p - 1 + pat[i];
-					if (!hypos[c] || hypos[c] < pat[i + 1]) {
-						hypos[c] = pat[i + 1];
-					}
-					i++;
+					break;
 				}
 			}
 		}
-		inserted = 0;
-		for (i = lo.leftmin; i <= (wl - 2 - lo.rightmin); i++) {
-			if (ZWNJpos.length > 0 && ZWNJpos[0] === i) {
-				ZWNJpos.shift();
-				s.splice(i + inserted - 1, 0, String.fromCharCode(8204));
-				inserted++;
-			}			
-			if (!!(hypos[i] & 1)) {
-				s.splice(i + inserted + 1, 0, hyphen);
-				inserted++;
+		for (i = 1; i < wordLength - 1; i += 1) {
+			if (i > lo.leftmin && i < (wordLength - lo.rightmin) && points[i] % 2) {
+				result.push(originalCharacters[i]);
+			} else {
+				result[result.length - 1] += originalCharacters[i];
 			}
 		}
-		hyphenatedword = s.slice(1, -1).join('');
-		if (enableCache) {
-			lo.cache[word] = hyphenatedword;
-		}
-		return hyphenatedword;
+		return result.join(hyphen);
+		/**
+		 * end of BSD licenced code from hypher.js
+		 */
 	},
 		
 	/**
