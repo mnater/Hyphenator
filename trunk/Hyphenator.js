@@ -1484,7 +1484,9 @@ var Hyphenator = (function (window) {
 			for (j = i; j < wordLength; j += 1) {
 				node = node[characterPoints[j]];
 				if (node) {
-					pattern += String.fromCharCode(characterPoints[j]);
+					if (enableReducedPatternSet) {
+						pattern += String.fromCharCode(characterPoints[j]);
+					}
 					nodePoints = node.tpoints;
 					if (nodePoints) {
 						if (enableReducedPatternSet) {
