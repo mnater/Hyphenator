@@ -36,6 +36,7 @@
 			var hyphenatorSettings = {
 				hyphenchar: '|',
 				storagetype: 'none',
+				unhide: 'progressive'
 			};
 			Hyphenator.config(hyphenatorSettings);
 			Hyphenator.run();
@@ -48,5 +49,6 @@
 
         <p id="test" class="hyphenate">This text is english (english patterns are just 29kb), whereas the hungarian word <span lang="hu">magyar</span> requests a patternfile of 500kb…</p>
         <p id="test" class="hyphenate">This text is english only and could be displayed as soon as en-patterns are available.</p>
+        <p>Hint: throttle server and empty cache!!!</p>
     </body>
 </html>
