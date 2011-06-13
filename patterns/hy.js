@@ -3,8 +3,6 @@
 Hyphenator.languages['hy'] = {
 	leftmin : 1,
 	rightmin : 2,
-	shortestPattern : 2,
-	longestPattern : 3,
 	specialChars : unescape("աբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքևօֆԱԲԳԴԵԶԷԸԹԺԻԼԽԾԿՀՁՂՃՄՅՆՇՈՉՊՋՌՍՎՏՐՑՒՓՔՕՖ"),
 	patterns : {
 		3 : "և1աև1եև1էև1ըև1իև1ոև1օ",

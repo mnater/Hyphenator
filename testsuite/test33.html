@@ -18,112 +18,18 @@
             }
         </style>
         <script type="text/javascript">
-			var Hyphenator = {	languages: {}};
-        </script>
-        <script src="../patterns/be.js" type="text/javascript"></script>
-        <script src="../patterns/bn.js" type="text/javascript"></script>
-        <script src="../patterns/ca.js" type="text/javascript"></script>
-        <script src="../patterns/cs.js" type="text/javascript"></script>
-        <script src="../patterns/da.js" type="text/javascript"></script>
-        <script src="../patterns/de.js" type="text/javascript"></script>
-        <script src="../patterns/el-monoton.js" type="text/javascript"></script>
-        <script src="../patterns/el-polyton.js" type="text/javascript"></script>
-        <script src="../patterns/en-gb.js" type="text/javascript"></script>
-        <script src="../patterns/en-us.js" type="text/javascript"></script>
-        <script src="../patterns/es.js" type="text/javascript"></script>
-        <script src="../patterns/fi.js" type="text/javascript"></script>
-        <script src="../patterns/fr.js" type="text/javascript"></script>
-        <script src="../patterns/gu.js" type="text/javascript"></script>
-        <script src="../patterns/grc.js" type="text/javascript"></script>
-        <script src="../patterns/hi.js" type="text/javascript"></script>
-        <script src="../patterns/hu.js" type="text/javascript"></script>
-        <script src="../patterns/hy.js" type="text/javascript"></script>
-        <script src="../patterns/it.js" type="text/javascript"></script>
-        <script src="../patterns/kn.js" type="text/javascript"></script>
-        <script src="../patterns/la.js" type="text/javascript"></script>
-        <script src="../patterns/lt.js" type="text/javascript"></script>
-        <script src="../patterns/lv.js" type="text/javascript"></script>
-        <script src="../patterns/ml.js" type="text/javascript"></script>
-        <script src="../patterns/nl.js" type="text/javascript"></script>
-        <script src="../patterns/no-nb.js" type="text/javascript"></script>
-        <script src="../patterns/or.js" type="text/javascript"></script>
-        <script src="../patterns/pa.js" type="text/javascript"></script>
-        <script src="../patterns/pl.js" type="text/javascript"></script>
-        <script src="../patterns/pt.js" type="text/javascript"></script>
-        <script src="../patterns/ru.js" type="text/javascript"></script>
-        <script src="../patterns/sk.js" type="text/javascript"></script>
-        <script src="../patterns/sl.js" type="text/javascript"></script>
-        <script src="../patterns/sv.js" type="text/javascript"></script>
-        <script src="../patterns/ta.js" type="text/javascript"></script>
-        <script src="../patterns/te.js" type="text/javascript"></script>
-        <script src="../patterns/tr.js" type="text/javascript"></script>
-        <script src="../patterns/uk.js" type="text/javascript"></script>
-        <script type="text/javascript">
-        	function output(c, t) {
-        		var el = document.getElementById('out');
-        		var myout = document.createElement('div');
-        		var myClass = document.createAttribute('class');
-				myClass.nodeValue = c;
-				myout.setAttributeNode(myClass);
-				var myTextNode = document.createTextNode(t);
-				myout.appendChild(myTextNode);
-				el.appendChild(myout);
-        	}
-        	
-        	function runTest() {        	
-				for (var lang in Hyphenator.languages) {
-					if (Hyphenator.languages.hasOwnProperty(lang)) {
-						var plen, i = 0, anfang, pats, pat, key, shortest = 100, longest = 0;
-						var newlongest = 0;
-						var newshortest = 10;
-						var r = true;
-						pats = Hyphenator.languages[lang].patterns;
-						for (plen in pats) {
-							if (pats.hasOwnProperty(plen)) {
-								plen = parseInt(plen, 10);
-								anfang = 0;
-								while (!!(pat = pats[plen].substr(anfang, plen))) {
-									key = pat.replace(/\d/g, '');
-									if (key.length > newlongest) {
-										newlongest = key.length;
-									}
-									if (key.length < newshortest) {
-										newshortest = key.length;
-									}
-									anfang += plen;
-								}
-							}
-						}
-						var t1 = 'Hyphenator.longestPattern['+lang+'] set to '+Hyphenator.languages[lang].longestPattern+' -- computed: '+newlongest;
-						if (newlongest === Hyphenator.languages[lang].longestPattern) {
-							output('ref', t1);
-						} else {
-							r = false;
-							output('test', t1);
-						}
-						var t2 = 'Hyphenator.shortestPattern['+lang+'] set to '+Hyphenator.languages[lang].shortestPattern+' -- computed: '+newshortest;
-						if (newshortest === Hyphenator.languages[lang].shortestPattern) {
-							output('ref', t2);
-						} else {
-							r = false
-							output('test', t2);
-						}
-					}
-				}
-				if (parent != window) {
-					var desc = document.getElementById('desc').firstChild.data,
-					msg = {
-						desc: desc,
-						index: 33,
-						result: r ? 'passed' : 'failed'
-					};
-					parent.postMessage(JSON.stringify(msg), window.location.href);
-				}
+        window.onload = function () {
+        	if (parent != window) {
+				var desc = document.getElementById('desc').innerHTML,
+				msg = {
+					desc: desc,
+					index: 33,
+					result: 'obsolete'
+				};
+				parent.postMessage(JSON.stringify(msg), window.location.href);
 			}
-			
-			window.onload = function() {
-				runTest();
-			};
+		};
+        </script>
         </script>
     </head>
     <body>

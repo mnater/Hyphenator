@@ -3,8 +3,6 @@
 Hyphenator.languages['uk'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 12,
 	specialChars : "аеіоуюяєїибкпстфхцчшщвгджзлмнрй’'ґь",
 	patterns : {
 		2 : "6’6ь",

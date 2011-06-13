@@ -3,8 +3,6 @@
 Hyphenator.languages['ta'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 2,
 	specialChars : "அஆஇஈஉஊஎஏஐஒஓஔாிீுூெேைொோௌகஙசஜஞடணதநபமயரறலளழவஷஸஹ்னஂஃௗ",
 	patterns : {
 		2 : "ா1ி1ீ1ு1ூ1ெ1ே1ை1ொ1ோ1ௌ11க1ங1ச1ஜ1ஞ1ட1ண1த1ந1ப1ம1ய1ர1ற1ல1ள1ழ1வ1ஷ1ஸ1ஹ",

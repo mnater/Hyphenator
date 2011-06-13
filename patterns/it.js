@@ -1,8 +1,6 @@
 ﻿Hyphenator.languages['it'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 8,
 	specialChars : "àéèìòù’'",
 	// The italian hyphenation patterns are retrieved from 
 	// http://www.ctan.org/tex-archive/language/hyphenation/ithyph.tex

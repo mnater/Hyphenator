@@ -5,8 +5,6 @@
 Hyphenator.languages['ru'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 7,
 	specialChars : unescape("абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯਂ%u200D"),
 	patterns : {
 		2 : "1г1ж1м1п1ф1ц1ш1щъ1ы1ь11э1ю",

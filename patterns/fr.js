@@ -3,8 +3,6 @@
 Hyphenator.languages['fr'] = {
 	leftmin : 2,
 	rightmin : 3,
-	shortestPattern : 1,
-	longestPattern : 14,
 	specialChars : "àâçèéêîïôûœ’'",
 	patterns : {
 		2 : "1ç1j1q",

@@ -4,8 +4,6 @@
 Hyphenator.languages['pt'] = {
 	leftmin : 2,
 	rightmin : 4,
-	shortestPattern : 1,
-	longestPattern : 3,
 	specialChars : "áéíóúãõàçâêô",
 	patterns : {
 		2 : "1-",

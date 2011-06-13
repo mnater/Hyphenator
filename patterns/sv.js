@@ -3,8 +3,6 @@
 Hyphenator.languages['sv'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 8,
 	specialChars : "åäöé",
 	patterns : {
 		2 : "c21df21hx12y",
