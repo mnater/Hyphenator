@@ -402,14 +402,14 @@ This language is only taken in count, if no actual lang-tag can be found (i.e. j
 *new in version 4.0.0*
 Modern browsers are implementing CSS3-Hyphenation. In cases where CSS3-Hyphenation is supported by the browser, Hyphenator.js can activate it for the supported languages (currently only English) instead of computing the hyphenation points by itself. This is fast and don't require to download the patterns which is nice for mobile browsers (e.g. iPad/iPhone).
 For other languages than english Hyphenator.js fills the gap.
-By default `useCSS3hyphenation` is on but you can force Hyphenator.js not to use CSS3-Hyphenation by setting this option to false.
+By default `useCSS3hyphenation` is off but you can make Hyphenator.js to use CSS3-Hyphenation by setting this option to true.
 
-===== Example 20 – turning `useCSS3hyphenation`off =====
+===== Example 20 – turning `useCSS3hyphenation`on =====
 {{{
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({
-		useCSS3hyphenation: false
+		useCSS3hyphenation: true
 	});
 	Hyphenator.run();
 </script>
