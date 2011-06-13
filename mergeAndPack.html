@@ -612,6 +612,12 @@ function jsmin(comment, input, level) {
 			$('onerror_btn').onclick = function () {
 				toggleInfoBoxDisplay($('onerror_box'), this, true);
 			};
+			$('useCSS3hyphenation_btn').onclick = function () {
+				toggleInfoBoxDisplay($('useCSS3hyphenation_box'), this, true);
+			};
+			$('unhide_btn').onclick = function () {
+				toggleInfoBoxDisplay($('unhide_box'), this, true);
+			};
 						
 			$('myform').onsubmit = function(){
 				var xhr = null;
@@ -663,6 +669,8 @@ function jsmin(comment, input, level) {
  				var onerrorhandler = $('onerrorhandler').value;
  				var intermediatestate = $('intermediatestate').value;
  				var storagetype = $('storagetype').value;
+ 				var unhide = $('unhide').value;
+ 				var useCSS3hyphenation = $('useCSS3hyphenation').checked;
  				var selectorfunction = $('selectorfunction').value;
  				var pack = $('pack').checked;
  				var packlevel = parseInt($('packlevel').value, 10);
@@ -726,6 +734,13 @@ function jsmin(comment, input, level) {
 				}
 				if(storagetype !== 'local') {
 					config += 'storagetype : \''+storagetype+'\',\n\t';	
+				}
+				
+				if(unhide !== 'wait') {
+					config += 'unhide : \''+unhide+'\',\n\t';	
+				}
+				if(useCSS3hyphenation === true) {
+					config += 'useCSS3hyphenation : true,\n\t';
 				}
 				
 				if(config.length > 0) {
@@ -890,13 +905,30 @@ function jsmin(comment, input, level) {
 					<option>session</option>
 					<option>none</option>
 				</select>
-				 Define storagetype (for modern browsers only).</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="storagetype_btn" class="info_btn" alt="Show-Info Button"></p>
+				 Define DOM-Storage type (for modern browsers only).</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="storagetype_btn" class="info_btn" alt="Show-Info Button"></p>
 				<div id="storagetype_box" class="info_box">Hyphenation patterns can be stored in DOM-Storage for later reuse. You can define the method (if at all):<br>
 				'local': patterns are stored locally (they will be there even after a restart)<br>
-				'session': patterns are removed if the window is closed
+				'session': patterns are removed if the window is closed<br>
 				'none': DOM-Storage is not used<br>
 				Degrades gracefully, if the browser does not support DOM-Storage.
 				</div>
+
+				<p>
+				<label><select id="unhide" name="unhide" size="1" title="unhide">
+					<option>wait</option>
+					<option>progressive</option>
+				</select>
+				 Define, when elements are hyphenated.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="unhide_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="unhide_box" class="info_box">Elements can either be hyphenated when all necessary patterns are loaded ('wait') or when the patterns for the specified language are loaded ('progressive').<br>
+				The second option may be useful on multilanguage pages, where one language takes much longer to load.
+				</div>
+
+				<p>
+				<label><input type="checkbox" id="useCSS3hyphenation" name="useCSS3hyphenation" title="useCSS3hyphenation"> Use the in-browser CSS3 hyphenation if available.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="useCSS3hyphenation_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="useCSS3hyphenation_box" class="info_box">With this option enabled Hyphenator.js checks if the browser supports CSS3-hyphenation. If so, the elements are hyphenated by the browser instead of Hyphenator.js.<br>
+				For unsupported languages or other browsers Hyphenator.js fills the gap and hyphenates as expected.
+				</div>
+				<p>
 				
 				
 				
