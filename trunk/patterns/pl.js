@@ -1,8 +1,6 @@
 ﻿Hyphenator.languages['pl'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 15,
 	specialChars : unescape("ąćęłńóśźżਂ%u200D"),
 	patterns : {
 		2 : "a1ą1e1ę1i1o1ó1u1y1",

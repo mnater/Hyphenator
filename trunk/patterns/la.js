@@ -5,8 +5,6 @@
 Hyphenator.languages['la'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 8,
 	specialChars : "æœ",
 	patterns : {
 		2 : "æ1œ11b1c1d1f1g1h1j1k1l1m1n1p1r1t1v1x1z",

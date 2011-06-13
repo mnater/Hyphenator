@@ -85,7 +85,7 @@
 
         </style>
         <script type="text/javascript">
-			var oldpatterns, newpatterns, shortestPattern, longestPattern, specialChars;
+			var oldpatterns, newpatterns, specialChars;
 			
 			function lengthSort(a, b) {
 				return a.length - b.length;
@@ -96,8 +96,6 @@
 				tmp = 'Hyphenator.languages[\'' + document.getElementsByName('language')[0].value + '\'] = {\n';
 				tmp += '\tleftmin : ' + document.getElementsByName('leftmin')[0].value + ',\n';
 				tmp += '\trightmin : ' + document.getElementsByName('rightmin')[0].value + ',\n';
-				tmp += '\tshortestPattern : ' + shortestPattern + ',\n';
-				tmp += '\tlongestPattern : ' + longestPattern + ',\n';
 				tmp += '\tspecialChars : "' + specialChars + '",\n';
 				tmp += '\tpatterns : {\n';
 				for (len in newpatterns) {
@@ -112,8 +110,6 @@
 			
 			function startConversion() {
 				var len, i, curlen, key, special, s;
-				shortestPattern = 100;
-				longestPattern = 0;
 				newpatterns = {};
 				special = document.getElementsByName('oldpattern')[0].value.match(/[^a-z0-9\. ]/gi);
 				if (special) {
@@ -137,12 +133,6 @@
 				len = oldpatterns.length;
 				for (i = 0; i < len; i++) {
 					key = oldpatterns[i].replace(/\d/g, '');
-					if (key.length < shortestPattern) {
-						shortestPattern = key.length;
-					}
-					if (key.length > longestPattern) {
-						longestPattern = key.length;
-					}
 					curlen = oldpatterns[i].length;
 					if (curlen in newpatterns) {
 						newpatterns[curlen] += oldpatterns[i].replace(/\./g, '_');

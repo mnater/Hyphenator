@@ -1,8 +1,6 @@
 ﻿Hyphenator.languages['fi'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 2,
-	longestPattern : 7,
 	specialChars : "öäå",
 	patterns : {
 		3 : "1ba1be1bi1bo1bu1by1da1de1di1do1du1dy1dä1dö1fa1fe1fi1fo1fu1fy1ga1ge1gi1go1gu1gy1gä1gö1ha1he1hi1ho1hu1hy1hä1hö1ja1je1ji1jo1ju1jy1jä1jö1ka1ke1ki1ko1ku1ky1kä1kö1la1le1li1lo1lu1ly1lä1lö1ma1me1mi1mo1mu1my1mä1mö1na1ne1ni1no1nu1ny1nä1nö1pa1pe1pi1po1pu1py1pä1pö1ra1re1ri1ro1ru1ry1rä1rö1sa1se1si1so1su1sy1sä1sö1ta1te1ti1to1tu1ty1tä1tö1va1ve1vi1vo1vu1vy1vä1vöä2yo1yö2ya1äa1öo1äo1öä2äö2öä2öö2ä_ä2u2sb2lb2rd2rf2lf2rg2lg2rk2lp2lp2rc2lq2v",

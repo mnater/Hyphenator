@@ -6,8 +6,6 @@
 Hyphenator.languages['el-monoton'] = Hyphenator.languages['el'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 7,
 	specialChars : "αεηιουωϊϋάέήίόύώΐΰίάύέήόώβγκδζθλμπντξρσϲςφχψ'ʼ᾿’᾽",
 	patterns : {
 		2 : "α1ε1η1ι1ο1υ1ω1ϊ1ϋ1ά1έ1ή1ί1ό1ύ1ώ1ΐ1ΰ14'4ʼ4᾿",

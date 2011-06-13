@@ -3,8 +3,6 @@
 Hyphenator.languages['es'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 13,
 	specialChars : "áéíóúñ",
 	patterns : {
 		2 : "1b1c1d1f1g1j1k1l1m1n1ñ1p1q1r1s1t1v1w1x1y1z",

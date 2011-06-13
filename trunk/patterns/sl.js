@@ -3,8 +3,6 @@
 Hyphenator.languages['sl'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 2,
-	longestPattern : 6,
 	specialChars : "čšž",
 	patterns : {
 		3 : "_č8_š8_ž81fa1hu1kn1sc1sp1wa1ye1zi1zn1zo1zu1čj1čl2cc2ck2ew2ft2jh2nč2vč8č_8š_8ž_a1aa1ba1ca1da1fa1ga1ha1ia1ja1ka1la1ma1na1oa1pa1sa1ta1va1ča1ša1žb1hb1mb1zb1žbe1bi1bo1d2ed2oe1ae1be1ce1de1ee1fe1ge1he1ie1je1ke1le1me1ne1pe1se1te1ve1ze1če1še1žfe1fu1go1gu1i1ai1bi1ci1di1fi1gi1hi1ii1ji1ki1li1mi1ni1pi1ri1si1ti1ui1vi1xi1zi1ši1žju1ki1ko1le1lo1na1ne1nu1o1ao1bo1co1do1eo1fo1go1ho1io1jo1ko1lo1mo1no1oo1po1so1to1uo1vo1yo1zo1čo1šo1žpe1po1qu2r1fr1rr1žre1ri1ro1si1su1t1ftu1u1bu1cu1du1eu1fu1gu1hu1iu1ju1lu1mu1nu1pu1su1tu1vu1zu1ču1šu1žv1fv1gvz2wo2x1fy1jy1ly1wz1cz1gz1tz1šz1žči1š2č",

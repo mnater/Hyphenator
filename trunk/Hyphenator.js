@@ -568,15 +568,6 @@ var Hyphenator = (function (window) {
 	 */	
 	exceptions = {},
 	
-	countObjProps = function (obj) {
-		var k, l = 0;
-		for (k in obj) {
-			if (obj.hasOwnProperty(k)) {
-				l++;
-			}
-		}
-		return l;
-	},
 	/**
 	 * @name Hyphenator-docLanguages
 	 * @description
@@ -586,7 +577,6 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */	
 	docLanguages = {},
-
 
 	/**
 	 * @name Hyphenator-state
@@ -1089,9 +1079,9 @@ var Hyphenator = (function (window) {
 	 * @private
 	 * @param {string} lang the language whose patterns shall be converted
 	 */		
-	convertPatterns2Trie = function (lang) {
+	convertPatterns = function (lang) {
 		/** @license BSD licenced code
-		 * The following code is based on code from hypher.js
+		 * The following code is based on code from hypher.js and adapted for Hyphenator.js
 		 * Copyright (c) 2011, Bram Stein
 		 */
 		var size = 0,
@@ -1248,7 +1238,7 @@ var Hyphenator = (function (window) {
 			} else {
 				lo.exceptions = {};
 			}
-			convertPatterns2Trie(lang);
+			convertPatterns(lang);
 			wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
 			lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
 			lo.prepared = true;

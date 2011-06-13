@@ -3,8 +3,6 @@
 Hyphenator.languages['lv'] = {
 	leftmin : 2,
 	rightmin : 3,
-	shortestPattern : 2,
-	longestPattern : 9,
 	specialChars : "žāīūēčļšķņģ",
 	patterns : {
 		3 : "d4z",

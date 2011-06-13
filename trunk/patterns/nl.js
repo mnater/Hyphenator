@@ -3,8 +3,6 @@
 Hyphenator.languages['nl'] = {
 	leftmin : 2,
 	rightmin : 2,
-	shortestPattern : 1,
-	longestPattern : 8,
 	specialChars : "",
 	patterns : {
 		2 : "1b1çè1ê13ëî31ï3ñ1q1ü1z",

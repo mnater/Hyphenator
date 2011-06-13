@@ -3,8 +3,6 @@
 Hyphenator.languages['en-gb'] = {
 	leftmin : 2,
 	rightmin : 3,
-	shortestPattern : 2,
-	longestPattern : 8,
 	specialChars : "",
 	patterns : {
 		3 : "sw2s2ym1p2chck1cl2cn2st24sss1rzz21moc1qcr2m5q2ct2byb1vcz2z5sd3bs1jbr4m3rs2hd2gbo2t3gd1jb1j1dosc2d1pdr2dt4m1v1dum3w2myd1vea2r2zr1we1bb2e2edn1az1irt2e1fe1j4aya4xr1q2av2tlzd4r2kr1jer1m1frh2r1fr2er1bqu44qft3ptr22ffy3wyv4y3ufl21fo1po2pn2ft3fut1wg1ba2ra4q2gh4ucm2ep5gp1fm5d2ap2aom1cg3p2gyuf2ha2h1bh1ch1d4nda2nhe22oz2oyo4xh1fh5h4hl2ot2hrun1h1wh2y2yp2aki2d2upie22ah2oo2igu4r2ii2omo1j2oiyn1lz42ip2iq2ir1aba4a2ocn3fuu4uv22ix1iz1jay1iy1h2lylx4l3wn5w2ji4jr4ng4jsy1gk1ck1fkk4y5fk1mkn21vok1pvr44vsk1t4vyk5vk1wl2aw5cn2ul3bw5fwh2wi2w1m1wowt4wy2wz4x1an1in1rn1ql3hxe4x1hx1ill24lsn3mlm2n1jx1ox3plr4x5wxx4",
