@@ -404,9 +404,16 @@ var Hyphenator = (function (window) {
 				//iOS only hyphenates in systemlanguage
 				r.languages[navigator.language.split('-')[0]] = true;
 			} else {
-				//Desktop Safari only hyphenates english
+				//Desktop Safari only hyphenates some languages:
 				r.languages = {
-					en: true
+					de: true,
+					en: true,
+					es: true,
+					fr: true,
+					it: true,
+					nl: true,
+					ru: true,
+					zh: true
 				};
 			}
 		} else if ((ua.indexOf('Firefox') !== -1) && (s['MozHyphens'] !== undefined)) {
@@ -1027,6 +1034,7 @@ var Hyphenator = (function (window) {
 			//if css3-hyphenation is supported: use it!
 			if (css3 && css3_h9n.support && !!css3_h9n.languages[lang]) {
 				el.style[css3_h9n.property] = "auto";
+				el.style['-webkit-locale'] = "'" + lang + "'";
 			} else {
 				if (intermediateState === 'hidden') {
 					if (!!el.getAttribute('style')) {
