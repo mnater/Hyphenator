@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 53</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script src="../patterns/en-us.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                Hyphenator.config({hyphenchar:'|'});
+				function process() {
+					document.getElementById('ta2').value = Hyphenator.hyphenate(document.getElementById('ta1').value, 'en');
+				}
+				
+				window.onload = function() {
+					document.getElementById('ta1').onchange = process;
+					if (window != parent) {
+						document.getElementById('ta1').value = "Hyphenation is also known as syllabification";
+						document.getElementById('ta1').onchange();
+						window.setTimeout(function () {
+							var t1 = document.getElementById('ta2').value,
+							t2 = 'Hy|phen|ation is also known as syl|lab|i|fi|ca|tion',
+							desc = document.getElementById('desc').firstChild.data,
+							msg = {
+								desc: desc,
+								index: 53
+							};
+							if (t1 == t2) {
+								msg.result = 'passed';
+							} else {
+								msg.result = 'failed';
+							}
+							parent.postMessage(JSON.stringify(msg), window.location.href);
+						}, 200);
+					};
+				}
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test52.html">&lt;- Prev</a> | <a href="test54.html">Next -&gt;</a></p>
+        <h1>Test 53</h1>
+        <p id="desc">Hyphenate a form field value on onchange. (AKA hyphenate a string.)</p>
+        <textarea cols="20" rows="3" id="ta1">Hyphenation is also known as syllabification.</textarea>
+        <textarea cols="20" rows="3" id="ta2"></textarea>
+    </body>
+</html>
