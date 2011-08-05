@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+    <head>
+        <title>Hyphenator.js &ndash; Test 47</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+            div {
+                text-align:justify;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 47,
+							result: 'visual'
+						};
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+        	Hyphenator.config({
+        		hyphenchar:'|'
+        	});
+        	Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test46.html">&lt;- Prev</a> | <a href="test48.html">Next -&gt;</a></p>
+        <h1>Test 47</h1>
+        <p id="desc">Preserve style-Attribute of hyphenated elements.</p>
+		<p id="test" class="hyphenate" style="font-style:italic">Silbentrennung ist <span style="font-style:normal;">tatsächlich</span> ganz einfach.</p>
+        <p id="ref" style="font-style:italic">Sil|ben|tren|nung ist <span style="font-style:normal;">tat|säch|lich</span> ganz ein|fach.</p>
+    </body>
+</html>
