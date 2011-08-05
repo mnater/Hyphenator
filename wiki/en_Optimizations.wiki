@@ -6,6 +6,11 @@
 There is no answer to this question despite of: “it depends on a lot of parameters”.
 For most tasks Hyphenator is fast enough, but speed is cool and there are things you can do to make Hyphenator faster and thus even cooler ;-)
 
+== CSS3 hyphenation ==
+Some browsers already support the not yet fully standardized CSS hyphenation properties ([http://www.w3.org/TR/css3-text/#hyphenation css3-text]). If you develop for a specific platform supporting css3-hyphenation (like e.g. WebKit/Safari on iOS) you will not need Hyphenator.js.
+If you develop for all platforms don't forget to set the switch: [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_useCSS3hyphenation useCSS3hyphenation].
+If set to true Hyphenator.js takes himself back.
+
 == Execution speed ==
 I'm permanently tweaking the code for execution speed. If there's a millisecond to save, I want to save it!
 Nevertheless there are differences in execution speed depending on the browser you use. In general a more recent version is faster.
