@@ -9,7 +9,6 @@
                 margin-left:25%;
                 margin-right:25%;
                 font-family:'Times';
-                -webkit-locale: 'en';
             }
             #test {
             	background-color: #ffd6d6;
@@ -24,6 +23,12 @@
             	width:30px;
             	-Moz-hyphens:auto;
             	-webkit-hyphens:auto;
+            }
+            .hyph[lang='en'] {
+            	-webkit-locale: 'en';
+            }
+            .hyph[lang='de'] {
+            	-webkit-locale: 'de';
             }
             
         </style>

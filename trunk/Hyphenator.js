@@ -1077,6 +1077,11 @@ var Hyphenator = (function (window) {
 				process(tmp, true, '');
 			}			
 		}
+		if (elements.count === 0) {
+			//nothing to hyphenate or all hyphenated b css3
+			state = 3;
+			onHyphenationDone();
+		}
 	},
 		 
 	
