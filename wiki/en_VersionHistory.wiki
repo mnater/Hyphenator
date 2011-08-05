@@ -1,8 +1,7 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-<wiki:comment>
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.0.0.zip 4.0.0] (June 10, 2011) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.0.0.zip 4.0.0] (August 05, 2011) ==
 This major release brings the following new features:
   * Faster hyphenation algorithm based on a trie (thanks to Bram Stein)
   * Faster DOM traversal
@@ -14,7 +13,7 @@ And some bugfixes:
   * fixed issue with oncopy and IE9
   * fixed issue138 (HTML5 Elements)
   * fixed issue142 (no-nb -> nb-no)
-</wiki:comment>
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%203.3.0.zip 3.3.0] (April 6, 2011) ==
 This minor release brings the following changes:
   * Support for Catalan (Thanks to Jordi Rosell)
