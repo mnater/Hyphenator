@@ -2383,7 +2383,7 @@ Hyphenator['toggleHyphenation'] = Hyphenator.toggleHyphenation;
 window['Hyphenator'] = Hyphenator;
 
 if (Hyphenator.isBookmarklet()) {
-	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true});
+	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true, useCSS3hyphenation: true});
 	Hyphenator.config(Hyphenator.getConfigFromURI());
 	Hyphenator.run();
 }
