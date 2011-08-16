@@ -10,10 +10,10 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            #test {
+            h2 + p {
             	background-color: #ffd6d6;
             }
-            #ref {
+            h2 + p + p {
             	background-color: #d6ffd6;
             }
         </style>
@@ -21,15 +21,19 @@
         <script type="text/javascript">
         	if (parent != window) {
 				Hyphenator.config({
-					'onhyphenationdonecallback': function () {
-						var t1 = document.getElementById('test').innerHTML,
-						t2 = document.getElementById('ref').innerHTML,
+					'onhyphenationdonecallback': function () {
+						var i, last = 2, t1, t2, r = true,
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
 							index: 91
 						};
-						if (t1 == t2) {
+						for (i = 1; i <= last; i++) {
+							t1 = document.getElementById('test' + i).innerHTML;
+							t2 = document.getElementById('ref' + i).innerHTML;
+							r = r && (t1 == t2);
+						}
+						if (r) {
 							msg.result = 'passed';
 						} else {
 							msg.result = 'failed';
@@ -47,7 +51,12 @@
         <h1>Test 91</h1>
         <p id="desc">Hyphenate one paragraph with CSS3hyphenation.</p>
 
-        <p id="test" class="hyphenate" lang="en">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
-        <p id="ref" style="-webkit-hyphens: auto; -moz-hyphens: auto; -webkit-locale: 'en'">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+		<h2>en</h2>
+        <p id="test1" class="hyphenate" lang="en">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+        <p id="ref1" lang="en" style="-webkit-hyphens: auto; -moz-hyphens: auto; -webkit-locale: 'en'">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+
+		<h2>de</h2>
+        <p id="test2" class="hyphenate" lang="de">Die Worttrennung, auch Silbentrennung genannt, bezeichnet in der Orthographie die Art und Weise, wie die Wörter insbesondere am Zeilenende getrennt werden können.</p>
+        <p id="ref2" lang="de" style="-webkit-hyphens: auto; -moz-hyphens: auto; -webkit-locale: 'de'">Die Worttrennung, auch Silbentrennung genannt, bezeichnet in der Orthographie die Art und Weise, wie die Wörter insbesondere am Zeilenende getrennt werden können.</p>
     </body>
 </html>
