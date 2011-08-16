@@ -14,7 +14,7 @@
 						desc: desc,
 						index: 67
 					};
-					window.location.href = "javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src=myServerPath+'Hyphenator.js?bm=true&hyphenchar=|');void(script.type='text/javascript');void(head.appendChild(script));}";
+					window.location.href = "javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src=myServerPath+'Hyphenator.js?bm=true&hyphenchar=|&useCSS3hyphenation=false');void(script.type='text/javascript');void(head.appendChild(script));}";
 					window.setTimeout(function () {
 						t1 = frames.left.document.getElementById('test').innerHTML;
 						r1 = frames.left.document.getElementById('ref').innerHTML;
