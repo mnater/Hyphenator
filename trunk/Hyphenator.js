@@ -388,7 +388,7 @@ var Hyphenator = (function (window) {
 			languages: {}
 		};
 		if (window.getComputedStyle) {
-			s = window.getComputedStyle(window.document.getElementsByTagName('body')[0]);
+			s = contextWindow.getComputedStyle(contextWindow.document.getElementsByTagName('body')[0]);
 		} else {
 			//ancient Browser don't support CSS3 anyway
 			css3_h9n = r;
