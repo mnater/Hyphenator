@@ -1,0 +1,160 @@
+#summary Round-up on how CSS3 hyphenation works in different browsers.
+
+= Introduction =
+_time-stamp: August 17, 2001_
+
+ "In justified text, there is always a trade-off between evenness of word spacing and frequency of hyphenation. Narrow measures – which prevent good justification – are commonly used when the text is set in multiple columns. Setting ragged right under these conditions will lighten the page and decrease its stiffness."
+
+ (The Elements of Typographic Style by Robert Bringhurst via [http://webtypography.net/])
+
+*The web is ragged right.*
+
+In typography justification and hyphenation always come together. Justified text without hyphenation is considered as a no-go.
+
+For years webdesigners have been discouraged to use `text-align: justify` because it led to ugly interword spaces due to the lack of hyphenation in webbrowsers.
+
+*The need for hyphenation is language specific*
+
+In english words are short in average. Even in narrow, ragged-left columns the need for hyphenation is rare.
+
+On the contrary words in e.g. German are longer in average. To avoid single words per line or text-overflows words have to be hyphenated, sometimes even in ragged-right texts.
+
+*There are bad solutions …*
+
+To wrap words at the end of lines, people are very creative. They split up compound words with a space or a hyphen-minus witch may work on one plattform but looks ugly on the other where a different font is used.
+
+*… and better solutions …*
+
+The soft hyphen [http://unicode.org/reports/tr14/#SoftHyphen] is an invisible character that marks a hyphenation point in a word. If the layout engine decides to break the line at this point a hyphen character (commonly a hyphen minus) will be displayed.
+
+Inserting the soft hyphen manually works fine but is quite expensive. There are several solutions to automatically insert soft hyphens at the server-side or on the client.
+
+These solutions all have their drawbacks: it requires computing time and network bandwith (either to serve hyphenated text or to serve the script that hyphenates).
+
+*… and finally best solutions!*
+
+CSS3 defines some new properties to enable hyphenation by webbrowsers [http://www.w3.org/TR/css3-text/#hyphenation]. Since in most cases hyphenation is a question of style CSS is the right place to do it. Allthough there are rare cases where a missplaced hyphen changes the meaning of the word: e.g. Wach-stube (German for guardroom) vs. Wachs-tube (wax tube). In these rare cases hyphenation as to be done manually by the author.
+
+CSS3 is still a working draft and support for CSS3-hyphenation is not yet widely deployed nor documented. First implementations came up in iOS 4.2 (Safari and iBooks on iPhone and iPad) late 2010 followed by Safari 5.1 and Firefox 6 (both mid 2011). Still the range of supported language is small but the issue is improving.
+
+== Intent of this article ==
+
+I like to give an overview of the state of the art of hyphenation in the different UserAgents (aka browsers) and how it can be used and how it is implemented.
+
+= Automatic hyphenation – algorithm =
+
+It looks like all engines are using the hyphenation algorithm by Franklin Mark Liang [http://www.tug.org/docs/liang/liang-thesis-hires.pdf] or a derivation of it. It is easy to implement and thanks to TeX there are hyphenation patterns for a wide range of languages available for free [http://tug.org/svn/texhyphen/]. See [http://www.mnn.ch/hyph/hyphenation2.html] for a short abstract on how it works.
+
+While using the hyphenation patterns is easy, they are quite complicated to compute and maintain. Whereas free and open software (like Mozilla Firefox or OpenOffice) relies on the free TeX hyphenation patterns other vendors are buying patterns from specialized companies.
+
+In short terms: to support hyphenation one will
+  # need to implement the hyphenation algorithm and
+  # needs the hyphenation patterns for each language.
+
+= Mozilla Firefox =
+In Firefox 6, released in August 2011, support for hyphenation has started. The algorithm is implemented but only patterns for english are included [https://bugzilla.mozilla.org/show_bug.cgi?id=253317].
+
+Mozilla uses the [http://sourceforge.net/projects/hunspell/ Hunspell] library witch includes an extended version of Liangs hyphenation algorithm. Hunspell includes the patterns for english witch in turn are a derivate of the original TeX patterns.
+
+To include more languages in Mozilla Firefox the patterns from TeX have to be converted in the (slightly different) hunspell format. These packages are included in the nightly builds for Firefox 8 [http://nightly.mozilla.org/]. So we can hope that Firefox 8 will support a wider range of languages.
+
+Due to licensing issues it is not yet clear if all languages from the TeX repository will be included in Firefox.
+
+== Using CSS3 hyphenation in Firefox (>=6) ==
+
+Since CSS3 is a working draft you'll need to prepend a vendor prefix ('-moz-'). Setting the width of the paragraph is not necessary; it's just for testing.
+
+Firefox needs a hint for the language of the document (use the `lang`-tag). If a language is not supported, Firefox will not hyphenate.
+
+Other controls/properties are not yet supported.
+
+{{{
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>CSS3 Hyphenation</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+			p {
+				width: 5em;
+				-moz-hyphens: auto;
+			}
+        </style>
+    </head>
+    <body>
+		<p lang="en">supercalifragilisticexpialidocious</p>
+		<p lang="es">supercalifragilisticexpialidocious</p>
+	</body>
+</html>
+}}}
+
+== Webkit Safari ==
+
+Safari has a different approach: It uses a system service to hyphenate texts.
+
+*Lion (Mac OS X 10.7)*
+The patterns are located in `/System/Library/LinguisticData/`. There are patterns (binaries) for de, en_GB, en_US, es, fr, it, nl and ru.
+
+*Snow Leopard (Mac OS X 10.6)*
+Only English is supported: (/System/Library/Frameworks/AppKit.framework/Resources/English-Hyphenation.txt	)
+
+*iOS >= 4.2*
+//tbd
+
+== Using CSS3 hyphenation in Safari (>=5.1) ==
+
+Again you'll need to prepend a vendor-prefix ('-webkit').
+
+Further Safari doesn't respect the setting in the `lang`-tags. By default, texts are hyphenated with the rules of the system language. You can change this, though, with the `-webkit-locale`-property.
+
+Safari supports the property `hyphenate-character` witch may be usefull in other scripts than latin.
+
+{{{
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>CSS3 Hyphenation</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+			p {
+				width: 5em;
+				-webkit-hyphens: auto;
+				-webkit-hyphenate-character: '~';
+			}
+			p[lang='en'] {
+				-webkit-locale: 'en';
+			}
+			p[lang='es'] {
+				-webkit-locale: 'es';
+			}
+        </style>
+    </head>
+    <body>
+		<p lang="en">supercalifragilisticexpialidocious</p>
+		<p lang="es">supercalifragilisticexpialidocious</p>
+	</body>
+</html>
+}}}
+
+== Webkit Chrome ==
+Not yet supported.
+
+== Microsoft Internet Explorer ==
+Not yet supported.
+
+== Opera ==
+Not yet supported.
+
+= Compatibility Table = 
+|| *property* || *Firefox 6* || *Firefox 8* || *Safari 5.1 Snow Leopard* || *Safari 5.1 Lion* || *Safari iOS 4.3* || *Chrome 13* || *IE 9* || *Opera 11.5* ||
+|| languages || en || growing || en || de, en_GB, en_US, es, fr, it, nl, ru (-webkit-locale) || tbd || 0 || 0 || 0 ||
+|| hyphens || -moz-hyphens || -moz-hyphens || -webkit-hyphens || -webkit-hyphens || -webkit-hyphens || 0 || 0 || 0 ||
+|| hyphenate-character || 0 || 0 || tbd || -webkit-hyphenate-character  || tbd || 0 || 0 || 0 ||
+|| hyphenate-limit-zone || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
+|| hyphenate-limit-chars || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
+|| hyphenate-limit-lines || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
+|| hyphenate-resources || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
+|| @hyphenate-resource || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
+
+= How to check availability of patterns with JavaScript =
+tbd
