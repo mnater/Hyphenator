@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Dictionary Checker</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+			p {
+				width: 5.2em;
+				-moz-hyphens: auto;
+				-webkit-hyphens: auto;
+				hyphens: auto;
+				font-size: 12px;
+				line-height: 12px;
+			}
+			.ok {
+				background-color: lime;
+			}
+			.nok {
+				background-color: red;
+			}
+			td {
+				text-align: center;
+			}
+        </style>
+        <script type="text/javascript">
+        	pac = (function () {
+        		var testStrings = {
+					arabic: 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي',
+					armenian: 'աբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ',
+					bengali: 'ঁংঃঅআইঈউঊঋঌএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহ়ঽািীুূৃৄেৈোৌ্ৎৗড়ঢ়য়ৠৡৢৣ',
+					cyrillic: 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
+					Devanagari: 'ँंःअआइईउऊऋऌएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलळवशषसहऽािीुूृॄेैोौ्॒॑ॠॡॢॣ',
+					greek: 'αβγδεζηθικλμνξοπρσςτυφχψω',
+					gujarati: 'બહઅઆઇઈઉઊઋૠએઐઓઔાિીુૂૃૄૢૣેૈોૌકખગઘઙચછજઝઞટઠડઢણતથદધનપફસભમયરલળવશષ',
+					kannada: 'ಂಃಅಆಇಈಉಊಋಌಎಏಐಒಓಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಱಲಳವಶಷಸಹಽಾಿೀುೂೃೄೆೇೈೊೋೌ್ೕೖೞೠೡ',
+					lao: 'ກຂຄງຈຊຍດຕຖທນບປຜຝພຟມຢຣລວສຫອຮະັາິີຶືຸູົຼເແໂໃໄ່້໊໋ໜໝ',
+					latin: 'abcdefghijklmnopqrstuvwxyz',
+					malayalam: 'ംഃഅആഇഈഉഊഋഌഎഏഐഒഓഔകഖഗഘങചഛജഝഞടഠഡഢണതഥദധനപഫബഭമയരറലളഴവശഷസഹാിീുൂൃെേൈൊോൌ്ൗൠൡൺൻർൽൾൿ',
+					oriya: 'ଁଂଃଅଆଇଈଉଊଋଌଏଐଓଔକଖଗଘଙଚଛଜଝଞଟଠଡଢଣତଥଦଧନପଫବଭମଯରଲଳଵଶଷସହାିୀୁୂୃେୈୋୌ୍ୗୠୡ',
+					persian: 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي',
+					punjabi: 'ਁਂਃਅਆਇਈਉਊਏਐਓਔਕਖਗਘਙਚਛਜਝਞਟਠਡਢਣਤਥਦਧਨਪਫਬਭਮਯਰਲਲ਼ਵਸ਼ਸਹਾਿੀੁੂੇੈੋੌ੍ੰੱ',
+					tamil: 'ஃஅஆஇஈஉஊஎஏஐஒஓஔகஙசஜஞடணதநனபமயரறலளழவஷஸஹாிீுூெேைொோௌ்ௗ',
+					telugu: 'ఁంఃఅఆఇఈఉఊఋఌఎఏఐఒఓఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరఱలళవశషసహాిీుూృౄెేైొోౌ్ౕౖౠౡ'
+        		},
+        		//http://en.wikipedia.org/wiki/List_of_Unicode_characters
+        		languages = {
+					en: 'latin',
+					af: 'latin',
+					ar: 'arabic',
+					as: 'bengali',
+					bg: 'cyrillic',
+					bn: 'bengali',
+					ca: 'latin',
+					cop: 'coptic',
+					cs: 'latin',
+					cy: 'latin',
+					da: 'latin',
+					de: 'latin',
+					el: 'greek',
+					eo: 'latin',
+					es: 'latin',
+					et: 'latin',
+					eu: 'latin',
+					fa: 'persian',
+					fi: 'latin',
+					fr: 'latin',
+					ga: 'latin',
+					gl: 'latin',
+					gu: 'gujarati',
+					hi: 'Devanagari',
+					hr: 'latin',
+					hsb: 'latin',
+					hu: 'latin',
+					hy: 'armenian',
+					ia: 'latin',
+					id: 'latin',
+					'is': 'latin',
+					it: 'latin',
+					kmr: 'latin',
+					kn: 'kannada',
+					la: 'latin',
+					lo: 'lao',
+					lt: 'latin',
+					lv: 'latin',
+					ml: 'malayalam',
+					mn: 'cyrillic',
+					mr: 'Devanagari',
+					nb: 'latin',
+					nl: 'latin',
+					nn: 'latin',
+					or: 'oriya',
+					pa: 'punjabi',
+					pl: 'latin',
+					pt: 'latin',
+					ro: 'latin',
+					ru: 'cyrillic',
+					sa: '',
+					sl: 'latin',
+					'sr-latn': 'latin',
+					'sr-cyrl': 'cyrillic',
+					sv: 'latin',
+					ta: 'tamil',
+					te: 'telugu',
+					tk: 'latin',
+					tr: 'latin',
+					uk: 'cyrillic',
+					'zh-latn': 'latin'
+        		},
+        		result = {},
+        		bdy,
+				createElem = function (tagname, context) {
+					context = context || contextWindow;
+					if (document.createElementNS) {
+						return context.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
+					} else if (document.createElement) {
+						return context.document.createElement(tagname);
+					}
+				},
+				id = 'a' + Math.random(),
+        		shadow, lang, computedHeight;
+        		
+        		return {
+        			scripts: languages,
+        			getSupportedLanguages: function () {
+        				bdy = window.document.getElementsByTagName('body')[0];
+						//create and append shadow-test-element
+						shadow = createElem('div', window);
+						shadow.id = id;
+						shadow.style.width = '5em';
+						shadow.style.MozHyphens = 'auto';
+						shadow.style['-webkit-hyphens'] = 'auto';
+						shadow.style.hyphens = 'auto';
+						shadow.style.fontSize = '12px';
+						shadow.style.lineHeight = '12px';
+						//shadow.style.visibility = 'visible';
+						bdy.appendChild(shadow);
+						
+						//test languages
+						for (lang in languages) {
+							if (languages.hasOwnProperty(lang)) {
+								shadow.lang = lang;
+								shadow.style['-webkit-locale'] = "'" + lang + "'";
+								shadow.innerHTML = testStrings[languages[lang]];
+								computedHeight = parseInt(window.getComputedStyle(shadow).height.slice(0, -2), 10);
+								if (computedHeight > 12) {
+									result[lang] = true;
+								} else {
+									result[lang] = false;
+								}
+							}
+						}
+						
+						//remove Element
+						bdy.removeChild(shadow);
+						shadow = null;
+						//
+						return result;
+        			}
+        		};
+        	}());
+        
+        	
+			window.onload = function () {
+				var data = pac.getSupportedLanguages(),
+				out = document.getElementById('res'), lang, s = '<table><tr><th>language</th><th>support</th><th>script</th></tr>';
+				for (lang in data) {
+					if (data[lang]) {
+						s = s + '<tr><td class="ok">' + lang + '</td><td class="ok">' + data[lang] + '</td><td class="ok">' + pac.scripts[lang] + '</td></tr>';
+					} else {
+						s = s + '<tr><td class="nok">' + lang + '</td><td class="nok">' + data[lang] + '</td><td class="nok">' + pac.scripts[lang] + '</td></tr>';
+					}
+				}
+				s = s + '</table>'
+				out.innerHTML = s;
+			};
+        </script>
+    </head>
+    <body>
+		<div id="res"> </div>
+	</body>
+</html>
