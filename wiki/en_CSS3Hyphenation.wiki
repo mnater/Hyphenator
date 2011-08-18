@@ -99,7 +99,9 @@ The patterns are located in `/System/Library/LinguisticData/`. There are pattern
 Only English is supported: (/System/Library/Frameworks/AppKit.framework/Resources/English-Hyphenation.txt	)
 
 *iOS >= 4.2*
-//tbd
+Hyphenation in Safri on iOS is weird. It's activated with '-webkit-hyphens: atuto;', too. But it doesn't respect any language settings. Unfortunately all texts are hyphenated with the rules for the given system-language. So if your iPhone is set to German, all texts are hyphenated witch German rules!
+
+Due to that bug and because iOS is really a closed system, I actually can't figure out what languages iOS can hyphenate.
 
 == Using CSS3 hyphenation in Safari (>=5.1) ==
 
