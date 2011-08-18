@@ -149,9 +149,9 @@ Not yet supported.
 
 = Compatibility Table = 
 || *property* || *Firefox 6* || *Firefox 8* || *Safari 5.1 Snow Leopard* || *Safari 5.1 Lion* || *Safari iOS 4.3* || *Chrome 13* || *IE 9* || *Opera 11.5* ||
-|| languages || en || growing || en || de, en_GB, en_US, es, fr, it, nl, ru (-webkit-locale) || tbd || 0 || 0 || 0 ||
+|| languages || en || growing || en || de, en_GB, en_US, es, fr, it, nl, ru (-webkit-locale) || unclear || 0 || 0 || 0 ||
 || hyphens || -moz-hyphens || -moz-hyphens || -webkit-hyphens || -webkit-hyphens || -webkit-hyphens || 0 || 0 || 0 ||
-|| hyphenate-character || 0 || 0 || tbd || -webkit-hyphenate-character  || tbd || 0 || 0 || 0 ||
+|| hyphenate-character || 0 || 0 || -webkit-hyphenate-character || -webkit-hyphenate-character  || -webkit-hyphenate-character || 0 || 0 || 0 ||
 || hyphenate-limit-zone || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
 || hyphenate-limit-chars || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
 || hyphenate-limit-lines || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
