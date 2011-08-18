@@ -21,7 +21,7 @@ On the contrary words in e.g. German are longer in average. To avoid single word
 
 *There are bad solutions …*
 
-To wrap words at the end of lines, people are very creative. They split up compound words with a space or a hyphen-minus witch may work on one plattform but looks ugly on the other where a different font is used.
+To wrap words at the end of lines, people are very creative. They split up compound words with a space or a hyphen-minus which may work on one plattform but looks ugly on the other where a different font is used.
 
 *… and better solutions …*
 
@@ -54,7 +54,7 @@ In short terms: to support hyphenation one will
 = Mozilla Firefox =
 In Firefox 6, released in August 2011, support for hyphenation has started. The algorithm is implemented but only patterns for english are included [https://bugzilla.mozilla.org/show_bug.cgi?id=253317].
 
-Mozilla uses the [http://sourceforge.net/projects/hunspell/ Hunspell] library witch includes an extended version of Liangs hyphenation algorithm. Hunspell includes the patterns for english witch in turn are a derivate of the original TeX patterns.
+Mozilla uses the [http://sourceforge.net/projects/hunspell/ Hunspell] library which includes an extended version of Liangs hyphenation algorithm. Hunspell includes the patterns for english which in turn are a derivate of the original TeX patterns.
 
 To include more languages in Mozilla Firefox the patterns from TeX have to be converted in the (slightly different) hunspell format. These packages are included in the nightly builds for Firefox 8 [http://nightly.mozilla.org/]. So we can hope that Firefox 8 will support a wider range of languages.
 
@@ -99,7 +99,7 @@ The patterns are located in `/System/Library/LinguisticData/`. There are pattern
 Only English is supported: (/System/Library/Frameworks/AppKit.framework/Resources/English-Hyphenation.txt	)
 
 *iOS >= 4.2*
-Hyphenation in Safri on iOS is weird. It's activated with '-webkit-hyphens: atuto;', too. But it doesn't respect any language settings. Unfortunately all texts are hyphenated with the rules for the given system-language. So if your iPhone is set to German, all texts are hyphenated witch German rules!
+Hyphenation in Safri on iOS is weird. It's activated with '-webkit-hyphens: atuto;', too. But it doesn't respect any language settings. Unfortunately all texts are hyphenated with the rules for the given system-language. So if your iPhone is set to German, all texts are hyphenated with German rules!
 
 Due to that bug and because iOS is really a closed system, I actually can't figure out what languages iOS can hyphenate.
 
@@ -109,7 +109,7 @@ Again you'll need to prepend a vendor-prefix ('-webkit').
 
 Further Safari doesn't respect the setting in the `lang`-tags. By default, texts are hyphenated with the rules of the system language. You can change this, though, with the `-webkit-locale`-property.
 
-Safari supports the property `hyphenate-character` witch may be usefull in other scripts than latin.
+Safari supports the property `hyphenate-character` which may be usefull in other scripts than latin.
 
 {{{
 <!DOCTYPE HTML>
@@ -159,4 +159,4 @@ Not yet supported.
 || @hyphenate-resource || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
 
 = How to check availability of patterns with JavaScript =
-I wrote a script that checks witch languages the current browser supports: [http://hyphenator.googlecode.com/svn/dictChecker.html]
+I wrote a script that checks which languages the current browser supports: [http://hyphenator.googlecode.com/svn/dictChecker.html]
