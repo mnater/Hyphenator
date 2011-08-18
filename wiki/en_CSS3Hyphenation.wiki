@@ -150,7 +150,10 @@ Not yet supported.
 = Compatibility Table = 
 || *property* || *Firefox 6* || *Firefox 8/9* || *Safari 5.1 Snow Leopard* || *Safari 5.1 Lion* || *Safari iOS 4.3* || *Chrome 13* || *IE 9* || *Opera 11.5* ||
 || languages || en || en, af, bg, ca, cy, da, de, eo, es, et, fi, fr, gl, hr, hsb, ia, is, kmr, la, lt, mn, nb, nl, nn, pt, ru, sl, sr-latn, sr-cyrl, sv, uk (growing list…) || en || de, en_GB, en_US, es, fr, it, nl, ru (-webkit-locale) || unclear || 0 || 0 || 0 ||
-|| hyphens || -moz-hyphens || -moz-hyphens || -webkit-hyphens || -webkit-hyphens || -webkit-hyphens || 0 || 0 || 0 ||
+|| hyphens: auto || -moz-hyphens || -moz-hyphens || -webkit-hyphens || -webkit-hyphens || -webkit-hyphens || 0 || 0 || 0 ||
+|| hyphens: manual || tbd || tbd || tbd || tbd || tbd || 0 || 0 || 0 ||
+|| hyphens: none || tbd || tbd || tbd || tbd || tbd || 0 || 0 || 0 ||
+|| precedence of conditional hyphen || tbd || tbd || tbd || tbd || tbd || 0 || 0 || 0 ||
 || hyphenate-character || 0 || 0 || -webkit-hyphenate-character || -webkit-hyphenate-character  || -webkit-hyphenate-character || 0 || 0 || 0 ||
 || hyphenate-limit-zone || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
 || hyphenate-limit-chars || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
