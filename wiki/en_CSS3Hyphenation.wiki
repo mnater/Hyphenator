@@ -159,4 +159,4 @@ Not yet supported.
 || @hyphenate-resource || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
 
 = How to check availability of patterns with JavaScript =
-tbd
+I wrote a script that checks witch languages the current browser supports: [http://hyphenator.googlecode.com/svn/dictChecker.html]
