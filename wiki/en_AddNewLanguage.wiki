@@ -26,8 +26,10 @@ Currently, there's support for
   * Latin (thanks to Pablo Rodríguez)
   * Greek, monoton, polyton and ancient (thanks to Pablo Rodríguez)
   * Belarusian (thanks to Olexandr Zhydenko)
-  * Norwegian (coming soon, thanks to Erik Erik Seierstad)
-  * Latvian (coming soon, thanks to Kristaps Karlsons)
+  * Norwegian (thanks to Erik Erik Seierstad)
+  * Latvian (thanks to Kristaps Karlsons)
+  * Catalan (thanks to Jordi Rosell)
+  * Slovak (thanks to Zdenko Podobny)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
