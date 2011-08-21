@@ -3,7 +3,7 @@
 
 == What we have now ==
 Currently, there's support for
-  * English
+  * English (US and GB)
   * German
   * French
   * Dutch (thanks to Remco Bloemen)
