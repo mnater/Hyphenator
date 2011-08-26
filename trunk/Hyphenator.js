@@ -791,7 +791,11 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	runOnContentLoaded = function (w, f) {
-		var DOMContentLoaded = function () {}, toplevel, hyphRunForThis = {};
+		var DOMContentLoaded = function () {}, toplevel, hyphRunForThis = {},
+		add = document.addEventListener ? 'addEventListener' : 'attachEvent',
+		rem = document.addEventListener ? 'removeEventListener' : 'detachEvent',
+		pre = document.addEventListener ? '' : 'on';
+		
 		if (documentLoaded && !hyphRunForThis[w.location.href]) {
 			f();
 			hyphRunForThis[w.location.href] = true;
@@ -845,61 +849,29 @@ var Hyphenator = (function (window) {
 		}
 		
 		// Cleanup functions for the document ready method
-		if (document.addEventListener) {
-			DOMContentLoaded = function () {
-				document.removeEventListener("DOMContentLoaded", DOMContentLoaded, false);
-				if (doFrames && window.frames.length > 0) {
-					//we are in a frameset, so do nothing but wait for onload to fire
-					return;
-				} else {
-					init(window);
-				}
-			};
-		
-		} else if (document.attachEvent) {
-			DOMContentLoaded = function () {
-				// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
-				if (document.readyState === "complete") {
-					document.detachEvent("onreadystatechange", DOMContentLoaded);
-					if (doFrames && window.frames.length > 0) {
-						//we are in a frameset, so do nothing but wait for onload to fire
-						return;
-					} else {
-						init(window);
-					}
-				}
-			};
-		}
-
-		// Mozilla, Opera and webkit nightlies currently support this event
-		if (document.addEventListener) {
-			// Use the handy event callback
-			document.addEventListener("DOMContentLoaded", DOMContentLoaded, false);
-			
-			// A fallback to window.onload, that will always work
-			window.addEventListener("load", doOnLoad, false);
-
-		// If IE event model is used
-		} else if (document.attachEvent) {
-			// ensure firing before onload,
-			// maybe late but safe also for iframes
-			document.attachEvent("onreadystatechange", DOMContentLoaded);
-			
-			// A fallback to window.onload, that will always work
-			window.attachEvent("onload", doOnLoad);
-
-			// If IE and not a frame
-			// continually check to see if the document is ready
-			toplevel = false;
-			try {
-				toplevel = window.frameElement === null;
-			} catch (e) {}
-
-			if (document.documentElement.doScroll && toplevel) {
-				doScrollCheck();
+		DOMContentLoaded = function (e) {
+			if (e.type === 'readystatechange' && document.readyState !== 'complete') {
+				return;
 			}
-		}
+			document[rem](pre + e.type, DOMContentLoaded, false);
+			if (doFrames && window.frames.length > 0) {
+				//we are in a frameset, so do nothing but wait for onload to fire
+				return;
+			} else {
+				init(window);
+			}
+		};
 
+		document[add](pre + "DOMContentLoaded", DOMContentLoaded, false);
+		document[add](pre + 'readystatechange', DOMContentLoaded, false);
+		window[add](pre + 'load', doOnLoad, false);
+		toplevel = false;
+		try {
+			toplevel = !window.frameElement;
+		} catch (e) {}
+		if (document.documentElement.doScroll && toplevel) {
+			doScrollCheck();
+		}
 	},
 	
 	/**
