@@ -57,7 +57,7 @@
  
 /* The following comment is for JSLint: */
 /*global window, ActiveXObject, unescape */
-/*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, regexp: true, sub: true, newcap: true, immed: true, evil: true, eqeqeq: false */
+/*jslint plusplus: true, white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: false, regexp: true, sub: true, newcap: true, immed: true, evil: true, eqeqeq: false */
 
 
 /**
@@ -74,7 +74,8 @@
  * &lt;/script&gt;
  */
 var Hyphenator = (function (window) {
-
+	'use strict';
+	
 	var
 	/**
 	 * @name Hyphenator-supportedLang
@@ -203,10 +204,7 @@ var Hyphenator = (function (window) {
 	 */
 	basePath = (function () {
 		var s = document.getElementsByTagName('script'), i = 0, p, src, t;
-		while (!!(t = s[i++])) {
-			if (!t.src) {
-				continue;
-			}
+		while (!!(t = s[i++]) && !!t.src) {
 			src = t.src;
 			p = src.indexOf('Hyphenator.js');
 			if (p !== -1) {
@@ -490,9 +488,7 @@ var Hyphenator = (function (window) {
 			if (!!jsArray[i].getAttribute('src')) {
 				loc = jsArray[i].getAttribute('src');
 			}
-			if (!loc) {
-				continue;
-			} else if (loc.indexOf('Hyphenator.js?bm=true') !== -1) {
+			if (!!loc && loc.indexOf('Hyphenator.js?bm=true') !== -1) {
 				re = true;
 			}
 		}
@@ -803,7 +799,7 @@ var Hyphenator = (function (window) {
 		}
 		function init(context) {
 			contextWindow = context || window;
-			if (!hyphRunForThis[contextWindow.location.href] && (!documentLoaded || contextWindow != window.parent)) {
+			if (!hyphRunForThis[contextWindow.location.href] && (!documentLoaded || !!contextWindow.frameElement)) {
 				documentLoaded = true;
 				f();
 				hyphRunForThis[contextWindow.location.href] = true;
@@ -905,9 +901,7 @@ var Hyphenator = (function (window) {
 		}
 
 	},
-
-
-
+	
 	/**
 	 * @name Hyphenator-getLang
 	 * @description
@@ -978,7 +972,7 @@ var Hyphenator = (function (window) {
 			}
 		}
 		//get lang for frame from enclosing document
-		if (!mainLanguage && doFrames && contextWindow != window.parent) {
+		if (!mainLanguage && doFrames && (!!contextWindow.frameElement)) {
 			autoSetMainLanguage(window.parent);
 		}
 		//fallback to defaultLang if set
@@ -988,7 +982,7 @@ var Hyphenator = (function (window) {
 		//ask user for lang
 		if (!mainLanguage) {
 			text = '';
-			ul = navigator.language ? navigator.language : navigator.userLanguage;
+			ul = navigator.language || navigator.userLanguage;
 			ul = ul.substring(0, 2);
 			if (prompterStrings.hasOwnProperty(ul)) {
 				text = prompterStrings[ul];
@@ -1059,7 +1053,7 @@ var Hyphenator = (function (window) {
 			}
 			while (!!(n = el.childNodes[i++])) {
 				if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
-					n.className.indexOf(dontHyphenateClass) === -1 && !(n in elToProcess)) {
+					n.className.indexOf(dontHyphenateClass) === -1 && !elToProcess[n]) {
 					process(n, false, lang);
 				}
 			}
@@ -1103,29 +1097,13 @@ var Hyphenator = (function (window) {
 			},
 			patterns, pattern, i, j, k,
 			patternObject = Hyphenator.languages[lang].patterns,
-			c, chars, points, t, p, codePoint,
+			c, chars, points, t, p, codePoint, test = 'in3se',
 			getPoints = (function () {
-				//IE<9 doesn't act like other browsers
-				if ('in3se'.split(/\D/).length === 1) {
+				//IE<9 doesn't act like other browsers: doesn't preserve the separators
+				if (test.split(/\D/).length === 1) {
 					return function (pattern) {
-						var chars = pattern.split(''), c, i, r = [],
-						numb3rs = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}, lastWasNum = false;
-						i = 0;
-						while (!!(c = chars[i])) {
-							if (numb3rs.hasOwnProperty(c)) {
-								r.push(c);
-								i += 2;
-								lastWasNum = true;
-							} else {
-								r.push('');
-								i += 1;
-								lastWasNum = false;
-							}
-						}
-						if (!lastWasNum) {
-							r.push('');
-						}
-						return r;
+						pattern = pattern.replace(/\D/gi, ' ');
+						return pattern.split(' ');
 					};
 				} else {
 					return function (pattern) {
@@ -1156,7 +1134,7 @@ var Hyphenator = (function (window) {
 					t.tpoints = [];
 					for (k = 0; k < points.length; k++) {
 						p = points[k];
-						t.tpoints.push((p == "") ? 0 : p);
+						t.tpoints.push((p === "") ? 0 : p);
 					}
 				}
 			}
@@ -1264,9 +1242,9 @@ var Hyphenator = (function (window) {
 		var lo = Hyphenator.languages[lang], wrd;
 		if (!lo.prepared) {	
 			if (enableCache) {
-				lo.cache = {};
+				lo['cache'] = {};
 				//Export
-				lo['cache'] = lo.cache;
+				//lo['cache'] = lo.cache;
 			}
 			if (enableReducedPatternSet) {
 				lo.redPatSet = {};
@@ -1360,7 +1338,6 @@ var Hyphenator = (function (window) {
 					
 					delete docLanguages[lang];
 					callback(lang);
-					continue;
 				} else {
 					loadPatterns(lang);
 				}
@@ -1598,7 +1575,7 @@ var Hyphenator = (function (window) {
 			var target = e.target || e.srcElement,
 			currDoc = target.ownerDocument,
 			body = currDoc.getElementsByTagName('body')[0],
-			targetWindow = 'defaultView' in currDoc ? currDoc.defaultView : currDoc.parentWindow;
+			targetWindow = currDoc.defaultView || currDoc.parentWindow;
 			if (target.tagName && dontHyphenate[target.tagName.toLowerCase()]) {
 				//Safari needs this
 				return;
@@ -2311,36 +2288,24 @@ var Hyphenator = (function (window) {
 				if (!!jsArray[i].getAttribute('src')) {
 					loc = jsArray[i].getAttribute('src');
 				}
-				if (!loc) {
-					continue;
-				} else {
+				if (loc && (loc.indexOf('Hyphenator.js?') !== -1)) {
 					s = loc.indexOf('Hyphenator.js?');
-					if (s === -1) {
-						continue;
-					}
 					gp = loc.substring(s + 14).split('&');
 					for (j = 0; j < gp.length; j++) {
 						option = gp[j].split('=');
-						if (option[0] === 'bm') {
-							continue;
+						if (option[0] !== 'bm') {
+							if (option[1] === 'true') {
+								option[1] = true;
+							} else if (option[1] === 'false') {
+								option[1] = false;
+							} else if (isFinite(option[1])) {
+								option[1] = parseInt(option[1], 10);
+							}
+							if (option[0] === 'onhyphenationdonecallback') {
+								option[1] = new Function('', option[1]);
+							}
+							re[option[0]] = option[1];
 						}
-						if (option[1] === 'true') {
-							re[option[0]] = true;
-							continue;
-						}
-						if (option[1] === 'false') {
-							re[option[0]] = false;
-							continue;
-						}
-						if (isFinite(option[1])) {
-							re[option[0]] = parseInt(option[1], 10);
-							continue;
-						}
-						if (option[0] === 'onhyphenationdonecallback') {
-							re[option[0]] = new Function('', option[1]);
-							continue;
-						}
-						re[option[0]] = option[1];
 					}
 					break;
 				}
@@ -2371,6 +2336,7 @@ var Hyphenator = (function (window) {
 }(window));
 
 //Export properties/methods (for google closure compiler)
+/* to be moved to external file
 Hyphenator['languages'] = Hyphenator.languages;
 Hyphenator['config'] = Hyphenator.config;
 Hyphenator['run'] = Hyphenator.run;
@@ -2381,7 +2347,7 @@ Hyphenator['isBookmarklet'] = Hyphenator.isBookmarklet;
 Hyphenator['getConfigFromURI'] = Hyphenator.getConfigFromURI;
 Hyphenator['toggleHyphenation'] = Hyphenator.toggleHyphenation;
 window['Hyphenator'] = Hyphenator;
-
+*/
 if (Hyphenator.isBookmarklet()) {
 	Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true, useCSS3hyphenation: true});
 	Hyphenator.config(Hyphenator.getConfigFromURI());
