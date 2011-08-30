@@ -695,6 +695,8 @@ var Hyphenator = (function (window) {
 		var tmp, el = [], i, l;
 		if (document.getElementsByClassName) {
 			el = contextWindow.document.getElementsByClassName(hyphenateClass);
+		} else if (document.querySelectorAll) {
+			el = contextWindow.document.querySelectorAll('.' + hyphenateClass);
 		} else {
 			tmp = contextWindow.document.getElementsByTagName('*');
 			l = tmp.length;
@@ -1183,14 +1185,18 @@ var Hyphenator = (function (window) {
 				}
 			}
 			if (xhr) {
-				xhr.open('HEAD', url, false);
+				xhr.open('HEAD', url, true);
 				xhr.setRequestHeader('Cache-Control', 'no-cache');
-				xhr.send(null);
-				if (xhr.status === 404) {
-					onError(new Error('Could not load\n' + url));
-					delete docLanguages[lang];
-					return;
+				xhr.onreadystatechange = function (aEvt) {
+					if (xhr.readyState == 4) {
+						if (xhr.status == 404) {
+							onError(new Error('Could not load\n' + url));
+							delete docLanguages[lang];
+							return;
+						}
+					}
 				}
+				xhr.send(null);
 			}
 		}
 		if (createElem) {
