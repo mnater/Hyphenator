@@ -1188,14 +1188,14 @@ var Hyphenator = (function (window) {
 				xhr.open('HEAD', url, true);
 				xhr.setRequestHeader('Cache-Control', 'no-cache');
 				xhr.onreadystatechange = function (aEvt) {
-					if (xhr.readyState == 4) {
-						if (xhr.status == 404) {
+					if (xhr.readyState === 4) {
+						if (xhr.status === 404) {
 							onError(new Error('Could not load\n' + url));
 							delete docLanguages[lang];
 							return;
 						}
 					}
-				}
+				};
 				xhr.send(null);
 			}
 		}
