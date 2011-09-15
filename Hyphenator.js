@@ -386,7 +386,7 @@ var Hyphenator = (function (window) {
 			languages: {}
 		};
 		if (window.getComputedStyle) {
-			s = contextWindow.getComputedStyle(contextWindow.document.getElementsByTagName('body')[0]);
+			s = contextWindow.getComputedStyle(contextWindow.document.getElementsByTagName('body')[0], null);
 		} else {
 			//ancient Browser don't support CSS3 anyway
 			css3_h9n = r;
@@ -1566,7 +1566,7 @@ var Hyphenator = (function (window) {
 			//shadow.style.top = '-5000px';
 			//shadow.style.height = '1px';
 			//doing this instead:
-			shadow.style.color = window.getComputedStyle ? targetWindow.getComputedStyle(body).backgroundColor : '#FFFFFF';
+			shadow.style.color = window.getComputedStyle ? targetWindow.getComputedStyle(body, null).backgroundColor : '#FFFFFF';
 			shadow.style.fontSize = '0px';
 			body.appendChild(shadow);
 			if (!!window.getSelection) {
