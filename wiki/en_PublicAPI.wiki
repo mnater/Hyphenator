@@ -164,15 +164,17 @@ Don't forget to set `displaytogglebox`!
 <script type="text/javascript">
 	var hyphenatorSettings = {
 		displaytogglebox :	true,
-		togglebox : 		function (hyphenate) {
+		togglebox : 		function () {
 			var myelem = document.getElementById('hyphenationbutton');
-			if (hyphenate) {
-				myelem.style.color = '#00FF00';
+			if (Hyphenator.doHyphenation) {
+                                myelem.style.color = '#00FF00';
 				myelem.onclick = Hyphenator.toggleHyphenation;
 			} else {
 				myelem.style.color = '#FF0000';
 				myelem.onclick = Hyphenator.toggleHyphenation;
 			}
+
+
 		}
 	};
 	Hyphenator.config(hyphenatorSettings);
