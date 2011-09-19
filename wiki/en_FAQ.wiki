@@ -12,7 +12,7 @@ Safari (since Version 5.1 on Mac OS X Lion and since iOS Version 4.2) supports i
 
 Since Version 4.0.0 Hyphenator.js respects those browsers and automatically activates css3-hyphenation if available. See [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_useCSS3hyphenation the manual] on how to enable this in Hyphenator.js.
 
-[#faq > Go to top]
+[#FAQ > Go to top]
 
 == Shouldn't hyphenation be done on the server side? ==
 There are some arguments against client side hyphenation - true. It costs a lot of computing time and the patterns have to be loaded for each language, everytime.
@@ -23,7 +23,7 @@ But I believe that hyphenation belongs to the client:
   * as JavaScript-engines are in focus of development, they become faster and faster.
   * there are billions of mostly underworked clients vs. millions of often overloaded servers.
 
-[#List_of_questions > Go to top]
+[#FAQ > Go to top]
 
 == Hyphenator breaks the search functionality of my browser ==
 Your browser has a bug (currently, only Firefox3 finds hyphenated words). So I don't want/can't fix this in Hyphenator.js.
