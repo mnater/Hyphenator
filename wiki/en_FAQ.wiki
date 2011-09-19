@@ -2,6 +2,7 @@
 
 = FAQ =
 
+== List of questions: ==
 <wiki:toc max_depth="2" />
 ----
 
@@ -10,6 +11,8 @@ There's work going on on standardizing hyphenation in CSS 3 ([http://www.w3.org/
 Safari (since Version 5.1 on Mac OS X Lion and since iOS Version 4.2) supports it, Firefox is presumably going to support it with Version 6 and will see how other browsers will do. The set of supported languages changes.
 
 Since Version 4.0.0 Hyphenator.js respects those browsers and automatically activates css3-hyphenation if available. See [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_useCSS3hyphenation the manual] on how to enable this in Hyphenator.js.
+
+[WikiSyntax#List_of_questions: > Go to top]
 
 == Shouldn't hyphenation be done on the server side? ==
 There are some arguments against client side hyphenation - true. It costs a lot of computing time and the patterns have to be loaded for each language, everytime.
