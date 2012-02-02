@@ -102,7 +102,9 @@ var Hyphenator = (function (window) {
 		'en': 'en-us.js',
 		'en-gb': 'en-gb.js',
 		'en-us': 'en-us.js',
+		'eo': 'eo.js',
 		'es': 'es.js',
+		'et': 'et.js',
 		'fi': 'fi.js',
 		'fr': 'fr.js',
 		'grc': 'grc.js',
@@ -127,6 +129,7 @@ var Hyphenator = (function (window) {
 		'ru': 'ru.js',
 		'sk': 'sk.js',
 		'sl': 'sl.js',
+		'sr-latn': 'sr-latn.js',
 		'sv': 'sv.js',
 		'ta': 'ta.js',
 		'te': 'te.js',
@@ -171,7 +174,9 @@ var Hyphenator = (function (window) {
 		'da': 'Denne websides sprog kunne ikke bestemmes. Angiv venligst sprog:',
 		'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:',
 		'en': 'The language of this website could not be determined automatically. Please indicate the main language:',
+		'eo': 'La lingvo de ĉi tiu retpaĝo ne rekoneblas aŭtomate. Bonvolu indiki ĝian ĉeflingvon:',
 		'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal:',
+		'et': 'Veebilehe keele tuvastamine ebaõnnestus, palun valige kasutatud keel:',
 		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:',
 		'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:',
 		'hu': 'A weboldal nyelvét nem sikerült automatikusan megállapítani. Kérem adja meg a nyelvet:',
@@ -204,11 +209,13 @@ var Hyphenator = (function (window) {
 	 */
 	basePath = (function () {
 		var s = document.getElementsByTagName('script'), i = 0, p, src, t;
-		while (!!(t = s[i++]) && !!t.src) {
-			src = t.src;
-			p = src.indexOf('Hyphenator.js');
-			if (p !== -1) {
-				return src.substring(0, p);
+		while (!!(t = s[i++])) {
+			if (!!t.src) {
+				src = t.src;
+				p = src.indexOf('Hyphenator.js');
+				if (p !== -1) {
+					return src.substring(0, p);
+				}
 			}
 		}
 		return 'http://hyphenator.googlecode.com/svn/trunk/';
@@ -418,7 +425,8 @@ var Hyphenator = (function (window) {
 			r.support = true;
 			r.property = 'MozHyphens';
 			r.languages = {
-				en: true
+				en: true,
+				de: true
 			};
 		}
 		css3_h9n = r;
@@ -679,7 +687,7 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */		
 	onError = function (e) {
-		window.alert("Hyphenator.js says:\n\nAn Error ocurred:\n" + e.message);
+		window.alert("Hyphenator.js says:\n\nAn Error occurred:\n" + e.message);
 	},
 
 	/**
@@ -733,6 +741,102 @@ var Hyphenator = (function (window) {
 	unhide = 'wait',
 	
 	/**
+	 * @name Hyphenator-CSSEditors
+	 * @description A container array that holds CSSEdit classes
+	 * For each window object one CSSEdit class is inserted
+	 * @see Hyphenator-CSSEdit
+	 * @type {array}
+	 * @private
+	 */			
+	CSSEditors = [],
+
+	/**
+	 * @name Hyphenator-CSSEditors
+	 * @description A custom class with two public methods: setRule() and clearChanges()
+	 * Tis is used to hide/unhide elements when they are hyphenated.
+	 * @see Hyphenator-gatherDocumentInfos
+	 * @type {function ()}
+	 * @private
+	 */			
+	CSSEdit = function (w) {
+		w = w || window;
+		var doc = w.document,
+		sheet = doc.styleSheets[doc.styleSheets.length-1],
+		changes = [],
+		findRule = function (sel) {
+			var sheet, rule, sheets = window.document.styleSheets, rules, i, j;
+			for (i = 0; i < sheets.length; i++) {
+				sheet = sheets[i];
+				if (!!sheet.cssRules) {
+					rules = sheet.cssRules;
+				} else if (!!sheet.rules) {
+					// IE < 9
+					rules = sheet.rules;
+				}
+				if (!!rules && !!rules.length) {
+					for (j = 0; j < rules.length; j++) {
+						rule = rules[j];
+						if (rule.selectorText === sel) {
+							return {
+								index: j,
+								rule: rule
+							};
+						}
+					}
+				}
+			}
+			return false;
+		},
+		addRule = function (sel, rulesStr) {
+			var i;
+			if (!!sheet.insertRule) {
+				if (!!sheet.cssRules) {
+					i = sheet.cssRules.length;
+				} else {
+					i = 0;
+				}
+				return sheet.insertRule(sel + '{' + rulesStr + '}', i);
+			} else {
+				// IE < 9
+				return sheet.addRule(sel, rulesStr, -1);
+			}
+		},
+		removeRule = function (sheet, index) {
+			if (sheet.deleteRule) {
+				sheet.deleteRule(index);
+			} else {
+				// IE < 9
+				sheet.removeRule(index);
+			}
+		};
+		
+		return {
+			setRule: function (sel, rulesString) {
+				var i, existingRule;
+				existingRule = findRule(sel);
+				if (!!existingRule) {
+					if (existingRule.rule.cssText === '.' + hyphenateClass + ' { visibility: hidden; }') {
+						changes.push({sheet: existingRule.rule.parentStyleSheet, index: existingRule.index});
+					} else if (existingRule.rule.cssText.indexOf('visibility: hidden') !== -1) {
+						i = addRule(sel, rulesString);
+						changes.push({sheet: sheet, index: i});
+						existingRule.rule.style.removeProperty('visibility');
+					}
+				} else {
+					i = addRule(sel, rulesString);
+					changes.push({sheet: sheet, index: i});
+				}
+			},
+			clearChanges: function () {
+				var change;
+				while (!!(change = changes.pop())) {
+					removeRule(change.sheet, change.index);
+				}
+			}
+		};
+	},
+	
+	/**
 	 * @name Hyphenator-hyphen
 	 * @description
 	 * A string containing the character for in-word-hyphenation
@@ -766,8 +870,7 @@ var Hyphenator = (function (window) {
 	 * @see Hyphenator.config
 	 * @see Hyphenator-registerOnCopy
 	 */
-	safeCopy = true,
-	
+	safeCopy = true,	
 		
 	/*
 	 * runOnContentLoaded is based od jQuery.bindReady()
@@ -839,7 +942,9 @@ var Hyphenator = (function (window) {
 						haveAccess = undefined;
 					}
 					if (!!haveAccess) {
-						init(window.frames[i]);
+						if (window.frames[i].location.href !== 'about:blank') {
+							init(window.frames[i]);
+						}
 					}
 				}
 				contextWindow = window;
@@ -1004,7 +1109,7 @@ var Hyphenator = (function (window) {
 				el.style[css3_h9n.property] = "auto";
 				el.style['-webkit-locale'] = "'" + lang + "'";
 			} else {
-				if (intermediateState === 'hidden') {
+				if (intermediateState === 'hidden' && unhide === 'progressive') {
 					if (!!el.getAttribute('style')) {
 						hyphenatorSettings.hasOwnStyle = true;
 					} else {
@@ -1039,6 +1144,10 @@ var Hyphenator = (function (window) {
 			elToProcess = contextWindow.document.getElementsByTagName('body')[0];
 			process(elToProcess, false, mainLanguage);
 		} else {
+			if (!css3 && unhide === 'wait') {
+				CSSEditors.push(new CSSEdit(contextWindow));
+				CSSEditors[CSSEditors.length - 1].setRule('.' + hyphenateClass, 'visibility: hidden;');
+			}
 			elToProcess = selectorFunction();
 			while (!!(tmp = elToProcess[i++]))
 			{
@@ -1612,6 +1721,7 @@ var Hyphenator = (function (window) {
 		}
 	},
 	
+		
 	/**
 	 * @name Hyphenator-unhideElement
 	 * @description
@@ -1643,17 +1753,20 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */		
 	checkIfAllDone = function () {
-		var allDone = true;
+		var allDone = true, i;
 		elements.each(function (lang, list) {
 			var i, l = list.length;
 			for (i = 0; i < l; i++) {
 				allDone = allDone && list[i].hyphenated;
-				if (intermediateState === 'hidden' && unhide === 'wait') {
+				/*if (intermediateState === 'hidden' && unhide === 'wait') {
 					unhideElement(list[i]);
-				}
+				}*/
 			}
 		});
 		if (allDone) {
+			for (i = 0; i < CSSEditors.length; i++) {
+				CSSEditors[i].clearChanges();
+			}
 			state = 3;
 			onHyphenationDone();
 		}
@@ -2124,7 +2237,6 @@ var Hyphenator = (function (window) {
 					documentCount++;
 					autoSetMainLanguage(undefined);
 					gatherDocumentInfos();
-					//console.log('preparing for ' + contextWindow.location.href);
 					prepare(hyphenateLanguageElements);
 					if (displayToggleBox) {
 						toggleBox();
