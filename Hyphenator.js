@@ -391,7 +391,12 @@ var Hyphenator = (function (window) {
 			support: false,
 			property: '',
 			languages: {}
+		},
+		getSupportedLanguages = function () {
+		
+		
 		};
+		
 		if (window.getComputedStyle) {
 			s = contextWindow.getComputedStyle(contextWindow.document.getElementsByTagName('body')[0], null);
 		} else {
@@ -399,6 +404,7 @@ var Hyphenator = (function (window) {
 			css3_h9n = r;
 			return;
 		}
+		
 		if (ua.indexOf('Chrome') !== -1) {
 			//Chrome actually knows -webkit-hyphens but does no hyphenation
 			r.support = false;
@@ -796,9 +802,15 @@ var Hyphenator = (function (window) {
 					i = 0;
 				}
 				return sheet.insertRule(sel + '{' + rulesStr + '}', i);
-			} else {
+			} else if (!!sheet.addRule) {
 				// IE < 9
-				return sheet.addRule(sel, rulesStr, -1);
+				if (!!sheet.rules) {
+					i = sheet.rules.length;
+				} else {
+					i = 0;
+				}
+				sheet.addRule(sel, rulesStr, i);
+				return i;
 			}
 		},
 		removeRule = function (sheet, index) {
@@ -806,6 +818,7 @@ var Hyphenator = (function (window) {
 				sheet.deleteRule(index);
 			} else {
 				// IE < 9
+				
 				sheet.removeRule(index);
 			}
 		};
