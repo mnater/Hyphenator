@@ -825,15 +825,27 @@ var Hyphenator = (function (window) {
 		
 		return {
 			setRule: function (sel, rulesString) {
-				var i, existingRule;
+				var i, existingRule, cssText;
 				existingRule = findRule(sel);
 				if (!!existingRule) {
-					if (existingRule.rule.cssText === '.' + hyphenateClass + ' { visibility: hidden; }') {
+					if (!!existingRule.rule.cssText) {
+						cssText = existingRule.rule.cssText;
+					} else {
+						// IE < 9
+						cssText = existingRule.rule.style.cssText.toLowerCase();
+					}
+					if (cssText === '.' + hyphenateClass + ' { visibility: hidden; }') {
+						//browsers w/o IE < 9 and no additional style defs:
+						//add to [changes] for later removal
 						changes.push({sheet: existingRule.rule.parentStyleSheet, index: existingRule.index});
-					} else if (existingRule.rule.cssText.indexOf('visibility: hidden') !== -1) {
+					} else if (cssText.indexOf('visibility: hidden') !== -1) {
+						// IE < 9 or additional style defs:
+						// add new rule
 						i = addRule(sel, rulesString);
+						//add to [changes] for later removal
 						changes.push({sheet: sheet, index: i});
-						existingRule.rule.style.removeProperty('visibility');
+						// clear existing def
+						existingRule.rule.style['visibility'] = '';
 					}
 				} else {
 					i = addRule(sel, rulesString);
