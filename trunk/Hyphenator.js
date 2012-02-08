@@ -352,6 +352,18 @@ var Hyphenator = (function (window) {
 	displayToggleBox = false,
 
 	/**
+	 * @name Hyphenator-onError
+	 * @description
+	 * A function that can be called upon an error.
+	 * @see Hyphenator.config
+	 * @type {function(Object)}
+	 * @private
+	 */		
+	onError = function (e) {
+		window.alert("Hyphenator.js says:\n\nAn Error occurred:\n" + e.message);
+	},
+
+	/**
 	 * @name Hyphenator-css3
 	 * @description
 	 * A variable to set if css3 hyphenation should be used
@@ -387,16 +399,96 @@ var Hyphenator = (function (window) {
 	css3_gethsupport = function () {
 		var s,
 		ua = navigator.userAgent,
+		checkLangSupport = function (lang) {
+			var testStrings = [
+				//latin: 0
+				'abcdefghijklmnopqrstuvwxyz',
+				//cyrillic: 1
+				'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
+				//arabic: 2
+				'أبتثجحخدذرزسشصضطظعغفقكلمنهوي',
+				//armenian: 3
+				'աբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ',
+				//bengali: 4
+				'ঁংঃঅআইঈউঊঋঌএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহ়ঽািীুূৃৄেৈোৌ্ৎৗড়ঢ়য়ৠৡৢৣ',
+				//devangari: 5
+				'ँंःअआइईउऊऋऌएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलळवशषसहऽािीुूृॄेैोौ्॒॑ॠॡॢॣ',
+				//greek: 6
+				'αβγδεζηθικλμνξοπρσςτυφχψω',
+				//gujarati: 7
+				'બહઅઆઇઈઉઊઋૠએઐઓઔાિીુૂૃૄૢૣેૈોૌકખગઘઙચછજઝઞટઠડઢણતથદધનપફસભમયરલળવશષ',
+				//kannada: 8
+				'ಂಃಅಆಇಈಉಊಋಌಎಏಐಒಓಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಱಲಳವಶಷಸಹಽಾಿೀುೂೃೄೆೇೈೊೋೌ್ೕೖೞೠೡ',
+				//lao: 9
+				'ກຂຄງຈຊຍດຕຖທນບປຜຝພຟມຢຣລວສຫອຮະັາິີຶືຸູົຼເແໂໃໄ່້໊໋ໜໝ',
+				//malayalam: 10
+				'ംഃഅആഇഈഉഊഋഌഎഏഐഒഓഔകഖഗഘങചഛജഝഞടഠഡഢണതഥദധനപഫബഭമയരറലളഴവശഷസഹാിീുൂൃെേൈൊോൌ്ൗൠൡൺൻർൽൾൿ',
+				//oriya: 11
+				'ଁଂଃଅଆଇଈଉଊଋଌଏଐଓଔକଖଗଘଙଚଛଜଝଞଟଠଡଢଣତଥଦଧନପଫବଭମଯରଲଳଵଶଷସହାିୀୁୂୃେୈୋୌ୍ୗୠୡ',
+				//persian: 12
+				'أبتثجحخدذرزسشصضطظعغفقكلمنهوي',
+				//punjabi: 13
+				'ਁਂਃਅਆਇਈਉਊਏਐਓਔਕਖਗਘਙਚਛਜਝਞਟਠਡਢਣਤਥਦਧਨਪਫਬਭਮਯਰਲਲ਼ਵਸ਼ਸਹਾਿੀੁੂੇੈੋੌ੍ੰੱ',
+				//tamil: 14
+				'ஃஅஆஇஈஉஊஎஏஐஒஓஔகஙசஜஞடணதநனபமயரறலளழவஷஸஹாிீுூெேைொோௌ்ௗ',
+				//telugu: 15
+				'ఁంఃఅఆఇఈఉఊఋఌఎఏఐఒఓఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరఱలళవశషసహాిీుూృౄెేైొోౌ్ౕౖౠౡ'
+			],
+				
+
+			//http://en.wikipedia.org/wiki/List_of_Unicode_characters
+			languages = {en: 0, af: 0, ar: 2, 'as': 4, bg: 1, bn: 4, ca: 0, cs: 0, cy: 0, da: 0, de: 0, el: 6, eo: 0, es: 0, et: 0, eu: 0, fa: 12, fi: 0, fr: 0, ga: 0, gl: 0, gu: 7, hi: 5, hr: 0, hsb: 0, hu: 0, hy: 3, ia: 0, id: 0, 'is': 0, it: 0, kmr: 0, kn: 8, la: 0, lo: 9, lt: 0, lv: 0, ml: 10, mn: 1, mr: 5, nb: 0, nl: 0, nn: 0, or: 11, pa: 13, pl: 0, pt: 0, ro: 0, ru: 1, 'sr-latn': 0, 'sr-cyrl': 1, sl: 0, sv: 0, ta: 14, te: 15, tk: 0, tr: 0, uk: 1, 'zh-latn': 0},
+			createElem = function (tagname, context) {
+				context = context || contextWindow;
+				if (document.createElementNS) {
+					return context.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
+				} else if (document.createElement) {
+					return context.document.createElement(tagname);
+				}
+			},
+			shadow,
+			computedHeight,
+			bdy = window.document.getElementsByTagName('body')[0];
+			
+			//create and append shadow-test-element
+			shadow = createElem('div', window);
+			shadow.id = 'Hyphenator_LanguageChecker';
+			shadow.style.width = '5em';
+			shadow.style.MozHyphens = 'auto';
+			shadow.style['-webkit-hyphens'] = 'auto';
+			shadow.style['-ie-hyphens'] = 'auto';
+			shadow.style.hyphens = 'auto';
+			shadow.style.fontSize = '12px';
+			shadow.style.lineHeight = '12px';
+			shadow.style.visibility = 'hidden';
+			if (languages.hasOwnProperty(lang)) {
+				shadow.lang = lang;
+				shadow.style['-webkit-locale'] = "'" + lang + "'";
+				shadow.innerHTML = testStrings[languages[lang]];
+			} else {
+				//onError(new Error('css3 hyphenation test for ' + lang + ' was not possible.'));
+				return false;
+			}
+			bdy.appendChild(shadow);
+			
+			//measure its height
+			//computedHeight = parseInt(window.getComputedStyle(shadow, null).height.slice(0, -2), 10);
+			computedHeight = shadow.offsetHeight;
+			
+			//remove shadow element
+			bdy.removeChild(shadow);
+
+			if (computedHeight > 12) {
+				return true;
+			} else {
+				return false;
+			}				
+		},
 		r = {
 			support: false,
 			property: '',
-			languages: {}
-		},
-		getSupportedLanguages = function () {
-		
-		
-		};
-		
+			checkLangSupport: checkLangSupport
+		};		
 		if (window.getComputedStyle) {
 			s = contextWindow.getComputedStyle(contextWindow.document.getElementsByTagName('body')[0], null);
 		} else {
@@ -405,7 +497,18 @@ var Hyphenator = (function (window) {
 			return;
 		}
 		
-		if (ua.indexOf('Chrome') !== -1) {
+		if (s['-webkit-hyphens'] !== undefined) {
+			r.support = true;
+			r.property = '-webkit-hyphens';
+		} else if (s['MozHyphens'] !== undefined) {
+			r.support = true;
+			r.property = 'MozHyphens';		
+		} else if (s['-ms-hyphens'] !== undefined) {
+			r.support = true;
+			r.property = '-ms-hyphens';
+		}
+		
+		/*if (ua.indexOf('Chrome') !== -1) {
 			//Chrome actually knows -webkit-hyphens but does no hyphenation
 			r.support = false;
 		} else if ((ua.indexOf('Safari') !== -1) && (s['-webkit-hyphens'] !== undefined)) {
@@ -434,7 +537,7 @@ var Hyphenator = (function (window) {
 				en: true,
 				de: true
 			};
-		}
+		}*/
 		css3_h9n = r;
 	},
 	
@@ -683,18 +786,6 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */		
 	onHyphenationDone = function () {},
-
-	/**
-	 * @name Hyphenator-onError
-	 * @description
-	 * A function that can be called upon an error.
-	 * @see Hyphenator.config
-	 * @type {function(Object)}
-	 * @private
-	 */		
-	onError = function (e) {
-		window.alert("Hyphenator.js says:\n\nAn Error occurred:\n" + e.message);
-	},
 
 	/**
 	 * @name Hyphenator-selectorFunction
@@ -1130,7 +1221,7 @@ var Hyphenator = (function (window) {
 			}
 			
 			//if css3-hyphenation is supported: use it!
-			if (css3 && css3_h9n.support && !!css3_h9n.languages[lang]) {
+			if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(lang)) {
 				el.style[css3_h9n.property] = "auto";
 				el.style['-webkit-locale'] = "'" + lang + "'";
 			} else {
@@ -1470,7 +1561,6 @@ var Hyphenator = (function (window) {
 				}
 			}
 			if (finishedLoading) {
-				//console.log('callig callback for ' + contextWindow.location.href);
 				window.clearInterval(interval);
 				state = 2;
 			}
