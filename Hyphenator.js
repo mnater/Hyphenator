@@ -82,66 +82,74 @@ var Hyphenator = (function (window) {
 	 * @description
 	 * A key-value object that stores supported languages.
 	 * The key is the bcp47 code of the language and the value
-	 * is the (abbreviated) filename of the pattern file.
-	 * @type {Object.<string, string>}
+	 * is an object containing informations about the language
+	 * @type {Object.<string, Object>}
 	 * @private
 	 * @example
 	 * Check if language lang is supported:
-	 * if (supportedLang.hasOwnProperty(lang))
+	 * if (supportedLangs.hasOwnProperty(lang))
 	 */
-	supportedLang = {
-		'be': 'be.js',
-		'ca': 'ca.js',
-		'cs': 'cs.js',
-		'da': 'da.js',
-		'bn': 'bn.js',
-		'de': 'de.js',
-		'el': 'el-monoton.js',
-		'el-monoton': 'el-monoton.js',
-		'el-polyton': 'el-polyton.js',
-		'en': 'en-us.js',
-		'en-gb': 'en-gb.js',
-		'en-us': 'en-us.js',
-		'eo': 'eo.js',
-		'es': 'es.js',
-		'et': 'et.js',
-		'fi': 'fi.js',
-		'fr': 'fr.js',
-		'grc': 'grc.js',
-		'gu': 'gu.js',
-		'hi': 'hi.js',
-		'hu': 'hu.js',
-		'hy': 'hy.js',
-		'it': 'it.js',
-		'kn': 'kn.js',
-		'la': 'la.js',
-		'lt': 'lt.js',
-		'lv': 'lv.js',
-		'ml': 'ml.js',
-		'nb': 'nb-no.js',
-		'no': 'nb-no.js',
-		'nb-no': 'nb-no.js',
-		'nl': 'nl.js',
-		'or': 'or.js',
-		'pa': 'pa.js',
-		'pl': 'pl.js',
-		'pt': 'pt.js',
-		'ru': 'ru.js',
-		'sk': 'sk.js',
-		'sl': 'sl.js',
-		'sr-latn': 'sr-latn.js',
-		'sv': 'sv.js',
-		'ta': 'ta.js',
-		'te': 'te.js',
-		'tr': 'tr.js',
-		'uk': 'uk.js'
-	},
-
+	supportedLangs = (function () {
+		var r = {},
+		o = function (code, file, script, prompt) {
+			r[code] = {'file': file, 'script': script, 'prompt': prompt};
+		};
+		
+		//latin:0, cyrillic: 1, arabic: 2, armenian:3, bengali: 4, devangari: 5, greek: 6
+		//gujarati: 7, kannada: 8, lao: 9, malayalam: 10, oriya: 11, persian: 12, punjabi: 13, tamil: 14, telugu: 15
+		o('be', 'be.js', 1, 'Мова гэтага сайта не можа быць вызначаны аўтаматычна. Калі ласка пакажыце мову:');
+		o('ca', 'ca.js', 0, '');
+		o('cs', 'cs.js', 0, 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:');
+		o('da', 'da.js', 0, 'Denne websides sprog kunne ikke bestemmes. Angiv venligst sprog:');
+		o('bn', 'bn.js', 4, '');
+		o('de', 'de.js', 0, 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:');
+		o('el', 'el-monoton.js', 6, '');
+		o('el-monoton', 'el-monoton.js', 6, '');
+		o('el-polyton', 'el-polyton.js', 6, '');
+		o('en', 'en-us.js', 0, 'The language of this website could not be determined automatically. Please indicate the main language:');
+		o('en-gb', 'en-gb.js', 0, 'The language of this website could not be determined automatically. Please indicate the main language:');
+		o('en-us', 'en-us.js', 0, 'The language of this website could not be determined automatically. Please indicate the main language:');
+		o('eo', 'eo.js', 0, 'La lingvo de ĉi tiu retpaĝo ne rekoneblas aŭtomate. Bonvolu indiki ĝian ĉeflingvon:');
+		o('es', 'es.js', 0, 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal:');
+		o('et', 'et.js', 0, 'Veebilehe keele tuvastamine ebaõnnestus, palun valige kasutatud keel:');
+		o('fi', 'fi.js', 0, 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:');
+		o('fr', 'fr.js', 0, 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:');
+		o('grc', 'grc.js', 6, '');
+		o('gu', 'gu.js', 7, '');
+		o('hi', 'hi.js', 5, '');
+		o('hu', 'hu.js', 0, 'A weboldal nyelvét nem sikerült automatikusan megállapítani. Kérem adja meg a nyelvet:');
+		o('hy', 'hy.js', 3, 'Չհաջողվեց հայտնաբերել այս կայքի լեզուն։ Խնդրում ենք նշեք հիմնական լեզուն՝');
+		o('it', 'it.js', 0, 'Lingua del sito sconosciuta. Indicare una lingua, per favore:');
+		o('kn', 'kn.js', 8, 'ಜಾಲ ತಾಣದ ಭಾಷೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಮುಖ್ಯ ಭಾಷೆಯನ್ನು ಸೂಚಿಸಿ:');
+		o('la', 'la.js', 0, '');
+		o('lt', 'lt.js', 0, 'Nepavyko automatiškai nustatyti šios svetainės kalbos. Prašome įvesti kalbą:');
+		o('lv', 'lv.js', 0, 'Šīs lapas valodu nevarēja noteikt automātiski. Lūdzu norādiet pamata valodu:');
+		o('ml', 'ml.js', 10, 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:');
+		o('nb', 'nb-no.js', 0, 'Nettstedets språk kunne ikke finnes automatisk. Vennligst oppgi språk:');
+		o('no', 'nb-no.js', 0, 'Nettstedets språk kunne ikke finnes automatisk. Vennligst oppgi språk:');
+		o('nb-no', 'nb-no.js', 0, 'Nettstedets språk kunne ikke finnes automatisk. Vennligst oppgi språk:');
+		o('nl', 'nl.js', 0, 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:');
+		o('or', 'or.js', 11, '');
+		o('pa', 'pa.js', 13, '');
+		o('pl', 'pl.js', 0, '');
+		o('pt', 'pt.js', 0, 'A língua deste site não pôde ser determinada automaticamente. Por favor indique a língua principal:');
+		o('ru', 'ru.js', 1, 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:');
+		o('sk', 'sk.js', 0, '');
+		o('sl', 'sl.js', 0, 'Jezika te spletne strani ni bilo mogoče samodejno določiti. Prosim navedite jezik:');
+		o('sr-latn', 'sr-latn.js', 0, 'Jezika te spletne strani ni bilo mogoče samodejno določiti. Prosim navedite jezik:');
+		o('sv', 'sv.js', 0, 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:');
+		o('ta', 'ta.js', 14, '');
+		o('te', 'te.js', 15, '');
+		o('tr', 'tr.js', 0, 'Bu web sitesinin dili otomatik olarak tespit edilememiştir. Lütfen dökümanın dilini seçiniz%A0:');
+		o('uk', 'uk.js', 1, 'Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:');
+		
+		return r;
+	}()),
 	/**
 	 * @name Hyphenator-languageHint
 	 * @description
 	 * An automatically generated string to be displayed in a prompt if the language can't be guessed.
-	 * The string is generated using the supportedLang-object.
+	 * The string is generated using the supportedLangs-object.
 	 * @see Hyphenator-supportedLang
 	 * @type {string}
 	 * @private
@@ -150,51 +158,14 @@ var Hyphenator = (function (window) {
 
 	languageHint = (function () {
 		var k, r = '';
-		for (k in supportedLang) {
-			if (supportedLang.hasOwnProperty(k)) {
+		for (k in supportedLangs) {
+			if (supportedLangs.hasOwnProperty(k)) {
 				r += k + ', ';
 			}
 		}
 		r = r.substring(0, r.length - 2);
 		return r;
 	}()),
-	
-	/**
-	 * @name Hyphenator-prompterStrings
-	 * @description
-	 * A key-value object holding the strings to be displayed if the language can't be guessed
-	 * If you add hyphenation patterns change this string.
-	 * @type {Object.<string,string>}
-	 * @private
-	 * @see Hyphenator-autoSetMainLanguage
-	 */	
-	prompterStrings = {
-		'be': 'Мова гэтага сайта не можа быць вызначаны аўтаматычна. Калі ласка пакажыце мову:',
-		'cs': 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:',
-		'da': 'Denne websides sprog kunne ikke bestemmes. Angiv venligst sprog:',
-		'de': 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:',
-		'en': 'The language of this website could not be determined automatically. Please indicate the main language:',
-		'eo': 'La lingvo de ĉi tiu retpaĝo ne rekoneblas aŭtomate. Bonvolu indiki ĝian ĉeflingvon:',
-		'es': 'El idioma del sitio no pudo determinarse autom%E1ticamente. Por favor, indique el idioma principal:',
-		'et': 'Veebilehe keele tuvastamine ebaõnnestus, palun valige kasutatud keel:',
-		'fi': 'Sivun kielt%E4 ei tunnistettu automaattisesti. M%E4%E4rit%E4 sivun p%E4%E4kieli:',
-		'fr': 'La langue de ce site n%u2019a pas pu %EAtre d%E9termin%E9e automatiquement. Veuillez indiquer une langue, s.v.p.%A0:',
-		'hu': 'A weboldal nyelvét nem sikerült automatikusan megállapítani. Kérem adja meg a nyelvet:',
-		'hy': 'Չհաջողվեց հայտնաբերել այս կայքի լեզուն։ Խնդրում ենք նշեք հիմնական լեզուն՝',
-		'it': 'Lingua del sito sconosciuta. Indicare una lingua, per favore:',
-		'kn': 'ಜಾಲ ತಾಣದ ಭಾಷೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಮುಖ್ಯ ಭಾಷೆಯನ್ನು ಸೂಚಿಸಿ:',
-		'lt': 'Nepavyko automatiškai nustatyti šios svetainės kalbos. Prašome įvesti kalbą:',
-		'lv': 'Šīs lapas valodu nevarēja noteikt automātiski. Lūdzu norādiet pamata valodu:',
-		'ml': 'ഈ വെ%u0D2C%u0D4D%u200Cസൈറ്റിന്റെ ഭാഷ കണ്ടുപിടിയ്ക്കാ%u0D28%u0D4D%u200D കഴിഞ്ഞില്ല. ഭാഷ ഏതാണെന്നു തിരഞ്ഞെടുക്കുക:',
-		'nl': 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:',
-		'no': 'Nettstedets språk kunne ikke finnes automatisk. Vennligst oppgi språk:',
-		'pt': 'A língua deste site não pôde ser determinada automaticamente. Por favor indique a língua principal:',
-		'ru': 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:',
-		'sl': 'Jezika te spletne strani ni bilo mogoče samodejno določiti. Prosim navedite jezik:',
-		'sv': 'Spr%E5ket p%E5 den h%E4r webbplatsen kunde inte avg%F6ras automatiskt. V%E4nligen ange:',
-		'tr': 'Bu web sitesinin dili otomatik olarak tespit edilememiştir. Lütfen dökümanın dilini seçiniz%A0:',
-		'uk': 'Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:'
-	},
 	
 	/**
 	 * @name Hyphenator-basePath
@@ -362,6 +333,22 @@ var Hyphenator = (function (window) {
 	onError = function (e) {
 		window.alert("Hyphenator.js says:\n\nAn Error occurred:\n" + e.message);
 	},
+	
+	/**
+	 * @name Hyphenator-createElem
+	 * @description
+	 * A function alias to document.createElementNS or document.createElement
+	 * @type {function(string, Object)}
+	 * @private
+	 */		
+	createElem = function (tagname, context) {
+		context = context || contextWindow;
+		if (document.createElementNS) {
+			return context.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
+		} else if (document.createElement) {
+			return context.document.createElement(tagname);
+		}
+	},
 
 	/**
 	 * @name Hyphenator-css3
@@ -399,8 +386,8 @@ var Hyphenator = (function (window) {
 	css3_gethsupport = function () {
 		var s,
 		ua = navigator.userAgent,
-		checkLangSupport = function (lang) {
-			var testStrings = [
+		createLangSupportChecker = function (prefix) {
+			 var testStrings = [
 				//latin: 0
 				'abcdefghijklmnopqrstuvwxyz',
 				//cyrillic: 1
@@ -434,65 +421,54 @@ var Hyphenator = (function (window) {
 				//telugu: 15
 				'ఁంఃఅఆఇఈఉఊఋఌఎఏఐఒఓఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరఱలళవశషసహాిీుూృౄెేైొోౌ్ౕౖౠౡ'
 			],
+			f = function (lang) {
+				var shadow,
+					computedHeight,
+					bdy = window.document.getElementsByTagName('body')[0];
 				
-
-			//http://en.wikipedia.org/wiki/List_of_Unicode_characters
-			languages = {en: 0, af: 0, ar: 2, 'as': 4, bg: 1, bn: 4, ca: 0, cs: 0, cy: 0, da: 0, de: 0, el: 6, eo: 0, es: 0, et: 0, eu: 0, fa: 12, fi: 0, fr: 0, ga: 0, gl: 0, gu: 7, hi: 5, hr: 0, hsb: 0, hu: 0, hy: 3, ia: 0, id: 0, 'is': 0, it: 0, kmr: 0, kn: 8, la: 0, lo: 9, lt: 0, lv: 0, ml: 10, mn: 1, mr: 5, nb: 0, nl: 0, nn: 0, or: 11, pa: 13, pl: 0, pt: 0, ro: 0, ru: 1, 'sr-latn': 0, 'sr-cyrl': 1, sl: 0, sv: 0, ta: 14, te: 15, tk: 0, tr: 0, uk: 1, 'zh-latn': 0},
-			createElem = function (tagname, context) {
-				context = context || contextWindow;
-				if (document.createElementNS) {
-					return context.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
-				} else if (document.createElement) {
-					return context.document.createElement(tagname);
+				//create and append shadow-test-element
+				shadow = createElem('div', window);
+				shadow.id = 'Hyphenator_LanguageChecker';
+				shadow.style.width = '5em';
+				shadow.style[prefix] = 'auto';
+				shadow.style.hyphens = 'auto';
+				shadow.style.fontSize = '12px';
+				shadow.style.lineHeight = '12px';
+				shadow.style.visibility = 'hidden';
+				if (supportedLangs.hasOwnProperty(lang)) {
+					shadow.lang = lang;
+					shadow.style['-webkit-locale'] = "'" + lang + "'";
+					shadow.innerHTML = testStrings[supportedLangs[lang].script];
+				} else {
+					return false;
 				}
-			},
-			shadow,
-			computedHeight,
-			bdy = window.document.getElementsByTagName('body')[0];
-			
-			//create and append shadow-test-element
-			shadow = createElem('div', window);
-			shadow.id = 'Hyphenator_LanguageChecker';
-			shadow.style.width = '5em';
-			shadow.style.MozHyphens = 'auto';
-			shadow.style['-webkit-hyphens'] = 'auto';
-			shadow.style['-ie-hyphens'] = 'auto';
-			shadow.style.hyphens = 'auto';
-			shadow.style.fontSize = '12px';
-			shadow.style.lineHeight = '12px';
-			shadow.style.visibility = 'hidden';
-			if (languages.hasOwnProperty(lang)) {
-				shadow.lang = lang;
-				shadow.style['-webkit-locale'] = "'" + lang + "'";
-				shadow.innerHTML = testStrings[languages[lang]];
-			} else {
-				//onError(new Error('css3 hyphenation test for ' + lang + ' was not possible.'));
-				return false;
-			}
-			bdy.appendChild(shadow);
-			
-			//measure its height
-			//computedHeight = parseInt(window.getComputedStyle(shadow, null).height.slice(0, -2), 10);
-			computedHeight = shadow.offsetHeight;
-			
-			//remove shadow element
-			bdy.removeChild(shadow);
-
-			if (computedHeight > 12) {
-				return true;
-			} else {
-				return false;
-			}				
+				bdy.appendChild(shadow);
+				
+				//measure its height
+				//computedHeight = parseInt(window.getComputedStyle(shadow, null).height.slice(0, -2), 10);
+				computedHeight = shadow.offsetHeight;
+				
+				//remove shadow element
+				bdy.removeChild(shadow);
+	
+				if (computedHeight > 12) {
+					return true;
+				} else {
+					return false;
+				}			
+			};
+			return f;
 		},
 		r = {
 			support: false,
 			property: '',
-			checkLangSupport: checkLangSupport
+			checkLangSupport: function () {}
 		};		
+		
 		if (window.getComputedStyle) {
 			s = contextWindow.getComputedStyle(contextWindow.document.getElementsByTagName('body')[0], null);
 		} else {
-			//ancient Browser don't support CSS3 anyway
+			//ancient Browsers don't support CSS3 anyway
 			css3_h9n = r;
 			return;
 		}
@@ -500,44 +476,17 @@ var Hyphenator = (function (window) {
 		if (s['-webkit-hyphens'] !== undefined) {
 			r.support = true;
 			r.property = '-webkit-hyphens';
+			r.checkLangSupport = createLangSupportChecker('-webkit-hyphens');
 		} else if (s['MozHyphens'] !== undefined) {
 			r.support = true;
-			r.property = 'MozHyphens';		
+			r.property = 'MozHyphens';
+			r.checkLangSupport = createLangSupportChecker('MozHyphens');
 		} else if (s['-ms-hyphens'] !== undefined) {
 			r.support = true;
 			r.property = '-ms-hyphens';
+			r.checkLangSupport = createLangSupportChecker('-ms-hyphens');
 		}
 		
-		/*if (ua.indexOf('Chrome') !== -1) {
-			//Chrome actually knows -webkit-hyphens but does no hyphenation
-			r.support = false;
-		} else if ((ua.indexOf('Safari') !== -1) && (s['-webkit-hyphens'] !== undefined)) {
-			r.support = true;
-			r.property = '-webkit-hyphens';
-			if (ua.indexOf('Mobile') !== -1) {
-				//iOS only hyphenates in systemlanguage
-				r.languages[navigator.language.split('-')[0]] = true;
-			} else {
-				//Desktop Safari only hyphenates some languages:
-				r.languages = {
-					de: true,
-					en: true,
-					es: true,
-					fr: true,
-					it: true,
-					nl: true,
-					ru: true,
-					zh: true
-				};
-			}
-		} else if ((ua.indexOf('Firefox') !== -1) && (s['MozHyphens'] !== undefined)) {
-			r.support = true;
-			r.property = 'MozHyphens';
-			r.languages = {
-				en: true,
-				de: true
-			};
-		}*/
 		css3_h9n = r;
 	},
 	
@@ -759,22 +708,6 @@ var Hyphenator = (function (window) {
 		}
 		return zws;
 	}()),
-	
-	/**
-	 * @name Hyphenator-createElem
-	 * @description
-	 * A function alias to document.createElementNS or document.createElement
-	 * @type {function(string, Object)}
-	 * @private
-	 */		
-	createElem = function (tagname, context) {
-		context = context || contextWindow;
-		if (document.createElementNS) {
-			return context.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
-		} else if (document.createElement) {
-			return context.document.createElement(tagname);
-		}
-	},
 	
 	/**
 	 * @name Hyphenator-onHyphenationDone
@@ -1140,8 +1073,8 @@ var Hyphenator = (function (window) {
 	 * <li>&lt;meta name = "DC.Language" content = "xy" /&gt;</li>
 	 * <li>&lt;meta name = "language" content = "xy" /&gt;</li>
 	 * </li>
-	 * If nothing can be found a prompt using {@link Hyphenator-languageHint} and {@link Hyphenator-prompterStrings} is displayed.
-	 * If the retrieved language is in the object {@link Hyphenator-supportedLang} it is copied to {@link Hyphenator-mainLanguage}
+	 * If nothing can be found a prompt using {@link Hyphenator-languageHint} and a prompt-string is displayed.
+	 * If the retrieved language is in the object {@link Hyphenator-supportedLangs} it is copied to {@link Hyphenator-mainLanguage}
 	 * @private
 	 */		
 	autoSetMainLanguage = function (w) {
@@ -1179,16 +1112,16 @@ var Hyphenator = (function (window) {
 			text = '';
 			ul = navigator.language || navigator.userLanguage;
 			ul = ul.substring(0, 2);
-			if (prompterStrings.hasOwnProperty(ul)) {
-				text = prompterStrings[ul];
+			if (!!supportedLangs[ul] && supportedLangs[ul].prompt !== '') {
+				text = supportedLangs[ul].prompt;
 			} else {
-				text = prompterStrings.en;
+				text = supportedLangs.en.prompt;
 			}
 			text += ' (ISO 639-1)\n\n' + languageHint;
 			mainLanguage = window.prompt(unescape(text), ul).toLowerCase();
 		}
-		if (!supportedLang.hasOwnProperty(mainLanguage)) {
-			if (supportedLang.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
+		if (!supportedLangs.hasOwnProperty(mainLanguage)) {
+			if (supportedLangs.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
 				mainLanguage = mainLanguage.split('-')[0];
 			} else {
 				e = new Error('The language "' + mainLanguage + '" is not yet supported.');
@@ -1234,10 +1167,10 @@ var Hyphenator = (function (window) {
 					hyphenatorSettings.isHidden = true;
 					el.style.visibility = 'hidden';
 				}
-				if (supportedLang[lang]) {
+				if (supportedLangs.hasOwnProperty(lang)) {
 					docLanguages[lang] = true;
 				} else {
-					if (supportedLang.hasOwnProperty(lang.split('-')[0])) { //try subtag
+					if (supportedLangs.hasOwnProperty(lang.split('-')[0])) { //try subtag
 						lang = lang.split('-')[0];
 						hyphenatorSettings.language = lang;
 					} else if (!isBookmarklet) {
@@ -1382,7 +1315,7 @@ var Hyphenator = (function (window) {
 	 * @name Hyphenator-loadPatterns
 	 * @description
 	 * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
-	 * If the given language is not in the {@link Hyphenator-supportedLang}-Object it returns.
+	 * If the given language is not in the {@link Hyphenator-supportedLangs}-Object it returns.
 	 * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
 	 * has a same-origin-policy. This makes the isBookmarklet-functionality impossible.
 	 * @param {string} lang The language to load the patterns for
@@ -1391,8 +1324,8 @@ var Hyphenator = (function (window) {
 	 */
 	loadPatterns = function (lang) {
 		var url, xhr, head, script;
-		if (supportedLang[lang] && !Hyphenator.languages[lang]) {
-	        url = basePath + 'patterns/' + supportedLang[lang];
+		if (supportedLangs.hasOwnProperty(lang) && !Hyphenator.languages[lang]) {
+	        url = basePath + 'patterns/' + supportedLangs[lang].file;
 		} else {
 			return;
 		}
