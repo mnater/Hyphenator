@@ -1017,16 +1017,23 @@ var Hyphenator = (function (window) {
 				init(window);
 			}
 		};
-
-		document[add](pre + "DOMContentLoaded", DOMContentLoaded, false);
-		document[add](pre + 'readystatechange', DOMContentLoaded, false);
-		window[add](pre + 'load', doOnLoad, false);
-		toplevel = false;
-		try {
-			toplevel = !window.frameElement;
-		} catch (e) {}
-		if (document.documentElement.doScroll && toplevel) {
-			doScrollCheck();
+		
+		if (document.readyState === "complete" || document.readyState === "interactive") {
+			//Running Hyphenator.js if it has been loaded later
+			//Thanks to davenewtron http://code.google.com/p/hyphenator/issues/detail?id=158#c10
+			setTimeout(doOnLoad, 1);
+		} else {
+			//registering events
+			document[add](pre + "DOMContentLoaded", DOMContentLoaded, false);
+			document[add](pre + 'readystatechange', DOMContentLoaded, false);
+			window[add](pre + 'load', doOnLoad, false);
+			toplevel = false;
+			try {
+				toplevel = !window.frameElement;
+			} catch (e) {}
+			if (document.documentElement.doScroll && toplevel) {
+				doScrollCheck();
+			}
 		}
 	},
 	
