@@ -945,26 +945,22 @@ var Hyphenator = (function (window) {
 	 * @private
 	 */
 	runOnContentLoaded = function (w, f) {
-		var DOMContentLoaded = function () {}, toplevel, hyphRunForThis = {},
+		var
+		toplevel, hyphRunForThis = {},
 		add = document.addEventListener ? 'addEventListener' : 'attachEvent',
 		rem = document.addEventListener ? 'removeEventListener' : 'detachEvent',
-		pre = document.addEventListener ? '' : 'on';
+		pre = document.addEventListener ? '' : 'on',
 		
-		if (documentLoaded && !hyphRunForThis[w.location.href]) {
-			f();
-			hyphRunForThis[w.location.href] = true;
-			return;
-		}
-		function init(context) {
+		init = function (context) {
 			contextWindow = context || window;
 			if (!hyphRunForThis[contextWindow.location.href] && (!documentLoaded || !!contextWindow.frameElement)) {
 				documentLoaded = true;
 				f();
 				hyphRunForThis[contextWindow.location.href] = true;
 			}
-		}
+		},
 		
-		function doScrollCheck() {
+		doScrollCheck = function () {
 			try {
 				// If IE is used, use the trick by Diego Perini
 				// http://javascript.nwbox.com/IEContentLoaded/
@@ -976,9 +972,9 @@ var Hyphenator = (function (window) {
 		
 			// and execute any waiting functions
 			init(window);
-		}
+		},
 
-		function doOnLoad() {
+		doOnLoad = function () {
 			var i, haveAccess, fl = window.frames.length;
 			if (doFrames && fl > 0) {
 				for (i = 0; i < fl; i++) {
@@ -1002,7 +998,7 @@ var Hyphenator = (function (window) {
 			} else {
 				init(window);
 			}
-		}
+		},
 		
 		// Cleanup functions for the document ready method
 		DOMContentLoaded = function (e) {
@@ -1018,6 +1014,12 @@ var Hyphenator = (function (window) {
 			}
 		};
 		
+		if (documentLoaded && !hyphRunForThis[w.location.href]) {
+			f();
+			hyphRunForThis[w.location.href] = true;
+			return;
+		}
+
 		if (document.readyState === "complete" || document.readyState === "interactive") {
 			//Running Hyphenator.js if it has been loaded later
 			//Thanks to davenewtron http://code.google.com/p/hyphenator/issues/detail?id=158#c10
