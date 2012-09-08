@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<style>
+			div {
+				width:126px;
+				font-size:20px;
+				line-height:30px;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="./Hyphenator.js"></script>
+		<script>
+			Hyphenator.config({
+				onhyphenationdonecallback: function () {
+					var
+					jQ = $("#myid").height(),
+					oh = document.getElementById("myid").offsetHeight,
+					he = document.getElementById("myid").style.height;
+					alert(jQ + ' ' + oh);
+				}
+			});
+			Hyphenator.run();
+		</script>		
+	</head>
+	<body>
+		<div id="myid" class="hyphenate">Lastenhebemaschine</div>
+	</body>
+</html>
