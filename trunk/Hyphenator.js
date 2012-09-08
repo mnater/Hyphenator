@@ -1061,7 +1061,7 @@ var Hyphenator = (function (window) {
 					return el.getAttribute('xml:lang').toLowerCase();
 				}
 			} catch (ex) {}
-			if (el.tagName !== 'HTML') {
+			if (el.tagName.toLowerCase() !== 'html') {
 				return getLang(el.parentNode, true);
 			}
 			if (fallback) {
