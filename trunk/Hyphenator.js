@@ -1163,7 +1163,6 @@ var Hyphenator = (function (window) {
 					} else {
 						lang = getLang(el, true);
 					}
-
 					//if css3-hyphenation is supported: use it!
 					if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(lang)) {
 						el.style[css3_h9n.property] = "auto";
@@ -1184,6 +1183,7 @@ var Hyphenator = (function (window) {
 							if (supportedLangs.hasOwnProperty(lang.split('-')[0])) { //try subtag
 								lang = lang.split('-')[0];
 								hyphenatorSettings.language = lang;
+								docLanguages[lang] = true;
 							} else if (!isBookmarklet) {
 								onError(new Error('Language ' + lang + ' is not yet supported.'));
 							}
