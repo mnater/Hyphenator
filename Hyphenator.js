@@ -1594,7 +1594,7 @@ var Hyphenator = (function (window) {
 			var lo = Hyphenator.languages[lang], parts, l, subst,
 				w, characters, originalCharacters, wordLength, i, j, k, node, points = [],
 				characterPoints = [], nodePoints, nodePointsLength, m = Math.max, trie,
-				result = [''], pattern;
+				result = [''], pattern, r;
 			if (word === '') {
 				return '';
 			}
@@ -1616,7 +1616,7 @@ var Hyphenator = (function (window) {
 				}
 				return parts.join('-');
 			}
-			w = word = '_' + word + '_';
+			w = '_' + word + '_';
 			if (!!lo.charSubstitution) {
 				for (subst in lo.charSubstitution) {
 					if (lo.charSubstitution.hasOwnProperty(subst)) {
@@ -1632,7 +1632,7 @@ var Hyphenator = (function (window) {
 			 * Copyright (c) 2011, Bram Stein
 			 */
 			characters = w.toLowerCase().split('');
-			originalCharacters = word.split('');
+			originalCharacters = w.split('');
 			wordLength = characters.length;
 			trie = lo.patterns;
 			for (i = 0; i < wordLength; i += 1) {
@@ -1672,10 +1672,14 @@ var Hyphenator = (function (window) {
 					result[result.length - 1] += originalCharacters[i];
 				}
 			}
-			return result.join(hyphen);
+			r = result.join(hyphen);
 			/**
 			 * end of BSD licenced code from hypher.js
 			 */
+			if (enableCache) { //put the word in the cache
+				lo.cache[word] = r;
+			}
+			return r;
 		},
 
 		/**
