@@ -51,3 +51,11 @@ Additionally to the mandatory fields there are two optional fields in the object
 ||`exceptions`||string CSV|| exceptions for the language (see: http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation#Language_wide_exceptions)||
 
 ==== charSubstitution ===
+With `charSubstitution` you can replace a character in a word by another character for hyphenation (e.g. character `é` treated as `e`).
+This is used for example to internally substitute the old german `&#383;` with an `s`; the `&#383;` will remain in the hyphenated text, though.
+
+<code>
+charSubstitution : {
+    'ſ' : 's'
+}
+</code>
