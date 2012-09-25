@@ -1,9 +1,16 @@
 #summary Description of the format used in pattern files
 #labels Phase-Deploy
 
+_work in progress_
+
 = About Pattern Files =
-.loading
-.specificity
+Each language has its own rules for hyphenation, so Hyphenator.js has to load a language-specific file containing the patterns and some meta information. This files are called pattern files.
+
+Their format and meta information is described in this article.
+
+
+== Loading of pattern files ==
+By default Hyphenator.js searches the html-file for information, witch language to use to hyphenate the text. It then loads the pattern
 
 == encodings and naming ==
 .utf8 no DOM
