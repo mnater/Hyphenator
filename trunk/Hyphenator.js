@@ -1592,7 +1592,7 @@ var Hyphenator = (function (window) {
 		 */
 		hyphenateWord = function (lang, word) {
 			var lo = Hyphenator.languages[lang], parts, l, subst,
-				w, characters, originalCharacters, wordLength, i, j, k, node, points = [],
+				w, characters, origWord, originalCharacters, wordLength, i, j, k, node, points = [],
 				characterPoints = [], nodePoints, nodePointsLength, m = Math.max, trie,
 				result = [''], pattern, r;
 			if (word === '') {
@@ -1616,7 +1616,8 @@ var Hyphenator = (function (window) {
 				}
 				return parts.join('-');
 			}
-			w = '_' + word + '_';
+			origWord = word;
+			w = word = '_' + word + '_';
 			if (!!lo.charSubstitution) {
 				for (subst in lo.charSubstitution) {
 					if (lo.charSubstitution.hasOwnProperty(subst)) {
@@ -1624,7 +1625,7 @@ var Hyphenator = (function (window) {
 					}
 				}
 			}
-			if (word.indexOf("'") !== -1) {
+			if (origWord.indexOf("'") !== -1) {
 				w = w.replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
 			}
 			/** @license BSD licenced code
@@ -1632,7 +1633,7 @@ var Hyphenator = (function (window) {
 			 * Copyright (c) 2011, Bram Stein
 			 */
 			characters = w.toLowerCase().split('');
-			originalCharacters = w.split('');
+			originalCharacters = word.split('');
 			wordLength = characters.length;
 			trie = lo.patterns;
 			for (i = 0; i < wordLength; i += 1) {
@@ -1677,7 +1678,7 @@ var Hyphenator = (function (window) {
 			 * end of BSD licenced code from hypher.js
 			 */
 			if (enableCache) { //put the word in the cache
-				lo.cache[word] = r;
+				lo.cache[origWord] = r;
 			}
 			return r;
 		},
