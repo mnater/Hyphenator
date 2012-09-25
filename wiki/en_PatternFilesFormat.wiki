@@ -1,0 +1,24 @@
+#summary Description of the format used in pattern files
+#labels Phase-Deploy
+
+= About Pattern Files =
+.loading
+.specificity
+
+== encodings and naming ==
+.utf8 no DOM
+.bcp-xyz.js
+
+== general structure of the pattern files ==
+.JSON
+.comment
+
+=== mandatory fields ===
+.leftmin
+.rightmin
+.specialChars
+.patterns
+
+=== optional fields ===
+.charSubstitution
+.exceptions
