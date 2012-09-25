@@ -52,7 +52,7 @@ Additionally to the mandatory fields there are two optional fields in the object
 
 ==== charSubstitution ===
 With `charSubstitution` you can replace a character in a word by another character for hyphenation (e.g. character `é` treated as `e`).
-This is used for example to internally substitute the old german `&#383;` with an `s`; the `&#383;` will remain in the hyphenated text, though.
+This is used for example to internally substitute the old german `ſ` (&#383;) with an `s`; the `ſ` will remain in the hyphenated text, though.
 
 <code>
 charSubstitution : {
