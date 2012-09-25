@@ -10,11 +10,17 @@ Their format and meta information is described in this article.
 
 
 == Loading of pattern files ==
-By default Hyphenator.js searches the html-file for information, witch language to use to hyphenate the text. It then loads the pattern
+By default Hyphenator.js searches the html-file for information, witch language to use to hyphenate the text. It then loads the pattern files asynchronously in the background. As soon as the patterns are loaded Hyphenator.js hyphenates the texts.
+
+Instead of automatically loading the patterns [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_remoteloading you can load them manually].
 
 == encodings and naming ==
-.utf8 no DOM
-.bcp-xyz.js
+If you decide to create your own pattern file (e.g. to add a new language) you should use the [http://hyphenator.googlecode.com/svn/trunk/compressor.html "compressor"] that comes with the Hyphenator.js package.
+
+Please make sure to save the file with the following standards:
+  * encoding: utf8
+  * no BOM
+  * filename: <language-tag>.js (<language-tag> according to [http://en.wikipedia.org/wiki/BCP_47 BCP 47]
 
 == general structure of the pattern files ==
 .JSON
