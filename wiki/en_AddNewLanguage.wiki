@@ -40,9 +40,9 @@ But Hyphenator is written in a manner that makes it easy to add support for othe
 To add a further language, a language pattern file is needed. If you have a (complete) list of hyphenated words you may be able to compute patterns by your own (if you can, you know how). If not, go to [http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/ http://www.ctan.org] and search the LaTeX hyphenation patterns for your language (be aware of the license!)
 
 Next steps you will have to do:
-  # to convert the patterns
-  # to build a pattern file
-  # to change code in Hyphenator.js
+  # convert the patterns
+  # build a pattern file
+  # change code in Hyphenator.js
   # send-in changings and patterns if you feel like (I'll take you as a supporter for this language, you'll get full attribution)
 
 === Converting the patterns ===
@@ -54,7 +54,7 @@ Next steps you will have to do:
   * replace the lccodes (if any) by their respective characters
   * remove all comments (from '%' to the EOL) from the LaTeX patterns.
   * replace all linebreaks by a single space. At the end there should only be patterns in the file, separated by spaces.
-  * use compressor.html (that comes with the Hyphenator-package) to build the patterns and information for Hyphenator.js
+  * use compressor.html (that comes with the Hyphenator-package) to build the patterns and information for Hyphenator.js. compressor.html outputs the pattern in a special format described in http://code.google.com/p/hyphenator/wiki/en_PatternFilesFormat
 
 ==== Version <1.0.2 ====
   * LaTeX patterns are coming in this form: `.ab3s2`. To see the difference I use underline instead of point. A simple search&replace will do the trick: `_ab3s2`
