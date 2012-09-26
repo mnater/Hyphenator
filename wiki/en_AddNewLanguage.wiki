@@ -71,6 +71,8 @@ Next steps you will have to do:
 
 === adapt code in Hyphenator ===
 There is one thing you HAVE to change and one thing you SHOULD change in Hyphenator.js:
+==== Version >4.0.0 ====
+Add the new language `supportedLangs` (around line 90 in Hyphenator.js)
 ==== Version >=3.0.0 ====
   * `supportedLang`: Add the new language to the list. Please use the [http://www.rfc-editor.org/rfc/bcp/bcp47.txt bcp47-codes] for the language to be supported.
   * `prompterStrings`: This strings are used if the language of a document isn't defined. Please translate this short text to the language to be supported.
