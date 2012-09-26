@@ -95,6 +95,8 @@ var Hyphenator = (function (window) {
 
 			//latin:0, cyrillic: 1, arabic: 2, armenian:3, bengali: 4, devangari: 5, greek: 6
 			//gujarati: 7, kannada: 8, lao: 9, malayalam: 10, oriya: 11, persian: 12, punjabi: 13, tamil: 14, telugu: 15
+			//
+			//(language code, file name, script, prompt)
 			o('be', 'be.js', 1, 'Мова гэтага сайта не можа быць вызначаны аўтаматычна. Калі ласка пакажыце мову:');
 			o('ca', 'ca.js', 0, '');
 			o('cs', 'cs.js', 0, 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:');
@@ -129,7 +131,7 @@ var Hyphenator = (function (window) {
 			o('nl', 'nl.js', 0, 'De taal van deze website kan niet automatisch worden bepaald. Geef de hoofdtaal op:');
 			o('or', 'or.js', 11, '');
 			o('pa', 'pa.js', 13, '');
-			o('pl', 'pl.js', 0, '');
+			o('pl', 'pl.js', 0, 'Języka tej strony nie można ustalić automatycznie. Proszę wskazać język:');
 			o('pt', 'pt.js', 0, 'A língua deste site não pôde ser determinada automaticamente. Por favor indique a língua principal:');
 			o('ru', 'ru.js', 1, 'Язык этого сайта не может быть определен автоматически. Пожалуйста укажите язык:');
 			o('sk', 'sk.js', 0, '');
