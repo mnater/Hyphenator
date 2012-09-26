@@ -50,7 +50,7 @@ Additionally to the mandatory fields there are two optional fields in the object
 ||`charSubstitution`||object|| characters to be replaced for hyphenation (see below)||
 ||`exceptions`||string CSV|| exceptions for the language (see: http://code.google.com/p/hyphenator/wiki/en_DealingWithInaccurateHyphenation#Language_wide_exceptions)||
 
-==== charSubstitution ===
+=== charSubstitution ===
 With `charSubstitution` you can replace a character in a word by another character for hyphenation (e.g. character `é` treated as `e`).
 This is used for example to internally substitute the old german `ſ` (&#383;) with an `s`; the `ſ` will remain in the hyphenated text, though.
 
@@ -59,3 +59,24 @@ charSubstitution : {
     'ſ' : 's'
 }
 </code>
+You may also want to substitute more than one character:
+<code>
+charSubstitution : {
+    'à' : 'a',
+    'ä' : 'a',
+    'å' : 'a'
+}
+</code>
+
+=== Pattern packing ===
+Since pattern files have to be loaded additionally to the Hyphenator.js-script they should be as small as possible. In standard TeX-hyphenation-pattern the patterns are separated by a white-space character (typically a new line) using 8bits each.
+
+These white-space characters are saved up by sorting the patterns by their length.
+<code>
+patterns : {
+    3 : [patterns with length 3],
+    4 : [patterns with length 4],
+    n : [patterns with length n]
+}
+</code>
+This saves typically around 10% of the file size. Extracting the patterns is much faster then loading the additional 10% of bits.
