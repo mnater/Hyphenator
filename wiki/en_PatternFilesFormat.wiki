@@ -1,8 +1,6 @@
 #summary Description of the format used in pattern files
 #labels Phase-Deploy
 
-_work in progress_
-
 = About Pattern Files =
 Each language has its own rules for hyphenation, so Hyphenator.js has to load a language-specific file containing the patterns and some meta information. This files are called pattern files.
 
