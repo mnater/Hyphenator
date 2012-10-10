@@ -1734,6 +1734,20 @@ var Hyphenator = (function (window) {
 			}
 		},
 
+		oncopyHandler,
+
+		removeOnCopy = function (el) {
+			var body = el.ownerDocument.getElementsByTagName('body')[0];
+			if (!body) {
+				return;
+			}
+			el = el || body;
+			if (window.removeEventListener) {
+				el.removeEventListener("copy", oncopyHandler, true);
+			} else {
+				el.detachEvent("oncopy", oncopyHandler);
+			}
+		},
 
 		/**
 		 * @name Hyphenator-registerOnCopy
@@ -1750,60 +1764,60 @@ var Hyphenator = (function (window) {
 				selection,
 				range,
 				rangeShadow,
-				restore,
-				oncopyHandler = function (e) {
-					e = e || window.event;
-					var target = e.target || e.srcElement,
-						currDoc = target.ownerDocument,
-						body = currDoc.getElementsByTagName('body')[0],
-						targetWindow = currDoc.defaultView || currDoc.parentWindow;
-					if (target.tagName && dontHyphenate[target.tagName.toLowerCase()]) {
-						//Safari needs this
-						return;
-					}
-					//create a hidden shadow element
-					shadow = currDoc.createElement('div');
-					//Moving the element out of the screen doesn't work for IE9 (https://connect.microsoft.com/IE/feedback/details/663981/)
-					//shadow.style.overflow = 'hidden';
-					//shadow.style.position = 'absolute';
-					//shadow.style.top = '-5000px';
-					//shadow.style.height = '1px';
-					//doing this instead:
-					shadow.style.color = window.getComputedStyle ? targetWindow.getComputedStyle(body, null).backgroundColor : '#FFFFFF';
-					shadow.style.fontSize = '0px';
-					body.appendChild(shadow);
-					if (!!window.getSelection) {
-						//FF3, Webkit, IE9
-						e.stopPropagation();
-						selection = targetWindow.getSelection();
-						range = selection.getRangeAt(0);
-						shadow.appendChild(range.cloneContents());
-						removeHyphenationFromElement(shadow);
-						selection.selectAllChildren(shadow);
-						restore = function () {
-							shadow.parentNode.removeChild(shadow);
-							selection.removeAllRanges(); //IE9 needs that
-							selection.addRange(range);
-						};
-					} else {
-						// IE<9
-						e.cancelBubble = true;
-						selection = targetWindow.document.selection;
-						range = selection.createRange();
-						shadow.innerHTML = range.htmlText;
-						removeHyphenationFromElement(shadow);
-						rangeShadow = body.createTextRange();
-						rangeShadow.moveToElementText(shadow);
-						rangeShadow.select();
-						restore = function () {
-							shadow.parentNode.removeChild(shadow);
-							if (range.text !== "") {
-								range.select();
-							}
-						};
-					}
-					window.setTimeout(restore, 0);
-				};
+				restore;
+			oncopyHandler = function (e) {
+				e = e || window.event;
+				var target = e.target || e.srcElement,
+					currDoc = target.ownerDocument,
+					body = currDoc.getElementsByTagName('body')[0],
+					targetWindow = currDoc.defaultView || currDoc.parentWindow;
+				if (target.tagName && dontHyphenate[target.tagName.toLowerCase()]) {
+					//Safari needs this
+					return;
+				}
+				//create a hidden shadow element
+				shadow = currDoc.createElement('div');
+				//Moving the element out of the screen doesn't work for IE9 (https://connect.microsoft.com/IE/feedback/details/663981/)
+				//shadow.style.overflow = 'hidden';
+				//shadow.style.position = 'absolute';
+				//shadow.style.top = '-5000px';
+				//shadow.style.height = '1px';
+				//doing this instead:
+				shadow.style.color = window.getComputedStyle ? targetWindow.getComputedStyle(body, null).backgroundColor : '#FFFFFF';
+				shadow.style.fontSize = '0px';
+				body.appendChild(shadow);
+				if (!!window.getSelection) {
+					//FF3, Webkit, IE9
+					e.stopPropagation();
+					selection = targetWindow.getSelection();
+					range = selection.getRangeAt(0);
+					shadow.appendChild(range.cloneContents());
+					removeHyphenationFromElement(shadow);
+					selection.selectAllChildren(shadow);
+					restore = function () {
+						shadow.parentNode.removeChild(shadow);
+						selection.removeAllRanges(); //IE9 needs that
+						selection.addRange(range);
+					};
+				} else {
+					// IE<9
+					e.cancelBubble = true;
+					selection = targetWindow.document.selection;
+					range = selection.createRange();
+					shadow.innerHTML = range.htmlText;
+					removeHyphenationFromElement(shadow);
+					rangeShadow = body.createTextRange();
+					rangeShadow.moveToElementText(shadow);
+					rangeShadow.select();
+					restore = function () {
+						shadow.parentNode.removeChild(shadow);
+						if (range.text !== "") {
+							range.select();
+						}
+					};
+				}
+				window.setTimeout(restore, 0);
+			};
 			if (!body) {
 				return;
 			}
@@ -1814,7 +1828,6 @@ var Hyphenator = (function (window) {
 				el.attachEvent("oncopy", oncopyHandler);
 			}
 		},
-
 
 		/**
 		 * @name Hyphenator-unhideElement
@@ -1994,6 +2007,7 @@ var Hyphenator = (function (window) {
 				var i, l = elo.length, el;
 				for (i = 0; i < l; i += 1) {
 					removeHyphenationFromElement(elo[i].element);
+					removeOnCopy(elo[i].element);
 					elo[i].hyphenated = false;
 				}
 			});
