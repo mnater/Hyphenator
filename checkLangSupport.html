@@ -62,11 +62,11 @@
 				shadow.style.width = '5em';
 				shadow.style.MozHyphens = 'auto';
 				shadow.style['-webkit-hyphens'] = 'auto';
-				shadow.style['-ie-hyphens'] = 'auto';
+				shadow.style['-ms-hyphens'] = 'auto';
 				shadow.style.hyphens = 'auto';
 				shadow.style.fontSize = '12px';
 				shadow.style.lineHeight = '12px';
-				shadow.style.visibility = 'hidden';
+				//shadow.style.visibility = 'hidden';
 				if (languages.hasOwnProperty(lang)) {
 					shadow.lang = lang;
 					shadow.style['-webkit-locale'] = "'" + lang + "'";
@@ -82,7 +82,7 @@
 				computedHeight = shadow.offsetHeight;
 				
 				//remove shadow element
-				bdy.removeChild(shadow);
+				//bdy.removeChild(shadow);
 
 				if (computedHeight > 12) {
 					return true;
