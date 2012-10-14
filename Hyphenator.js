@@ -1734,8 +1734,21 @@ var Hyphenator = (function (window) {
 			}
 		},
 
+		/**
+		 * @name Hyphenator-oncopyHandler
+		 * @description
+		 * The function called by registerOnCopy
+		 * @private
+		 */
 		oncopyHandler,
 
+		/**
+		 * @name Hyphenator-removeOnCopy
+		 * @description
+		 * Method to remove copy event handler from the given element
+		 * @param object a html object from witch we remove the event
+		 * @private
+		 */
 		removeOnCopy = function (el) {
 			var body = el.ownerDocument.getElementsByTagName('body')[0];
 			if (!body) {
@@ -1756,6 +1769,7 @@ var Hyphenator = (function (window) {
 		 * copying of hyphenated text.
 		 * The idea behind this code has been provided by http://github.com/aristus/sweet-justice
 		 * sweet-justice is under BSD-License
+		 * @param object an HTML element where the copy event will be registered to
 		 * @private
 		 */
 		registerOnCopy = function (el) {
