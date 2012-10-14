@@ -393,7 +393,7 @@ var Hyphenator = (function (window) {
 				createLangSupportChecker = function (prefix) {
 					var testStrings = [
 						//latin: 0
-						'abcdefghijklmnopqrstuvwxyz',
+						'aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz',
 						//cyrillic: 1
 						'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
 						//arabic: 2
@@ -486,7 +486,6 @@ var Hyphenator = (function (window) {
 				r.property = '-ms-hyphens';
 				r.checkLangSupport = createLangSupportChecker('-ms-hyphens');
 			}
-
 			css3_h9n = r;
 		},
 
