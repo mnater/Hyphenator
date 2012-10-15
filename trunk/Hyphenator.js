@@ -2017,7 +2017,9 @@ var Hyphenator = (function (window) {
 				var i, l = elo.length, el;
 				for (i = 0; i < l; i += 1) {
 					removeHyphenationFromElement(elo[i].element);
-					removeOnCopy(elo[i].element);
+					if (safeCopy) {
+						removeOnCopy(elo[i].element);
+					}
 					elo[i].hyphenated = false;
 				}
 			});
