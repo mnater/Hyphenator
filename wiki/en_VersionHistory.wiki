@@ -10,12 +10,19 @@ This minor release brings the following changes:
 * use of querySelectorAll in some browsers
 * globally hide and unhide text by setting CSS classes (faster)
 * included test for CSS3hyphenation availability
+* made Hyphenator.js ready for IE10
 * added support for Esperanto (thanks to Sergio Pokrovskij)
 * added support for Estonian (thanks to Peeter Marvet)
 * added support for Serbian latin (thanks to (Sonja Keljević)
+* some general commenting and code reordering
 Ans some bugfixes:
 * fixed issue with getComputedStyle for older Firefox (<4)
-* fixed issue158 (Not working when called after the document load)
+* fixed issue158 (Not working when called after the document load, thanks to  davenewtron)
+* fixed issue162 (Object #<Document> has no method 'getAttribute')
+* fixed issue165 (words not cached)
+* fixed issue166 (added polish prompter string)
+* fixed issue148 (safe copy not working correctly with toggle box)
+* fixed an issue where words with apostrophes weren't treated correctly
 </wiki:comment>
 
 
