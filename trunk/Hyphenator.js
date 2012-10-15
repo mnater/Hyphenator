@@ -1208,7 +1208,7 @@ var Hyphenator = (function (window) {
 				elToProcess = contextWindow.document.getElementsByTagName('body')[0];
 				process(elToProcess, false, mainLanguage);
 			} else {
-				if (!css3 && unhide === 'wait') {
+				if (!css3 && intermediateState === 'hidden' && unhide === 'wait') {
 					CSSEditors.push(new CSSEdit(contextWindow));
 					CSSEditors[CSSEditors.length - 1].setRule('.' + hyphenateClass, 'visibility: hidden;');
 				}
@@ -1878,9 +1878,6 @@ var Hyphenator = (function (window) {
 				var i, l = list.length;
 				for (i = 0; i < l; i += 1) {
 					allDone = allDone && list[i].hyphenated;
-					/*if (intermediateState === 'hidden' && unhide === 'wait') {
-						unhideElement(list[i]);
-					}*/
 				}
 			});
 			if (allDone) {
