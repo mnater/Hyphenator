@@ -1,6 +1,24 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
+<wiki:comment>
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.1..0.zip 4.1.0] (October 15, 2012) ==
+This minor release brings the following changes:
+* bookmarklet uses CSS3hyphenation
+* updated jslint and made it happier
+* faster pattern checking (async)
+* use of querySelectorAll in some browsers
+* globally hide and unhide text by setting CSS classes (faster)
+* included test for CSS3hyphenation availability
+* added support for Esperanto (thanks to Sergio Pokrovskij)
+* added support for Estonian (thanks to Peeter Marvet)
+* added support for Serbian latin (thanks to (Sonja Keljević)
+Ans some bugfixes:
+* fixed issue with getComputedStyle for older Firefox (<4)
+* fixed issue158 (Not working when called after the document load)
+</wiki:comment>
+
+
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.0.0.zip 4.0.0] (August 05, 2011) ==
 This major release brings the following new features:
   * Faster hyphenation algorithm based on a trie (thanks to Bram Stein)
