@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+    <head>
+        <title>Hyphenator.js &ndash; Test 37</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			Hyphenator.config({onerrorhandler:function(){alert('Ein Vehler ischt eingeträtn: '+arguments[0].message)}});
+        	if (parent != window) {
+				Hyphenator.config({
+					'onerrorhandler': function () {
+						var desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 37
+						};
+						if (arguments[0].message == 'Language tl is not yet supported.') {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test36.html">&lt;- Prev</a> | <a href="test38.html">Next -&gt;</a></p>
+        <h1>Test 37</h1>
+        <p id="desc">Test error handling.</p>
+        <p id="test" class="hyphenate" lang="tl">Ang pagpapantig ay paraan ng pahahati-hati ng salita sa mga pantig.</p>
+        <p id="ref">Error: Language tl not supported.</p>
+    </body>
+</html>

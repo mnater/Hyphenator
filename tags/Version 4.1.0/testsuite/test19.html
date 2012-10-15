@@ -1,0 +1,786 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+    <head>
+        <title>Hyphenator.js &ndash; Test 19</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+            #error {
+            	color: red;
+            }
+			table {
+				width:100%;
+				border: 1px solid #555555;
+				border-collapse:collapse
+			}
+			th {
+				text-align:left;
+			}
+			tr {
+				text-align:left;
+				border: 1px solid #555555;
+			}
+			td {border: 1px solid #555555;}
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			Hyphenator.config({
+				'onhyphenationdonecallback': function () {
+					var t = document.getElementById('test');
+					var ref = document.getElementById('ref');
+					var i = 0, entry, r = true, s = '';
+					while (!!(entry = t.childNodes[i])) {
+						if (entry.nodeType === 1) {
+							if (entry.firstChild.data !== ref.childNodes[i].firstChild.data) {
+								entry.style.color = 'red';
+								ref.childNodes[i].style.color = 'green';
+								r = false;
+								s += ', ' + ref.childNodes[i].firstChild.data;
+							}
+						}
+						i++;
+					}
+					if (parent != window) {
+						var desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 19,
+							result: r ? 'passed' : 'failed'
+						};
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				}
+			});     	
+			Hyphenator.config({hyphenchar:'•', safecopy: false, 'storagetype': 'none'});
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test18.html">&lt;- Prev</a> | <a href="test20.html">Next -&gt;</a></p>
+        <h1>Test 19</h1>
+        <p id="desc">Do some checks related to german patterns.</p>
+
+		<table>
+<tr>
+	<th style="width:40em">Hyphenator</th>
+	<th style="width:40em">Manuell</th>
+</tr>
+<tr>	
+	<td id="test" class="hyphenate"><p>Absaugtrichter</p>
+<p>Aberration</p>
+<p>absaugen</p>
+<p>Absaugesiphon</p>
+<p>Abtreibung</p>
+<p>Abtrennen</p>
+<p>Aktionen</p>
+<p>allerengste</p>
+<p>Alpenostrand</p>
+<p>Altbaucharme</p>
+<p>Altbauerhaltung</p>
+<p>Ankerlichten</p>
+<p>Analphabeten</p>
+<p>Angstraum</p>
+<p>Angsttraum</p>
+<p>Anschlagsorte</p>
+<p>Antiklack</p>
+<p>Antragsteller</p>
+<p>anzugleichen</p>
+<p>anzugraben</p>
+<p>Armbandage</p>
+<p>Asthmagen</p>
+<p>Auflieger</p>
+<p>Automaten</p>
+<p>aufpolstern</p>
+<p>Augengel</p>
+<p>Ausdruckstanzen</p>
+<p>Aussendung</p>
+<p>Autorinnen</p>
+<p>Autoradios</p>
+<p>Autorennen</p>
+<p>Badenden</p>
+<p>Ballade</p>
+<p>Ballkontrolle</p>
+<p>Barambiente</p>
+<p>Baumangel</p>
+<p>Baumesstechnik</p>
+<p>Beamtenadel</p>
+<p>Beatmungsgerät</p>
+<p>Beifallstürme</p>
+<p>Beinamen</p>
+<p>beinhalten</p>
+<p>beratschlagen</p>
+<p>Besamsegel</p>
+<p>Bettrost</p>
+<p>Betriebsauffahrt</p>
+<p>Beuteleimer</p>
+<p>Bildungsexpansion</p>
+<p>Billigreise</p>
+<p>Billigersatz</p>
+<p>Blumentopferde</p>
+<p>Bombasteinfluss</p>
+<p>Brautradition</p>
+<p>Bonbonniere</p>
+<p>Briefeinwurf</p>
+<p>Brottrocken</p>
+<p>Busengrabscher</p>
+<p>Chefetage</p>
+<p>Dachspoiler</p>
+<p>dampfarm</p>
+<p>Deckeleimer</p>
+<p>Deimetal</p>
+<p>Delikatessen</p>
+<p>dementsprechend</p>
+<p>Dezernenten</p>
+<p>Diamantnadel</p>
+<p>Dienstrang</p>
+<p>Dienstraum</p>
+<p>Discountermarmor</p>
+<p>dreisekündigen</p>
+<p>Duschlampe</p>
+<p>Dudelei</p>
+<p>Eidotter</p>
+<p>Eileiter</p>
+<p>Einbauschalter</p>
+<p>Einkaufstempel</p>
+<p>einsalben</p>
+<p>einsaugen</p>
+<p>Einzellernen</p>
+<p>Eischnee</p>
+<p>Elektrodengel</p>
+<p>Erblasser</p>
+<p>Erbrecht</p>
+<p>Erdachse</p>
+<p>erblinden</p>
+<p>erdrückend</p>
+<p>erstunken</p>
+<p>Eselstute</p>
+<p>Europalette</p>
+<p>Fankreise</p>
+<p>Fankrawall</p>
+<p>fantastisch</p>
+<p>Festrumpfschlauchboot</p>
+<p>Fehlernährung</p>
+<p>Feindesinfektion</p>
+<!--<p>Fließestrich</p>-->
+<p>Flussetappe</p>
+<p>Flutscheinwerfer</p>
+<p>Freilichtaufnahme</p>
+<p>fruchtiger</p>
+<p>Fährunglücke</p>
+<p>Gabellaschenketten</p>
+<p>Gagautor</p>
+<p>Garantieregel</p>
+<p>Gastanker</p>
+<p>Gasthermen</p>
+<p>Gastraum</p>
+<p>Gastrolle</p>
+<p>Gasturbine</p>
+<p>Gauleiter</p>
+<p>Gebetsturm</p>
+<p>Gebetstürme</p>
+<p>Gelbrand</p>
+<p>gelbrot</p>
+<p>Gelächter</p>
+<p>Genitalien</p>
+<p>Gesetzestreuer</p>
+<p>Gespenstern</p>
+<p>Glücksautomaten</p>
+<p>Gourmetrösterei</p>
+<p>Grabschereien</p>
+<p>Grabbepflanzung</p>
+<p>Grabschändung</p>
+<p>Grundübel</p>
+<p>Grundsubstanzen</p>
+<p>Gyroskopie</p>
+<p>Hanflatschen</p>
+<p>Hanfrauchen</p>
+<p>Hausaufgabe</p>
+<p>Haustiere</p>
+<p>Haustrunk</p>
+<p>Heilerfolge</p>
+<p>Heimatschlager</p>
+<p>Herbsteinbruch</p>
+<p>hermetisch</p>
+<p>herzeigen</p>
+<p>Hofladen</p>
+<p>hochprozentiger</p>
+<p>Hochzeitsalben</p>
+<p>Hostessen</p>
+<p>hurtiger</p>
+<p>Hörnerven</p>
+<p>Isarufer</p>
+<p>Januarschnee</p>
+<p>Juliangebot</p>
+<p>Kadaversammlung</p>
+<p>Kameradenkreise</p>
+<p>Kameratasche</p>
+<p>Kameratreiber</p>
+<p>Kanzerogene</p>
+<p>Karibikreise</p>
+<p>Karnevalsauftakt</p>
+<p>Kastraten</p>
+<p>Kathoden</p>
+<p>Kaufladen</p>
+<p>Kauzahn</p>
+<p>Kellerasseln</p>
+<p>Kirschwein</p>
+<p>Klumpstreu</p>
+<p>Kolumbier</p>
+<p>kombinieren</p>
+<p>Kondensstreifen</p>
+<p>Kontopfändung</p>
+<p>kontrastreicher</p>
+<p>Kotrainer</p>
+<p>Kuhfladen</p>
+<p>Kultschlager</p>
+<p>Kurzurlaub</p>
+<p>Kurtrauben</p>
+<p>Kühltruhe</p>
+<p>Lachspäckchen</p>
+<p>Lachsalven</p>
+<p>Landrücken</p>
+<p>Landessender</p>
+<p>Landesteil</p>
+<p>Laubrechen</p>
+<p>Lebensmittelpunkt</p>
+<p>linkselbisch</p>
+<p>magentarot</p>
+<p>Malzeichen</p>
+<p>Mannschaftstransportwagen</p>
+<p>Marketingeifer</p>
+<p>Messetage</p>
+<p>Messias</p>
+<p>Metzgerinnung</p>
+<p>Metzgersenkel</p>
+<p>Mietnomaden</p>
+<p>Mietzweck</p>
+<p>Moderation</p>
+<p>Musiknoten</p>
+<p>Musikerziehung</p>
+<p>Nachtaufnahme</p>
+<p>Nachtruhe</p>
+<p>Nachbarskater</p>
+<p>nachgeholt</p>
+<p>Nachmittagstalker</p>
+<p>nachtragend</p>
+<p>Nachtreter</p>
+<p>Nachteilzug</p>
+<p>Nachttischlampe</p>
+<p>Nagelfeile</p>
+<p>Nahtoderlebnis</p>
+<p>Namenserbe</p>
+<p>Neubaucharme</p>
+<p>Notartermin</p>
+<p>Notentriegelung</p>
+<p>Notlaufeigenschaften</p>
+<p>Oberstübchen</p>
+<p>Ölablassschraube</p>
+<p>Panamazone</p>
+<p>Patentrichter</p>
+<p>paternostern</p>
+<p>perfektesten</p>
+<p>pieksender</p>
+<p>Plastikeimer</p>
+<p>Poversohlen</p>
+<p>Profilachse</p>
+<p>Profilaufruf</p>
+<p>Propangastank</p>
+<p>Prüfflüge</p>
+<p>Prüffeldelektriker</p>
+<p>Prüffeldingenieur</p>
+<p>Publikumshit</p>
+<p>Punktrichter</p>
+<p>punktuell</p>
+<p>Qualmaustritt</p>
+<p>Quereinsteiger</p>
+<p>Quetschverbinder</p>
+<p>Radieschen</p>
+<p>radikalliberal</p>
+<p>Radiosendung</p>
+<p>ranschleimen</p>
+<p>Rechtschreibrat</p>
+<p>Restetruhe</p>
+<p>Rohrohrzucker</p>
+<p>Rolladenkasten</p>
+<p>Rostocker</p>
+<p>Rotzeder</p>
+<p>Rotzungenfilet</p>
+<p>Rucksackreisende</p>
+<p>Rumaroma</p>
+<p>rundfunken</p>
+<p>Rühreifrühstück</p>
+<p>Saaleufer</p>
+<p>Sahnehering</p>
+<p>Sauflieder</p>
+<p>Saugrippe</p>
+<p>saugute</p>
+<p>Schaffamilie</p>
+<p>Schiffstau</p>
+<p>Schiffstuten</p>
+<p>Schiffsirene</p>
+<p>Schlafshirt</p>
+<p>Schlammassel</p>
+<p>Schnapskaraffe</p>
+<p>schnauzbärtiger</p>
+<p>Schreibecken</p>
+<p>Schreibblockade</p>
+<p>Schulaula</p>
+<p>Schulpflicht</p>
+<p>Schultermine</p>
+<p>Schulterrain</p>
+<p>Schulterrasse</p>
+<p>Schweineleber</p>
+<p>Schweinsaugen</p>
+<p>Schweinigelei</p>
+<p>Seeleute</p>
+<p>Seetangarten</p>
+<p>Sekretariat</p>
+<p>Senioreninformation</p>
+<p>Siebentausender</p>
+<p>Silbentrennung</p>
+<p>siebente</p>
+<p>Spargelernte</p>
+<p>Sprecherziehung</p>
+<p>Spurtreue</p>
+<p>Staatsexamen</p>
+<p>Stabantenne</p>
+<p>Standardofen</p>
+<p>Starknebel</p>
+<p>Starkregen</p>
+<p>Stargagen</p>
+<p>Startenöre</p>
+<p>Stauballergie</p>
+<p>Staubecken</p>
+<p>staubsaugen</p>
+<p>Stauteiche</p>
+<p>Stiefeltern</p>
+<p>Strafanzeige</p>
+<p>Stromausfall</p>
+<p>Strompreis</p>
+<p>Subtropikluft</p>
+<p>Südengland</p>
+<p>Tatorte</p>
+<p>Talentförderung</p>
+<p>Talentwässerung</p>
+<p>Talgrund</p>
+<p>Tangente</p>
+<p>Tauschwert</p>
+<p>Taufliege</p>
+<p>Teenager</p>
+<p>Terrorattentat</p>
+<p>Topflappen</p>
+<p>topaktuell</p>
+<p>Torflaute</p>
+<p>Transport</p>
+<p>traumatisch</p>
+<p>Türenteiser</p>
+<p>Türklinken</p>
+<p>Uranus</p>
+<p>Uraltakte</p>
+<p>Urinsekt</p>
+<p>Urinstinkt</p>
+<p>Verandabrüstung</p>
+<p>verbeulen</p>
+<p>verblassen</p>
+<p>verblüfft</p>
+<p>vereinsamt</p>
+<p>vergessen</p>
+<p>Verlustaversion</p>
+<p>versehen</p>
+<p>verstauchen</p>
+<p>verstopfen</p>
+<p>versunken</p>
+<p>Versorgungsamt</p>
+<p>vertrösten</p>
+<p>vertragstreu</p>
+<p>Violenten</p>
+<p>Visagebühren</p>
+<p>Visapflicht</p>
+<p>Volmetal</p>
+<p>Vormarsch</p>
+<p>Wachstube</p>
+<p>waldarm</p>
+<p>Wandelstern</p>
+<p>Wasserschieber</p>
+<p>Wegschaumentalität</p>
+<p>Weihnachtspaten</p>
+<p>Weltraum</p>
+<p>Werbetrommel</p>
+<p>Windeseile</p>
+<p>Wurfantenne</p>
+<p>Zimtrolle</p>
+<p>Zuckerguß</p>
+<p>Zugangsteuerung</p>
+<p>Zugriff</p>
+<p>Zugangebote</p>
+<p>Zwangsehen</p>
+<p>Zwangsexmatrikulation</p>
+<p>Zweigangliederung</p>
+<p>Zwergelstern</p></td>
+	<td id="ref"><p>Ab•saug•trich•ter</p>
+<p>Ab•erra•ti•on</p>
+<p>ab•sau•gen</p>
+<p>Ab•sau•ge•si•phon</p>
+<p>Ab•trei•bung</p>
+<p>Ab•tren•nen</p>
+<p>Ak•tio•nen</p>
+<p>al•ler•engs•te</p>
+<p>Al•pen•ost•rand</p>
+<p>Alt•bau•char•me</p>
+<p>Alt•bau•erhal•tung</p>
+<p>An•ker•lich•ten</p>
+<p>An•alpha•be•ten</p>
+<p>Angst•raum</p>
+<p>Angst•traum</p>
+<p>An•schlagsor•te</p>
+<p>An•tik•lack</p>
+<p>An•trag•stel•ler</p>
+<p>an•zu•glei•chen</p>
+<p>an•zu•gra•ben</p>
+<p>Arm•ban•da•ge</p>
+<p>Asthma•gen</p>
+<p>Auf•lie•ger</p>
+<p>Au•to•ma•ten</p>
+<p>auf•pols•tern</p>
+<p>Au•gen•gel</p>
+<p>Aus•drucks•tan•zen</p>
+<p>Aus•sen•dung</p>
+<p>Au•to•rin•nen</p>
+<p>Au•to•ra•di•os</p>
+<p>Au•to•ren•nen</p>
+<p>Ba•den•den</p>
+<p>Bal•la•de</p>
+<p>Ball•kontrol•le</p>
+<p>Bar•am•bien•te</p>
+<p>Bau•man•gel</p>
+<p>Bau•mess•tech•nik</p>
+<p>Be•am•ten•adel</p>
+<p>Be•at•mungs•ge•rät</p>
+<p>Bei•fall•stür•me</p>
+<p>Bei•na•men</p>
+<p>be•inhal•ten</p>
+<p>be•rat•schla•gen</p>
+<p>Be•sam•se•gel</p>
+<p>Bett•rost</p>
+<p>Be•triebs•auf•fahrt</p>
+<p>Beu•tel•ei•mer</p>
+<p>Bil•dungs•ex•pan•si•on</p>
+<p>Bil•lig•rei•se</p>
+<p>Bil•lig•ersatz</p>
+<p>Blu•men•topf•er•de</p>
+<p>Bom•bast•ein•fluss</p>
+<p>Brau•tra•di•ti•on</p>
+<p>Bon•bon•nie•re</p>
+<p>Brief•ein•wurf</p>
+<p>Brot•tro•cken</p>
+<p>Bu•sen•grabscher</p>
+<p>Chef•eta•ge</p>
+<p>Dach•spoi•ler</p>
+<p>dampf•arm</p>
+<p>De•ckel•ei•mer</p>
+<p>Deime•tal</p>
+<p>De•li•ka•tes•sen</p>
+<p>dem•entspre•chend</p>
+<p>De•zer•nen•ten</p>
+<p>Dia•mant•na•del</p>
+<p>Dienst•rang</p>
+<p>Dienst•raum</p>
+<p>Dis•coun•ter•mar•mor</p>
+<p>drei•se•kün•di•gen</p>
+<p>Dusch•lam•pe</p>
+<p>Du•de•lei</p>
+<p>Ei•dot•ter</p>
+<p>Ei•lei•ter</p>
+<p>Ein•bau•schal•ter</p>
+<p>Ein•kaufs•tem•pel</p>
+<p>ein•sal•ben</p>
+<p>ein•sau•gen</p>
+<p>Ein•zel•lernen</p>
+<p>Ei•schnee</p>
+<p>Elek•tro•den•gel</p>
+<p>Erb•las•ser</p>
+<p>Erbrecht</p>
+<p>Erd•ach•se</p>
+<p>er•blin•den</p>
+<p>er•drü•ckend</p>
+<p>er•stun•ken</p>
+<p>Esel•stu•te</p>
+<p>Eu•ro•palet•te</p>
+<p>Fan•krei•se</p>
+<p>Fan•kra•wall</p>
+<p>fan•tas•tisch</p>
+<p>Fest•rumpf•schlauch•boot</p>
+<p>Fehl•ernäh•rung</p>
+<p>Fein•desin•fek•ti•on</p>
+<!--<p>Fließ•est•rich</p>-->
+<p>Fluss•etap•pe</p>
+<p>Flut•schein•wer•fer</p>
+<p>Frei•licht•auf•nah•me</p>
+<p>fruch•ti•ger</p>
+<p>Fähr•un•glü•cke</p>
+<p>Ga•bel•la•schen•ket•ten</p>
+<p>Gag•au•tor</p>
+<p>Ga•ran•tie•re•gel</p>
+<p>Gas•tan•ker</p>
+<p>Gas•ther•men</p>
+<p>Gast•raum</p>
+<p>Gast•rol•le</p>
+<p>Gas•tur•bi•ne</p>
+<p>Gau•lei•ter</p>
+<p>Ge•bets•turm</p>
+<p>Ge•bets•tür•me</p>
+<p>Gelb•rand</p>
+<p>gelb•rot</p>
+<p>Ge•läch•ter</p>
+<p>Ge•ni•ta•li•en</p>
+<p>Ge•set•zes•treu•er</p>
+<p>Ge•spens•tern</p>
+<p>Glücks•au•to•ma•ten</p>
+<p>Gour•met•rös•te•rei</p>
+<p>Grabsche•rei•en</p>
+<p>Grab•bepflan•zung</p>
+<p>Grab•schän•dung</p>
+<p>Grund•übel</p>
+<p>Grund•sub•stan•zen</p>
+<p>Gy•ro•sko•pie</p>
+<p>Hanf•lat•schen</p>
+<p>Hanf•rau•chen</p>
+<p>Haus•auf•ga•be</p>
+<p>Haus•tie•re</p>
+<p>Haus•trunk</p>
+<p>Heil•erfol•ge</p>
+<p>Hei•mat•schla•ger</p>
+<p>Herbst•ein•bruch</p>
+<p>her•me•tisch</p>
+<p>her•zei•gen</p>
+<p>Hof•la•den</p>
+<p>hoch•pro•zen•ti•ger</p>
+<p>Hoch•zeits•al•ben</p>
+<p>Hos•tes•sen</p>
+<p>hur•ti•ger</p>
+<p>Hör•nerven</p>
+<p>Isar•ufer</p>
+<p>Ja•nu•ar•schnee</p>
+<p>Ju•li•ange•bot</p>
+<p>Ka•da•ver•samm•lung</p>
+<p>Ka•me•ra•den•krei•se</p>
+<p>Ka•me•ra•ta•sche</p>
+<p>Ka•me•ra•trei•ber</p>
+<p>Kan•ze•ro•ge•ne</p>
+<p>Ka•ri•bik•rei•se</p>
+<p>Kar•ne•vals•auf•takt</p>
+<p>Kas•tra•ten</p>
+<p>Ka•tho•den</p>
+<p>Kauf•la•den</p>
+<p>Kau•zahn</p>
+<p>Kel•ler•as•seln</p>
+<p>Kirsch•wein</p>
+<p>Klump•streu</p>
+<p>Ko•lum•bier</p>
+<p>kom•bi•nie•ren</p>
+<p>Kon•dens•strei•fen</p>
+<p>Kon•to•pfän•dung</p>
+<p>kon•trast•rei•cher</p>
+<p>Ko•trai•ner</p>
+<p>Kuh•fla•den</p>
+<p>Kult•schla•ger</p>
+<p>Kurz•ur•laub</p>
+<p>Kur•trau•ben</p>
+<p>Kühl•tru•he</p>
+<p>Lachs•päck•chen</p>
+<p>Lach•sal•ven</p>
+<p>Land•rü•cken</p>
+<p>Lan•des•sen•der</p>
+<p>Lan•des•teil</p>
+<p>Laub•re•chen</p>
+<p>Le•bens•mit•tel•punkt</p>
+<p>links•el•bisch</p>
+<p>ma•genta•rot</p>
+<p>Mal•zei•chen</p>
+<p>Mann•schafts•trans•port•wa•gen</p>
+<p>Mar•ke•ting•ei•fer</p>
+<p>Mes•se•ta•ge</p>
+<p>Mes•sias</p>
+<p>Metz•ger•innung</p>
+<p>Metz•gers•en•kel</p>
+<p>Miet•no•ma•den</p>
+<p>Miet•zweck</p>
+<p>Mo•dera•ti•on</p>
+<p>Mu•sik•no•ten</p>
+<p>Mu•sik•erzie•hung</p>
+<p>Nacht•auf•nah•me</p>
+<p>Nacht•ru•he</p>
+<p>Nach•bars•ka•ter</p>
+<p>nach•ge•holt</p>
+<p>Nach•mit•tags•tal•ker</p>
+<p>nach•tra•gend</p>
+<p>Nach•tre•ter</p>
+<p>Nacht•eilzug</p>
+<p>Nacht•tisch•lam•pe</p>
+<p>Na•gel•fei•le</p>
+<p>Nah•tod•er•leb•nis</p>
+<p>Na•mens•er•be</p>
+<p>Neu•bau•char•me</p>
+<p>No•tar•ter•min</p>
+<p>Not•ent•rie•ge•lung</p>
+<p>Not•lauf•ei•gen•schaf•ten</p>
+<p>Ober•stüb•chen</p>
+<p>Öl•ab•lass•schrau•be</p>
+<p>Pa•na•ma•zo•ne</p>
+<p>Pa•tent•rich•ter</p>
+<p>pa•ter•nos•tern</p>
+<p>per•fek•tes•ten</p>
+<p>piek•sen•der</p>
+<p>Plas•tik•ei•mer</p>
+<p>Po•ver•soh•len</p>
+<p>Pro•fil•ach•se</p>
+<p>Pro•fil•auf•ruf</p>
+<p>Pro•pan•gas•tank</p>
+<p>Prüf•flü•ge</p>
+<p>Prüf•feld•elek•tri•ker</p>
+<p>Prüf•feld•in•ge•nieur</p>
+<p>Pu•bli•kums•hit</p>
+<p>Punkt•rich•ter</p>
+<p>punk•tu•ell</p>
+<p>Qualm•aus•tritt</p>
+<p>Quer•ein•stei•ger</p>
+<p>Quetsch•ver•bin•der</p>
+<p>Ra•dies•chen</p>
+<p>ra•di•kal•li•be•ral</p>
+<p>Ra•dio•sen•dung</p>
+<p>ran•schlei•men</p>
+<p>Recht•schreib•rat</p>
+<p>Res•te•tru•he</p>
+<p>Roh•rohr•zu•cker</p>
+<p>Rol•la•den•kas•ten</p>
+<p>Ros•to•cker</p>
+<p>Rot•ze•der</p>
+<p>Rot•zun•gen•fi•let</p>
+<p>Ruck•sack•rei•sen•de</p>
+<p>Rum•aro•ma</p>
+<p>rund•fun•ken</p>
+<p>Rühr•ei•früh•stück</p>
+<p>Saale•ufer</p>
+<p>Sah•ne•he•ring</p>
+<p>Sauf•lie•der</p>
+<p>Sau•grip•pe</p>
+<p>sau•gu•te</p>
+<p>Schaf•fa•mi•lie</p>
+<p>Schiffs•tau</p>
+<p>Schiffs•tu•ten</p>
+<p>Schiff•si•re•ne</p>
+<p>Schlaf•shirt</p>
+<p>Schlam•mas•sel</p>
+<p>Schnaps•ka•raf•fe</p>
+<p>schnauz•bär•ti•ger</p>
+<p>Schreib•ecken</p>
+<p>Schreib•blo•cka•de</p>
+<p>Schul•au•la</p>
+<p>Schul•pflicht</p>
+<p>Schul•ter•mi•ne</p>
+<p>Schul•ter•rain</p>
+<p>Schul•ter•ras•se</p>
+<p>Schwei•ne•le•ber</p>
+<p>Schweins•au•gen</p>
+<p>Schwein•ige•lei</p>
+<p>See•leu•te</p>
+<p>See•tang•ar•ten</p>
+<p>Se•kre•ta•ri•at</p>
+<p>Se•nio•ren•in•for•ma•ti•on</p>
+<p>Sie•ben•tau•sen•der</p>
+<p>Sil•ben•tren•nung</p>
+<p>sie•ben•te</p>
+<p>Spar•gel•ern•te</p>
+<p>Sprech•erzie•hung</p>
+<p>Spur•treue</p>
+<p>Staats•ex•amen</p>
+<p>Stab•an•ten•ne</p>
+<p>Stan•dard•ofen</p>
+<p>Stark•ne•bel</p>
+<p>Stark•re•gen</p>
+<p>Star•ga•gen</p>
+<p>Star•te•nö•re</p>
+<p>Staub•al•ler•gie</p>
+<p>Staubecken</p>
+<p>staub•sau•gen</p>
+<p>Stau•tei•che</p>
+<p>Stief•eltern</p>
+<p>Straf•an•zei•ge</p>
+<p>Strom•aus•fall</p>
+<p>Strom•preis</p>
+<p>Sub•tro•pik•luft</p>
+<p>Süd•eng•land</p>
+<p>Tat•or•te</p>
+<p>Ta•lent•för•de•rung</p>
+<p>Tal•entwäs•se•rung</p>
+<p>Tal•grund</p>
+<p>Tan•gen•te</p>
+<p>Tausch•wert</p>
+<p>Tau•flie•ge</p>
+<p>Teen•ager</p>
+<p>Ter•ror•at•ten•tat</p>
+<p>Topf•lap•pen</p>
+<p>top•ak•tu•ell</p>
+<p>Tor•flau•te</p>
+<p>Trans•port</p>
+<p>trau•ma•tisch</p>
+<p>Tür•ent•ei•ser</p>
+<p>Tür•klin•ken</p>
+<p>Ura•nus</p>
+<p>Ur•alt•ak•te</p>
+<p>Ur•insekt</p>
+<p>Ur•instinkt</p>
+<p>Ve•ran•da•brüs•tung</p>
+<p>ver•beu•len</p>
+<p>ver•blas•sen</p>
+<p>ver•blüfft</p>
+<p>ver•ein•samt</p>
+<p>ver•ges•sen</p>
+<p>Ver•lust•aver•si•on</p>
+<p>ver•se•hen</p>
+<p>ver•stau•chen</p>
+<p>ver•stop•fen</p>
+<p>ver•sun•ken</p>
+<p>Ver•sor•gungs•amt</p>
+<p>ver•trös•ten</p>
+<p>ver•trags•treu</p>
+<p>Vio•len•ten</p>
+<p>Vi•sa•gebüh•ren</p>
+<p>Vi•sa•pflicht</p>
+<p>Vol•me•tal</p>
+<p>Vor•marsch</p>
+<p>Wachstu•be</p>
+<p>waldarm</p>
+<p>Wan•del•stern</p>
+<p>Was•ser•schie•ber</p>
+<p>Weg•schau•men•ta•li•tät</p>
+<p>Weih•nachts•pa•ten</p>
+<p>Welt•raum</p>
+<p>Wer•be•trom•mel</p>
+<p>Win•des•ei•le</p>
+<p>Wurf•an•ten•ne</p>
+<p>Zimt•rol•le</p>
+<p>Zu•cker•guß</p>
+<p>Zu•gang•steue•rung</p>
+<p>Zu•griff</p>
+<p>Zug•an•ge•bo•te</p>
+<p>Zwangs•ehen</p>
+<p>Zwangs•ex•ma•tri•ku•la•ti•on</p>
+<p>Zweig•an•glie•de•rung</p>
+<p>Zwerg•els•tern</p></td>
+</tr>
+</table>
+<a href="http://giardino.blogger.de/stories/1236034/">...</a>
+     </body>
+</html>
