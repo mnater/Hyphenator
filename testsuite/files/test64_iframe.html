@@ -34,7 +34,9 @@
 						} else {
 							msg.result = 'failed';
 						}
-						parent.parent.postMessage(JSON.stringify(msg), window.location.href);
+						if (window.JSON) {
+							parent.parent.postMessage(JSON.stringify(msg), window.location.href);
+						}
 					}
 				});     	
 			}
