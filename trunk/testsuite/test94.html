@@ -49,7 +49,7 @@
 			}
         	window.onload = function () {
         		document.getElementById('log').innerHTML+='onload event fired<br>';
-        		var head, script,
+        		var head, script, loaded = false, interval;
 					createElem = function (tagname, context) {
 						context = context || window;
 						if (document.createElementNS) {
@@ -63,7 +63,21 @@
 					script = createElem('script', window);
 					script.src = '../Hyphenator.js';
 					script.type = 'text/javascript';
-					script.onload = function () {init()};
+					script.onload = function () {
+						loaded = true;
+						init()
+					};
+					if (!loaded) {
+						//fallback for ie<9
+						interval = setInterval(function() {
+							if (!!Hyphenator) {
+								clearInterval(interval);
+								if(!loaded) {
+									init();
+								}
+							}						
+						}, 50);
+					}
 					head.appendChild(script);
 					document.getElementById('log').innerHTML+='Hyphenator added<br>';
 					
