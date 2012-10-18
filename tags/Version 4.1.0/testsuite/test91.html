@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 91</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            h2 + p {
+            	background-color: #ffd6d6;
+            }
+            h2 + p + p {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var i, last = 2, t1, t2, r = true,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 91
+						};
+						for (i = 1; i <= last; i++) {
+							t1 = document.getElementById('test' + i).innerHTML;
+							t2 = document.getElementById('ref' + i).innerHTML;
+							r = r && (t1 == t2);
+						}
+						if (r) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.config({useCSS3hyphenation: true});
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test90.html">&lt;- Prev</a> | <a href="test92.html">Next -&gt;</a></p>
+        <h1>Test 91</h1>
+        <p id="desc">Hyphenate one paragraph with CSS3hyphenation.</p>
+
+		<h2>en</h2>
+        <p id="test1" class="hyphenate" lang="en">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+        <p id="ref1" lang="en" style="-webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; -webkit-locale: 'en'">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+
+		<h2>de</h2>
+        <p id="test2" class="hyphenate" lang="de">Die Worttrennung, auch Silbentrennung genannt, bezeichnet in der Orthographie die Art und Weise, wie die Wörter insbesondere am Zeilenende getrennt werden können.</p>
+        <p id="ref2" lang="en" style="-webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; -webkit-locale: 'de'">Die Worttrennung, auch Silbentrennung genannt, bezeichnet in der Orthographie die Art und Weise, wie die Wörter insbesondere am Zeilenende getrennt werden können.</p>
+    </body>
+</html>

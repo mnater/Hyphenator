@@ -1,0 +1,1084 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator &ndash; merge+pack</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+        	body {
+        		font: 11px/1.8em Verdana;
+        		margin-left: 20%;
+        		margin-right:20%;
+        		background-color:#EEEEEE;
+        		width:60em;
+        	}
+        	fieldset {
+        		background-color:#FFFFFF;
+        		border:1px solid #AAAAAA;
+        		margin:1em 0em;
+        		padding: 0em 1em 2em 1em;
+        	}
+        	h1 {
+        		background-color:#FFFFFF;
+        		border:1px solid #AAAAAA;
+        		margin:1em 0em;
+        		color: #404041;
+        		text-align:right;
+        		
+        	}
+        	img {
+        		vertical-align:middle;
+        	}
+        	.info_btn {
+        		vertical-align:text-bottom;
+        		cursor:pointer;
+        	}
+        	.info_box {
+        		display:none;
+        		border:1px dashed #AAAAAA;
+        		padding:0.2em 1em;
+        		font-style:italic;
+        	}
+        	.multicol {
+        		text-align:justify;
+        		width: 28em;
+        		float:left;
+        		margin:0em 1em;
+        	}
+        	ul.multicol {
+        		width:28em;
+        		padding:0;
+        		margin:0;
+        		
+        	}
+        	li {
+        		list-style:none;
+        	}
+        	form {
+        		clear: both;
+        		padding-top:2em;
+        	}
+        	legend {
+        		border:1px solid #AAAAAA;
+        		background-color:#FFFFFF;
+        		padding:0em 1em;
+        		font-style: italic;
+        		font-weight: 200;
+        	}
+        	input {
+        		margin-right:1em;
+        	}
+        	textarea {
+        		width:100%;
+        	}
+			.grayedout {
+				border: 1px solid grey;
+				color: grey;
+			}
+ 		</style>
+ 		<script src="Hyphenator.js" type="text/javascript"></script>
+ 		<script src="patterns/en-us.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        Hyphenator.config({
+        	displaytogglebox:true,
+        	remoteloading:false,
+        	safecopy:false
+        });
+        Hyphenator.run();
+        
+        
+/* jsmin.js - 2006-08-31
+Author: Franck Marcia
+This work is an adaptation of jsminc.c published by Douglas Crockford.
+Permission is hereby granted to use the Javascript version under the same
+conditions as the jsmin.c on which it is based.
+
+jsmin.c
+2006-05-04
+
+Copyright (c) 2002 Douglas Crockford  (www.crockford.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+The Software shall be used for Good, not Evil.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Update:
+	add level:
+		1: minimal, keep linefeeds if single
+		2: normal, the standard algorithm
+		3: agressive, remove any linefeed and doesn't take care of potential
+		   missing semicolons (can be regressive)
+	store stats
+		jsmin.oldSize
+		jsmin.newSize
+*/
+
+String.prototype.has = function(c) {
+	return this.indexOf(c) > -1;
+};
+
+function jsmin(comment, input, level) {
+	if (input === undefined) {
+		input = comment;
+		comment = '';
+		level = 2;
+	} else if (level === undefined || level < 1 || level > 3) {
+		level = 2;
+	}
+
+	if (comment.length > 0) {
+		comment += '\n';
+	}
+
+	var a = '',
+		b = '',
+		EOF = -1,
+		LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+		DIGITS = '0123456789',
+		ALNUM = LETTERS + DIGITS + '_$\\',
+		theLookahead = EOF;
+
+
+	/* isAlphanum -- return true if the character is a letter, digit, underscore,
+			dollar sign, or non-ASCII character.
+	*/
+
+	function isAlphanum(c) {
+		return c != EOF && (ALNUM.has(c) || c.charCodeAt(0) > 126);
+	}
+
+
+	/* get -- return the next character. Watch out for lookahead. If the
+			character is a control character, translate it to a space or
+			linefeed.
+	*/
+
+	function get() {
+
+		var c = theLookahead;
+		if (get.i == get.l) {
+			return EOF;
+		}
+		theLookahead = EOF;
+		if (c == EOF) {
+			c = input.charAt(get.i);
+			++get.i;
+		}
+		if (c >= ' ' || c == '\n') {
+			return c;
+		}
+		if (c == '\r') {
+			return '\n';
+		}
+		return ' ';
+	}
+
+	get.i = 0;
+	get.l = input.length;
+
+
+	/* peek -- get the next character without getting it.
+	*/
+
+	function peek() {
+		theLookahead = get();
+		return theLookahead;
+	}
+
+
+	/* next -- get the next character, excluding comments. peek() is used to see
+			if a '/' is followed by a '/' or '*'.
+	*/
+
+	function next() {
+
+		var c = get();
+		if (c == '/') {
+			switch (peek()) {
+			case '/':
+				for (;;) {
+					c = get();
+					if (c <= '\n') {
+						return c;
+					}
+				}
+				break;
+			case '*':
+				get();
+				for (;;) {
+					switch (get()) {
+					case '*':
+						if (peek() == '/') {
+							get();
+							return ' ';
+						}
+						break;
+					case EOF:
+						throw 'Error: Unterminated comment.';
+					}
+				}
+				break;
+			default:
+				return c;
+			}
+		}
+		return c;
+	}
+
+
+	/* action -- do something! What you do is determined by the argument:
+			1   Output A. Copy B to A. Get the next B.
+			2   Copy B to A. Get the next B. (Delete A).
+			3   Get the next B. (Delete B).
+	   action treats a string as a single character. Wow!
+	   action recognizes a regular expression if it is preceded by ( or , or =.
+	*/
+
+	function action(d) {
+
+		var r = [];
+
+		if (d == 1) {
+			r.push(a);
+		}
+
+		if (d < 3) {
+			a = b;
+			if (a == '\'' || a == '"') {
+				for (;;) {
+					r.push(a);
+					a = get();
+					if (a == b) {
+						break;
+					}
+					if (a <= '\n') {
+						throw 'Error: unterminated string literal: ' + a;
+					}
+					if (a == '\\') {
+						r.push(a);
+						a = get();
+					}
+				}
+			}
+		}
+
+		b = next();
+
+		if (b == '/' && '(,=:[!&|'.has(a)) {
+			r.push(a);
+			r.push(b);
+			for (;;) {
+				a = get();
+				if (a == '/') {
+					break;
+				} else if (a =='\\') {
+					r.push(a);
+					a = get();
+				} else if (a <= '\n') {
+					throw 'Error: unterminated Regular Expression literal';
+				}
+				r.push(a);
+			}
+			b = next();
+		}
+
+		return r.join('');
+	}
+
+
+	/* m -- Copy the input to the output, deleting the characters which are
+			insignificant to JavaScript. Comments will be removed. Tabs will be
+			replaced with spaces. Carriage returns will be replaced with
+			linefeeds.
+			Most spaces and linefeeds will be removed.
+	*/
+
+	function m() {
+
+		var r = [];
+		a = '\n';
+
+		r.push(action(3));
+
+		while (a != EOF) {
+			switch (a) {
+			case ' ':
+				if (isAlphanum(b)) {
+					r.push(action(1));
+				} else {
+					r.push(action(2));
+				}
+				break;
+			case '\n':
+				switch (b) {
+				case '{':
+				case '[':
+				case '(':
+				case '+':
+				case '-':
+					r.push(action(1));
+					break;
+				case ' ':
+					r.push(action(3));
+					break;
+				default:
+					if (isAlphanum(b)) {
+						r.push(action(1));
+					} else {
+						if (level == 1 && b != '\n') {
+							r.push(action(1));
+						} else {
+							r.push(action(2));
+						}
+					}
+				}
+				break;
+			default:
+				switch (b) {
+				case ' ':
+					if (isAlphanum(a)) {
+						r.push(action(1));
+						break;
+					}
+					r.push(action(3));
+					break;
+				case '\n':
+					if (level == 1 && a != '\n') {
+						r.push(action(1));
+					} else {
+						switch (a) {
+						case '}':
+						case ']':
+						case ')':
+						case '+':
+						case '-':
+						case '"':
+						case '\'':
+							if (level == 3) {
+								r.push(action(3));
+							} else {
+								r.push(action(1));
+							}
+							break;
+						default:
+							if (isAlphanum(a)) {
+								r.push(action(1));
+							} else {
+								r.push(action(3));
+							}
+						}
+					}
+					break;
+				default:
+					r.push(action(1));
+					break;
+				}
+			}
+		}
+
+		return r.join('');
+	}
+
+	jsmin.oldSize = input.length;
+	ret = m(input);
+	jsmin.newSize = ret.length;
+
+	return comment + ret;
+
+}
+/* End of jsmin.js */        
+        
+        
+        var base = window.location.href.replace(/[^/]*$/, '');
+        function $(id) {
+        	return document.getElementById(id);
+        } 
+        
+        function toggleAllLanguages(value) {
+        	var inputelements = document.getElementsByName('language[]');
+        	for(var i=0; i<inputelements.length; i++) {
+				inputelements[i].checked = value;
+        	}
+        }
+        
+        function getSelMethod() {
+        	var radio = document.getElementsByName('selMethod');
+        	for(var i = 0; i<radio.length; i++) {
+        		if(radio[i].checked == true) {
+        			return radio[i].value;
+        		}
+        	}
+        }
+        
+        function toggleSelectorFunction(value) {
+        	switch(value) {
+        		case 'standard':
+        			$('classname_block').style.display='block';
+        			$('selectorfunction_block').style.display='none';
+        		break;
+        		case 'custom':
+					$('classname_block').style.display='none';
+        			$('selectorfunction_block').style.display='block';
+        		break;
+        	}
+        }
+        
+        function toggleTBSettings(value) {
+			switch(value) {
+        		case true:
+        			$('togglebox_block').style.display = 'block';
+        			$('tbStandard').disabled=false;
+        			$('tbCustom').disabled=false;
+        			$('togglebox').disabled=$('tbStandard').checked;
+        			$('tbStandard').className='';
+        			$('tbCustom').className='';
+        			$('togglebox').className='';
+        		break;
+        		case false:
+        			$('togglebox_block').style.display = 'none';
+        		break;
+        	}
+        }
+        
+        function getTBMethod() {
+        	var radio = document.getElementsByName('tbMethod');
+        	for(var i = 0; i<radio.length; i++) {
+        		if(radio[i].checked == true) {
+        			return radio[i].value;
+        		}
+        	}
+        }
+
+		function toggletogglebox(value) {
+        	switch(value) {
+        		case 'standard':
+        			$('toggleboxfunction_block').style.display='none';
+        		break;
+        		case 'custom':
+        			$('toggleboxfunction_block').style.display='block';
+        		break;
+        	}
+        }
+        
+        function toggleonhyphenationdonecallback(value) {
+        	switch(value) {
+        		case true:
+        			$('onhyphenationdonecallback_block').style.display='block';
+        		break;
+         		case false:
+        			$('onhyphenationdonecallback_block').style.display='none';
+        		break;
+	       	}
+        }
+
+        function toggleonerrorhandler(value) {
+        	switch(value) {
+        		case true:
+        			$('onerrorhandler_block').style.display='block';
+        		break;
+         		case false:
+        			$('onerrorhandler_block').style.display='none';
+        		break;
+	       	}
+        }
+        
+        function toggleInfoBoxDisplay(elem, btn, disp) {
+        	if(disp) {
+        		elem.style.display = 'block';
+        		btn.onclick = function() {
+        			toggleInfoBoxDisplay(elem, btn, false);
+        		};
+        	} else {
+        		elem.style.display = 'none';
+        		btn.onclick = function() {
+        			toggleInfoBoxDisplay(elem, btn, true);
+        		};
+        	}
+        }
+                
+        window.onload = function(){
+        	var ul = navigator.language ? navigator.language.slice(0,2) : navigator.userLanguage.slice(0,2);
+			if(ul) {
+				switch (ul) {
+					case 'en':
+						ul = 'en-us';
+						break;
+					case 'el':
+						ul = 'el-monoton';
+						break;
+				}
+				$(ul).checked = true;
+			}        	
+			$('alllanguages').onclick = function(){
+				if(this.checked == true) {
+					toggleAllLanguages(true);
+				} else {
+					toggleAllLanguages(false);
+				}
+			};
+			
+			toggleSelectorFunction(getSelMethod());
+        	var radio = document.getElementsByName('selMethod');
+        	for(var i = 0; i<radio.length; i++) {
+       			radio[i].onclick = function() {
+       				toggleSelectorFunction(getSelMethod());
+       			};
+        	}
+        	
+        	toggleTBSettings(false);
+        	$('displaytogglebox').onclick = function(){
+				toggleTBSettings(this.checked);
+			};
+			toggletogglebox(getTBMethod());
+        	radio = document.getElementsByName('tbMethod');
+        	for(var i = 0; i<radio.length; i++) {
+       			radio[i].onclick = function() {
+       				toggletogglebox(getTBMethod());
+       			};
+        	}
+			
+			
+			toggleonhyphenationdonecallback($('usecb').checked);
+			$('usecb').onclick = function(){
+				toggleonhyphenationdonecallback(this.checked);
+			}
+
+			toggleonerrorhandler($('useer').checked);
+			$('useer').onclick = function(){
+				toggleonerrorhandler(this.checked);
+			}
+			
+			$('minwordlength_btn').onclick = function () {
+				toggleInfoBoxDisplay($('minwordlength_box'), this, true);
+			};
+			$('defaultlanguage_btn').onclick = function () {
+				toggleInfoBoxDisplay($('defaultlanguage_box'), this, true);
+			};
+			$('dohyphenation_btn').onclick = function () {
+				toggleInfoBoxDisplay($('dohyphenation_box'), this, true);
+			};
+			$('remoteloading_btn').onclick = function () {
+				toggleInfoBoxDisplay($('remoteloading_box'), this, true);
+			};
+			$('enablecache_btn').onclick = function () {
+				toggleInfoBoxDisplay($('enablecache_box'), this, true);
+			};
+			$('safecopy_btn').onclick = function () {
+				toggleInfoBoxDisplay($('safecopy_box'), this, true);
+			};
+			$('doframes_btn').onclick = function () {
+				toggleInfoBoxDisplay($('doframes_box'), this, true);
+			};
+			$('persistentconfig_btn').onclick = function () {
+				toggleInfoBoxDisplay($('persistentconfig_box'), this, true);
+			};
+			$('intermediatestate_btn').onclick = function () {
+				toggleInfoBoxDisplay($('intermediatestate_box'), this, true);
+			};
+			$('storagetype_btn').onclick = function () {
+				toggleInfoBoxDisplay($('storagetype_box'), this, true);
+			};
+			$('classname_btn').onclick = function () {
+				toggleInfoBoxDisplay($('classname_box'), this, true);
+			};
+			$('selectorfunction_btn').onclick = function () {
+				toggleInfoBoxDisplay($('selectorfunction_box'), this, true);
+			};
+			$('donthyphenate_btn').onclick = function () {
+				toggleInfoBoxDisplay($('donthyphenate_box'), this, true);
+			};
+			$('togglebox_btn').onclick = function () {
+				toggleInfoBoxDisplay($('togglebox_box'), this, true);
+			};
+			$('callback_btn').onclick = function () {
+				toggleInfoBoxDisplay($('callback_box'), this, true);
+			};
+			$('onerror_btn').onclick = function () {
+				toggleInfoBoxDisplay($('onerror_box'), this, true);
+			};
+			$('useCSS3hyphenation_btn').onclick = function () {
+				toggleInfoBoxDisplay($('useCSS3hyphenation_box'), this, true);
+			};
+			$('unhide_btn').onclick = function () {
+				toggleInfoBoxDisplay($('unhide_box'), this, true);
+			};
+						
+			$('myform').onsubmit = function(){
+				var xhr = null;
+				if (typeof XMLHttpRequest != 'undefined') {
+					xhr = new XMLHttpRequest();
+				}
+				if (!xhr) {
+					try {
+						xhr  = new ActiveXObject("Msxml2.XMLHTTP");
+					} catch(e) {
+						xhr  = null;
+					}
+				}
+				if (xhr) {
+					xhr.open('GET', base+'Hyphenator.js', false);
+					xhr.send(null);
+					if(xhr.status == 200) {
+						//var script=xhr.responseText;
+						var script = xhr.responseText;
+					}
+					var langBoxes = document.getElementsByName('language[]');
+					var l = langBoxes.length;
+					for(var i = 0; i<l; i++) {
+						if(langBoxes[i].checked) {
+							xhr.open('GET', base+'patterns/'+langBoxes[i].value+'.js', false);
+							xhr.send(null);
+							if(xhr.status == 200) {
+								script+='\r\r'+xhr.responseText;
+							}
+						}
+					}
+				}
+				
+				var classname = $('classname').value;
+				var donthyphenateclassname = $('donthyphenateclassname').value;
+				var minwordlength = $('minwordlength').value;
+				var defaultlanguage = $('defaultlanguage').value;
+				var hyphenchar = $('hyphenchar').value;
+				var urlhyphenchar = $('urlhyphenchar').value;
+ 				var togglebox = $('togglebox').value;
+ 				var displaytogglebox = $('displaytogglebox').checked;
+ 				var dohyphenation = $('dohyphenation').checked;
+ 				var remoteloading = $('remoteloading').checked;
+ 				var enablecache = $('enablecache').checked;
+ 				var safecopy = $('safecopy').checked;
+ 				var doframes = $('doframes').checked;
+ 				var persistentconfig = $('persistentconfig').checked;
+ 				var onhyphenationdonecallback = $('onhyphenationdonecallback').value;
+ 				var onerrorhandler = $('onerrorhandler').value;
+ 				var intermediatestate = $('intermediatestate').value;
+ 				var storagetype = $('storagetype').value;
+ 				var unhide = $('unhide').value;
+ 				var useCSS3hyphenation = $('useCSS3hyphenation').checked;
+ 				var selectorfunction = $('selectorfunction').value;
+ 				var pack = $('pack').checked;
+ 				var packlevel = parseInt($('packlevel').value, 10);
+
+				var config_head = '\r\rHyphenator.config({\n\t';
+				var config = '';
+				if($('selStandard').checked) {
+					if(classname !== '') {
+						config += 'classname : \''+classname+'\',\n\t';
+					}
+				} else {
+					config += 'selectorfunction : '+selectorfunction+',\n\t';
+				}
+				if(donthyphenateclassname !== '') {
+					config += 'donthyphenateclassname : \''+donthyphenateclassname+'\',\n\t';
+				}
+				if(minwordlength !== '') {
+					config += 'minwordlength : '+minwordlength+',\n\t';
+				}
+				if(defaultlanguage !== '') {
+					config += 'defaultlanguage : \''+defaultlanguage+'\',\n\t';
+				}
+				if(hyphenchar !== '') {
+					config += 'hyphenchar : \''+hyphenchar+'\',\n\t';
+				}
+				if(urlhyphenchar !== '') {
+					config += 'urlhyphenchar : \''+urlhyphenchar+'\',\n\t';
+				}
+				if(displaytogglebox === true) {
+					config += 'displaytogglebox : '+true+',\n\t';
+					if($('tbCustom').checked) {
+						config += 'togglebox : '+togglebox+',\n\t';
+					}
+				}
+				if(dohyphenation === false) {
+					config += 'dohyphenation : false,\n\t';
+				}
+				if(remoteloading === false) {
+					config += 'remoteloading : false,\n\t';
+				}
+				if(enablecache === false) {
+					config += 'enablecache : false,\n\t';
+				}
+				if(safecopy === false) {
+					config += 'safecopy : false,\n\t';
+				}
+				if(doframes === true) {
+					config += 'doframes : true,\n\t';
+				}
+				if(persistentconfig === true) {
+					config += 'persistentconfig : true,\n\t';
+				}
+				if($('usecb').checked) {
+					config += 'onhyphenationdonecallback : '+onhyphenationdonecallback+',\n\t';
+				}
+				if($('useer').checked) {
+					config += 'onerrorhandler : '+onerrorhandler+',\n\t';
+				}
+				if(intermediatestate !== 'hidden') {
+					config += 'intermediatestate : \''+intermediatestate+'\',\n\t';	
+				}
+				if(storagetype !== 'local') {
+					config += 'storagetype : \''+storagetype+'\',\n\t';	
+				}
+				
+				if(unhide !== 'wait') {
+					config += 'unhide : \''+unhide+'\',\n\t';	
+				}
+				if(useCSS3hyphenation === true) {
+					config += 'useCSS3hyphenation : true,\n\t';
+				}
+				
+				if(config.length > 0) {
+					script += config_head + config.slice(0,-3) + '\n});\n\n';					
+				}
+				script += 'Hyphenator.run();';
+				if(navigator.userAgent.indexOf('MSIE') != -1) {
+					script = script.replace(/\n/gi, "\r");
+				}
+				if(pack) {
+					var license = script.slice(script.indexOf('/** @license'), script.indexOf('*/')+2).replace('* @license', '\n * ');
+					script = jsmin(license, script, packlevel);
+				}
+				var output = $('output');
+				output.firstChild.data = '';
+				output.firstChild.data = script;
+				
+				output.focus();
+				output.select();
+				return false;
+			};
+		};
+    	</script>
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    </head>
+    <body>
+		<h1>merge+pack <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%97%00%00%007%08%06%00%00%00%01%83%D8%97%00%00%00%04sBIT%08%08%08%08%7C%08d%88%00%00%20%00IDATx%9C%ED%9Dw%9C%5C%E5y%EF%BF%A7M%DF%99%DD%D9%5E%25%ED%AA%01%AA%88b%10H%60%3A%A2c%1B%DB8%D8%26%BE%F7b%9B8%8E%1D%DB%09.Ipn%9C%60%9B%C4%C4%80qI%AE%03%18%C7%A68%E0%98%18%89%22%89*P%EFeUv%A5%DD%D5%F6%E9s%E6%B4%FB%C7)sfv%85%A4%98%DB%3E%D7%EF%E73%9A%D9%99s%DE%F3%BE%CF%FB%BCO%F9%3D%CF%F3J%B0%2C%CB%E2%F7%ED%F7%ED%BDk%1E%3F%C9%A7t%B5e!%08%02.%1F%FA%F9Q%10%04%DF%95%02%FE%3F%FD%F7U%F3%B0%20%08%DEo%95%7D%FC%DF%D3%FE_%1F%FF%FF%E9%26%FC%5Er%9D%B8%95J%25%02%81%00%5B%B6le%F5%0B%ABI%26%93%DEw%97_q%193f%CC%40%D7ud%F9%94%F6%E8%FF%2F%ED%3F%2F%B9t%5D%C70%0C%EFoQ%14Q%14%C5%B9rz%C9%A5%EB%3A%9A%A6%23%8A%E5%9D%AE(%0A%A2(%FE_%BD%F3u%5D'%10%08%B0k%D7.%1E~%F8%07tww%93%CB%E5%88D%22%CC%3Fc%3E3f%CC%C00%8C%DF3%D7%09%DA)Q%C54M%24I%22%97%CB%F1%D8%A3%8F%F3%C6%1Bo%10%8B%C5H%A5R%CC%3Fc%3E%7F%FC%C7%9F%23%1A%8D%82%20%E0g%13UU%09%85B%FC%FB%AF%FF%9D%9F%FE%F4_hkk%A3P(%10%89F%F9%CCg%EE%E2%8C3%CE%40%D34%02%81%C0%FF%A2%E9%FDn%CDezA%10%90%24%A9%E2%E5%FF%ED%F7m%FAv%CA%92%0Bl%26%1B86%C0%AE%5D%BBI%24%12%8C%8D%8E%11%0E%87%D1u%D3%26r%15%9D-%C3%BEodt%94%ED%DBw%90%CDf%C9%E5%F2%D4%D4%C4%C8%E7%F2X%96%85i%9A%98%A6%E9%DDs2%5B%E6dvP%F5%98%FD%7D%BA%DFW%DB%8E%EE%EF%D5%CF%F5_%E7%7FU%8F%C7%1D%FFt%FD%F9%C7%7C2%1AO7%AE%EA%F1%9F%0A-Ng%BE%A7%3A%BE%FFL%3B%25%E6%AA%1E%C4%D4%97%3B%81*%B5(L%9DL5%C1%24IB%14%C5%F2%3D%0E1N%C5X%F6%DF%E7%BF%FFD%8B%E1%AA%F3%E9%EEs%99%5C%92%A4)%F3%AE%1E%B7i%9A%1ES%B9%A6%C1%89%FA%13Eq%DA%B9%F8%E7h%9A%E6%09%C7%F5n%7D%9D%8C%F9%DC%F1%F9%E7%E4%7F%BEa%18'%1C%DF%7B%D1NKr%B9%9F%A7%BE%98Vr%B9%A6%DD%D4%9D%2F%60%18%06%9A%A6Q(%140%0C%C3%BB.%14%0A!%08%D3%EF%26%F7%3BWR%A8%AA%EA%FDf_%2B%10%08(h%9A%E6%F5%09%02%B2%2Cy%8C%0CP%2C%16%BDkDQ%24%10%08%10%0A%85%000M%03Q%94%A6%CC%1Bg%8E%96e%A1(%8A%C7%0C%B2%2CS*%95PU%D5%EEO%10Q%02%0A%E1p%D8%E9%CF%F4%C6W%BDi%5C%A6%F2%8FK%D7ut%5D%B7%17G%96%91e%85P(%E8%F5%E52%B3_%0A%99%A6%89%AA%AA%88%82%88i%D9%1BD%96e%8FY5MCUU%CF%EE%95e%99h4%8A%24I%A7%B5%99O%B7%9D%96%E4z7%09t%B2%FB%FC%D7%BA%04_%B3z%0D%AF%BF%FE%06%B5%B5%B5%08%82%C0%C4%C4%04%1F%FF%C4%1D%F4%F4%F4x%3B%D5%7F%3F%E0%7D%BFn%DDz%DEz%F3-%2C%D3%02%01L%D3%E2%CA%AB%AE%60%C9%92%C5%BC%BA%FE56l%D8%80%CBX%EF%BF%ECR%96.%5D%CA%F8%F88%3Bw%ECb%C3%5B%1B%E8%EB%EFcdd%94H%24%C2%BC%F9s9%F7%DCsY%BAt)%89D%BCBJ%80%B3G%1C%09P%2C%16Y%B4h%11%9D%9D%9Dd%B3Y%DEyg%23%7B%F6%ECa%E7%8E%9D%8C%8D%8D%11%0A%85%E9%EE%9E%C5%85%CB%97%B3t%E9b%EA%EA%EA%A6%5D%40%F7%19%A6i2%3A%3A%CA%DE%BD%FBx%F3%8D7%19%19%19axx%18%10hjj%A4%A9%A9%89%0B%97%2Fg%CE%9C%1E%92%C9zD%B1%7C%AF%EB%A9%0E%0C%0C%F0%83%87%1F%A1%B9%B9%99%91%91Q%96.%5D%CC%CD%B7%DCL%A1P%E0%C0%81%03%BC%F5%D6%DB%EC%DB%BB%8F%FE%FE%3EB%A1%10%AD%AD%AD%5Cp%E1%05%9Cs%EE2Z%9A%5B%EC9%FE%9F%92%5C%D35%3F%B1%0C%DD%B0w%5B%95A%EF%EEBw%87%BA%BBN%D34%9A%9B%9B9t%F8%08%CF%3D%F7k%22%91%08%82%20%90%C9d%90d%89%2F~%F1%8B%C4b%D1%0A%06%03%9B%C9%0C%C3%A0T%D2%F8%C7%07%BE%CF%E1%C3%87%91e%D9%93x%FF%ED%AE%FF%82i%9A%EC%D8%B1%83%A7%9Ez%1AA%10%08%04%02tww%13%0C%86%F8%DE%F7%1E%60%C3%9B%1B%08%86%82%9E%04%12E%91%5D%3Bw%F2%B3%C7%9F%60%D9%B2e%7C%F9%CF%BE%CC%DC9%B3%2B%88-%00%96%20%E0%8AbM%D3%D8%BFo%1F%BFy%FE%B7%ACY%BD%9Ap8%8CeY%9E%D7%B8g%EF%5E%9Ex%E2%E7%5Ct%D1r%BE%FE%8D%AF%D1%D6%D6%E6%CD%DD%CFX%99L%86%97_~%85%87%1E%7C%98%91%91%11%14E%C10%0CO%BAK%92%88%24I%3C%FA%E8ctvv%F2%99%CF~%9A%8B%2F%BE%88X%2Cf%D3%DD4%90%91%19%1B%1B%E3%B1%C7~%C6%FC%F9s%D8%B7%EF%00jI%E5%CA%AB%AE%E4%5B%7F%F3w%ACY%BD%06%1CM%E0J%DC%03%07zy%F6%D9%E7%983g%0E%DF%F8%C6%D7Y%BCdQ%85I%F0%5E1%D9%F4J%FE%5D%9A_%1C%BB%04%0BG%C2(%8A%82%22%CB%8E(%B7_%91H%04Y%96Q%14%A5b%C7%06%83A%86G%86%B9%EE%BAU%9Cs%CE9h%9AF(%14%A2%A1%A1%81%97_z%99%FE%FE%BE%0A%09%E7%3E%D74MdYf%F5%EA%D5%8C%8F%8F%13%0E%87%09%06%83(%8A%C2%1F%FC%C1%C7%A8%AB%AB%F3%D4L0%18%24%10%08%10%89D%D8%B1s%07_%F8%FC%17%D8%B1c'%D1X%94X%2CF%7D%7D%3D%81%40%00M%D3%91%15%85%C6%C6F6m%DA%C4W%EF%F9*%87%8F%1C%F1%18%D9%7D%B6%3D%1E%5Bz%8D%8E%8E%F2%ADo%FD-%EB%D6%AE%25%91%88%13%0E%87%A9O%26%3D%AFW%12E%DA%DA%DA%D8%B8q%13%7F%7F%FF%3F%90%CB%E6%90%24%C9Sk%96e%91%CB%E5%F8%F6%7D%DF%E1%DE%BF%FA%26%C5b%81h4J8%1Cf%C6%8C%19%9Cy%E6%19%CC%99%D3CSs%13%00%F5%F5%F5%A4R)%BE%FE%B5o%F0%C0%3F%FC%23%AA%AA%DA%0C*%D8%CB'%8A%22%E1p%08I%92%89%C7%E3L%8C%8F%F3%0F%F7%7F%8F'%9F%7C%92XM%8C%40%20%40CC%3D%A1P%C8%7B~KK%0B%C7%8E%1D%E3%BB%DF%BD%9F%23G%8E%20%CB2%BA%AE%FF%AFU%8B%D5%DE%92i%9Ah%9A%86i%9A%15%F8%96%CBX%AA%AA%D2%DF%DFOMMl%8A%E4*%16%8A%84%23%11R%93)%8F%B8.1J%A5%12%E1p%88s%CF%3B%97%3D%7B%F6P*%95%90%24%89T*%CD%2B%AF%AC%A5%A7%A7%C7cJ%97%99M%D3D%D7uV%BF%B0%86b%B1%E8%A9%95%600%C8-%1F%B8%B9%C2%AE%D3u%1DE%91%C9d2%3C%F7%EC%AF%09%87%C3%18%BA%CE%FC%F9%F3%B9%EC%B2%F7%D3%DC%DC%C4%C0%E0%20%2F%BF%B4%96%FD%FB%F7%91%CB%E5H%26%93%1C%D8w%80%87%1F%7C%98o%FE%F57%3D%E6%F2%3B-%B2%2C3%3A%3A%EA%D9j%ED%ED%1D%AC%BCd%05%B3f%CDb%E0%D81~%F3%9B%E7%E9%EF%3FJ.%97%A3%AE%AE%96%D5%AB%D7p%C7%C7%EF%60%D1%A2%85%15%9E%DB%83%0F%3E%C4%8B%2F%BEDMM%0C%5D7%88F%A3%5Cw%DD*n%BC%E9F%3A%3B%3B(%AAE%B6l%D9%CAc%FF%F2%18%1B7nBQ%14%A2%D1(%2F%AC%5E%CD%EC%B9%B3%F9%D0%87%3EHI-y42%0C%83bQ%25%12%89%B0m%DB%0E%B6n%DDFSc%23%B1X%94%8B.%BE%9A%05%0B%CE%22%3D%99b%CD%8Bk%D8%BE%7D'%F9%7C%9ED%22%C1%A6M%9B%D8%F0%D6%DB%CC%9C9%D3%C3%EC%FC%D1%98%B2%24%3Dy%13%04%A1%02%F3%2B%7F%B2%2C%2C%CA%22%B1T%D2%90%E52%AE%03x%9C%EF%02%A3%C1P%90%FE%FE~%BE%FE%B5%AF%DB%22%1F%01%FF0%2C%CB%24%10%082%3E%3EF%5D%5D%1D%AA%AA9%C6%A8%CD%10%82%20p%FD%0D%AB%D8%B4i%13oox%9BD%22A%22%91%E0%E9%A7%9E%E6%AA%AB%AE%A2%A7%A7%1BM%D3%3C%D5'%08%02%9B6mb%C7%8E%9D%15*%F6%E3%1F%BF%83D%3CQa%0F%DA%CF%C1%93b%86%AEs%C5%95Wp%CF%3D%7FN8%1C%F2%C6x%C5%E5%97%F1%F9%CF%7F%81%C1%C1!%1B%7D%0F%068%7C%F80%BBv%EDb%D1%A2%85%F6fp%9C%85j%C7%E6%A2%E5%CB%F9%DC%E7%3FG%5B%5B%2B%86a%20I%12%B5%B5u%3C%F0%C0%3FR*%950%0C%5B%D5%EC%D9%B3%87%C5%8B%179%FD%C0%D6%AD%DB%F8%ED%7F%BC%E00%85%ED%09~%E5%2B_%E2%D2%F7_%8Aa%18%14%0A%05DQ%E4%7D%E7%9F%CF%D9K%97%F2%89%8F%DFI__%1F%92%24Q(%E4%F9%B7g%9E%E5%A6%9Bn%C4%B0%1Cg%01%01A%2C%DB%BE%81%80%0Dj%CF%9B7%8F%3F%FA%DCgY%B4h%917%BEyg%CC%E7%AB%F7%7C%95%F1%F1%09O%15%1E%3E%7C%D8%03%8C%AB%3D%D1%DF%05%20%F6%EE%B4%1C%18%C1%DD%05%EE%00GFFH%A7%D3%DE%24%FCn%AD-%814%8E%1E%3Dv%C2%07%B8%AA%CCf%10%17%0F*%C3%08m%ADm%5Cx%C1%85%EC%DA%B9%CB%916%0ACC%C7%D9%B6m%1B3fty%13u%8D%D7_%FE%E2)4%AD%E4M%3A%16%8D%F2%81%0F%DE%E2I1%FF%E2%8B%A2%88a%18%18%86%C9%87n%FB%10w%FF%D1g%D14%CD%13%FF%86a%D0%D4%DC%CC%07%3E%F8%01%BEy%EF_%D3%DC%DC%8CeY%F4%F5%F5%B1%7D%DB6%16%2F%5Edw%E6%93%D6%B2%2CS%2C%16%B9%F5%D6%5B%F8%C2%17%FF%04Y%92%D04%0D%01%01%DD%D2iii!%91Hp%EC%D81%C2%E10%A6iz%11%0CM%D7%09%06%83%3C%F5%E4S%9E%A4%06%E8%EA%EAb%C5%CA%15%94J%25G%C5%851%9Du%B0L%8B%9Bo%BE%99o%7F%FB%DB6P%8D%40*%9Db%C7%8E%1D%2C%5E%BC%D8%19%9E%80%60%95%99AUU%CE%3D%F7%5C%FE%EA%DE%BF%A4%BE%3E%89%AA%AAH%92%E4I%C8%D6%D66%06%07%8FSSS%83%E5%A8z%BF%99%E3%D2%CF0%0C%06%07%06)%AAE%DB%83%3E%89%04%0B%86%82%B4%B7%B7%97%19%D3%ED%C8f%AC23l%DF%B6%9D%D7_%7F%83W%D7%BFJ__%1F%BA%A6s%E5UW%10%8D%C5%D04%CDs%87%15E!%91p%A4%06%E5%C0%92%AB%C6%14E%F1%C0SY%96%CA%CF2%ED%2BK%A5%12%AB%AE%BB%86W_%5D%CF%C6%8D%9BH%24%12%D4%D5%D5%F1%D8%A3%8Fq%EE%B9%E7%D0%D1%D1%E11%C3%D1%FE~%B6n%DD%82%A6i%04%83A4M%E3%F6%8F%7D%94x%3CQ%E1%60%F8%99KUU%9A%9A%92%7C%E8%B6%0F%A2i%9A%2FTU%0E%EFtww%A3%AA%25%00%14Eaxx%98c%C7%06%BC%EB%FC%847%0C%83d2%C9%E5W%5Cno.g%2C%AEdp1)%FFX%5C%5BK%10%04%8A%C5%22%3Bv%EE%A4X(%12%8DE%D14%8Dp8%C4%CF%9F%F8W%02%C1%40y%83%D8j%04Q%14%E8%ED%ED%F5%8CqEQ%D0u%9D%E3C%C7%11%CFv%20%13%C1%02g%C3%1A%86A%24%12f%E5%A5%2BH%26%EB(%16%8B%84B!gsJ%CE%A6%D2%CB%E3%13%CAPQ%85%87lY%A4%26S%7C%F9K_a%FB%B6%ED%C4%E3q4%5D%3B!%3CdY%16%0B%16%9C%C5%23%3F%7C%84%40%D0%96%80%B2%9F%11%C0V%23%CF%FF%E6y%EE%FE%CC%E7%18%188F%3C%1E'%9F%2F%A0(2%0B%17-d%DE%FCy%9E8-%A9%25%BA%BA%3A%B9%E3%8E%3B%88D%C2%15%0F%B6%09%A9R%5B%5B%CBs%CF%FD%9A%A7%9F~%86%E6%E6%26TU%B5'%E3%B0%A1%AA%AA444p%E1%85%CB%D9%BBw%1F%BA%A6%13%08%06%D8%B3g%2F%9B6m%A2%A5%A5%D5%93%18%8F%3C%F2%23%0A%F9%02%81%40%C0%23%F4%D5W_%ED%ED2%BF%D1%5C%ED%F6g2%19%9A%9A%9A*%88%E2g2%3FL%E2%E2D%D5%E0%B1%FBn%18%06%F9%7C%1EI%92%A6%D8%24n%3F%15%803e%7C%AC%B7%F7%A0%BD%81%15%D9%5B%D0%1D%3Bv%F2%F6%DB%EFTH%5E%7Fs%9D%23%17%07%2B%954o3%83%03%2F%0AT%CC%B7%90%2Fx%CEM%B5%CD%24%08%E5%98%AE%60UBK%FEy%18%86%C1%C0%C0%00%07%7B%0FQ%97%AC%A5T*%BD%2Bs%D5%D5%D5U%60%9B%9E%E4%B2%ED%13%91%DE%DE%5E%FE%F0%93%9FBQ%14%9A%9A%9A%D0u%9De%CB%96%12r%3C%19%DD1%EA%5DU%15%8F%C7Yy%C9J%22%91%F0%14%A2%98%86%81(I%EC%DC%B5%13U-%22%CB%12%C5%A2%E5%11%1Cl%3B%CE0%0C%AE%BFa%15%AF%BE%F6*%5B6mA%09(%24%93I%9Ez%F2i.%BC%F0B%EA%EB%EB%19%18%18%E0%9D%8D%1B)%96JD%C2aTU%E5%DAk%AF%A1%AB%AB%13(%ABYQ%14%91%7C%01q%F7%DD%2F%B1%FC%84)%83%92U%F0%8A%C34.8%5C%DD%9F%AB%96%BD%EF%99%AA2%2C%CBr%24%90%8F%E0%F2T%E02%99LRSSS%EE%DF%BD%1F%10%1C%0C%CF%D5%16%BA%AE%13%8DE%09%06%83%BE%3E%84%0A%90%D7%3F%BEj)%EAg%9E2gN%CF%2C%A2%24%D2%D4%D4DGg%3B%89D%82%92%F6%EE%CC%D5%D8%D8%E8%F5'%08B%99%B9%24%C96%8E%FF%F9'%FF%8CeY%94J%B6%5D%F3%E9O%DF%C5m%1F%B9%8D%BAd%1D%A5R%89%1F%3E%F2%23%14E%F1%06m%9A%26%85B%C1%B6%D1%AA%BC%C5B%BE%408%12%B1m%12%A1%12%01%AE%F6%02%1B%1A%1AX%BE%7C9%FB%F7%EF%F7%D2Z%B6o%DF%C1%CE%9D%BBX%B9r%05%BF%FC%C5%93%14%0BE%82%8E-%18%09%87%F9%F0G%3EL.%97%A7%A8%16%BD%BE%0C%C3%20_(LK%84j%E2%BA%AA%DD0L%04%A1%7C%BF%24I%04%82%E5%60%BA%BB%BB%FD%8B%E2%1F%BF%BDFSw%BEeY%88%82%C0%C4%E4%24%FD%C7%06%C02%19%1E%1D%F5L%02%B7%9F%A5K%97p%D5UW%22%2B%0A%82%7B%AF%BF%2F*c%9F%A2%242k%D6%2C%CFFu%D5%DB%BB%8E%EF%14!%06%BF%C4%AD%A9%A9%E1%0B%7F%FA%05R%93%93%C8%8A%82e%9A6%B7W%DE%80kS%25%12qdE%F6%9E%E7%93%5C%16%9A%A6%B3c%C7N%CF%0B%7B%FFe%EF%E7k%7F%F15J%25%DB%E5M%A7%D3X%86U1Qw%97L%E7U%C8%B2%8C%24%89%15%A95%D5%936M%93%40%20%80%AE%1B%DCp%C3%F5%BC%BA~%3D%5B%B7n%23%18%0C%12%0A%85x%EA%C9%A7Y%B4p%01o%BC%F1%26%E9T%9Ax%A2%06U-%B1%F2%92%95%20%08%EC%DE%BB%97L%26%E3%CD%11%60dl%ACb%7C%F6%DC%B4%0Ai%E4%C7t%5E%7B%ED5b%B1(%86a%83%C1%1D%1D%1D%CC%9B7o%CAB%9DN%F33%C2%D8%D88%87%8F%1CF%D7lfp%D5%BA%2B5%B3%D9%1C%97%5Cz%C9i%3F%C3%0D%7F%09%C2%7B%97%92%E7g%C6%600%C8%05%17%BC%EF%3F%DD%97%E8vdK%10%83%D1%D1QL%D3%24%1A%8Dr%F1%8A%8B)%16%8B%95%EE%A9%CF%00%F4%13%DF%B2%A6*%86j%5B%C4%FF%5E%7D%9Di%1A44%D4s%F1%C5%17S%13%AB%F1%8C%EFM%9B6%F1%FD%EF%3FD%26%93A%09*X%96%CD%B4g%2F%5B%C6%E0%D0%10%AA%AA%A2(v%FC-%12%0E%DBjQ%92*%18K%14E%E2%F1%1A%CF%96%F2%83%AC%CF%3F%FF%3C%CF%3D%FB%AC%17k%2B%E4%0B%B4%B7%B7q%DEy%E7Q(%14%9C%F1%99%A7%CD%60%FE%E7K%B2D0%10%24%18%0C%12%8DF%993gN%85Z%7B%E7%9Dwx%F6%D9gOhsM%D7%B7%3D%1E%9F%D5u%92%E1%9D%EA%F8%FD%0E%91k%1E%B8%91%96%93%BD%CA%F1%5C%BB%C9%FE%0E%0D%C3%60%EF%DE%BD%04%14%5B%25DcQ%CF%D3p%9B%1Fev%3D%23o%40%BE%E9V%0F%D4%BDv%CA%3D%3E%9BH%D7un%B8%F1%06%D6%AE%5D%C7%CE%9D%3B%89%C5b%98%A6%C93%CF%FC%8AP(D%40%09PRK%9C%FB%BE%F3hmkA%96%ED%7Bj%E2qj%1D%E6I%A5%D2%95*%C4%01l%B7n%DD%CE%82%056%B1%B0%2C%0A%C5%02%5B%B7n%E3%C7%3F%FA1%86a%12%0E%87%C9%E5r6%20%7B%CB-44%D4%93N%A7%3DX%A0z%BE%D5%8BU%3DW%FF%BBeZ%9E%A4%CCf2%DC~%FBG%D8%B9s'%13%13%13%84%C3%B6%23%F4%C0%F7%BE%CF%F0%F0(K%96%2C%A2%BD%AD%1D%CB%06%87l%BE1-%B2%B9%1C%99t%9A%D1%B11f%CF%9EMOOw%E53-%3F%7D%A7%A6%A4W%0B%82)c%F4%D9%9F%FE%EB%A7%CB%A88%D5V%C1%5C%82%20%A0k%3A%C1%40%10%8B%A9y%40%60%BB%EA%C1%A0%BD%0B%83%A1%60%85%88%9F%CE%E3p%07%18%0A%85%08%06%83%E8%BAA0%18%3CaP%BA%BE%3E%C9%8A%95%2B8t%E8%90%B7%13%12%89%04%BA%AE%DBRI%91%B8x%C5%C5%88%92%8C%A6i%C4bQ%CE%9C7%D73%D8%3B%DA%DBI%D4%D4x%FDI%92D%3E%9F%E3%A1%07%1F%A2%A7%A7%07M%D3%90%24%99%D1%B1Q%F6%ED%DDG4%1AEQdR%A9%14%E1p%84%CF%DE%FD%19V%5Dw%ADg%CFx6X%20%E0%A947%E3%C00%8C%0A%EF%14l%87%C2%A3%8F%F3%F2%3B%1B%9Aa%B0x%C9b%FE%F0Sw%F2%E0%F7%1Fbrr%92%1Ag%BC%0F%7C%EF%01%1A%1B%1BY%B8p!%F8%98%CB4M%D2%E9%0CCC%83%0C%0F%8F%F2%D5%AF%DDC%F7%ACYX%96%135%11%05%8F%BE6%CA%5E%06%BE%DD%B5%F1k%1BY%96%BDy%04%83A%CF3%9En%1D%FD%1E%A8%BF%3F%FB%B3%E8%98%5B%D3%07%BDew%D2Pv%C9%DD%9B%DD%01%FA%99%2C%9B%CD266%86a%18%8C%8D%8C%92J%A50M%D7c%9A%5Er%15%0A%05F%86G%88%C7k%C8fshZ%09M%D3*%AEq%A5%97a%18%DCx%D3%0D%AC%7De-%BBv%ED%22%16%8BQRK%88%92H%A1P%E0%7D%17%5E%40SS%93g%F8%26%93Io%A1%11%04tM%23%16%8B9%DCm%7Bk%96%05%FD%FD%C78t%E8%B0%F7L%97A%8E%1F%3FN2%99d%E9%D2%25%DCv%DBm%5Cv%F9%FB%3D%95%EC%22%EC%F9%7C%9ET*E%26%93!%97%CD9p%80%0B%82V%26%ECi%25%8D%F1%F1q%C6%C6%C6(%16%8BdRiJ%25%CDc%F6p8D%3A%9D%E6%96%5Bn%26%91%88%F3%E4%93O%B3e%D3%16%D2%A54%89D%02UUY%B7v%1D%16%E5%3C%2F%D3ve%11%04%81D%3CA(%18DpR%C6%25I%C2%D0%0C%86GF%88%C6%A2%E4r9dY%F2%A9%F4%CA%1C%3C%D34%C9%E6%B2%A4%D3)%82%01%85%F1%F1q%B2%D9%EC%14%C9U%CDX%EE%F7%FE%CF.%CAp%22%E1%22%BB%FAR%14DB%A1P%85%DEw1)%F7%26Y%B6%B1%AEb%A9D4%1A!%93%CA0g%DEl%02%01e%DA%CE%5D%E6%EC%E9%E9%E6%BA%1B%AE%A3%A5%B9%99bQ%25%1C%09%91L%26%2B%AEq%19L%D34%EA%93I%CE%3D%F7%1C%0E%1E%3C%E8%11%D8%C5zV%5Er%89%C7%84%82%20%A09%8Bl%18%06%92(%22%05%83%14%5DC%17%01%C34%08%06%03%CC%9D%BB%C8A%C0%5D%2CK%26Y%9F%A4%A9%B1%91%9E%9E%1EV%AE%5CASs%13%86%93%DD126F%3A%9D%26%16%8D%A1(%01.%5Eq1%0D%0D%8D%A8j%91%60%20%80Z*14t%1C%0B%DB%05w%17%AF%A1%B1%9E%95%2BW0%3E%3EN%24%12axx%84%C6%C6%06%8F6%C1%40%80x%3CN6%9B%E5%C2%0B%2F%24%12%AD%A1%A3%A3%83%A3G%8F299%89ZT%91d%19Y%96%08%05%82%E8%8E%E4lnn%C2p%BCjQ%968%D2%D7O%A1X%20%11%8F%A3%96J%DCt%D3%0D%8EG%AF!%89%223g%CE%C4%15%1C.%13%E6%0B%05FFG%E9%EE%EEF%91%15%C2%910%DD%B3%7BX%B0%E0%ACi%25%97%DF%B4%98%98L%91J%A5%D0%0D%1DY%92%89F%234%D4%D7W0au%AB%A8%FE%D9%BE%7D%07%97%5Dr%19%A1P%88p8%CC%DF%3F%F0%F7%5C%7B%ED5%15%B9Gv%F8%C4p%BDO%24%C9V%03%EE%60%FC%CD%7D%A8%A6i%0E%00'%E2Z%9Enl%D1%2Fnu%5DG%12%254%5D%E3%BE%BF%FB6k%D6%BC%88i%9AD%A2%11F%86G%F8%EAW%EFa%D1%92E%8C%8DO%60%99%16%82(%A0%C82g%9E1%9Fh4%8Aa%1A%8C%8C%8C%F2%C8%0F~%C4%0B%BF%FD-%8A%A2P%2C%AA44%D4%F3%97%7F%F9%0D%94%40%C0%03Z%03J%80%8E%AE%0Eb%D1%A8o3%95Hg%D2%1C%1F%1Ef2%95B%2Biv%D8D%D3%D1%2B%82%D8%20K%12%A6e%91%AC%ABc%DE%BC%B9%84%9D%B8%ABi%9A%94J%1A%86%A1%23%CB%0A%07%0F%1Fblt%0C%C9%89%8FF%22%11%DA%DB%DA%18%1B%1Fc%60%60%80%400Hm%A2%96l6%CB%E8%E8(%D9l%D6%F3%A0guu%D9%EAKQ%E8%EA%EABQl5%F6%FA%9Boy%92_7%0C%E251%E6%CE%9E%E3!%F0%B6%20PP%14%D7%83%B70L%93C%87%8Fp%E4H%1F%8A%AC8k*%D0%D3%DDMkk%8B%B7%D1%A7%83%8B%C6%C6'%D8%DF%DBK%B1Xp%12%12-%14Yfvw%B7%ADE*a%90r%F5%CF%CE%9D%BB%10%04%81%A3%FDGy%E0%7B%0F%000%3A%3A%CA%BCy%F3%B8h%F9r%CF%E6pwA%20%10%60%BAz%8A%E9%D4%A2_%E2%C9%924%05%23q%B1%26%B7I%92%84n%18%FC%ECg%3Fg%F5%EA5%94J%25'W%7F%9C%F3%CE%3B%8FU%D7%5D%8B%20%0A%8CON%DA%12%0D%01%B5T%E2%C0%C1%83%B4%B6%B40%99J1%3C%3C%82%A6i%1E%F6%E3%E2W%CD%AD%CDtvtNa~%3B%7D%C5B%09%C8L%A6R%EC%3Fp%C0%89%AD%06%10%02v%B2a%5D%5D%9D%0D%A9%08%22%9A%AE%A3k%1A%26%16%85B%01%17%ED%F6%AB%95P(%88i%DA%E1%9AP0%84%E8C%C95%AD%C4%81%DE%5EL%D3%24%14%0Ac%9A%16%E3%E3%E3X%D8%A95%CD%CD%CD%DE%D8%12%C9%3A%E6%F4%F4%00eG*%97%CF%D3P%9Fddt%CC%B6%05-%0B%5D7Ig2tv%B4%DB%92%CE%A5%A9%20%60%1A%26%92%24%92%CBf%99%9C%9C%24%1A%8D%22%08%02%AA%AA%D2%DA%D2B%B3%93%D63%5D%25%96k%B3%0E%0D%0D%D9a%AAP%D8%D1%24%B6%60%19%3C~%9C%FA%FAd%05%EE%E9o%F2%97%FF%F4%CB%00%1C%3E%7C%84%A3%FD%FD%CC%981%83%F6%8Ev%3Ey%E7'%89'%E2%E8%BA%3E%05%A3%9A%AEM'%1A%2B%BE%9B%C6H%9C%98%98%60ll%1C%CB%99%C4%C0%C0%00%EB_%7D%8D%DF%FE%C7o%11%04%81%DA%DAZ%C6%C6%C6%98%7F%C6%3C%FE%EC%CF%BF%E2%A4%22%0Btutp%A4%AF%DF%5B%CCt%3AK6%7B%C0%91%A8%02%BAi%E3Y%96Q%F6%F0Jj%09U-y%CC%26%8A%A2g%7C%03dsY%0E%1F9%E4%E0%3Bv%9EW(%14%A2%AD%AD%95%DAx%9C%80%23%F5%EC29%0DM%D7%C9%17%0AH%A2%88%E2%0B%15Uo%1E%FB%03%1E%82%AE%AA%25%24%C9%0E%E2'%E2%B5%24%93I%82%81%00%25M%E3%D8%C01%0A%85%A2w%DF%E0%E0%10%F5uI%E2%F1%1A%2F%EE%17%8DDhmiaxx%14S%B0%19N7%0C%26%26'hin%AA%F4%EE%2C%3B%8Ek%3B%04i2%99%1C%8A%2Ca%98%26%B2%2C%91%9C%861%A6%AC%A3c%B3%FA%D7%BE%FC%B7%8F%1F%A6%C1h%E5%97_z%19%2C%88%D5%C4%BC%D8%DBE%17%5D%C4%87n%FB%E0%94%82%CFSEy%AB%AF%AF%BEO%D3t%02%01%85%B7%DF~%9B_%FE%F2)%0C%E79%C7%8E%0Dp%7C%E88%C9%FA%3AJ%25%18%1E%1Ea%D1%E2%85%7C%EDk%F7%D0%DD%3D%CB%11%E5%D0%DA%DC%C2%D8%F8%18%99L%0E%B0U%B3eY%8ET%0DP%97Hxy%F1%96%60%11%08%06%88F%23%04%83SE%AEa%9A%88%82%40I-%91%CB%17%BC%DDi%9A%26%B1X%94%F6%D6V%00%0F%8Ep%3DF%80%DADb%DA%F9%BA%9F%BD%97%0B)8%9B%C1%B4%0C%9A%1A%9B%98%D1%D5%E5%E5%C7%03%08%A2P%E1t%B8i%D5%C9d%5D%C5%06%8FD%224552t%FC%B8%8D%DB%89%B6%01%3F11ASS%93g%C6%18%A6%89%24%0Ad%B39%06%8E%1F'%12%09%11%89%D8%C1%F2%C6%86%06j%9C%8CV%BF%D4%F2%CFA%14E%2C%C1%A2%B9%B9%91%7C!O%B1%98%07%5CZ%2B475%97U%A9%25La0%F9%D2%F7_%0A%C0%F1%E3%C7%D9%BBg%2F%D1h%94'%9F%7C%92H%24%CC%9F%7C%F1Ol%3B%C8W%A7%F7%5E4%D7%CE%1A%18%18d%DB%D6m%9EA%0E%A0%04%14%FA%FA%FAioo%E7%D6%0F%DC%CC-%B7%DCLww%B7%A7%9E%0B%85%02%FD%C7%8EQR%2BCJ%AE%BD%E3l%2B%C6%C7%C6%11%25%09M%2B!%20p%F0%E0%11T'%E0%9B%88'H%24%E2%DE%EE%13%04%D1%CE%40%90%DC%AC%01%7Ba%D3%E9%0C%BD%87%0EQ%9FLR%13%8BUH%05%17%86%A8%A6%CD%89%E8%E4E%06%0C%83%99%9D%9D%B4%B7%B7%97%BD%5C%A7E%23%91%8A%EB%0D%C3%A8%80%84%00%2Clfhiifdt%14%00Q%14(%954F%C7%C6hp%9C%07%CBrc%94v%F8%A9%98%2F091%C1%D1cG%ED%94%9Cs%CE%A1%AB%B3%E3%5D%2B%98lS%C7%A2%A9%B1%11EQ%98%98%98%40%D7%EDu%A8%A9%89%D1%D8%D0%88%2B%BD%A6%85%22%EE%FB%CE%7D%88%A2%C0%C8%F0(%F7%FD%DD%7Dl%DB%BA%8DC%BD%87%F8%1F%FF%FCS%FE%F0Sw%12%8D%C5%DES%C6%B2%89aOd%C6%8C%19tuu%91%C9%A4%B1%2Chll%A4%A1%A1%81%B6%F6V.Z%BE%9C%0B%97_Xq_%26%97%E5%F0%A1%23%8COLxjB%09(hn%96%80%00%D9%5C%8E%DA%FA%24%D7%5Ew-%0D%F5%F5%E4r9t%C3%60l%7C%9Cb%C9%CEk%9A%DD%D3C%3C%5Ec%13%D5%B1%99%A2%91%08%C9%DA%3A%C6%C7%C7%BD%A4HM%D38vl%80%89%89I%A2%91%08%E1p%88%88%F3%1E%8B%D5Td%1C%9C%8A%D9%E0%3AE-%AD-N%F5%B9YaD%FB1%B3j%EF%CD%03n%1D%C36%1A%0E%D3%D4%D8%C0%E0%D0qO%BBds9%26'%26%A9%AB%AB%C30l%D5%97%CD%E5(%14%8B%1C8p%80%7F%7B%FAW%E4%0Byt%C3%E0%E5%17_%22%95J%B1j%D5%B5%15%18X%F5%98%DDq%D5%D5%D6RW%5B%8Ba%1AHU%D5Q.%13V%C7W%E5%B3%CE%3A%13%803%CE%80%BAd%1D%97%AE%B8%94X%3CFQ-%F2%EAk%AFWx%8B%EFUS%14%7Bp%E7%9E%7B%0E%7F%F6g_%26%9F%CF%DB.%7DC%23u%C9%3Ajjbd%D2Y%5E%F8%ED%0B%F4%1E%3C%C4%DC9%B3%B9%F0%A2%E5%1C%3E%DC%C7%C4%E4%A4%971i%E7b%CDB-%AA%1C%3A%7C%18%CB%B2A%DE3%CF%3C%93%C5%8B%173gv%0F5%B1%18%EFl%DAd3%11%F6%EF%A1%60%25%F0%EB%A6J%CF%9A1%03%D30%98L%A5%CA%60%A3%12%40%D34FFGm%7CLQ%88%84C%84B!jb5%B447%23%CB%92G%A3%13%BA%E5%3Ei%A2%EB%BAg%A7%F9%19%B2Z-U3%AB%DF.%12%25%89%A6%A6f%86%87m%E9e%AB%D0%12%C7%87G%A9%ABK%3A%F8%98%9Djt%F0%E0!%DEz%EB-%8E%1C9B%22%91%C0%C2%E2%E8%D1c%3C%F6%2F%8F1w%EEl%E6%CE%9D7%25%D7%CD%1B3%95%A5l%A2%CF%81%F1%E3%5D%AE%EA%F7%B72%CE%25%8A%F4%F4t%7B%D9%8F%C5b%91%A1%A1!O%DD%BC%97%CC%258%85%05%B1X%8Ce%E7%2C%AB%F8-%97%CBs%FF%FD%F7%B3u%F3V%8A%AA%CA%A1%83%87l%D58%BB%9B%7C.%EFM%D4%B4L%BAg%CE%22Y%5Bk%13W%149p%B0%17%CB%12%9C%24%C1%12%87%8F%F4%D1%D2%DC%E4%D8%8E%8A%83%5E%2B%84%C3%B6%FA%F1G%09%2C%CB%A2%A6%26%C6%BCys%19%1F%1F'%97%CD1%99IS(%140M%8B%80%A2xj1%97%CB%93J%A5%19%1F%1Bgbr%92Y3%BA%BC%8A%9C%E9v%BF%FB.%8A6%83%97%0BQM%CF%DB%9C%9EN%D3%E7Y%B9%D7G%23%11%5Bz%1D%3F%EE%24%13B%BE%90'%9B%CD%12%8BEQ%D5%12%A9t%C6%8E%0F%96%EC%A4%C6H%2C%E2%18%E9%B6%23%E0%02%BC'k.%12%E0m%92%AA%AA%AC%E9%9A%EC%22%D5vt%3E%EB%5D(%0A%A2%17%DA9%15%B5%E8%8FS%B9%0F%F4g6V_%EBJ%0C%97%99%DD%1D%92N%A7%D9%B8q3%BD%07%0E%D0%DC%DCL%5D%5D-%F5%F5%F5LL%A60%ADr%D9%7C%24%1C%F6j%0C-%CB%A2%A9%A9%11K%80%DE%DE%5E%40%40Qd%0A%F9%02%7D%7D%FD%C8J%00Q%00%C3%00Y%16%BD%C2Y%B7%DA%DB%2F%11%C2%A1%10%EDmmh%9AN%BE%90GUUr%B9%02%85b%81Tz%92%92j%EF%F0%60%20%08%02%8C%8E%8F%22%CB2%DD%B3fzyd%FE%8D%E8%3F%7C%05%40%A8%60%A4%D377%FCjR%96E%9A%9A%9B8%EEHUQ%14%C9%E7%0B%0C%0E%0D1w%CEl%D2%E9%0C%C3%C3%C3456r%D1%8A%8B960%C0%91%C3G0%0C%93%B6%D6%16%3Ev%FBG%99%3Bw%EE%09%0FS%A9%08k9%EFn%3A%14%80%AE%E9X%80%2CO_%92%26C%19%D2%97d_6%01S%CF%40%A86%9E%5D%20%2F%10%08x%D9%08%D5%CD%95%8C%D3%A5%E5%B8L%ED%9F%8C%2C%CB%24%12q%A2%D1%08%82%00EU%A5%A4%95%3C%3C%AA%7C%B1%FD%8F%1D%DF%B2%19%B5%B9%B1%11%2C%D8%DF%7B%00%11%3B%0Ei%E8%86%97j%13%0A%85%E8%9E5%ABb%1C.%B4%E0%3Fu%C7V%7F2%09%25n_%D4%08%C5%A2JA-066%CE%F0%F0%08%BAi%03%BE%8A%AC016N%B1%A5%85D%22%EE%F5k%18%86S%85%5D%CE%7BsV%60%0A%8DN%A7%F97%82eA4%1A%A5%A9%B1%91%C1%81A%02%C1%00%9AV%22%97%CF%91%C9d%98HM%D8%8E%87e2%AB%A7%9B%3F%FE%FC%E7%10%9C%B1%B5%B6%B6%B0h%D1%A2%13bT~%3E%D0J%1A%C3%23%23%A4%D2iDQD%91%EDd%CEd%5D%ADw-%E0e%A8%B8k*%FB%07%8CU%89%D2VC%09%FEw%7FUP.%97'%9DN3pl%C0s%E3%23%910%0D%8D%0D%B4%B6%B6z%8B%E9V%F2%B8%FD%E8%BA%EE%A9%1D%B0%89%95Ig%9Cr%7B%DD%5E%18QD%D7%ED%A2%0AU-a%1A%F6F%C8%E7%F2%1C%1F%1E!%1A%89%10%8F%C7%CA%0C%D6%D4H%40Q%D8w%E0%00%85%A2%0D-%C4%13q%B4%92F6%93e%EF%EE%BDvI%BB%22%93%AC%AF%A7%BD%AD%DD%2B%BD%AF%26%AEa%96%03%C3%A6i%A0H%0A%F5%C9%24%23%C3%A3%E8%9A%8E%A0%94%C3R%D9l%96%A3G%8F%92I%A7%A9K%26inn%A6%B66%81%A2%C8S%B2A%7F%D7%EC%2B%FF%26%97D%91%C6%86z%FA%FA%8E%A0%E9v%09%E0%E4%84%C1%CE%5D%BBQKv%09%7F%26%9D%C5%B4L%16%2C8%8B%AEN%1BH6%0C%13U-z%D2%BB%1A%99%17%04%C1K%18%D5%0D%9Dt%3A%C3%E0%D0qF%87%87%C9f%B3(%81%003%3A%BB%08%87%82%CC%9E%3D%07I%96%A8%AD%AD%84f*%B2%22%2C%CB%A2%90%2FT%14ON7%A9B%B1%C8%E6M%9B%D9%F8%CE%3B%F4%F5%F5%A3%96J%A8%C5%22%E9t%06%B0%D3r%25Q%20%1C%89%10%8DE%E8%EC%E8%E4%A2%8B%2F%F2%12%CF%5CIq%E0%40%2F%8F%3E%FA%18%C3%C7%87%09%04%02%18%A6%81%A1%1B%8C%8D%8Ey%E9%CF%C1%40%C0.G%DF%7F%00C%2F%E7%AB%9B%96E%24%12F%12E%EE%FF%FB%EFzF~%A9T%A2%A8%AA%E8%BAN%5Dm%1D%BBv%EEb%FB%B6m%8C%8C%8C%90%CF%E7)%E6%0B%B6%BD%20%404%12%A5%A6%A6%86%AE%19%9D%2CY%B2%94%99%B3f%3A%88%B3L8%1CAr%22%12%00%3F%7B%FC%09%DEX%BB%60%00%00%10%B2IDAT%FE%E3%3F%5E%A0%B5%A5%85%23%7D%7D%5Cz%E9%25%5Cv%E5%15%BC%B3%E1m6%BC%F9%16%85B%81B!O6%9B%A3%26%16%23%12%8D%B1x%F1%02%CE%5Ev%8E%07%BE%BA%25r%9C%C0%C6%F2%D3%BC%FA%DD%DF%5C%26%F0%E0%99%7C%9E%7F%7B%E6WLL%A4%C0rK%04%DDN%ED77%97%CD%B4L%14%D9N%FC%BC%FA%9A%AB%B8%FDc%B7W%F4%EB%85%ECJ%F6%D1V%B9%5C%8E%9F%FE%F4Qv%EC%D8A!_%20%97%CBa%9A%86%17%D4%17E%81%86%86F%00B%E1%10w%DD%F5_%99%3Bw%AE-%FD%FD%83%95e%99%05%0B%17%D0%D7%D7G%20%10%C04LO%DA%D8Lcw86%3A%CA%3F%FD%E4%9F%D8%BF%7F%3F%A9T%DA%B1%9DL%14Evp1%D1%89m)%14%0AE%14Ef%DD%BA%F5%5Ct%F1r%3E%F9%89OP%DF%60%07%3C%D3%E94%5B6o%E1%C8%91%23v%D1%AAs0H(%14%F2b%80%A2(2%3C%3C%CC%C0%C0%40%85%3D%E8%A9f%5Dc%F7%DE%7D%04%14%05%CB!x%3E%9F%C74L%1E%7F%F4q%F6%ED%DB%C7%D0%C0%00j%A9D%C4%C1%91%FCgA%A4%D3%19dY%E2%E5%97%5E%A1%AB%AB%8B%EBo%BC%9EY%DD%DDh%CE%AE%95d%3B%B6%B8q%E3%266%BC%F5%16%ED%ED%ED%1C%3E%7C%98%F3%CF%3F%8F%D7%D6%AF%E7%E7%8F%FF%1CM%D3%C8%17%F26%81C!%8E%0F%0DQ(%14%D9%B1c%3Bk%D7%BE%CA%ED%7Fp%3B%CD%AD%CD%18%BA%81(%0A%DE%CA%FB%25%90%1F~%F0%2F%F6%89%90s%3F%7CPRK%1C%3C%D0%CB%C8%E8X%A5W%E7%C3%A0%5C%DB%D40L%22%E10CCC%CC%9D7%D7%A9%DC%16*%9C%1BM%D3P%02%0Ak%D6%AC%E1%97%BF%7C%8A%DE%03%BD%8C%8FOxR%D8%3D%F4%C4%B2%ECD%C8%1D%3Bv%3AGi%E9%DCz%EB-%CC%9D%3B%D7%F6%B6%FD%1C%2B%8A%12%1D%9D%1D%F4%F5%F5%91%CF%E7y%7B%C3%DB%7C%E2%93%1F'%97%CBy%D7D%A3QJ%A5%12G%0E%1Ffr2E%22%11g%CE%DC%B9%B4%B6%B4%22J%02%C9%FA%24%F9l%81%A3%FD%FD%EC%DA%BD%07YV%08%06%03LLL%F0%E8%BF%3CF%5B%5B%1B%1FsvK8%1C%A6%B3%AB%03Y%96%BC%5C%24%CB%B2%98%18%9FD%D35%0F%17%AA%A9%A9%F1bb%00%85b%D1)%5B%B3%99%3E%93%CD%20I2%A6%B3%93EA%E0'%3F%FE%09%FB%F7%ED%B3cx%E10%E1H%C4%CEr%88%C5%88%D5%C4H%A7%D2%A4%D3i%1A%EA%EB%91d%C9f%F4-%5B%D0M%83%9Bn%BA%89%DA%BAZ%0F%E0t%99%BE%B1%B1%91H%24Bgg'o%BE%F1%A6%5D2%97%B7q%A4%FAd%3DMM%8D%8E%03%A1%D0P%13%C34Lz%7B%0F%B0%E6%85%D5%DCp%D3%8DN)%99%EE%19%F5%D5%E6%86%0B%9C%DA%9F%DD%D4%F4%E9AJ%3F%0E%26%2B%0Am%ED%ED(%CE%F1%04%82%E8%C2%A7vV%88%24IH%A2%7Dx%9F%7BtBQ-zgtTH%2C%C7%D1Y%BFn%3D%0F%7C%EF%FBN5%7D%0D%89D%1CM%D3%E8%99%DDCwO%0F%A2%20%22%88%02%A9%89%09%02%81%00%87%0E%1Db%EF%DE%7D%15v%BA%EC%1F%AC%24I%CC%9C5%93%0Don%40-%A9%ACY%BD%86%9F%3D%FE%04%1F%FD%E8%87%2B%0C%D1p8%CC%F57%DE%C0%FCy%F3ijn%A2%AE%AE%96xM%1CQ%B2%A5%8E%AA%AA%14%F2%05vl%DF%C1%23%3F%FC1%87%0F%1F%A2%B6%B6%16M%D3x%E5%95%B5%AC%B8%F8bf%CC%9C%C1%8C%19%5D%7C%E5%2B_%A6T%D2%BCT%98%C9%C9%14%DF%F9%CEw9%7C%E8%B0%9D%CBU*%B1l%D9%D9%7C%F4%F6%8F%10%0A%86%BC%8C%CB%C9%C9%14%E9l%96B%3EOM%C49J%C0%F6%95y%F2%17%BFd%D7%CE%9DN%11%A9m%DB564p%C7%C7%FF%80%B6%F66%5B*%1A%16%C3%C7%8F%F3%ECs%CF%D1%7B%A0%97%B8%13%3F%DC%BAy%2B%CD%CDM%DC%F1%F1%3BHM%A6P%94%00%9An%3B.jQ%A5X%B4%8BA%86%06%87%40%80X%AC%86%8F%DE%FE%11.%BD%F4R%24%C9%CEz%BD%FF%FE%EF%B1u%CB%16b%B1%185%F18%AF%BD%F6%1A%D7%5E%B7%8A%96%96%16%D2%E9T%25%3E%E4%5BXEQ%A6%A4%B1%B8G%3BM%07s%B8%D1%81%86%86z%EE%B9%E7%CFIg2%EC%D9%BF%1FI%14%BC%22%10A%14%993%BB%87L*%C3%0F%1E%F9!%7B%F7%ECAQ%14T%C7t%A8%C6%AC%1C%B9%C8%D3%CF%3CC%7F%7F%3F%0D%0D%0D%CE%11Q%25%3E%F8%A1%0F0w%FE%3C%22%91%88S%C5n0sF%17%91p%98%89%C9%09%26'S%CC%9E%3D%DB%E3%A7%8A%BA%C5%40%40%E1%23%1F%F90%0F%3F%F40%EDm%EDd%B3Y%EE%FD%CB%7By%E2gO%10%0A%85%B8%FA%9A%AB%F9%C3O%DDImm-w%DEy'%B1X9%5D%C55%E4%0D%C3%F0%F2%D3W%5E%B2%92%5D%BBw%B3%7D%FB6%E2%F18%8A%A2080%C0%F1%E1af%CC%9CA%24%12!%1E%8F%E3o%99L%96%600X%91%E6%93L%26%9D%EC%CC%A9%CD%3E%23%A1%88e%D9n%FF%DE%BD%FBX%BFn%3D%B1X%CC9%03L%A7%A3%A3%9D%FB%EE%FB%5B%DA%3B%3A%BCJr%B7%9Dq%E6%7C%BE%7D%DFw9r%E4%08%A1%60%08I%12%D9%BB%7B%0F%A9%89I%CE%3A%EB%2C%0CC%07%04%12%89%04%86i%94%B3J%25%91H8%C2%DD%9F%BB%9Bk%AF%BD%0AY.%F7%7B%D3M702%3C%EC%15%A4%E6%F3y%2C%D3%A0%B3%A3%0D%5Do%F6%CC%8Cj%C9%15%0E%85%E8%E9%9E5%85%81%FC%D7%B8.%81%5B%11d%9A%96%0D%00w%CFbtl%8C%A2f%E7s%09%82%80%E1%20%EBsz%BA%19%1C%3ANM%B4%F2%E4%A0%8A%F8%A7%CF4J%A5%D2%E4%B29%AF%A8%D8%CD%E6%5D%B0%F0%2Cf%CE%EA%F6%B2%24DQ%A4%B9%B9%99%40%40%F1L%1D%7F%ABP%8B%96e%B1%F4%EC%A5%DC%F7%ED%FB%F8%E2%17%BE%E8%15J%AC%7De-%BA%AE%D3%D9%D5%E9%C1%05%E1%B0B%3E%9F%B7O%B7q%DCO%F704%7Fkko%A3TR%3Dc%D64%CB%B1477%DFo%BC%BA%F9L%D5%A2%DA%CBg%F7%D9K%EE3%A3%BE%9C%AC%CD%9B7%7B%F6%98%ED%B5F%B8%FD%F6%8F2%AB%7B%16%BA%03K%F8m%90e%CB%96q%C3%8D%D7%F3%AD%BF%F9%5B%C2%E10%A1P%90%C1%C1!%F6%ED%DD%C7%F9%E7%9Fg%7BL%8A%E2%8D_tTN4%12%E1%EE%3F%FA%2C%D7%5D%BF%0A%5D7%7C%958%02%B5%898%E9t%9Ac%C7%06%88%C7k%18%19%19arr%12Y%92%91%A5%A9%89%00%9E-%E9s%20%AA%5B%05N%26%086%10%8A%85%20%DA%EAo%60p%90%FD%07z%9D%02Y%11%C3%D0%89D%A3%D4'%EB%D0u%9D%5C6%83QEW%7F%F3%D3%3A%1A%8Dx*%D6%B6%9B%0BD%22a%1E%F8%87%7Fd%E9%D9K9k%C1Y%CC%989%93%B3%97.%B1m%5D%CB%3E%B5G%92%A4%0A%CF%5B%F6w%EC%BE%7F%FA3w1g%CEl~%F5%CC%BF%B1%7B%D7n%AF%8C%BB%AB%B3%D3%DE%11%86%81%A2(D%22%11%FA%FB%FAy%FB%ED%B7%D9%B5%7B7%83%03C%98%CE%EE%B6%23%F2v.Pcc%93w%B8%86%1F8%ACfF%97q%ABcj%A2(zL%5C%9Df%0B%E5%E3(%0D%C3%60%F3%E6%CD%15i%DB%C9d%98K.%5D%89%AA%AA%F6%C2%D9%86%8Cw%A6%82i%9A%CC%EE%E9%F1%F0(%FB%88%A41%86%86%86%9C%C4%BFR%05%8C%20%8A%12%A5R%89%AE3%CE%E0%ECeg%3B%9B%D2%AC%A8%E69%7B%D99%FC%F8'%3FD%D7tDID%D3t%3A%3B%3B*%16q%3A%BA%BF%1BR%EF%01%CF%80Z%2Cz%DF%E9%9A%1D%B0%3E%3E%3Cb%7B%84NN%5C%20%10a%DE%EC%1E%E2%F1%B8C%BF%C0%14f%9E%8E%B9%5C%F5%7C%C1%05%17%B0e%F3V%CFF3M%93%A1%A1!%5Ez%F1%256m%DCD(%1Cb%E1%82%B3X%B4x1g%9Cq%06%F3%E7%CF%03%A8%08%23%C9%D3%3DL%10%04%AE%BA%FA*%CE%3F%FF%7C2%99%0C%BAaK%98xM%DC%8B%C3%ED%DD%B3%8F%7F%FA%A7%7F%A6%B7%B7%97t%3AM%A1%90GUK%14%8B%AA%A3J%F0J%D4%A2%8E8%F6KH%3Fs%9C%88%A0'%22D%F55%FEC%D5%B4%92V%89%039gVU%00%85%BE%FBDQ%24Q%9B%60%E6%8C%19%A43i%8F%90%AE%0A%F4G%1A%2C%CA%91%05%FB%B8J%CD%FB%DD%CF4%89D%BC%02P%9Dn%CC%D3%CD%F1%DD%E6%EA%C7%9E%B6n%DBn%17%C3%9A%26%16xG%5C)%8AB%D1I%C3%9E3%BB%BB%A2%B0%E5%DDh%ED%7F%B6%2C%CB%A8%A5%12K%97-%E5%D6%0F%DE%C2o%9E%FB%0D%E3%E3c%04C!%BB%90D%80T*%C5%C8%C8%08%7DG%FAX%FF%EAk%24%E2%09ZZ%9A%B9%E6%9A%AB%B9%EE%FA%EB%BC%B1%96O%B9%A9%DAQ%9A%A6Q%5BWK%AD%83%C2%FA%DB%3B%EFl%E4%2F%BE%F1%17LN%A6(%95J%04%83AJ%25%8D%DAD%82y%E7%CF%A5%B5%D5%3EI%2F%91H%B0u%EBV6m%DAL%3C%1E%AF8%93%E1d%C4%F4%8F%EBtZ%D9F)%BB%EAnjK%F5%1C%DD%BE5M%A7P%2C%F8%24b%D5%F3%5D%8F%0D%A1%8Aq%CB%A7%C3TH%177%AC%E5%EB%A8%FA%60%E1jXA%10%04%CF%C0V%14%C5%ABRw%D5%B1%E5%9Cbc%99%A6%03%3C%97O%C1v%9F%AD%AA*%8D%C9%06%3A%3B%3B%3C%7B%B8L%EBw%A7c%B5%AA%2C%16%8A%9C%BDl%19K%96%2C%A1%AF%AF%9F%BD%BBw%B3e%CBV%06%06%06%09(%0A%C1p%88P0%88ZT9%9A%3EJ%DF%91%3E%0E%1C%E8%E5%AD%B76%F0%CD%BF%BE%17%A0%D2%5B%F4%BB%BD%FE%23%14-%CB%F2N%84%19%18%18%E4%DE%BF%FA%26%E3%E3%13%84B!%CF%E6%F9%C4'%3F%C1%C5%17-GV%EC%C3%5CUU%25%14%0C%F1%D8%E3%8F%B3n%DDz%EA%EB%EB%BDp%D1%C9%269%5D%B8%E9d%8C%E8%1F%A7%FD%B7%80%E4%A8%B0%A1%A1!'%D7%7B%FA%BC%ABT*%C5%E0%E0%20%1D%1D%1D%DE%A93%F1%9A%B8%A7%92%AD%AA%FB%AA%C73%9D%EDt%AA%81~%3Fc%B9%26%C2%D1%A3G%E9%E8%B0%D5%A8%0B%94%0A%82%09%08%9E%5D%E62b%20%A0%10%0EE%88%C6%C2%24%EB%92%24j%E2%DE!'%95%ED%D4%C3N%01E%C1%CD%96%09%05%ED%22%91%5C6K%3E%9Fgxx%98m%DB%B6%B3%7B%D7.V%AF~%11%25%10%20%1A%8Dz%F6%F2%EA%17Vs%D9%E5%97q%C9%25%2B%2BO%16%9C%CE%D5%F5%FF%26I%12%07%0F%F6%B2%7F%FF~%3A%3B%3B)%16%8B%A8%AA%CA%D5%D7%5C%CD%AD%B7%DE%5C%91%B2%E1%1Aw%91pdJ%F8%E3d%84%F6%7Fv%25%84K%CC%EA%EB%CB%B6%90%BD%A0s%E6%CCa%E7%CE%5D6%E0%2B%DBeak%D7%AE%E3%B6%DB%3E%E4%C5%BE%A0l%A7e2%19%D6%AD%5DO%D8%19%A7%AE%EB4551c%C6%0Co%CE%D5%88%FA%A9H%DCSm~5%FB%D0%83%0F%B3n%DDzTU%25%18%0Cr%DE%F9%E7r%F7%DD%9F%05%CAa%B9%40%20%C0%B2%A5K*%04%81%1B%D7%AD.%05%AC%A4%F9%A9%A9E%F7%9E%80%8FN%92(z%07%F3%B5%B6%B6%B2p%E1B2%99%0Cw%7D%FA.%EE%BD%F7%AF%D9%BDk%B7g%3F%8B%A2%C8%81%FD%07X%B9r%C5%E9%1D%B8%EBJ%06%D9)Hu%07%92L%DA%B9%D8%A9T%9A%88s%3Ej8%1C%E6%DF%7F%FD%EF%FC%E2%17%BF%A0%A9%A9l%D0%BF%1B%7F%B9%84vU%A7%5B(%B1w%EF%5EO%05%99%86%01U%AE%B4%1F%AB%B9v%D55%FC%EB%BF%FE%C2%03%08UU%E5%89%9F%FD%9C%F9%F3%E6%B1x%C9b%EFY%AEdy%F1%C5%97x%FE%F9%E7%A9%89%C7%00%8BL%26%C3%B2s%CE%E6%B2%CB%DF%EFe%00h%9A%3E%DDp%DF%93%E6%3A(%DF%F8%FA_%B0v%ED%3A%8FN%A6iq%F4%E8Q%06%07%06%F9%F6w%EE%AB(%94q%B1%AF%EA6%1D%E0Z%FE%7Cr%C9%EFg%B0%EA%0D%E4%1E%ED%0E6%A3%C7%E3q%12%89%04%97%5Dv)%BD%07z%3D%BB%0F_%C2%C3)3%97eZ%20AsS3%A2s%CA%B0%1B%D8%7C%E1%85%17h%A8%AF%E7%AAk%AE%C20%0C%DE%7Cs%03%BFz%E6%196n%DC%8Ce%95%0F%ADuz%3A%A1A%AFi%1A%0D%0D%F5%04%94%40%05%93%ED%DD%BB%8F%BF%F9%EF%DF%E2%23%1F%FD0%A1p%04%C31RGFF%18%1C%18%E4%86%1B%AF%F7%8C%EE%D9%B3gs%C5%95%97%B3%F6%95u%9E%BD222%C2%3D%F7%7C%8D%F3%CF%3F%8F%25K%96x)%CA%9B6m%E2%F5%D7%DF%F0RNTU%A5%A3%A3%83%0F%DCz%2B%A1P%A8b%03%9D%E85%DD%3CN%B7%1D%3Dz%8C%D7%5E%7B%0D%5D%D7%89D%22%DEFQU%95%CD%9B%B7%D0%DB%7B%90%EE%EEY%E5%E7%D9%0F%B5o%16*%F3%3F%AB%D5%B6%7F%8C%EF%F6%F2%7B%E0%E9t%86%FB%FE%EE%3ET%B5%C8%8A%15%2B%99%3Dg6555%9E%C7%0B066%CE%DB%1B%DE%E6%97%BFx%CA%2B%1B%94%24%89B%B1%C8%BC%F9%F3%2B%0D%FA%935%F7%CC%CD%B6%B66V%AE%5C%C9%9Bo%BE%E9!%E8c%A3c%FC%F0%87%3F%E2%B1%C7%1E%07%C16%06UU%25%93%C9%D0%DC%DC%84%2C%2B%8C%8E%8E%12%08%06pSd%5CBT%3C%C3QCW_%7D%25%87%0E%1DB7t%2F%BF~%DD%BA%F5lt3J-7xm%A2%16U%AE%BB~%95%17%8BT%14%85%2F%7D%E9O%E9%3Dp%90%BE%FE%3E%FBh%02%CB%22%95J%F1%E2%9A%17yu%FD%AB%9E%82p%FFc%82P(D%B1XD%96%15%EE%BC%F3%93%2C%BFh%B9%17SuK%A9%FC%B8%9A%CB%C8%A7%E3%98%9C%90%AE%82%FD%1F3%B8'E%BB%18%1D%94%11%F8j%F3%C4%C6%B2N%EEE%FB%3F%BB%E3%9Dn%0E%FE%B9%B8%CF%1F%1C%1Cd%EB%D6m%EC%DC%B9%DB%BB%CF%3D%DD%10%407t%D4%A2%EA%E1%5B%A2(%90%CF%E7Y%BE%7C9%17%5Cp%3Ep%1AG%85%BB%8B%5C%97%AC%E3O%BF%F4%05%16.%5C%C0%C4%C4%24%60%7B%96%D9l%96c%C7%8Eq%EC%E81%D2%E94%F9%5C%9EU%AB%AE%E5%C1%87%1F%E4%AC%B3%CEdrr%12%01%81RI%3D%E1%8Ew%8F%AB%BE%E5%D6%5B%F8%2F%FF%F5S%60%D9G%01%B8%DE%EB%D8%E8%18%C3%C3%C3%8C%8E%8E2%3C%3C%CC%E4%C4dE)%BA%DBg%5D%5D%1D%3Fx%E4!%AE_u%9DWzoY%16%9A%AE%93%C9f%C9f%B3d2%19%CF%EEJ%A5R%2C%5C%B8%80%07%1F%FA%3E7%DD%7C%A3%E7%A5%B9%FDY%96%E5%A9%05%F7%E5%F7%06%7F%17%C9eYv%C5%F6%AAU%D7Rr%8E9p%9F%A5%EB%3A%97%5C%B2%92%AE%AE%CEis%AEN%B5%7F%F7%FDDs%F0%8F%DFsJ%1C%B3%C4-%D6%1D%1E%1E%E6%E8%D1%A3%F4%F5%F5%D1%D7%D7%C7%D0%E0%10%93%93%93%9E%97%AA(A%3E%7B%F7g%F8%EF%7F%F3M%0F%08%3E%AD%FFo%D1%7Fi%A1P%60%E3%C6%8D%BC%F5%E6%06%22%91H%C5%B1%91%E1H%98%F7%BD%EF%7Cf%CF%9E%8D%24I%BC%F8%E2Kl%DB%BA%CD%3E%C3A%80U%AB%AE%A5%AB%ABk%DA%FF%AB%D0%0F%8C%1E%3F%3E%C4%AB%EB_gxxx%0A%9Ed_g%E7Y%7D%FA3w%95%D3Y(go%94J%25%06%06%06xu%FDkLLLT%2C%8E%7B%FAM%22%91%60%E5%25%2Bhmm%F5%D0e%3F%A4%E0%F6%F7%F2K%2F%B3y%F3%16%E7%18%CF%3C%9D%9D%9D%5C~%C5eN1%84Q!%5DN%A7%95%E1%10%8D%E7%9E%FB5%03%C7%06%BC%F9utv%B0%EA%DAkQ%7C!%AB%D3e0wl%E3%E3%E3%ACY%F3%22G%FB%8F%12q%82%F8g%9F%BD%94K.%BD%A4B%8A%B9%10%C7k%AF%BD%CE%8E%ED%3B%BCg%96U%AD%2B%E1l%DA%E8%BA%CE%19g%9E%C9%F9%E7%9FK%CC%AE%90%F2%98%E4%94%99%AB%1AEv'%E9%DA%25%FE%E6%17%E5%D3%1D9T%8D%0FM%F7%0C%F7%7B%3F%9Es%A26%1D%DE%E4%B7%23%DE%ED%2C%F5%EA%B1%FA%9D%04%7F%F3%A7p%BB%F7%95s%E1O%0E%95%BC%5B%F33%B3%7F%AE%AE%FA%FA%5D%FA%F7%D3%E4Ds%F0%FF%ED%BF%BE%FA%BC%AD%135%7Fy%9DeY%96%A7%8AOWr%F9%17o%3A%AF%C2m.%91N%B7%B0%E3D%0Cr%BA%F7%9F%CE%18%FC%60%E4%7B%C1%2C%A7%D3N%B4i%DD%DF%3C%AC%ED%7F%F3%98%AA%C7r%B2%EB%7D%FCp%FA%92%CB%DFQ%B5'r%A2%F6n%D8%D6%BB-b5%C1O%A5U%EF%BA%93%3D%7F%BA%FB%A7%1B%C7%E9%3C%F7%3F%DB%DEm%BE%BFk%FF%A7C%CB%D3%A5y%F5%BD%EE%23%BD%EFN%97%B9~%DF~%DFN%D2%3C~%FA%9F%03%ABB%23VZ%09L%00%00%00%00IEND%AEB%60%82" width="153" height="55" title="Hyphenator logo" alt="Hyphenator logo"></h1>
+		<p class="multicol hyphenate">
+			Hyphenator.js automatically loads language pattern files. This is convenient but not performant, since at minimum two http-requests are necessary.<br>
+			This page provides a service to merge the script and the language patterns in one file. You may also set the configure parameters and minify the resulting script.
+		</p>
+		<p class="multicol hyphenate">
+			Since this page uses XMLHttpRequests to load the script and pattern files, it will not work if you call it with the file:// protocol. Instead put it on your server or go to <a href="http://hyphenator.googlecode.com/svn/trunk/mergeAndPack.html">http://code.google.com/p/hyphenator/</a>.
+		</p>
+		<p class="multicol hyphenate">
+			The script loads the version of Hyphenator.js that resides in the same directory like this page.
+		</p>
+		<form action="#outanchor" method="post" id="myform">
+			<fieldset>
+			<legend>Languages</legend>
+				<p class="hyphenate">
+					Select the language you use on your website. The patterns of the selected languages will be included in the ouputted script for faster page loading.
+					If you select no language, make sure that "enable remote loading" is on (see below)!
+				</p>
+				<ul class="multicol">
+					<li><label><input type="checkbox" id="be" name="language[]" value="be">Беларуская (Belarusian)</label></li>
+					<li><label><input type="checkbox" id="bn" name="language[]" value="bn">বাংলা (Bengali)</label></li>
+					<li><label><input type="checkbox" id="ca" name="language[]" value="ca">Català (Catalan)</label></li>
+					<li><label><input type="checkbox" id="cs" name="language[]" value="cs">Česky (Czech)</label></li>
+					<li><label><input type="checkbox" id="da" name="language[]" value="da">Dansk (Danish)</label></li>
+					<li><label><input type="checkbox" id="de" name="language[]" value="de">Deutsch (German)</label></li>
+					<li><label><input type="checkbox" id="el-monoton" name="language[]" value="el-monoton">Ελληνική monotone (monotone greek)</label></li>
+					<li><label><input type="checkbox" id="el-polyton" name="language[]" value="el-polyton">Ελληνική polytone (polytone greek)</label></li>
+					<li><label><input type="checkbox" id="en-gb" name="language[]" value="en-gb">British English (British English)</label></li>
+					<li><label><input type="checkbox" id="en-us" name="language[]" value="en-us">American English (American English)</label></li>
+					<li><label><input type="checkbox" id="eo" name="language[]" value="eo">Esperanto (Esperanto)</label></li>
+					<li><label><input type="checkbox" id="es" name="language[]" value="es">Español (Spanish)</label></li>
+					<li><label><input type="checkbox" id="et" name="language[]" value="et">Eesti (Estonian)</label></li>
+					<li><label><input type="checkbox" id="fi" name="language[]" value="fi">Suomi (Finnish)</label></li>					
+					<li><label><input type="checkbox" id="fr" name="language[]" value="fr">Français (French)</label></li>
+					<li><label><input type="checkbox" id="grc" name="language[]" value="grc">Ελληνική ancient (ancient greek)</label></li>
+					<li><label><input type="checkbox" id="gu" name="language[]" value="gu">ગુજરાતી (Gujarati)</label></li>
+					<li><label><input type="checkbox" id="hi" name="language[]" value="hi">हिंदी (Hindi)</label></li>
+					<li><label><input type="checkbox" id="hu" name="language[]" value="hu">Magyar (Hungarian)</label></li>
+					<li><label><input type="checkbox" id="hy" name="language[]" value="hy">Հայերեն լեզու (Armenian)</label></li>
+					<li><label><input type="checkbox" id="it" name="language[]" value="it">Italiano (Italian)</label></li>
+				</ul>
+				<ul class="multicol">
+					<li><label><input type="checkbox" id="ka" name="language[]" value="kn">ಕನ್ನಡ (Kannada)</label></li>
+					<li><label><input type="checkbox" id="la" name="language[]" value="kn">Latina (Latin)</label></li>
+					<li><label><input type="checkbox" id="lt" name="language[]" value="lt">Lietuvių (Lithuanian)</label></li>
+					<li><label><input type="checkbox" id="lv" name="language[]" value="lv">latviešu valoda (Latvian)</label></li>
+					<li><label><input type="checkbox" id="ml" name="language[]" value="ml">മലയാളം (Malayalam)</label></li>
+					<li><label><input type="checkbox" id="nl" name="language[]" value="nl">Nederlands (Dutch)</label></li>
+					<li><label><input type="checkbox" id="nb-no" name="language[]" value="nb-no">Norsk (Norwegian)</label></li>
+					<li><label><input type="checkbox" id="or" name="language[]" value="or">ଓଡ଼ିଆ (Oriya)</label></li>
+					<li><label><input type="checkbox" id="pa" name="language[]" value="pa">ਪੰਜਾਬੀ (Punjabi)</label></li>
+					<li><label><input type="checkbox" id="pl" name="language[]" value="pl">Polski (Polish)</label></li>
+					<li><label><input type="checkbox" id="pt" name="language[]" value="pt">Português (Portuguese)</label></li>
+					<li><label><input type="checkbox" id="ru" name="language[]" value="ru">Pyccĸий (Russian)</label></li>
+					<li><label><input type="checkbox" id="sk" name="language[]" value="sk">Slovenčina (Slovak)</label></li>
+					<li><label><input type="checkbox" id="sl" name="language[]" value="sl">Slovenščina (Slovenian)</label></li>
+					<li><label><input type="checkbox" id="sr-latn" name="language[]" value="sr-latn">Srpski (Serbian, Latin script)</label></li>
+					<li><label><input type="checkbox" id="sv" name="language[]" value="sv">Svenska (Swedish)</label></li>
+					<li><label><input type="checkbox" id="ta" name="language[]" value="ta">தமிழ் (Tamil)</label></li>
+					<li><label><input type="checkbox" id="te" name="language[]" value="te">తెలుగు (Telugu)</label></li>
+					<li><label><input type="checkbox" id="tr" name="language[]" value="tr">Türkçe (Turkish)</label></li>
+					<li><label><input type="checkbox" id="uk" name="language[]" value="uk">Українська (Ukrainian)</label></li>				
+				</ul>
+				<ul class="multicol">
+					<li><label><input type="checkbox" id="alllanguages" name="alllanguages" value="alllang"><em>Select all</em></label></li>
+				</ul>
+			</fieldset>
+			<fieldset>
+			<legend>Configuration</legend>
+				<p class="hyphenate">
+					Make the settings for Hyphenator. Leave empty textfields empty for the default value to be set. If no special configuration is made, there will be no Hyphenator.config(); function in the output.
+				</p>
+				<p>
+				<label><input type="text" id="minwordlength" name="minwordlength" value="" size="10" title="minwordlength"> Don't hyphenate words shorter than this value (leave empty for default value 6)</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="minwordlength_btn" class="info_btn" alt="Show-Info Button">
+				</p>
+				<div id="minwordlength_box" class="info_box">A value lesser than 4 makes no sense. By increasing this value lesser words will be hyphenated, thus, there's a small speed gain.</div>
+				<p>
+				<label><input type="text" id="hyphenchar" name="hyphenchar" value="" size="10" title="hyphenchar"> The hyphen char for words (leave empty for &amp;shy;)</label>
+				</p>
+				<p>
+				<label><input type="text" id="urlhyphenchar" name="urlhyphenchar" value="" size="10" title="urlhyphenchar"> The hyphen char for URLs and E-Mail (leave empty for zero width space)</label>
+				</p>
+				
+				<p>
+				<label><input type="text" id="defaultlanguage" name="defaultlanguage" value="" size="10" title="defaultlanguage"> Make Hyphenator to use this language as a fallback</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="defaultlanguage_btn" class="info_btn" alt="Show-Info Button">
+				</p>
+				<div id="defaultlanguage_box" class="info_box">At best you define the language by using the lang-Attribute in your HTML-Document. But sometimes this isn't possible. In this case you can set the language here. Use a two-letter language code (e.g. en for English).</div>
+				
+				<p>
+				<label><input type="checkbox" id="dohyphenation" name="dohyphenation" title="dohyphenation" checked> Hyphenate the Document when Hyphenator.run() is called.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="dohyphenation_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="dohyphenation_box" class="info_box">Sometimes you like to run the script, prepare everything, but not to hyphenate yet.<br>Hyphenation can later be executed by calling Hyphenator.toggleHyphenation()</div>
+				
+				<p>
+				<label><input type="checkbox" id="remoteloading" name="remoteloading" title="remoteloading" checked> Enable remote loading of language patterns.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="remoteloading_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="remoteloading_box" class="info_box">By enabling remote loading Hyphenator will automatically load language patterns of supported languages when they are needed.<br>
+				If you turn off remote loading Hyphenator only hyphenates texts in languages it has the patterns for. Make sure you have them selected!</div>
+				<p>
+				<label><input type="checkbox" id="enablecache" name="enablecache" title="enablecache" checked> Enable cache</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="enablecache_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="enablecache_box" class="info_box">Once a word is hyphenated it is cached, thus a word has only to be hyphenated once. You can turn this mechanism off &ndash; mainly for performance-measuring.
+				</div>
+				<p>
+				<label><input type="checkbox" id="safecopy" name="safecopy" title="safecopy" checked> Remove hyphenation when copying text</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="safecopy_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="safecopy_box" class="info_box">Browsers don't remove soft hyphens from copied text. By enabling this feature hyphenation is removed on copy. This only works in browsers that support the oncopy-event.
+				</div>
+				<p>
+				<label><input type="checkbox" id="doframes" name="doframes" title="doframes"> Hyphenate frames and iframes, too</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="doframes_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="doframes_box" class="info_box">By default, hyphenator doesn't hyphenate text in frames. You can turn this on, but it will only work on frames that fullfill the same origin policy!
+				</div>
+				<p>
+				<label><input type="checkbox" id="persistentconfig" name="persistentconfig" title="persistentconfig"> Store settings over page reload (only if DOMStorage is available).</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="persistentconfig_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="persistentconfig_box" class="info_box">With this option enabled, all configuration options are stored in a object called `Hyphenator_config` in the storage type defined by the property `storagetype` (if `storagetype is none` or storage isn't supported, nothing is stored).<br>By reloading or going to an other page, those settings remain set. This is very and specially usefull for the toggle-button.<br>Be carefull with this option!
+				</div>
+				<p>
+				<label><select id="intermediatestate" name="intermediatestate" size="1" title="intermediatestate">
+					<option>hidden</option>
+					<option>visible</option>
+				</select>
+				 Define intermediate state (style.visibility of elements while they are hyphenated).</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="intermediatestate_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="intermediatestate_box" class="info_box">Since Javascript is executed after the page is loaded, the user may see the unhyphenated text for a short time befor it is hyphenated and redrawn. To prevent this all textblocks treated by Hyphenator are set to invisible upon hyphenation (setting: "hidden"). The result is, that only hyphenated text is displayed.<br>
+				On the other hand &ndash; if there's an error in the execution of Hyphenator.js &ndash; the text may stay invisible. Turn hiding off for debugging or if you prefer to see the redrawing of the text (setting: "visible").
+				</div>
+				
+				
+				<p>
+				<label><select id="storagetype" name="storagetype" size="1" title="storagetype">
+					<option>local</option>
+					<option>session</option>
+					<option>none</option>
+				</select>
+				 Define DOM-Storage type (for modern browsers only).</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="storagetype_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="storagetype_box" class="info_box">Hyphenation patterns can be stored in DOM-Storage for later reuse. You can define the method (if at all):<br>
+				'local': patterns are stored locally (they will be there even after a restart)<br>
+				'session': patterns are removed if the window is closed<br>
+				'none': DOM-Storage is not used<br>
+				Degrades gracefully, if the browser does not support DOM-Storage.
+				</div>
+
+				<p>
+				<label><select id="unhide" name="unhide" size="1" title="unhide">
+					<option>wait</option>
+					<option>progressive</option>
+				</select>
+				 Define, when elements are hyphenated.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="unhide_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="unhide_box" class="info_box">Elements can either be hyphenated when all necessary patterns are loaded ('wait') or when the patterns for the specified language are loaded ('progressive').<br>
+				The second option may be useful on multilanguage pages, where one language takes much longer to load.
+				</div>
+
+				<p>
+				<label><input type="checkbox" id="useCSS3hyphenation" name="useCSS3hyphenation" title="useCSS3hyphenation"> Use the in-browser CSS3 hyphenation if available.</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="useCSS3hyphenation_btn" class="info_btn" alt="Show-Info Button"></p>
+				<div id="useCSS3hyphenation_box" class="info_box">With this option enabled Hyphenator.js checks if the browser supports CSS3-hyphenation. If so, the elements are hyphenated by the browser instead of Hyphenator.js.<br>
+				For unsupported languages or other browsers Hyphenator.js fills the gap and hyphenates as expected.
+				</div>
+				<p>
+				
+				
+				
+				
+				<fieldset>
+				<legend>Element Selection</legend>
+					<p>Indicate how to get the elements for hyphenation:</p>
+					<p>
+					<label><input type="radio" id="selStandard" name="selMethod" value="standard" checked> Standard: Collecting elements by a classname</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="classname_btn" class="info_btn" alt="Show-Info Button">
+					<br>
+					<label><input type="radio" id="selCustom" name="selMethod" value="custom"> Custom: Collecting elements by a custom Selector-Function</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="selectorfunction_btn" class="info_btn" alt="Show-Info Button">
+					</p>
+					<div id="classname_block">
+					<label><input type="text" id="classname" name="classname" value="" size="10"> indicate a classname (leave empty for default "hyphenate")</label>
+					</div>
+					<div id="selectorfunction_block">
+					<label>Selector Function:<br>
+					<textarea cols="80" rows="20" id="selectorfunction" name="selectorfunction">function () {
+	var tmp, el = [], i, l;
+	if (document.getElementsByClassName) {
+		el = contextWindow.document.getElementsByClassName(hyphenateClass);
+	} else {
+		tmp = contextWindow.document.getElementsByTagName('*');
+		l = tmp.length;
+		for (i = 0; i < l; i++)
+		{
+			if (tmp[i].className.indexOf(hyphenateClass) !== -1 && tmp[i].className.indexOf(dontHyphenateClass) === -1) {
+				el.push(tmp[i]);
+			}
+		}
+	}
+	return el;
+}</textarea>
+					</label>
+					</div>
+					<div id="classname_box" class="info_box">Using this method Hyphenator.js searches the DOM for elements with the indicated classname. Note: an element can have multiple classnames; separate them with spaces (e.g. &lt;div&nbsp;class="content&nbsp;hyphenate"&gt;)
+					</div>
+					<div id="selectorfunction_box" class="info_box">If you want to have more control over the element selection you may define your own selector function. It has to return an array of elements to be hyphenated. Specifially if you use a JavaScript-Framework, this may be very interesting…
+					</div>
+
+				<p>Indicate a classname for elements that should NOT be hyphenated:<br>
+				<label><input type="text" id="donthyphenateclassname" name="donthyphenateclassname" value="" size="10"> indicate a classname (leave empty for default "donthyphenate")</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="donthyphenate_btn" class="info_btn" alt="Show-Info Button">
+				</p>
+				<div id="donthyphenate_box" class="info_box">You can turn off hyphenation for elements with the indicated classname. (Note: The following elements are never hyphenated: script, code, pre, img, br, samp, kbd, var, abbr, acronym, sub, sup, button, option, label, textarea)
+				</div>
+				</fieldset>
+				<fieldset>
+				<legend>Toggle Box</legend>
+					<p>Indicate how the Togglebox should be displayed:</p>
+					<p><label><input type="checkbox" id="displaytogglebox" name="displaytogglebox"> Display Toggle Box</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="togglebox_btn" class="info_btn" alt="Show-Info Button"></p>
+					<div id="togglebox_box" class="info_box">The standard togglebox is a small button in the upper right corner of the page. By clicking on it, the user can turn off/on hyphenation. This is useful for copying or searching text on the site.<br>
+					Since the standard togglebox may interfere with the design of your page, you can define it on your own.
+					</div>
+					<div id="togglebox_block">
+					<label><input type="radio" id="tbStandard" name="tbMethod" value="standard" checked> Standard: The standard togglebox is used.</label><br>
+					<label><input type="radio" id="tbCustom" name="tbMethod" value="custom"> Custom: A custom Toggle Box is used</label><br>
+					<div id="toggleboxfunction_block">
+					<label>Toggle Box Function:<br>
+					<textarea cols="80" rows="20" id="togglebox" name="togglebox">function (s) {
+	var myBox, bdy, myIdAttribute, myTextNode, myClassAttribute;
+	if (!!(myBox = contextWindow.document.getElementById('HyphenatorToggleBox'))) {
+		if (s) {
+			myBox.firstChild.data = 'Hy-phe-na-ti-on';
+		} else {
+			myBox.firstChild.data = 'Hyphenation';
+		}
+	} else {
+		bdy = contextWindow.document.getElementsByTagName('body')[0];
+		myBox = createElem('div');
+		myIdAttribute = contextWindow.document.createAttribute('id');
+		myIdAttribute.nodeValue = 'HyphenatorToggleBox';
+		myClassAttribute = contextWindow.document.createAttribute('class');
+		myClassAttribute.nodeValue = dontHyphenateClass;
+		myTextNode = contextWindow.document.createTextNode('Hy-phe-na-ti-on');
+		myBox.appendChild(myTextNode);
+		myBox.setAttributeNode(myIdAttribute);
+		myBox.setAttributeNode(myClassAttribute);
+		myBox.onclick =  Hyphenator.toggleHyphenation;
+		myBox.style.position = 'absolute';
+		myBox.style.top = '0px';
+		myBox.style.right = '0px';
+		myBox.style.margin = '0';
+		myBox.style.backgroundColor = '#AAAAAA';
+		myBox.style.color = '#FFFFFF';
+		myBox.style.font = '6pt Arial';
+		myBox.style.letterSpacing = '0.2em';
+		myBox.style.padding = '3px';
+		myBox.style.cursor = 'pointer';
+		myBox.style.WebkitBorderBottomLeftRadius = '4px';
+		myBox.style.MozBorderRadiusBottomleft = '4px';
+		bdy.appendChild(myBox);
+	}
+}</textarea>
+					</label></div>
+				</div>
+				</fieldset>
+				<fieldset>
+				<legend>Special Settings</legend>
+					<p>
+					<label><input type="checkbox" id="usecb" name="usecb"> Trigger callback function when hyphenation is done</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="callback_btn" class="info_btn" alt="Show-Info Button"></p>
+					<div id="onhyphenationdonecallback_block">
+					<label>onhyphenationdonecallback function:<br>
+					<textarea cols="80" rows="10" id="onhyphenationdonecallback" name="onhyphenationdonecallback">function () {
+
+}</textarea></label></div>
+					<div id="callback_box" class="info_box">This function is called, when hyphenation of a page is completed.</div>
+					<p>
+					<label><input type="checkbox" id="useer" name="useer"> Overwrite onerrorhandler</label> <img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="onerror_btn" class="info_btn" alt="Show-Info Button"></p>
+					<div id="onerrorhandler_block">
+					<label>onerrorhandler function:<br>
+					<textarea cols="80" rows="10" id="onerrorhandler" name="onerrorhandler">function(e){
+	alert("Hyphenator.js says:\n\nAn Error ocurred:\n"+e.message);
+}</textarea></label></div>
+				<div id="onerror_box" class="info_box">Most errors are catched and catched errors dipatch the onerror function. By default there's an alert with a predefined text. You can change this function.</div>
+				</fieldset>
+				<fieldset>
+				<legend>Minify</legend>
+				<p>By minifying the resulting script you can save some bandwith. This page uses the <a href="http://fmarcia.info/jsmin/">JavaScript-Version</a> of <a href="http://www.crockford.com/javascript/jsmin.html">jsmin</a> since it's easy to run on a webpage. You may achieve better results if you pack the resulting script with other minifiers/packers such as <a href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a> or <a href="http://closure-compiler.appspot.com/home">Google's Closure Compiler</a>.</p>
+				<p>
+					<label>
+						<input type="checkbox" id="pack" checked> pack with jsmin
+					</label>
+					<label>
+						Level
+						<select id="packlevel" size="1" title="packlevel">
+							<option value="1">1 - minimal</option>
+							<option value="2">2 - normal</option>
+							<option value="3" selected>3 - aggressive</option>
+						</select>
+					</label>
+				</p>
+				</fieldset>
+			</fieldset>
+			<p>
+			<input type="reset" value=" Reset! ">
+			<input id="create2" type="submit" value=" Create! ">
+			</p>
+		</form>
+		<hr>
+		<p class="hyphenate">Copy the merged and packed script from the output field as is to a new text-file give it a name (e.g. <code>"hyphenate.js"</code>) and include it in your website (<code>&lt;script src="hyphenate.js" type="text/javascript"&gt;&lt;/script&gt;</code>).<br>
+		It will run automatically.</p>
+		<p class="hyphenate">
+		Note: You are not allowed to remove the licensing at the beginning of the script!</p>
+		<p>
+		<label>Output:<br>
+		<a name="outanchor"></a>
+		<textarea id="output" name="output" cols="80" rows="20"> </textarea></label>
+		</p>
+    </body>
+</html>

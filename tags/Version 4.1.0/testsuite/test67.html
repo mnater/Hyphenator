@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
+   "http://www.w3.org/TR/html4/frameset.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 67</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var myServerPath = window.location.href.slice(0,-11) + '../';
+        	if (parent != window) {
+				window.onload = function () {
+					var t1, r1, t2, r2,
+					desc = frames.left.document.getElementById('desc').innerHTML,
+					msg = {
+						desc: desc,
+						index: 67
+					};
+					window.location.href = "javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src=myServerPath+'Hyphenator.js?bm=true&hyphenchar=|&useCSS3hyphenation=false');void(script.type='text/javascript');void(head.appendChild(script));}";
+					window.setTimeout(function () {
+						t1 = frames.left.document.getElementById('test').innerHTML;
+						r1 = frames.left.document.getElementById('ref').innerHTML;
+						t2 = frames.right.document.getElementById('test').innerHTML;
+						r2 = frames.right.document.getElementById('ref').innerHTML;
+						if ((t1 == r1) && (t2 == r2)) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}, 500);
+				};     	
+			}
+        </script>
+    </head>
+	<frameset cols="50%, 50%">
+		<frame src="files/test67_frame1.html" name="left">
+		<frame src="files/test67_frame2.html" name="right">
+	</frameset>
+</html>
