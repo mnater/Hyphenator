@@ -57,6 +57,8 @@ The values for the associated keys must be of the defined type:
 <tr><td>dohyphenation</td><td>boolean</td></tr>
 <tr><td>persistentconfig</td><td>boolean</td></tr>
 <tr><td>defaultlanguage</td><td>string</td></tr>
+<tr><td>useCSS3hyphenation</td><td>string</td></tr>
+<tr><td>unhide</td><td>string</td></tr>
 </table>
 
 For detailed description of each property see below.
