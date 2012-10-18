@@ -8,9 +8,11 @@
 
 == What about CSS3 hyphenation? ==
 There's work going on on standardizing hyphenation in CSS 3 ([http://www.w3.org/TR/css3-text/#hyphenation css3-text]).
-Safari (since Version 5.1 on Mac OS X Lion and since iOS Version 4.2) supports it, Firefox is presumably going to support it with Version 6 and will see how other browsers will do. The set of supported languages changes.
+Modern browsers already support CSS3 hyphenation for a different set of languages and support is growing.
 
 Since Version 4.0.0 Hyphenator.js respects those browsers and automatically activates css3-hyphenation if available. See [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_useCSS3hyphenation the manual] on how to enable this in Hyphenator.js.
+
+An even if all browsers will generally support hyphenation one day they will not support all languages Hyphenator.js can deal with actually… So Hyphenator.js will remain as a polyfill for this browsers.
 
 [#FAQ > Go to top]
 
