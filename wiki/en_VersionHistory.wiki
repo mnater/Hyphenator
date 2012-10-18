@@ -17,7 +17,7 @@ This minor release brings the following changes:
 Ans some bugfixes:
   * fixed issue with getComputedStyle for older Firefox (<4)
   * fixed issue158 (Not working when called after the document load, thanks to  davenewtron)
-  * fixed issue162 (Object #<Document> has no method 'getAttribute')
+  * fixed issue162 (Object Document has no method 'getAttribute')
   * fixed issue165 (words not cached)
   * fixed issue166 (added polish prompter string)
   * fixed issue148 (safe copy not working correctly with toggle box)
