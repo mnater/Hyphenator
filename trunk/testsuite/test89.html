@@ -49,14 +49,12 @@
 							t1 = document.getElementById('test' + i).offsetHeight;
 							t2 = document.getElementById('ref' + i).offsetHeight;
 							r = r && (t1 == t2);
-							console.log(t1, t2);
 						}
 						if (r) {
 							msg.result = 'passed';
 						} else {
 							msg.result = 'failed';
 						}
-						console.log(msg);
 						parent.postMessage(JSON.stringify(msg), window.location.href);
 					}
 				});     	
