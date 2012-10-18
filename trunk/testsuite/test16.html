@@ -47,8 +47,13 @@
         <p id="desc">Check Hyphenator with <a href="http://www.jslint.com/" target="_blank">JSLint</a>!</p>
 		<pre><script type="text/javascript">
 			JSLINT(loadScript());
-			var errors = JSLINT.errors, l = errors.length, i, globals = JSLINT.data().globals, lg = globals.length;
-			if (l > 0 || lg > 2) {
+			console.log(JSLINT.data());
+			var errors = JSLINT.errors, l = errors.length, i, globals = JSLINT.data().globals, lg = globals.length, unused, lu = 0;
+			if (JSLINT.data().unused) {
+				unused = JSLINT.data().unused;
+				lu = unused.length;
+			}
+			if (l > 0 || lg > 2 || lu > 0) {
 				if (window != parent) {
 					var msg = {
 						desc: "Make JSLint happy ;-)",
@@ -67,6 +72,9 @@
 							document.writeln("\n bad global:\n");
 							document.writeln("    " + globals[i]);
 						}
+					}
+					for (i = 0; i < lu; i++ ) {
+						document.writeln("    unused variable \'" + unused[i].name + "\' at line: " + unused[i].line + " in function: " + unused[i].function);
 					}
 				}
 			} else {
