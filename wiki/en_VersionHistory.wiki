@@ -1,8 +1,7 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-<wiki:comment>
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.1..0.zip 4.1.0] (October 15, 2012) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.1..0.zip 4.1.0] (October 18, 2012) ==
 This minor release brings the following changes:
 * bookmarklet uses CSS3hyphenation
 * updated jslint and made it happier
@@ -23,7 +22,6 @@ Ans some bugfixes:
 * fixed issue166 (added polish prompter string)
 * fixed issue148 (safe copy not working correctly with toggle box)
 * fixed an issue where words with apostrophes weren't treated correctly
-</wiki:comment>
 
 
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.0.0.zip 4.0.0] (August 05, 2011) ==
