@@ -623,15 +623,11 @@ var Hyphenator = (function (window) {
 					var k;
 					for (k in this.list) {
 						if (this.list.hasOwnProperty(k)) {
-							fn(k, this.list[k]);
-						}
-					}
-				},
-				eachValue: function (fn) {
-					var k;
-					for (k in this.list) {
-						if (this.list.hasOwnProperty(k)) {
-							fn(this.list[k]);
+							if (fn.length === 2) {
+								fn(k, this.list[k]);
+							} else {
+								fn(this.list[k]);
+							}
 						}
 					}
 				}
@@ -1903,7 +1899,7 @@ var Hyphenator = (function (window) {
 		 */
 		checkIfAllDone = function () {
 			var allDone = true, i;
-			elements.eachValue(function (ellist) {
+			elements.each(function (ellist) {
 				var i, l = ellist.length;
 				for (i = 0; i < l; i += 1) {
 					allDone = allDone && ellist[i].hyphenated;
@@ -2042,7 +2038,7 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		removeHyphenationFromDocument = function () {
-			elements.eachValue(function (ellist) {
+			elements.each(function (ellist) {
 				var i, l = ellist.length;
 				for (i = 0; i < l; i += 1) {
 					removeHyphenationFromElement(ellist[i].element);
