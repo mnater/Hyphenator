@@ -63,9 +63,7 @@ The number of properties to control hyphenation have been reduced to one single 
 || hyphenate-limit-lines || 1 || 1 || deferred to Level 4 || 0 ||
 || hyphenate-limit-last  || 1 || 1 || deferred to Level 4 || 0 ||
 
-
-
-
+So we are actually confronted with some sort of hyphenation, but we do not have any controls over the resulting layout (orphans, number of consecutive hyphenated lines etc.).
 
 = Mozilla Firefox =
 In Firefox 6, released in August 2011, support for hyphenation has started. The algorithm is implemented but only patterns for english are included [https://bugzilla.mozilla.org/show_bug.cgi?id=253317].
@@ -81,8 +79,6 @@ Due to licensing issues it is not yet clear if all languages from the TeX reposi
 Since CSS3 is a working draft you'll need to prepend a vendor prefix ('-moz-'). Setting the width of the paragraph is not necessary; it's just for testing.
 
 Firefox needs a hint for the language of the document (use the `lang`-tag). If a language is not supported, Firefox will not hyphenate.
-
-Other controls/properties are not yet supported.
 
 {{{
 <!DOCTYPE HTML>
