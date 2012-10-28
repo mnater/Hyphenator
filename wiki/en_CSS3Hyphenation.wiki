@@ -55,13 +55,17 @@ In short terms: to support hyphenation one will
 The number of properties to control hyphenation have been reduced to one single property (hyphens) over the last months:
 
 || property || [http://www.w3.org/TR/2011/WD-css3-text-20110412/ WD-css3-text-20110412] || [http://www.w3.org/TR/2011/WD-css3-text-20110901 WD-css3-text-20110901] || [http://www.w3.org/TR/2012/WD-css3-text-20120119/ WD-css3-text-20120119] || [http://dev.w3.org/csswg/css3-text/ latest WD] ||
-|| hyphens  || 1  || 1  || 1  || 1  ||
-|| hyphenate-resource/@hyphenate-resource  || 1  || removed  || 0  || 0  ||
-|| hyphenate-character  || 1  || 1  || deferred to Level 4  || 0  ||
-|| hyphenate-limit-zone  || 1  || 1  || deferred to Level 4  || 0  ||
-|| hyphenate-limit-chars  || 1  || 1  || deferred to Level 4  || 0  ||
-|| hyphenate-limit-lines  || 1  || 1  || deferred to Level 4  || 0  ||
-|| hyphenate-limit-last   || 1  || 1  || deferred to Level 4  || 0  ||
+|| hyphens || 1 || 1 (removed value 'all') || 1 || 1 ||
+|| hyphenate-resource/@hyphenate-resource || 1 || removed || 0 || 0 ||
+|| hyphenate-character || 1 || 1 || deferred to Level 4 || 0 ||
+|| hyphenate-limit-zone || 1 || 1 || deferred to Level 4 || 0 ||
+|| hyphenate-limit-chars || 1 || 1 || deferred to Level 4 || 0 ||
+|| hyphenate-limit-lines || 1 || 1 || deferred to Level 4 || 0 ||
+|| hyphenate-limit-last  || 1 || 1 || deferred to Level 4 || 0 ||
+
+
+
+
 
 = Mozilla Firefox =
 In Firefox 6, released in August 2011, support for hyphenation has started. The algorithm is implemented but only patterns for english are included [https://bugzilla.mozilla.org/show_bug.cgi?id=253317].
