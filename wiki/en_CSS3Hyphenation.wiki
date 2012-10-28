@@ -65,113 +65,75 @@ The number of properties to control hyphenation have been reduced to one single 
 
 So we are actually confronted with some sort of hyphenation, but we do not have any controls over the resulting layout (orphans, number of consecutive hyphenated lines etc.).
 
-= Mozilla Firefox =
+= Usage of the hyphens-property =
+
+== Firefox ==
 In Firefox 6, released in August 2011, support for hyphenation has started. The algorithm is implemented but only patterns for english are included [https://bugzilla.mozilla.org/show_bug.cgi?id=253317].
 
 Mozilla uses the [http://sourceforge.net/projects/hunspell/ Hunspell] library which includes an extended version of Liangs hyphenation algorithm. Hunspell includes the patterns for english which in turn are a derivate of the original TeX patterns.
 
 To include more languages in Mozilla Firefox the patterns from TeX have to be converted in the (slightly different) hunspell format. This has been done for a wide range of languages in Firefox 8 (released November 8, 2011) and some additional languages were added in Firefox 9 (December 20, 2011).
 
+The hyphenation patterns for the different languages are stored in the omni.ja-archive (that can be unzipped).
+
 Due to licensing issues it is not yet clear if all languages from the TeX repository will be included in Firefox.
 
-== Using CSS3 hyphenation in Firefox (>=6) ==
-
-Since CSS3 is a working draft you'll need to prepend a vendor prefix ('-moz-'). Setting the width of the paragraph is not necessary; it's just for testing.
-
-Firefox needs a hint for the language of the document (use the `lang`-tag). If a language is not supported, Firefox will not hyphenate.
-
-{{{
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>CSS3 Hyphenation</title>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <style type="text/css">
-			p {
-				width: 5em;
-				-moz-hyphens: auto;
-			}
-        </style>
-    </head>
-    <body>
-		<p lang="en">supercalifragilisticexpialidocious</p>
-		<p lang="es">supercalifragilisticexpialidocious</p>
-	</body>
-</html>
-}}}
-
-== Webkit Safari ==
-
+== Webkit/Safari ==
 Safari has a different approach: It uses a system service to hyphenate texts.
 
-*Lion (Mac OS X 10.7)*
+*Lion (Mac OS X 10.7) and Mountain Lion (10.8)*
 The patterns are located in `/System/Library/LinguisticData/`. There are patterns (binaries) for de, en_GB, en_US, es, fr, it, nl and ru.
 
 *Snow Leopard (Mac OS X 10.6)*
-Only English is supported: (/System/Library/Frameworks/AppKit.framework/Resources/English-Hyphenation.txt	)
+Only English is supported: (/System/Library/Frameworks/AppKit.framework/Resources/English-Hyphenation.txt)
 
-*iOS >= 4.2*
-Hyphenation in Safri on iOS is weird. It's activated with '-webkit-hyphens: atuto;', too. But it doesn't respect any language settings. Unfortunately all texts are hyphenated with the rules for the given system-language. So if your iPhone is set to German, all texts are hyphenated with German rules!
+*iOS Versions 4.2 to 5.1.1*
+Hyphenation in Safari on iOS (< iOS 6) is weird. It's activated with '-webkit-hyphens: auto;', too. But it doesn't respect any language settings. Unfortunately all texts are hyphenated with the rules for the given system-language. So if your iPhone is set to German, all texts are hyphenated with German rules!
 
-Due to that bug and because iOS is really a closed system, I actually can't figure out what languages iOS can hyphenate.
+Due to that bug and because iOS is really a closed system, I actually can't figure out what languages iOS (< iOS 6) can hyphenate.
 
-== Using CSS3 hyphenation in Safari (>=5.1) ==
+*iOS Version 6*
+In Webkit/Safari for iOS 6 the previous bugs have been fixed and it behaves like Safari on Desktop.
 
-Again you'll need to prepend a vendor-prefix ('-webkit').
-
-Further Safari doesn't respect the setting in the `lang`-tags. By default, texts are hyphenated with the rules of the system language. You can change this, though, with the `-webkit-locale`-property.
-
-Safari supports the property `hyphenate-character` which may be usefull in other scripts than latin.
-
-{{{
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>CSS3 Hyphenation</title>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <style type="text/css">
-			p {
-				width: 5em;
-				-webkit-hyphens: auto;
-				-webkit-hyphenate-character: '~';
-			}
-			p[lang='en'] {
-				-webkit-locale: 'en';
-			}
-			p[lang='es'] {
-				-webkit-locale: 'es';
-			}
-        </style>
-    </head>
-    <body>
-		<p lang="en">supercalifragilisticexpialidocious</p>
-		<p lang="es">supercalifragilisticexpialidocious</p>
-	</body>
-</html>
-}}}
-
-== Webkit Chrome ==
-Not yet supported.
+== Webkit/Chrome ==
+Chrome (as of Version 22) has a [http://code.google.com/p/chromium/issues/detail?id=47083 bug]. It implements '-webkit-hyphens' but doesn't hyphenate texts. It looks like the issue has been fixed and hyphenation support will come up with a future version.
 
 == Microsoft Internet Explorer ==
-Not yet supported.
+IE10 on Windows 8 (released Oct 26, 2012) supports hyphens for a distinctive set of languages.
+The pattern files (binaries) can be found in 'Windows\Globalisation\ELS…'.
 
 == Opera ==
 Not yet supported.
 
-= Compatibility Table = 
-|| *property* || *Firefox 6* || *Firefox 8/9* || *Safari 5.1 Snow Leopard* || *Safari 5.1 Lion* || *Safari iOS 4.3* || *Chrome 13* || *IE 9* || *Opera 11.5* ||
-|| languages || en || en, af, bg, ca, cy, da, de, eo, es, et, fi, fr, gl, hr, hsb, ia, is, kmr, la, lt, mn, nb, nl, nn, pt, ru, sl, sr-latn, sr-cyrl, sv, uk (growing list…) || en || de, en_GB, en_US, es, fr, it, nl, ru (-webkit-locale) || unclear || 0 || 0 || 0 ||
-|| hyphens: auto || -moz-hyphens || -moz-hyphens || -webkit-hyphens || -webkit-hyphens || -webkit-hyphens || 0 || 0 || 0 ||
-|| hyphens: manual || tbd || tbd || tbd || tbd || tbd || 0 || 0 || 0 ||
-|| hyphens: none || tbd || tbd || tbd || tbd || tbd || 0 || 0 || 0 ||
-|| precedence of conditional hyphen || tbd || tbd || tbd || tbd || tbd || 0 || 0 || 0 ||
-|| hyphenate-character || 0 || 0 || -webkit-hyphenate-character || -webkit-hyphenate-character  || -webkit-hyphenate-character || 0 || 0 || 0 ||
-|| hyphenate-limit-zone || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
-|| hyphenate-limit-chars || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
-|| hyphenate-limit-lines || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
-|| hyphenate-resources || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
-|| @hyphenate-resource || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 ||
+== Using CSS3 hyphenation ==
+Since CSS3 is a working draft you'll need to prepend vendor prefixes ('-webkit-', '-moz-', '-ms-') to the hyphens property.
 
-= How to check availability of patterns with JavaScript =
-I wrote a script that checks which languages the current browser supports: [http://hyphenator.googlecode.com/svn/dictChecker.html]
+Further, you'll have to provide the browsers with an information about the language of the text by setting the html-lang attribute
+
+{{{
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>CSS3 Hyphenation</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+			p {
+				width: 5em; /*just for testing purposes*/
+				-webkit-hyphens: auto;
+				-moz-hyphens: auto;
+				-ms-hyphens: auto;
+				hyphens: auto;
+			}
+        </style>
+    </head>
+    <body>
+		<p lang="en">supercalifragilisticexpialidocious</p>
+		<p lang="es">supercalifragilisticexpialidocious</p>
+	</body>
+</html>
+}}}
+
+= Supported languages =
+As noted above the user agents need hyphenation patterns for each language. While most of the actual browsers provide basic support for the hyphens-property, they do not support the same set of languages. Since 'hyphenate-resource/@hyphenate-resource' had been removed from CSS3 there's no way to add hyphenation support by the user.
+
+An automated testsuite and compatibility table can found here: [http://www.mnn.ch/hyphensChecker/index.php]
