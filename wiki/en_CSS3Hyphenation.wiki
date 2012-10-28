@@ -1,7 +1,7 @@
 #summary Round-up on how CSS3 hyphenation works in different browsers.
 
 = Introduction =
-_time-stamp: August 17, 2001_
+_time-stamp: October 28, 2012_
 
  "In justified text, there is always a trade-off between evenness of word spacing and frequency of hyphenation. Narrow measures – which prevent good justification – are commonly used when the text is set in multiple columns. Setting ragged right under these conditions will lighten the page and decrease its stiffness."
 
@@ -33,7 +33,7 @@ These solutions all have their drawbacks: it requires computing time and network
 
 *… and finally best solutions!*
 
-CSS3 defines some new properties to enable hyphenation by webbrowsers [http://www.w3.org/TR/css3-text/#hyphenation]. Since in most cases hyphenation is a question of style CSS is the right place to do it. Allthough there are rare cases where a missplaced hyphen changes the meaning of the word: e.g. Wach-stube (German for guardroom) vs. Wachs-tube (wax tube). In these rare cases hyphenation as to be done manually by the author.
+CSS3 defines some new properties to enable hyphenation by webbrowsers [http://www.w3.org/TR/css3-text/#hyphenation]. Since in most cases hyphenation is a question of style, CSS is the right place to do it. Allthough there are rare cases where a missplaced hyphen changes the meaning of the word: e.g. Wach-stube (German for guardroom) vs. Wachs-tube (wax tube). In these rare cases hyphenation as to be done manually by the author.
 
 CSS3 is still a working draft and support for CSS3-hyphenation is not yet widely deployed nor documented. First implementations came up in iOS 4.2 (Safari and iBooks on iPhone and iPad) late 2010 followed by Safari 5.1 and Firefox 6 (both mid 2011). Still the range of supported language is small but the issue is improving.
 
@@ -56,7 +56,7 @@ In Firefox 6, released in August 2011, support for hyphenation has started. The 
 
 Mozilla uses the [http://sourceforge.net/projects/hunspell/ Hunspell] library which includes an extended version of Liangs hyphenation algorithm. Hunspell includes the patterns for english which in turn are a derivate of the original TeX patterns.
 
-To include more languages in Mozilla Firefox the patterns from TeX have to be converted in the (slightly different) hunspell format. These packages are included in the nightly builds for Firefox 8 [http://nightly.mozilla.org/]. So we can hope that Firefox 8 will support a wider range of languages.
+To include more languages in Mozilla Firefox the patterns from TeX have to be converted in the (slightly different) hunspell format. This has been done for a wide range of languages in Firefox 8 (released November 8, 2011) and some additional languages were added in Firefox 9 (December 20, 2011).
 
 Due to licensing issues it is not yet clear if all languages from the TeX repository will be included in Firefox.
 
