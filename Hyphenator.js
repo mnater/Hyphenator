@@ -1473,9 +1473,9 @@ var Hyphenator = (function (window) {
 			}
 			if (!!storage) {
 				try {
-					storage.setItem('Hyphenator_' + lang, window.JSON.stringify(lo));
+					storage.setItem(lang, window.JSON.stringify(lo));
 				} catch (e) {
-					//onError(e);
+					onError(e);
 				}
 			}
 
@@ -1509,8 +1509,8 @@ var Hyphenator = (function (window) {
 			state = 1;
 			for (lang in docLanguages) {
 				if (docLanguages.hasOwnProperty(lang)) {
-					if (!!storage && storage.getItem('Hyphenator_' + lang)) {
-						Hyphenator.languages[lang] = window.JSON.parse(storage.getItem('Hyphenator_' + lang));
+					if (!!storage && storage.test(lang)) {
+						Hyphenator.languages[lang] = window.JSON.parse(storage.getItem(lang));
 						if (exceptions.hasOwnProperty('global')) {
 							tmp1 = convertExceptionsToObject(exceptions.global);
 							for (tmp2 in tmp1) {
@@ -2059,6 +2059,7 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		createStorage = function () {
+			var s;
 			try {
 				if (storageType !== 'none' &&
 						window.localStorage !== undefined &&
@@ -2067,18 +2068,36 @@ var Hyphenator = (function (window) {
 						window.JSON.parse !== undefined) {
 					switch (storageType) {
 					case 'session':
-						storage = window.sessionStorage;
+						s = window.sessionStorage;
 						break;
 					case 'local':
-						storage = window.localStorage;
+						s = window.localStorage;
 						break;
 					default:
-						storage = undefined;
+						s = undefined;
 						break;
 					}
 				}
 			} catch (f) {
 				//FF throws an error if DOM.storage.enabled is set to false
+			}
+			if (s) {
+				storage = {
+					prefix: 'Hyphenator_' + Hyphenator.version + '_',
+					store: s,
+					test: function (name) {
+						var val = this.store.getItem(this.prefix + name);
+						return (!!val) ? true : false;
+					},
+					getItem: function (name) {
+						return this.store.getItem(this.prefix + name);
+					},
+					setItem: function (name, value) {
+						this.store.setItem(this.prefix + name, value);
+					}
+				};
+			} else {
+				storage = undefined;
 			}
 		},
 
@@ -2115,7 +2134,7 @@ var Hyphenator = (function (window) {
 				'persistentconfig': persistentConfig,
 				'defaultlanguage': defaultLanguage
 			};
-			storage.setItem('Hyphenator_config', window.JSON.stringify(settings));
+			storage.setItem('config', window.JSON.stringify(settings));
 		},
 
 		/**
@@ -2126,8 +2145,8 @@ var Hyphenator = (function (window) {
 		 */
 		restoreConfiguration = function () {
 			var settings;
-			if (storage.getItem('Hyphenator_config')) {
-				settings = window.JSON.parse(storage.getItem('Hyphenator_config'));
+			if (storage.test('config')) {
+				settings = window.JSON.parse(storage.getItem('config'));
 				Hyphenator.config(settings);
 			}
 		};
