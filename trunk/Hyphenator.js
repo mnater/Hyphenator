@@ -807,11 +807,15 @@ var Hyphenator = (function (window) {
 					var sheet, rule, sheets = window.document.styleSheets, rules, i, j;
 					for (i = 0; i < sheets.length; i += 1) {
 						sheet = sheets[i];
-						if (!!sheet.cssRules) {
-							rules = sheet.cssRules;
-						} else if (!!sheet.rules) {
-							// IE < 9
-							rules = sheet.rules;
+						try { //FF has issues here with external CSS (s.o.p)
+							if (!!sheet.cssRules) {
+								rules = sheet.cssRules;
+							} else if (!!sheet.rules) {
+								// IE < 9
+								rules = sheet.rules;
+							}
+						} catch (e) {
+							//console.log(e);
 						}
 						if (!!rules && !!rules.length) {
 							for (j = 0; j < rules.length; j += 1) {
