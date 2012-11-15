@@ -22,7 +22,7 @@
         	if (parent != window) {
 				Hyphenator.config({
 					'onerrorhandler': function () {
-						var desc = 'Test nonexistent config-key.',
+						var desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
 							index: 51
