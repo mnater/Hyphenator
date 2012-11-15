@@ -2,7 +2,7 @@
     "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 98</title>
+        <title>Hyphenator.js &ndash; Test 99</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -27,40 +27,31 @@
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
-							index: 98
+							index: 99
 						};
-						if (t1 == t2) {
-							msg.result = 'passed';
-						} else {
-							msg.result = 'failed';
-						}
+						msg.result = 'visual';
 						parent.postMessage(JSON.stringify(msg), window.location.href);
 					}
 				});     	
 			}
 			Hyphenator.config({
-				hyphenchar:'|'
+				hyphenchar:'|',
+				storagetype: 'none',
+				selectorfunction: function () {
+					var el = [];
+					el.push(window.document.getElementById('test'));
+					return el;
+				}
 			});
 			Hyphenator.run();
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test97.html">&lt;- Prev</a> | <a href="test99.html">Next -&gt;</a></p>
-        <h1>Test 98</h1>
-        <p id="desc">Check compatibility with addthis.com</p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test98.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+        <h1>Test 99</h1>
+        <p id="desc">Check visibility with selector function</p>
 
-        <p id="test" class="hyphenate" lang="en">Hyphenation</p>
+        <p id="test" lang="en">Hyphenation</p>
         <p id="ref">Hy|phen|ation</p>
-        
-        <!-- AddThis Button BEGIN -->
-		<div class="addthis_toolbox addthis_default_style ">
-		<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-		<a class="addthis_button_tweet"></a>
-		<a class="addthis_button_pinterest_pinit"></a>
-		<a class="addthis_counter addthis_pill_style"></a>
-		</div>
-		<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-509fbb8a4b6f1f95"></script>
-		<!-- AddThis Button END -->
-		
     </body>
 </html>
