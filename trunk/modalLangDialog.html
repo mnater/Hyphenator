@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Hyphenator.js: select language</title>	
+	<script type="text/javascript">
+		
+		function getUALang () {
+			var ul = window.navigator.language || window.navigator.userLanguage;
+			ul = ul.substring(0, 2);
+			return ul;	
+		}
+		
+		function getMsgText (lang) {
+			var text, supportedLangs = window.dialogArguments;
+			if (!!supportedLangs[lang] && supportedLangs[lang].prompt !== '') {
+				text = supportedLangs[lang].prompt;
+			} else {
+				text = supportedLangs.en.prompt;
+			}
+			return text;
+		}
+		
+		function getLangBtns (ul) {
+			var supportedLangs = window.dialogArguments,
+				t = '';
+			for (lang in supportedLangs) {
+				if (supportedLangs.hasOwnProperty(lang)) {
+					if (lang === ul) {
+						t += '<option selected="selected">' + lang + '</option>';
+					} else {
+						t += '<option>' + lang + '</option>';
+					}
+				}
+			}
+			return t;
+		}
+		
+		window.onload = function () {
+			var msgOut = window.document.getElementById('msg'),
+				lngOut = window.document.getElementById('langsel'),
+				goBtn = window.document.getElementById('go');
+
+			msgOut.innerHTML = getMsgText(getUALang());
+
+			lngOut.innerHTML = getLangBtns(getUALang());
+			lngOut.onchange = function () {
+				window.returnValue = this.value;
+				window.close();
+			};
+			goBtn.onclick = function () {
+				window.returnValue = lngOut.value;
+				window.close();
+			};
+		};
+	</script>
+</head>
+<body>
+<h1>Hyphenator.js</h1>
+<p id="msg"></p>
+<select id="langsel" size="1"></select><span id="go" style="cursor:pointer;">&rarr;</span>
+</body>
+</html>
