@@ -1144,8 +1144,12 @@ var Hyphenator = (function (window) {
 				} else {
 					text = supportedLangs.en.prompt;
 				}
-				text += ' (ISO 639-1)\n\n' + languageHint;
-				mainLanguage = window.prompt(window.unescape(text), ul).toLowerCase();
+				if (!!window.showModalDialog) {
+					mainLanguage = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: 450px; dialogHeight: 300px; center: on; resizable: off; scroll: off;");
+				} else {
+					text += ' (ISO 639-1)\n\n' + languageHint;
+					mainLanguage = window.prompt(window.unescape(text), ul).toLowerCase();
+				}
 			}
 			if (!supportedLangs.hasOwnProperty(mainLanguage)) {
 				if (supportedLangs.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
