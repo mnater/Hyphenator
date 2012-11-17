@@ -273,7 +273,7 @@ You can change this behaviour in such a manner, that elements stay visible.
 ==== property `selectorfunction` ====
 This property is one of the most interesting, since it changes the way, Hyphenator.js selects the elements to be hyphenated.
 
-By default Hyphenator.js looks for all elements with classname='hyphenate'. If you declare a selector function, wich has to return a HTMLNodeList, you can hyphenate any arbitrary element your function returns.
+By default Hyphenator.js looks for all elements with classname='hyphenate'. If you declare a selector function, wich has to return a HTMLNodeList or an array of elements, you can hyphenate any arbitrary element your function returns.
 
 `selectorfunction` is really powerful, if it's used with a JavaScript-Framework like jQuery (see example), prototype or similar. These frameworks include functionalities to adress elements by special selectors.
 ===== Example 13 – defining `selectorfunction` =====
