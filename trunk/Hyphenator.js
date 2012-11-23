@@ -510,6 +510,21 @@ var Hyphenator = (function (window) {
 		hyphenateClass = 'hyphenate',
 
 		/**
+		 * @name Hyphenator-classPrefix
+		 * @description
+		 * A string containing a unique className prefix to be used
+		 * whenever Hyphenator sets a CSS-class
+		 * @type {string}
+		 * @private
+		 */
+		classPrefix = 'Hyphenator' + Math.round(Math.random() * 1000),
+		
+		hideClass = classPrefix + 'hide',
+		hideClassRegExp = new RegExp("\\s?\\b" + hideClass + "\\b", "g"),
+		unhideClass = classPrefix + 'unhide',
+		unhideClassRegExp = new RegExp("\\s?\\b" + unhideClass + "\\b", "g"),
+
+		/**
 		 * @name Hyphenator-dontHyphenateClass
 		 * @description
 		 * A string containing the css-class-name for elements that should not be hyphenated
@@ -733,13 +748,23 @@ var Hyphenator = (function (window) {
 		/**
 		 * @name Hyphenator-selectorFunction
 		 * @description
-		 * A function that has to return a HTMLNodeList of Elements to be hyphenated.
-		 * By default it uses the classname ('hyphenate') to select the elements.
+		 * A function set by the user that has to return a HTMLNodeList or array of Elements to be hyphenated.
+		 * By default this is set to false so we can check if a selectorFunction is set…
 		 * @see Hyphenator.config
 		 * @type {function()}
 		 * @private
 		 */
-		selectorFunction = function () {
+		selectorFunction = false,
+
+		/**
+		 * @name Hyphenator-mySelectorFunction
+		 * @description
+		 * A function that has to return a HTMLNodeList or array of Elements to be hyphenated.
+		 * By default it uses the classname ('hyphenate') to select the elements.
+		 * @type {function()}
+		 * @private
+		 */
+		mySelectorFunction = function () {
 			var tmp, el = [], i, l;
 			if (window.document.getElementsByClassName) {
 				el = contextWindow.document.getElementsByClassName(hyphenateClass);
@@ -755,6 +780,26 @@ var Hyphenator = (function (window) {
 				}
 			}
 			return el;
+		},
+
+		/**
+		 * @name Hyphenator-selectElements
+		 * @description
+		 * A function that has to return a HTMLNodeList or array of Elements to be hyphenated.
+		 * It uses either selectorFunction set by the user (and adds a unique class to each element)
+		 * or the default mySelectorFunction.
+		 * @type {function()}
+		 * @private
+		 */
+		selectElements = function () {
+			var elements, i = 0, el;
+			if (selectorFunction) {
+				elements = selectorFunction();
+			} else {
+				elements = mySelectorFunction();
+			}
+
+			return elements;
 		},
 
 		/**
@@ -1188,14 +1233,8 @@ var Hyphenator = (function (window) {
 						el.style[css3_h9n.property] = "auto";
 						el.style['-webkit-locale'] = "'" + lang + "'";
 					} else {
-						if (intermediateState === 'hidden' && unhide === 'progressive') {
-							if (!!el.getAttribute('style')) {
-								hyphenatorSettings.hasOwnStyle = true;
-							} else {
-								hyphenatorSettings.hasOwnStyle = false;
-							}
-							hyphenatorSettings.isHidden = true;
-							el.style.visibility = 'hidden';
+						if (intermediateState === 'hidden') {
+							el.className = el.className + ' ' + hideClass;
 						}
 						if (supportedLangs.hasOwnProperty(lang)) {
 							docLanguages[lang] = true;
@@ -1227,11 +1266,12 @@ var Hyphenator = (function (window) {
 				elToProcess = contextWindow.document.getElementsByTagName('body')[0];
 				process(elToProcess, mainLanguage);
 			} else {
-				if (!css3 && intermediateState === 'hidden' && unhide === 'wait') {
+				if (!css3 && intermediateState === 'hidden') {
 					CSSEditors.push(new CSSEdit(contextWindow));
-					CSSEditors[CSSEditors.length - 1].setRule('.' + hyphenateClass, 'visibility: hidden;');
+					CSSEditors[CSSEditors.length - 1].setRule('.' + hideClass, 'visibility: hidden;');
+					CSSEditors[CSSEditors.length - 1].setRule('.' + unhideClass, 'visibility: visible;');
 				}
-				elToProcess = selectorFunction();
+				elToProcess = selectElements();
 				tmp = elToProcess[i];
 				while (!!tmp) {
 					process(tmp, '');
@@ -1240,7 +1280,7 @@ var Hyphenator = (function (window) {
 				}
 			}
 			if (elements.count === 0) {
-				//nothing to hyphenate or all hyphenated b css3
+				//nothing to hyphenate or all hyphenated by css3
 				state = 3;
 				onHyphenationDone();
 			}
@@ -1994,8 +2034,14 @@ var Hyphenator = (function (window) {
 					n = el.childNodes[i];
 				}
 			}
-			if (hyphenatorSettings.isHidden && intermediateState === 'hidden' && unhide === 'progressive') {
-				unhideElement(elo);
+			if (intermediateState === 'hidden' && unhide === 'wait') {
+				el.className = el.className.replace(hideClassRegExp, '');
+				if (el.className === '') {
+					el.removeAttribute('class');
+				}
+			}
+			if (intermediateState === 'hidden' && unhide === 'progressive') {
+				el.className = el.className.replace(hideClassRegExp, unhideClass);
 			}
 			elo.hyphenated = true;
 			elements.hyCount += 1;
@@ -2133,7 +2179,7 @@ var Hyphenator = (function (window) {
 				'onhyphenationdonecallback': onHyphenationDone,
 				'onerrorhandler': onError,
 				'intermediatestate': intermediateState,
-				'selectorfunction': selectorFunction,
+				'selectorfunction': selectorFunction || mySelectorFunction,
 				'safecopy': safeCopy,
 				'doframes': doFrames,
 				'storagetype': storageType,
