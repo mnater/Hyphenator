@@ -518,7 +518,7 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		classPrefix = 'Hyphenator' + Math.round(Math.random() * 1000),
-		
+
 		hideClass = classPrefix + 'hide',
 		hideClassRegExp = new RegExp("\\s?\\b" + hideClass + "\\b", "g"),
 		unhideClass = classPrefix + 'unhide',
@@ -615,11 +615,10 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		elements = (function () {
-			var Element = function (element, data) {
+			var Element = function (element) {
 				this.element = element;
 				this.hyphenated = false;
 				this.treated = false; //collected but not hyphenated (dohyphenation is off)
-				this.data = data;
 			},
 				ElementCollection = function () {
 					this.count = 0;
@@ -627,11 +626,11 @@ var Hyphenator = (function (window) {
 					this.list = {};
 				};
 			ElementCollection.prototype = {
-				add: function (el, lang, data) {
+				add: function (el, lang) {
 					if (!this.list.hasOwnProperty(lang)) {
 						this.list[lang] = [];
 					}
-					this.list[lang].push(new Element(el, data));
+					this.list[lang].push(new Element(el));
 					this.count += 1;
 				},
 				each: function (fn) {
@@ -764,7 +763,7 @@ var Hyphenator = (function (window) {
 		 * @type {function()}
 		 * @private
 		 */
-		mySelectorFunction = function () {
+		mySelectorFunction = function (hyphenateClass) {
 			var tmp, el = [], i, l;
 			if (window.document.getElementsByClassName) {
 				el = contextWindow.document.getElementsByClassName(hyphenateClass);
@@ -792,11 +791,11 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		selectElements = function () {
-			var elements, i = 0, el;
+			var elements;
 			if (selectorFunction) {
 				elements = selectorFunction();
 			} else {
-				elements = mySelectorFunction();
+				elements = mySelectorFunction(hyphenateClass);
 			}
 
 			return elements;
@@ -1219,7 +1218,7 @@ var Hyphenator = (function (window) {
 		gatherDocumentInfos = function () {
 			var elToProcess, tmp, i = 0,
 				process = function (el, lang) {
-					var n, i = 0, hyphenatorSettings = {};
+					var n, i = 0;
 
 					if (el.lang && typeof (el.lang) === 'string') {
 						lang = el.lang.toLowerCase(); //copy attribute-lang to internal lang
@@ -1241,13 +1240,12 @@ var Hyphenator = (function (window) {
 						} else {
 							if (supportedLangs.hasOwnProperty(lang.split('-')[0])) { //try subtag
 								lang = lang.split('-')[0];
-								hyphenatorSettings.language = lang;
 								docLanguages[lang] = true;
 							} else if (!isBookmarklet) {
 								onError(new Error('Language ' + lang + ' is not yet supported.'));
 							}
 						}
-						elements.add(el, lang, hyphenatorSettings);
+						elements.add(el, lang);
 					}
 					n = el.childNodes[i];
 					while (!!n) {
@@ -1916,30 +1914,6 @@ var Hyphenator = (function (window) {
 		},
 
 		/**
-		 * @name Hyphenator-unhideElement
-		 * @description
-		 * Unhides an element and removes the visibility attr if set by hyphenator
-		 * @param Object The Element object from ElementCollection
-		 * @private
-		 */
-		unhideElement = function (elo) {
-			var el = elo.element,
-				hyphenatorSettings = elo.data;
-			el.style.visibility = 'visible';
-			elo.data.isHidden = false;
-			if (!hyphenatorSettings.hasOwnStyle) {
-				el.setAttribute('style', ''); // without this, removeAttribute doesn't work in Safari (thanks to molily)
-				el.removeAttribute('style');
-			} else {
-				if (el.style.removeProperty) {
-					el.style.removeProperty('visibility');
-				} else if (el.style.removeAttribute) { // IE
-					el.style.removeAttribute('visibility');
-				}
-			}
-		},
-
-		/**
 		 * @name Hyphenator-checkIfAllDone
 		 * @description
 		 * Checks if all Elements are hyphenated, unhides them and fires onHyphenationDone()
@@ -1954,6 +1928,18 @@ var Hyphenator = (function (window) {
 				}
 			});
 			if (allDone) {
+				if (intermediateState === 'hidden' && unhide === 'progressive') {
+					elements.each(function (ellist) {
+						var i, l = ellist.length, el;
+						for (i = 0; i < l; i += 1) {
+							el = ellist[i].element;
+							el.className = el.className.replace(unhideClassRegExp, '');
+							if (el.className === '') {
+								el.removeAttribute('class');
+							}
+						}
+					});
+				}
 				for (i = 0; i < CSSEditors.length; i += 1) {
 					CSSEditors[i].clearChanges();
 				}
@@ -1973,8 +1959,7 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		hyphenateElement = function (lang, elo) {
-			var hyphenatorSettings = elo.data,
-				el = elo.element,
+			var el = elo.element,
 				hyphenate,
 				n,
 				i,
@@ -2041,7 +2026,7 @@ var Hyphenator = (function (window) {
 				}
 			}
 			if (intermediateState === 'hidden' && unhide === 'progressive') {
-				el.className = el.className.replace(hideClassRegExp, unhideClass);
+				el.className = el.className.replace(hideClassRegExp, ' ' + unhideClass);
 			}
 			elo.hyphenated = true;
 			elements.hyCount += 1;
