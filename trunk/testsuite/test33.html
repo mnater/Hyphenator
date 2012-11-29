@@ -10,7 +10,7 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            #test {
+            #test1 {
             	background-color: #ffd6d6;
             }
             
@@ -44,9 +44,11 @@
     <body>
 		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test32.html">&lt;- Prev</a> | <a href="test34.html">Next -&gt;</a></p>
         <h1>Test 33</h1>
-        <p id="desc">Togglebox and CSS3hyphenation</p>
+        <p id="desc">CSS3hyphenation Tests: Togglebox and 'donthyphenateclass'</p>
 
-		<p id="test" class="hyphenate">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
-
+		<div id="test1" class="hyphenate">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.
+		<p id="test2" class="hyphenate" lang="de">Die Worttrennung, auch Silbentrennung genannt, bezeichnet in der Orthographie die Art und Weise, wie die Wörter insbesondere am Zeilenende getrennt werden können.</p>
+		<p id="test3" class="donthyphenate">Die Worttrennung, auch Silbentrennung genannt, bezeichnet in der Orthographie die Art und Weise, wie die Wörter insbesondere am Zeilenende getrennt werden können.</p>
+		</div>
     </body>
 </html>
