@@ -486,7 +486,7 @@ var Hyphenator = (function (window) {
 				r.checkLangSupport = createLangSupportChecker('-webkit-hyphens');
 			} else if (s.MozHyphens !== undefined) {
 				r.support = true;
-				r.property = 'MozHyphens';
+				r.property = '-moz-hyphens';
 				r.checkLangSupport = createLangSupportChecker('MozHyphens');
 			} else if (s['-ms-hyphens'] !== undefined) {
 				r.support = true;
@@ -524,6 +524,8 @@ var Hyphenator = (function (window) {
 		unhideClass = classPrefix + 'unhide',
 		unhideClassRegExp = new RegExp("\\s?\\b" + unhideClass + "\\b", "g"),
 
+		css3hyphenateClass = classPrefix + 'css3hyphenate',
+		css3hyphenateClassHandle,
 		/**
 		 * @name Hyphenator-dontHyphenateClass
 		 * @description
@@ -928,6 +930,8 @@ var Hyphenator = (function (window) {
 							changes.push({sheet: sheet, index: i});
 							// clear existing def
 							existingRule.rule.style.visibility = '';
+						} else {
+							addRule(sel, rulesString);
 						}
 					} else {
 						i = addRule(sel, rulesString);
@@ -1229,8 +1233,12 @@ var Hyphenator = (function (window) {
 					}
 					//if css3-hyphenation is supported: use it!
 					if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(lang)) {
-						el.style[css3_h9n.property] = "auto";
-						el.style['-webkit-locale'] = "'" + lang + "'";
+						css3hyphenateClassHandle =  new CSSEdit(contextWindow);
+						css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
+						css3hyphenateClassHandle.setRule('.' + dontHyphenateClass, css3_h9n.property + ': none;');
+						css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, '-webkit-locale : ' + lang + ';');
+
+						el.className = el.className + ' ' + css3hyphenateClass;
 					} else {
 						if (intermediateState === 'hidden') {
 							el.className = el.className + ' ' + hideClass;
@@ -1615,7 +1623,7 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		toggleBox = function () {
-			var bdy, myIdAttribute, myTextNode, myClassAttribute,
+			var bdy, myTextNode, /*myIdAttribute, myClassAttribute,*/
 				text = (Hyphenator.doHyphenation ? 'Hy-phen-a-tion' : 'Hyphenation'),
 				myBox = contextWindow.document.getElementById('HyphenatorToggleBox');
 			if (!!myBox) {
@@ -1623,14 +1631,18 @@ var Hyphenator = (function (window) {
 			} else {
 				bdy = contextWindow.document.getElementsByTagName('body')[0];
 				myBox = createElem('div', contextWindow);
-				myIdAttribute = contextWindow.document.createAttribute('id');
+				/*myIdAttribute = contextWindow.document.createAttribute('id');
 				myIdAttribute.nodeValue = 'HyphenatorToggleBox';
 				myClassAttribute = contextWindow.document.createAttribute('class');
-				myClassAttribute.nodeValue = dontHyphenateClass;
+				myClassAttribute.nodeValue = dontHyphenateClass;*/
+				//new:
+				myBox.setAttribute('id', 'HyphenatorToggleBox');
+				myBox.setAttribute('class', dontHyphenateClass);
+				//endnew
 				myTextNode = contextWindow.document.createTextNode(text);
 				myBox.appendChild(myTextNode);
-				myBox.setAttributeNode(myIdAttribute);
-				myBox.setAttributeNode(myClassAttribute);
+				//myBox.setAttributeNode(myIdAttribute);
+				//myBox.setAttributeNode(myClassAttribute);
 				myBox.onclick =  Hyphenator.toggleHyphenation;
 				myBox.style.position = 'absolute';
 				myBox.style.top = '0px';
@@ -1644,6 +1656,7 @@ var Hyphenator = (function (window) {
 				myBox.style.cursor = 'pointer';
 				myBox.style.WebkitBorderBottomLeftRadius = '4px';
 				myBox.style.MozBorderRadiusBottomleft = '4px';
+				myBox.style.borderBottomLeftRadius = '4px';
 				bdy.appendChild(myBox);
 			}
 		},
@@ -2628,11 +2641,17 @@ var Hyphenator = (function (window) {
          */
 		toggleHyphenation: function () {
 			if (Hyphenator.doHyphenation) {
+				if (!!css3hyphenateClassHandle) {
+					css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': none;');
+				}
 				removeHyphenationFromDocument();
 				Hyphenator.doHyphenation = false;
 				storeConfiguration();
 				toggleBox();
 			} else {
+				if (!!css3hyphenateClassHandle) {
+					css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
+				}
 				hyphenateLanguageElements('*');
 				Hyphenator.doHyphenation = true;
 				storeConfiguration();
