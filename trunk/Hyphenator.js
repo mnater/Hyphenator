@@ -1274,6 +1274,7 @@ var Hyphenator = (function (window) {
 			} else {
 				if (!css3 && intermediateState === 'hidden') {
 					CSSEditors.push(new CSSEdit(contextWindow));
+					CSSEditors[CSSEditors.length - 1].setRule('.' + hyphenateClass, 'visibility: hidden;');
 					CSSEditors[CSSEditors.length - 1].setRule('.' + hideClass, 'visibility: hidden;');
 					CSSEditors[CSSEditors.length - 1].setRule('.' + unhideClass, 'visibility: visible;');
 				}
@@ -1623,7 +1624,7 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		toggleBox = function () {
-			var bdy, myTextNode, /*myIdAttribute, myClassAttribute,*/
+			var bdy, myTextNode,
 				text = (Hyphenator.doHyphenation ? 'Hy-phen-a-tion' : 'Hyphenation'),
 				myBox = contextWindow.document.getElementById('HyphenatorToggleBox');
 			if (!!myBox) {
@@ -1631,18 +1632,10 @@ var Hyphenator = (function (window) {
 			} else {
 				bdy = contextWindow.document.getElementsByTagName('body')[0];
 				myBox = createElem('div', contextWindow);
-				/*myIdAttribute = contextWindow.document.createAttribute('id');
-				myIdAttribute.nodeValue = 'HyphenatorToggleBox';
-				myClassAttribute = contextWindow.document.createAttribute('class');
-				myClassAttribute.nodeValue = dontHyphenateClass;*/
-				//new:
 				myBox.setAttribute('id', 'HyphenatorToggleBox');
 				myBox.setAttribute('class', dontHyphenateClass);
-				//endnew
 				myTextNode = contextWindow.document.createTextNode(text);
 				myBox.appendChild(myTextNode);
-				//myBox.setAttributeNode(myIdAttribute);
-				//myBox.setAttributeNode(myClassAttribute);
 				myBox.onclick =  Hyphenator.toggleHyphenation;
 				myBox.style.position = 'absolute';
 				myBox.style.top = '0px';
