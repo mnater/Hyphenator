@@ -26,8 +26,8 @@
 				font: 6pt Arial;
 				letter-spacing: 0.2em;
 				padding: 3px;
+				border-bottom-left-radius: 4px;
 				-webkit-border-bottom-left-radius: 4px;
-				-moz-border-radius-bottomleft: 4px;
             }
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
@@ -77,28 +77,19 @@
 						myBoxWrapper = document.createElement('div');
 						
 						myBox = document.createElement('input');
-						id = document.createAttribute('id');
-						id.nodeValue = 'hyphenate';
-						type = document.createAttribute('type');
-						type.nodeValue = 'checkbox';
+						myBox.setAttribute('id', 'hyphenate');
+						myBox.setAttribute('type', 'checkbox');
 						
 						if (Hyphenator.doHyphenation) {
-							checked = document.createAttribute('checked');
-							checked.nodeValue = 'checked';
-							myBox.setAttributeNode(checked);
+							myBox.setAttribute('checked', 'checked');
 						}
 						
 						text = document.createTextNode('hyphenate!');
-						
-						myBox.setAttributeNode(id);
-						myBox.setAttributeNode(type);
-						
+												
 						myBoxWrapper.appendChild(myBox);
 						myBoxWrapper.appendChild(text);
 
-						classAttr = document.createAttribute('class');
-						classAttr.nodeValue = 'boxwrapper';
-						myBoxWrapper.setAttributeNode(classAttr);
+						myBoxWrapper.setAttribute('class', 'boxwrapper');
 						
 						myBox.onclick = Hyphenator.toggleHyphenation;
 						
