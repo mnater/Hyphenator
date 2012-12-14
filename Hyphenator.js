@@ -1154,9 +1154,30 @@ var Hyphenator = (function (window) {
 			var el = w.document.getElementsByTagName('html')[0],
 				m = w.document.getElementsByTagName('meta'),
 				i,
-				text,
 				e,
-				ul;
+				getLangFromUser = function () {
+					var mainLanguage,
+						text = '',
+						dH = 300,
+						dW = 450,
+						dX = Math.floor((w.outerWidth - dW) / 2) + window.screenX,
+						dY = Math.floor((w.outerHeight - dH) / 2) + window.screenY,
+						ul = '';
+					if (!!window.showModalDialog) {
+						mainLanguage = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: " + dW + "; dialogHeight: " + dH + "; dialogtop: " + dY + "; dialogleft: " + dX + "; center: on; resizable: off; scroll: off;");
+					} else {
+						ul = window.navigator.language || window.navigator.userLanguage;
+						ul = ul.substring(0, 2);
+						if (!!supportedLangs[ul] && supportedLangs[ul].prompt !== '') {
+							text = supportedLangs[ul].prompt;
+						} else {
+							text = supportedLangs.en.prompt;
+						}
+						text += ' (ISO 639-1)\n\n' + languageHint;
+						mainLanguage = window.prompt(window.unescape(text), ul).toLowerCase();
+					}
+					return mainLanguage;
+				};
 			mainLanguage = getLang(el, false);
 			if (!mainLanguage) {
 				for (i = 0; i < m.length; i += 1) {
@@ -1184,20 +1205,7 @@ var Hyphenator = (function (window) {
 			}
 			//ask user for lang
 			if (!mainLanguage) {
-				text = '';
-				ul = window.navigator.language || window.navigator.userLanguage;
-				ul = ul.substring(0, 2);
-				if (!!supportedLangs[ul] && supportedLangs[ul].prompt !== '') {
-					text = supportedLangs[ul].prompt;
-				} else {
-					text = supportedLangs.en.prompt;
-				}
-				if (!!window.showModalDialog) {
-					mainLanguage = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: 450px; dialogHeight: 300px; center: on; resizable: off; scroll: off;");
-				} else {
-					text += ' (ISO 639-1)\n\n' + languageHint;
-					mainLanguage = window.prompt(window.unescape(text), ul).toLowerCase();
-				}
+				mainLanguage = getLangFromUser();
 			}
 			if (!supportedLangs.hasOwnProperty(mainLanguage)) {
 				if (supportedLangs.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
