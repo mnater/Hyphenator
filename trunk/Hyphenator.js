@@ -519,13 +519,60 @@ var Hyphenator = (function (window) {
 		 */
 		classPrefix = 'Hyphenator' + Math.round(Math.random() * 1000),
 
+		/**
+		 * @name Hyphenator-hideClass
+		 * @description
+		 * The name of the class that hides elements
+		 * @type {string}
+		 * @private
+		 */
 		hideClass = classPrefix + 'hide',
+
+		/**
+		 * @name Hyphenator-hideClassRegExp
+		 * @description
+		 * RegExp to remove hideClass from a list of classes
+		 * @type {RegExp}
+		 * @private
+		 */
 		hideClassRegExp = new RegExp("\\s?\\b" + hideClass + "\\b", "g"),
+
+		/**
+		 * @name Hyphenator-hideClass
+		 * @description
+		 * The name of the class that unhides elements
+		 * @type {string}
+		 * @private
+		 */
 		unhideClass = classPrefix + 'unhide',
+
+		/**
+		 * @name Hyphenator-hideClassRegExp
+		 * @description
+		 * RegExp to remove unhideClass from a list of classes
+		 * @type {RegExp}
+		 * @private
+		 */
 		unhideClassRegExp = new RegExp("\\s?\\b" + unhideClass + "\\b", "g"),
 
+		/**
+		 * @name Hyphenator-css3hyphenateClass
+		 * @description
+		 * The name of the class that hyphenates elements with css3
+		 * @type {string}
+		 * @private
+		 */
 		css3hyphenateClass = classPrefix + 'css3hyphenate',
+
+		/**
+		 * @name Hyphenator-css3hyphenateClass
+		 * @description
+		 * The var where CSSEdit class is stored
+		 * @type {Object}
+		 * @private
+		 */
 		css3hyphenateClassHandle,
+
 		/**
 		 * @name Hyphenator-dontHyphenateClass
 		 * @description
