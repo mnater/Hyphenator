@@ -877,7 +877,30 @@ var Hyphenator = (function (window) {
 		CSSEdit = function (w) {
 			w = w || window;
 			var doc = w.document,
-				sheet = doc.styleSheets[doc.styleSheets.length - 1],
+				//find/create an accessible StyleSheet
+				sheet = (function () {
+					var i,
+						l = doc.styleSheets.length,
+						sheet,
+						element,
+						r = false;
+					for (i = 0; i < l; i += 1) {
+						sheet = doc.styleSheets[i];
+						try {
+							if (!!sheet.cssRules) {
+								r = sheet;
+								break;
+							}
+						} catch (e) {}
+					}
+					if (r === false) {
+						element = doc.createElement('style');
+						element.type = 'text/css';
+						doc.getElementsByTagName('head')[0].appendChild(element);
+						r = doc.styleSheets[doc.styleSheets.length - 1];
+					}
+					return r;
+				}()),
 				changes = [],
 				findRule = function (sel) {
 					var sheet, rule, sheets = window.document.styleSheets, rules, i, j;
@@ -891,6 +914,7 @@ var Hyphenator = (function (window) {
 								rules = sheet.rules;
 							}
 						} catch (e) {
+							//do nothing
 							//console.log(e);
 						}
 						if (!!rules && !!rules.length) {
