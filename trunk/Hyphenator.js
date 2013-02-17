@@ -159,26 +159,6 @@ var Hyphenator = (function (window) {
 			return r;
 		}()),
 
-		/**
-		 * @name Hyphenator-languageHint
-		 * @description
-		 * An automatically generated string to be displayed in a prompt if the language can't be guessed.
-		 * The string is generated using the supportedLangs-object.
-		 * @see Hyphenator-supportedLangs
-		 * @type {string}
-		 * @private
-		 * @see Hyphenator-autoSetMainLanguage
-		 */
-		languageHint = (function () {
-			var k, r = '';
-			for (k in supportedLangs) {
-				if (supportedLangs.hasOwnProperty(k)) {
-					r += k + ', ';
-				}
-			}
-			r = r.substring(0, r.length - 2);
-			return r;
-		}()),
 
 		/**
 		 * @name Hyphenator-basePath
@@ -619,14 +599,17 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		isBookmarklet = (function () {
-			var loc = null, re = false, jsArray = contextWindow.document.getElementsByTagName('script'), i, l;
-			for (i = 0, l = jsArray.length; i < l; i += 1) {
-				if (!!jsArray[i].getAttribute('src')) {
-					loc = jsArray[i].getAttribute('src');
-				}
+			var loc = null,
+				re = false,
+				scripts = contextWindow.document.getElementsByTagName('script'),
+				i = 0,
+				l = scripts.length;
+			while (!re && i < l) {
+				loc = scripts[i].getAttribute('src');
 				if (!!loc && loc.indexOf('Hyphenator.js?bm=true') !== -1) {
 					re = true;
 				}
+				i += 1;
 			}
 			return re;
 		}()),
@@ -1209,10 +1192,21 @@ var Hyphenator = (function (window) {
 						dW = 450,
 						dX = Math.floor((w.outerWidth - dW) / 2) + window.screenX,
 						dY = Math.floor((w.outerHeight - dH) / 2) + window.screenY,
-						ul = '';
+						ul = '',
+						languageHint;
 					if (!!window.showModalDialog) {
 						mainLanguage = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: " + dW + "; dialogHeight: " + dH + "; dialogtop: " + dY + "; dialogleft: " + dX + "; center: on; resizable: off; scroll: off;");
 					} else {
+						languageHint = (function () {
+							var k, r = '';
+							for (k in supportedLangs) {
+								if (supportedLangs.hasOwnProperty(k)) {
+									r += k + ', ';
+								}
+							}
+							r = r.substring(0, r.length - 2);
+							return r;
+						}());
 						ul = window.navigator.language || window.navigator.userLanguage;
 						ul = ul.substring(0, 2);
 						if (!!supportedLangs[ul] && supportedLangs[ul].prompt !== '') {
