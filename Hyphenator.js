@@ -767,6 +767,34 @@ var Hyphenator = (function (window) {
 		}()),
 
 		/**
+		 * @name Hyphenator-onBeforeWordHyphenation
+		 * @description
+		 * A method to be called for each word to be hyphenated before it is hyphenated.
+		 * Takes the word as a first parameter and its language as a second parameter.
+		 * Returns a string that will replace the word to be hyphenated.
+		 * @see Hyphenator.config
+		 * @type {function()}
+		 * @private
+		 */
+		onBeforeWordHyphenation = function (word) {
+			return word;
+		},
+
+		/**
+		 * @name Hyphenator-onAfterWordHyphenation
+		 * @description
+		 * A method to be called for each word to be hyphenated after it is hyphenated.
+		 * Takes the word as a first parameter and its language as a second parameter.
+		 * Returns a string that will replace the word that has been hyphenated.
+		 * @see Hyphenator.config
+		 * @type {function()}
+		 * @private
+		 */
+		onAfterWordHyphenation = function (word) {
+			return word;
+		},
+
+		/**
 		 * @name Hyphenator-onHyphenationDone
 		 * @description
 		 * A method to be called, when the last element has been hyphenated
@@ -1746,6 +1774,7 @@ var Hyphenator = (function (window) {
 				w, characters, origWord, originalCharacters, wordLength, i, j, k, node, points = [],
 				characterPoints = [], nodePoints, nodePointsLength, m = Math.max, trie,
 				result = [''], pattern, r;
+			word = onBeforeWordHyphenation(word, lang);
 			if (word === '') {
 				return '';
 			}
@@ -1828,6 +1857,7 @@ var Hyphenator = (function (window) {
 			/**
 			 * end of BSD licenced code from hypher.js
 			 */
+			r = onAfterWordHyphenation(r, lang);
 			if (enableCache) { //put the word in the cache
 				lo.cache[origWord] = r;
 			}
@@ -2250,7 +2280,11 @@ var Hyphenator = (function (window) {
 				'orphancontrol': orphanControl,
 				'dohyphenation': Hyphenator.doHyphenation,
 				'persistentconfig': persistentConfig,
-				'defaultlanguage': defaultLanguage
+				'defaultlanguage': defaultLanguage,
+				'useCSS3hyphenation': css3,
+				'unhide': unhide,
+				'onbeforewordhyphenation': onBeforeWordHyphenation,
+				'onafterwordhyphenation': onAfterWordHyphenation
 			};
 			storage.setItem('config', window.JSON.stringify(settings));
 		},
@@ -2497,6 +2531,16 @@ var Hyphenator = (function (window) {
 					case 'unhide':
 						if (assert('unhide', 'string')) {
 							unhide = obj[key];
+						}
+						break;
+					case 'onbeforewordhyphenation':
+						if (assert('onbeforewordhyphenation', 'function')) {
+							onBeforeWordHyphenation = obj[key];
+						}
+						break;
+					case 'onafterwordhyphenation':
+						if (assert('onafterwordhyphenation', 'function')) {
+							onAfterWordHyphenation = obj[key];
 						}
 						break;
 					default:
