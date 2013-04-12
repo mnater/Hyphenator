@@ -1237,7 +1237,6 @@ var Hyphenator = (function (window) {
 			var el = w.document.getElementsByTagName('html')[0],
 				m = w.document.getElementsByTagName('meta'),
 				i,
-				e,
 				getLangFromUser = function () {
 					var mainLanguage,
 						text = '',
@@ -1301,14 +1300,7 @@ var Hyphenator = (function (window) {
 			if (!mainLanguage) {
 				mainLanguage = getLangFromUser();
 			}
-			if (!supportedLangs.hasOwnProperty(mainLanguage)) {
-				if (supportedLangs.hasOwnProperty(mainLanguage.split('-')[0])) { //try subtag
-					mainLanguage = mainLanguage.split('-')[0];
-				} else {
-					e = new Error('The language "' + mainLanguage + '" is not yet supported.');
-					throw e;
-				}
-			}
+			el.lang = mainLanguage;
 		},
 
 		/**
@@ -1324,7 +1316,7 @@ var Hyphenator = (function (window) {
 		gatherDocumentInfos = function () {
 			var elToProcess, tmp, i = 0,
 				process = function (el, lang) {
-					var n, i = 0;
+					var n, i = 0, hyphenate = true;
 
 					if (el.lang && typeof (el.lang) === 'string') {
 						lang = el.lang.toLowerCase(); //copy attribute-lang to internal lang
@@ -1342,9 +1334,6 @@ var Hyphenator = (function (window) {
 
 						el.className = el.className + ' ' + css3hyphenateClass;
 					} else {
-						if (intermediateState === 'hidden') {
-							el.className = el.className + ' ' + hideClass;
-						}
 						if (supportedLangs.hasOwnProperty(lang)) {
 							docLanguages[lang] = true;
 						} else {
@@ -1352,10 +1341,16 @@ var Hyphenator = (function (window) {
 								lang = lang.split('-')[0];
 								docLanguages[lang] = true;
 							} else if (!isBookmarklet) {
-								onError(new Error('Language ' + lang + ' is not yet supported.'));
+								hyphenate = false;
+								onError(new Error('Language "' + lang + '" is not yet supported.'));
 							}
 						}
-						elements.add(el, lang);
+						if (hyphenate) {
+							if (intermediateState === 'hidden') {
+								el.className = el.className + ' ' + hideClass;
+							}
+							elements.add(el, lang);
+						}
 					}
 					n = el.childNodes[i];
 					while (!!n) {
@@ -1390,6 +1385,9 @@ var Hyphenator = (function (window) {
 			}
 			if (elements.count === 0) {
 				//nothing to hyphenate or all hyphenated by css3
+				for (i = 0; i < CSSEditors.length; i += 1) {
+					CSSEditors[i].clearChanges();
+				}
 				state = 3;
 				onHyphenationDone();
 			}
