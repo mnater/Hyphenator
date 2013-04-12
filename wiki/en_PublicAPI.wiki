@@ -437,7 +437,51 @@ Default: `unhide = 'wait'`
 </script>
 }}}
 ----
+<wiki:comment>
+==== property `onbeforewordhyphenation` ====
+*new in version 4.2.0*
+In some cases it is usefull to edit a word just before it is hyphenated. In this case you can define a function to change the word just before it is hyphenated.
+The function is called with two arguments:
+The first argument is the word to be hyphenated, the second argument is the language of the element.
+This function must return a string (aka the word).
+===== Example 22 – using `onbeforewordhyphenation` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+    Hyphenator.config({
+        'onbeforewordhyphenation': function (word, lang) {
+        	if (lang === 'de') {
+            	return word.replace(/ß/g, 'ss');
+            } else {
+            	return word;
+            }
+        }
+    });
+	Hyphenator.run();
+</script>
+}}}
+----
 
+==== property `onafterhyphenation` ====
+*new in version 4.2.0*
+In some cases it is usefull to edit a word after it is hyphenated. In this case you can define a function to change the word just after its hyphenation.
+The function is called with two arguments:
+The first argument is the hyphenated word, the second argument is the language of the element.
+This function must return a string (aka the word).
+===== Example 23 – using `onbeforewordhyphenation` =====
+{{{
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+    Hyphenator.config({
+        'onafterwordhyphenation': function (hword, lang) {
+        	console.log(lang + ': ' + hword.replace(new RegExp('&173;', 'g'), '-'));
+        }
+    });
+	Hyphenator.run();
+</script>
+}}}
+----
+</wiki:comment>
 === void Hyphenator.run() ===
 Calling this method invokes hyphenation.
 ==== Example ====
