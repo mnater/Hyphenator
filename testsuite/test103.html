@@ -2,7 +2,7 @@
     "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 102</title>
+        <title>Hyphenator.js &ndash; Test 103</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -27,7 +27,7 @@
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
-							index: 102
+							index: 103
 						};
 						if (t1 == t2) {
 							msg.result = 'passed';
@@ -40,22 +40,20 @@
 			}
 			Hyphenator.config({
 				hyphenchar:'|',
-				'onbeforewordhyphenation': function (word) {
-					return word.split('').reverse().join('');
-				},
 				'onafterwordhyphenation': function (word) {
-					return word.split('').reverse().join('');
+					word = word.replace(/-/g, String.fromCharCode(8209));
+					return word;
 				}
-				});
+			});
 			Hyphenator.run();
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test101.html">&lt;- Prev</a> | <a href="test103.html">Next -&gt;</a></p>
-        <h1>Test 102</h1>
-        <p id="desc">Usage of onbeforewordhyphenation and onafterwordhyphenation.</p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test102.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+        <h1>Test 103</h1>
+        <p id="desc">Usage of onbeforewordhyphenation to replace hyphens with non-breaking hyphens.</p>
 
-        <p id="test" class="hyphenate" lang="en">noitanehpyH</p>
-        <p id="ref">noita|nehp|yH</p>
+        <p id="test" class="hyphenate" lang="ro">m-a-ntrebat</p>
+        <p id="ref">m‑a‑ntre|bat</p>
     </body>
 </html>
