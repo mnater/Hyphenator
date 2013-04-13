@@ -44,6 +44,8 @@ The values for the associated keys must be of the defined type:
 <tr><td>defaultlanguage</td><td>string</td></tr>
 <tr><td>useCSS3hyphenation</td><td>string</td></tr>
 <tr><td>unhide</td><td>string</td></tr>
+<tr><td>onbeforewordhyphenation</td><td>string</td></tr>
+<tr><td>onafterwordhyphenation</td><td>string</td></tr>
 </table>
 
 For detailed description of each property see below.
