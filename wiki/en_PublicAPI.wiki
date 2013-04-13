@@ -12,22 +12,7 @@ Methods and fields that are accessible (public) are defined in the following.
 String that holds the version number.
 
 === languages ===
-Object that holds a key-value pairs, where key is the language and the value is the language-object loaded from (and set by) the pattern files.
-The language object holds the following members:
-<table>
-<tr><th>key</th><th>desc</th></tr>
-<tr><td>leftmin</td><td>The minimum of chars to remain on the old line</td></tr>
-<tr><td>rightmin</td><td>The minimum of chars to go on the new line</td></tr>
-<tr><td>shortestPattern</td><td>The shortes pattern (numbers don't count!)</td></tr>
-<tr><td>longestPattern</td><td>The longest pattern (numbers don't count!)</td></tr>
-<tr><td>specialChars</td><td>Non-ASCII chars in the alphabet.</td></tr>
-<tr><td>patterns</td><td>the patterns</td></tr>
-</table>
-
-And optionally (or after prepareLanguagesObj() has been called):
-<table>
-<tr><td>exceptions</td><td>Excpetions for the secified language</td></tr>
-</table>
+Object that holds a key-value pairs, where key is the language and the value is the language-object loaded from (and set by) the pattern files. See [http://code.google.com/p/hyphenator/wiki/en_PatternFilesFormat en_PatternFilesFormat] for details.
 
 == Methods ==
 === void Hyphenator.config(object settings) ===
