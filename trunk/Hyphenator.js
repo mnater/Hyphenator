@@ -1793,69 +1793,70 @@ var Hyphenator = (function (window) {
 				for (i = 0, l = parts.length; i < l; i += 1) {
 					parts[i] = hyphenateWord(lang, parts[i]);
 				}
-				return parts.join('-');
-			}
-			origWord = word;
-			w = word = '_' + word + '_';
-			if (!!lo.charSubstitution) {
-				for (subst in lo.charSubstitution) {
-					if (lo.charSubstitution.hasOwnProperty(subst)) {
-						w = w.replace(new RegExp(subst, 'g'), lo.charSubstitution[subst]);
+				r = parts.join('-');
+			} else {
+				origWord = word;
+				w = word = '_' + word + '_';
+				if (!!lo.charSubstitution) {
+					for (subst in lo.charSubstitution) {
+						if (lo.charSubstitution.hasOwnProperty(subst)) {
+							w = w.replace(new RegExp(subst, 'g'), lo.charSubstitution[subst]);
+						}
 					}
 				}
-			}
-			if (origWord.indexOf("'") !== -1) {
-				w = w.replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
-			}
-			/** @license BSD licenced code
-			 * The following code is based on code from hypher.js
-			 * Copyright (c) 2011, Bram Stein
-			 */
-			characters = w.toLowerCase().split('');
-			originalCharacters = word.split('');
-			wordLength = characters.length;
-			trie = lo.patterns;
-			for (i = 0; i < wordLength; i += 1) {
-				points[i] = 0;
-				characterPoints[i] = characters[i].charCodeAt(0);
-			}
-			for (i = 0; i < wordLength; i += 1) {
-				pattern = '';
-				node = trie;
-				for (j = i; j < wordLength; j += 1) {
-					node = node[characterPoints[j]];
-					if (node) {
-						if (enableReducedPatternSet) {
-							pattern += String.fromCharCode(characterPoints[j]);
-						}
-						nodePoints = node.tpoints;
-						if (nodePoints) {
+				if (origWord.indexOf("'") !== -1) {
+					w = w.replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
+				}
+				/** @license BSD licenced code
+				 * The following code is based on code from hypher.js
+				 * Copyright (c) 2011, Bram Stein
+				 */
+				characters = w.toLowerCase().split('');
+				originalCharacters = word.split('');
+				wordLength = characters.length;
+				trie = lo.patterns;
+				for (i = 0; i < wordLength; i += 1) {
+					points[i] = 0;
+					characterPoints[i] = characters[i].charCodeAt(0);
+				}
+				for (i = 0; i < wordLength; i += 1) {
+					pattern = '';
+					node = trie;
+					for (j = i; j < wordLength; j += 1) {
+						node = node[characterPoints[j]];
+						if (node) {
 							if (enableReducedPatternSet) {
-								if (!lo.redPatSet) {
-									lo.redPatSet = {};
+								pattern += String.fromCharCode(characterPoints[j]);
+							}
+							nodePoints = node.tpoints;
+							if (nodePoints) {
+								if (enableReducedPatternSet) {
+									if (!lo.redPatSet) {
+										lo.redPatSet = {};
+									}
+									lo.redPatSet[pattern] = recreatePattern(pattern, nodePoints);
 								}
-								lo.redPatSet[pattern] = recreatePattern(pattern, nodePoints);
+								for (k = 0, nodePointsLength = nodePoints.length; k < nodePointsLength; k += 1) {
+									points[i + k] = m(points[i + k], nodePoints[k]);
+								}
 							}
-							for (k = 0, nodePointsLength = nodePoints.length; k < nodePointsLength; k += 1) {
-								points[i + k] = m(points[i + k], nodePoints[k]);
-							}
+						} else {
+							break;
 						}
-					} else {
-						break;
 					}
 				}
-			}
-			for (i = 1; i < wordLength - 1; i += 1) {
-				if (i > lo.leftmin && i < (wordLength - lo.rightmin) && points[i] % 2) {
-					result.push(originalCharacters[i]);
-				} else {
-					result[result.length - 1] += originalCharacters[i];
+				for (i = 1; i < wordLength - 1; i += 1) {
+					if (i > lo.leftmin && i < (wordLength - lo.rightmin) && points[i] % 2) {
+						result.push(originalCharacters[i]);
+					} else {
+						result[result.length - 1] += originalCharacters[i];
+					}
 				}
+				r = result.join(hyphen);
+				/**
+				 * end of BSD licenced code from hypher.js
+				 */
 			}
-			r = result.join(hyphen);
-			/**
-			 * end of BSD licenced code from hypher.js
-			 */
 			r = onAfterWordHyphenation(r, lang);
 			if (enableCache) { //put the word in the cache
 				lo.cache[origWord] = r;
