@@ -173,19 +173,19 @@ var Hyphenator = (function (window) {
 		 * @see Hyphenator-loadPatterns
 		 */
 		basePath = (function () {
-			var s = contextWindow.document.getElementsByTagName('script'), i = 0, p, src, t = s[i];
+			var s = contextWindow.document.getElementsByTagName('script'), i = 0, p, src, t = s[i], r = '';
 			while (!!t) {
 				if (!!t.src) {
 					src = t.src;
 					p = src.indexOf('Hyphenator.js');
 					if (p !== -1) {
-						return src.substring(0, p);
+						r = src.substring(0, p);
 					}
 				}
 				i += 1;
 				t = s[i];
 			}
-			return 'http://hyphenator.googlecode.com/svn/trunk/';
+			return !!r ? r : 'http://hyphenator.googlecode.com/svn/trunk/';
 		}()),
 
 		/**
@@ -417,33 +417,32 @@ var Hyphenator = (function (window) {
 						f = function (lang) {
 							var shadow,
 								computedHeight,
-								bdy = window.document.getElementsByTagName('body')[0];
+								bdy = window.document.getElementsByTagName('body')[0],
+								r = false;
 
-							//create and append shadow-test-element
-							shadow = createElem('div', window);
-							shadow.id = 'Hyphenator_LanguageChecker';
-							shadow.style.width = '5em';
-							shadow.style[prefix] = 'auto';
-							shadow.style.hyphens = 'auto';
-							shadow.style.fontSize = '12px';
-							shadow.style.lineHeight = '12px';
-							shadow.style.visibility = 'hidden';
 							if (supportedLangs.hasOwnProperty(lang)) {
+								//create and append shadow-test-element
+								shadow = createElem('div', window);
+								shadow.id = 'Hyphenator_LanguageChecker';
+								shadow.style.width = '5em';
+								shadow.style[prefix] = 'auto';
+								shadow.style.hyphens = 'auto';
+								shadow.style.fontSize = '12px';
+								shadow.style.lineHeight = '12px';
+								shadow.style.visibility = 'hidden';
 								shadow.lang = lang;
 								shadow.style['-webkit-locale'] = "'" + lang + "'";
 								shadow.innerHTML = testStrings[supportedLangs[lang].script];
+								bdy.appendChild(shadow);
+								//measure its height
+								computedHeight = shadow.offsetHeight;
+								//remove shadow element
+								bdy.removeChild(shadow);
+								r = (computedHeight > 12) ? true : false;
 							} else {
-								return false;
+								r = false;
 							}
-							bdy.appendChild(shadow);
-
-							//measure its height
-							computedHeight = shadow.offsetHeight;
-
-							//remove shadow element
-							bdy.removeChild(shadow);
-
-							return (computedHeight > 12) ? true : false;
+							return r;
 						};
 					return f;
 				},
@@ -932,7 +931,7 @@ var Hyphenator = (function (window) {
 				}()),
 				changes = [],
 				findRule = function (sel) {
-					var sheet, rule, sheets = window.document.styleSheets, rules, i, j;
+					var sheet, rule, sheets = window.document.styleSheets, rules, i, j, r = false;
 					for (i = 0; i < sheets.length; i += 1) {
 						sheet = sheets[i];
 						try { //FF has issues here with external CSS (s.o.p)
@@ -950,7 +949,7 @@ var Hyphenator = (function (window) {
 							for (j = 0; j < rules.length; j += 1) {
 								rule = rules[j];
 								if (rule.selectorText === sel) {
-									return {
+									r = {
 										index: j,
 										rule: rule
 									};
@@ -958,7 +957,7 @@ var Hyphenator = (function (window) {
 							}
 						}
 					}
-					return false;
+					return r;
 				},
 				addRule = function (sel, rulesStr) {
 					var i, r;
@@ -1195,26 +1194,13 @@ var Hyphenator = (function (window) {
 		 * @private
 		 */
 		getLang = function (el, fallback) {
-			if (!!el.getAttribute('lang')) {
-				return el.getAttribute('lang').toLowerCase();
-			}
-			// The following doesn't work in IE due to a bug when getAttribute('xml:lang') in a table
-			/*if (!!el.getAttribute('xml:lang')) {
-				return el.getAttribute('xml:lang').substring(0, 2);
-			}*/
-			//instead, we have to do this (thanks to borgzor):
 			try {
-				if (!!el.getAttribute('xml:lang')) {
-					return el.getAttribute('xml:lang').toLowerCase();
-				}
-			} catch (ex) {}
-			if (el.tagName.toLowerCase() !== 'html') {
-				return getLang(el.parentNode, true);
-			}
-			if (fallback) {
-				return mainLanguage;
-			}
-			return null;
+				return !!el.getAttribute('lang') ? el.getAttribute('lang').toLowerCase() :
+						!!el.getAttribute('xml:lang') ? el.getAttribute('xml:lang').toLowerCase() :
+								el.tagName.toLowerCase() !== 'html' ? getLang(el.parentNode, fallback) :
+										fallback ? mainLanguage :
+												null;
+			} catch (e) {}
 		},
 
 		/**
@@ -1775,19 +1761,15 @@ var Hyphenator = (function (window) {
 				result = [''], pattern, r;
 			word = onBeforeWordHyphenation(word, lang);
 			if (word === '') {
-				return '';
-			}
-			if (word.indexOf(hyphen) !== -1) {
+				r = '';
+			} else if (enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
+				r = lo.cache[word];
+			} else if (word.indexOf(hyphen) !== -1) {
 				//word already contains shy; -> leave at it is!
-				return word;
-			}
-			if (enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
-				return lo.cache[word];
-			}
-			if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
-				return lo.exceptions[word].replace(/-/g, hyphen);
-			}
-			if (word.indexOf('-') !== -1) {
+				r = word;
+			} else if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
+				r = lo.exceptions[word].replace(/-/g, hyphen);
+			} else if (word.indexOf('-') !== -1) {
 				//word contains '-' -> hyphenate the parts separated with '-'
 				parts = word.split('-');
 				for (i = 0, l = parts.length; i < l; i += 1) {
