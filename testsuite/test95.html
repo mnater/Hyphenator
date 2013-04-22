@@ -13,7 +13,7 @@
             #test1, #test2 {
             	background-color: #ffd6d6;
             }
-            #ref1, #ref2 {
+            #ref1a, #ref1b, #ref2a, #ref2b {
             	background-color: #d6ffd6;
             }
             .hyphenate {
@@ -38,8 +38,9 @@
 					};
 					for (i = 1; i <= last; i++) {
 						t1 = document.getElementById('test' + i).innerHTML;
-						t2 = document.getElementById('ref' + i).innerHTML;
-						r = r && (t1 == t2);
+						t2a = document.getElementById('ref' + i + 'a').innerHTML;
+						t2b = document.getElementById('ref' + i + 'b').innerHTML;
+						r = r && (t1 == t2a || t1 == t2b);
 					}
 					if (r) {
 						msg.result = 'passed';
@@ -61,10 +62,12 @@
 
 		<h2>en</h2>
         <p id="test1" class="hyphenate" lang="en">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
-        <p id="ref1" lang="en" style="hyphens: auto; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; -webkit-locale: 'en'">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+        <p id="ref1a" lang="en" style="hyphens: auto; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; -webkit-locale: 'en'">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+        <p id="ref1b" lang="en">A hy&shy;phen&shy;ation al&shy;go&shy;rithm is a set of rules that de&shy;cides at which points a word can be bro&shy;ken over two lines with a hy&shy;phen.</p>
 
 		<h2>hy (Armenian)</h2>
         <p id="test2" class="hyphenate" lang="hy">Հայերենն ունի վեց ձայնավոր, մեկ կիսաձայն և երեսուն բաղաձայն հնչյուններ</p>
-		<p id="ref2" lang="hy">Հա&shy;յե&shy;րենն ունի վեց ձայնա&shy;վոր, մեկ կի&shy;սա&shy;ձայն և ե&shy;րե&shy;սուն բա&shy;ղա&shy;ձայն հնչյուններ</p>
+        <p id="ref2a" lang="en" style="hyphens: auto; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; -webkit-locale: 'en'">Հայերենն ունի վեց ձայնավոր, մեկ կիսաձայն և երեսուն բաղաձայն հնչյուններ</p>
+		<p id="ref2b" lang="hy">Հա&shy;յե&shy;րենն ունի վեց ձայնա&shy;վոր, մեկ կի&shy;սա&shy;ձայն և ե&shy;րե&shy;սուն բա&shy;ղա&shy;ձայն հնչյուններ</p>
     </body>
 </html>
