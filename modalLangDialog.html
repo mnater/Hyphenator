@@ -46,10 +46,6 @@
 			msgOut.appendChild(window.document.createTextNode(getMsgText(ul)));
 			populate(lngOut, ul);
 
-			lngOut.onchange = function () {
-				window.returnValue = this.value;
-				window.close();
-			};
 			goBtn.onclick = function () {
 				window.returnValue = lngOut.value;
 				window.close();
