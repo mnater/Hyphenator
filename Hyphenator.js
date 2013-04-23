@@ -1233,7 +1233,7 @@ var Hyphenator = (function (window) {
 						ul = '',
 						languageHint;
 					if (!!window.showModalDialog) {
-						mainLanguage = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: " + dW + "; dialogHeight: " + dH + "; dialogtop: " + dY + "; dialogleft: " + dX + "; center: on; resizable: off; scroll: off;");
+						mainLanguage = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: " + dW + "px; dialogHeight: " + dH + "px; dialogtop: " + dY + "; dialogleft: " + dX + "; center: on; resizable: off; scroll: off;");
 					} else {
 						languageHint = (function () {
 							var k, r = '';

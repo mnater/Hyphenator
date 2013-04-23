@@ -21,29 +21,31 @@
 			return text;
 		}
 		
-		function getLangBtns (ul) {
+		function populate (el, ul) {
 			var supportedLangs = window.dialogArguments,
-				t = '';
+			opEl;
+			console.log(supportedLangs);
 			for (lang in supportedLangs) {
 				if (supportedLangs.hasOwnProperty(lang)) {
+					opEl = window.document.createElement('option');
 					if (lang === ul) {
-						t += '<option selected="selected">' + lang + '</option>';
-					} else {
-						t += '<option>' + lang + '</option>';
+						opEl.setAttribute('selected', 'selected');
 					}
+					opEl.appendChild(window.document.createTextNode(lang));
+					el.appendChild(opEl);
 				}
 			}
-			return t;
 		}
 		
 		window.onload = function () {
 			var msgOut = window.document.getElementById('msg'),
 				lngOut = window.document.getElementById('langsel'),
-				goBtn = window.document.getElementById('go');
+				goBtn = window.document.getElementById('go'),
+				ul = getUALang();
+			
+			msgOut.appendChild(window.document.createTextNode(getMsgText(ul)));
+			populate(lngOut, ul);
 
-			msgOut.innerHTML = getMsgText(getUALang());
-
-			lngOut.innerHTML = getLangBtns(getUALang());
 			lngOut.onchange = function () {
 				window.returnValue = this.value;
 				window.close();
