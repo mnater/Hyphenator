@@ -54,7 +54,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
 	There are many interesting and useful settings you can change before you invoke the script. See [http://code.google.com/p/hyphenator/wiki/en_PublicAPI Documentation] for more details.
 
 === Example ===
-What could be better than a [http://hyphenator.googlecode.com/svn/trunk/WorkingExample.html working example]?
+What could be better than a [http://hyphenator.googlecode.com/svn/tags/Version%204.2.0/WorkingExample.html working example]?
 {{{
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
