@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 95</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test1, #test2 {
+            	background-color: #ffd6d6;
+            }
+            #ref1a, #ref1b, #ref2a, #ref2b {
+            	background-color: #d6ffd6;
+            }
+            .hyphenate {
+            	hyphens: auto;
+            	-ms-hyphens: auto;
+            	-moz-hyphens: auto;
+            	-webkit-hyphens: auto;
+            }
+        </style>
+        <script src="../Hyphenator_Loader.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			var
+				l = {'en':'Hyphenation', 'hy':'Հայերենն'},
+				c = {'safecopy': false, 'useCSS3hyphenation': true};
+			if (parent != window) {
+				c['onhyphenationdonecallback'] = function () {
+					var i, last = 2, t1, t2, r = true,
+					desc = document.getElementById('desc').firstChild.data,
+					msg = {
+						desc: desc,
+						index: 95
+					};
+					for (i = 1; i <= last; i++) {
+						t1 = document.getElementById('test' + i).innerHTML;
+						t2a = document.getElementById('ref' + i + 'a').innerHTML;
+						t2b = document.getElementById('ref' + i + 'b').innerHTML;
+						r = r && (t1 == t2a || t1 == t2b);
+					}
+					if (r) {
+						msg.result = 'passed';
+					} else {
+						msg.result = 'failed';
+					}
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				};
+				Hyphenator_Loader.init(l,c);
+			} else {
+				Hyphenator_Loader.init(l,c);
+			}
+        </script>
+    </head>
+    <body>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test94.html">&lt;- Prev</a> | <a href="test96.html">Next -&gt;</a></p>
+        <h1>Test 95</h1>
+        <p id="desc">Use Loader to load Hyphenator</p>
+
+		<h2>en</h2>
+        <p id="test1" class="hyphenate" lang="en">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+        <p id="ref1a" lang="en" style="hyphens: auto; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; -webkit-locale: 'en'">A hyphenation algorithm is a set of rules that decides at which points a word can be broken over two lines with a hyphen.</p>
+        <p id="ref1b" lang="en">A hy&shy;phen&shy;ation al&shy;go&shy;rithm is a set of rules that de&shy;cides at which points a word can be bro&shy;ken over two lines with a hy&shy;phen.</p>
+
+		<h2>hy (Armenian)</h2>
+        <p id="test2" class="hyphenate" lang="hy">Հայերենն ունի վեց ձայնավոր, մեկ կիսաձայն և երեսուն բաղաձայն հնչյուններ</p>
+        <p id="ref2a" lang="en" style="hyphens: auto; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; -webkit-locale: 'en'">Հայերենն ունի վեց ձայնավոր, մեկ կիսաձայն և երեսուն բաղաձայն հնչյուններ</p>
+		<p id="ref2b" lang="hy">Հա&shy;յե&shy;րենն ունի վեց ձայնա&shy;վոր, մեկ կի&shy;սա&shy;ձայն և ե&shy;րե&shy;սուն բա&shy;ղա&shy;ձայն հնչյուններ</p>
+    </body>
+</html>

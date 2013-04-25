@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 85</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 85,
+							result: 'visual'
+						};
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			
+			var hyphenatorSettings = {
+				hyphenchar: '|',
+				storagetype: 'none',
+				unhide: 'progressive'
+			};
+			Hyphenator.config(hyphenatorSettings);
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test83.html">&lt;- Prev</a> | <a href="test86.html">Next -&gt;</a></p>
+        <h1>Test 85</h1>
+        <p id="desc">Hyphenate and display text as soon as pattern is available. <span>Don't wait for other patterns to be loaded</span></p>
+
+        <p id="test" class="hyphenate">This text is english (english patterns are just 29kb), whereas the hungarian word <span lang="hu">magyar</span> requests a patternfile of 500kb…</p>
+        <p id="ref">This text is english only and could be displayed as soon as en-patterns are available.</p>
+        <p>Hint: throttle server and empty cache!!!</p>
+    </body>
+</html>
