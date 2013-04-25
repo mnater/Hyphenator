@@ -9,7 +9,7 @@ This minor release brings the following changes:
   * patterns stored in DOMStorage are now versioned (fixed issue169)
   * Hyphenator.js now uses a modalDialog to ask for languages if o language is defined (issue171)
   * there are two new functions that can be defined: onbeforewordhyphenation and onafterwordhyphenation
-Ans some bugfixes:
+And some bugfixes:
   * fixed issue when accessing external style sheets (fixed issue164)
   * togglebox works when elements are hyphenated by CSS (fixed issue168)
   * hyphenation now works for elements with a supported language on pages that have a unsupported main language (fixed issue177)
