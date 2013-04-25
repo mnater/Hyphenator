@@ -1,5 +1,5 @@
-/** @license Hyphenator X.Y.Z - client side hyphenation for webbrowsers
- *  Copyright (C) 2012  Mathias Nater, Zürich (mathias at mnn dot ch)
+/** @license Hyphenator 4.2.0 - client side hyphenation for webbrowsers
+ *  Copyright (C) 2013  Mathias Nater, Zürich (mathias at mnn dot ch)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
  *  This JavaScript code is free software: you can redistribute
@@ -64,7 +64,7 @@
  * @description Provides all functionality to do hyphenation, except the patterns that are loaded
  * externally.
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version X.Y.Z
+ * @version 4.2.0
  * @namespace Holds all methods and properties
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
@@ -2297,7 +2297,7 @@ var Hyphenator = (function (window) {
          * minor release: new languages, improvements
          * @public
          */
-        version: 'X.Y.Z',
+        version: '4.2.0',
 
         /**
          * @name Hyphenator.doHyphenation
