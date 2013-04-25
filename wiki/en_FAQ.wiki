@@ -38,11 +38,6 @@ This is fixed since version 3.0.0. Make sure that the option `safecopy` is set t
 
 [#FAQ > Go to top]
 
-== Hyphenator.js does NOT work in Firefox 2 ==
-Hyphenator.js infact works great in Firefox 2, but (apart from breaking urls) there's no effect since Firefox 2 does not support the soft hyphen (&shy;). If you can't be without, there's a script (external, no warranty and no support by me) that replaces the soft hyphens by spans in Firefox: [http://cheerleader.yoz.com/archives/000224.html].
-
-[#FAQ > Go to top]
-
 == I want to set a value for the minimum of letters that remain on the old line/come to the new line. ==
 In CSS3 are parameters hyphenate-before and hyphenate-before. These setting are made per language in the pattern files. You'll have to change them there.
 
