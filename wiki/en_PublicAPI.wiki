@@ -424,7 +424,7 @@ Default: `unhide = 'wait'`
 </script>
 }}}
 ----
-<wiki:comment>
+
 ==== property `onbeforewordhyphenation` ====
 *new in version 4.2.0*
 In some cases it is usefull to edit a word just before it is hyphenated. In this case you can define a function to change the word just before it is hyphenated.
@@ -468,7 +468,7 @@ This function must return a string (aka the word).
 </script>
 }}}
 ----
-</wiki:comment>
+
 === void Hyphenator.run() ===
 Calling this method invokes hyphenation.
 ==== Example ====
