@@ -1,8 +1,8 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-<wiki:comment>
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.2.0.zip 4.2.0] (April 14, 2013) ==
+
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.2.0.zip 4.2.0] (April 25, 2013) ==
 This minor release brings the following changes:
   * added support for Romanian (thanks to irragal)
   * hiding and unhiding of elements is now done by adding classes
@@ -14,7 +14,8 @@ Ans some bugfixes:
   * togglebox works when elements are hyphenated by CSS (fixed issue168)
   * hyphenation now works for elements with a supported language on pages that have a unsupported main language (fixed issue177)
   * elements now hide during hyphenation when using a selector function (fixed issue172)
-</wiki:comment>
+  * some general refactoring and code changes
+
 
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.1.0.zip 4.1.0] (October 18, 2012) ==
 This minor release brings the following changes:
