@@ -2755,9 +2755,9 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
   }
 
   var PROBLEMATIC_ATTRIBUTE_READING = (function() {
-    DIV.setAttribute('onclick', Prototype.emptyFunction);
+    DIV.setAttribute('onclick', []);
     var value = DIV.getAttribute('onclick');
-    var isFunction = (typeof value === 'function');
+    var isFunction = Object.isArray(value);
     DIV.removeAttribute('onclick');
     return isFunction;
   })();
