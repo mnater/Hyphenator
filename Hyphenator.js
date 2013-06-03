@@ -238,7 +238,7 @@ var Hyphenator = (function (window) {
          * @private
          * @see Hyphenator-hyphenateElement
          */
-        dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true, 'math': true, 'svg': true},
+        dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true, 'math': true, 'svg': true, 'style': true},
 
         /**
          * @name Hyphenator-enableCache
@@ -857,7 +857,6 @@ var Hyphenator = (function (window) {
             } else {
                 elements = mySelectorFunction(hyphenateClass);
             }
-
             return elements;
         },
 
@@ -931,7 +930,7 @@ var Hyphenator = (function (window) {
                 }()),
                 changes = [],
                 findRule = function (sel) {
-                    var sheet, rule, sheets = window.document.styleSheets, rules, i, j, r = false;
+                    var sheet, rule, sheets = w.document.styleSheets, rules, i, j, r = false;
                     for (i = 0; i < sheets.length; i += 1) {
                         sheet = sheets[i];
                         try { //FF has issues here with external CSS (s.o.p)
@@ -1067,7 +1066,7 @@ var Hyphenator = (function (window) {
         safeCopy = true,
 
         /*
-         * runOnContentLoaded is based od jQuery.bindReady()
+         * runWhenLoaded is based od jQuery.bindReady()
          * see
          * jQuery JavaScript Library v1.3.2
          * http://jquery.com/
@@ -1080,7 +1079,7 @@ var Hyphenator = (function (window) {
          * Revision: 6246
          */
         /**
-         * @name Hyphenator-runOnContentLoaded
+         * @name Hyphenator-runWhenLoaded
          * @description
          * A crossbrowser solution for the DOMContentLoaded-Event based on jQuery
          * <a href = "http://jquery.com/</a>
@@ -1089,7 +1088,7 @@ var Hyphenator = (function (window) {
          * @param {function()} f the function to call onDOMContentLoaded
          * @private
          */
-        runOnContentLoaded = function (w, f) {
+        runWhenLoaded = function (w, f) {
             var
                 toplevel, hyphRunForThis = {},
                 add = window.document.addEventListener ? 'addEventListener' : 'attachEvent',
@@ -1097,9 +1096,8 @@ var Hyphenator = (function (window) {
                 pre = window.document.addEventListener ? '' : 'on',
 
                 init = function (context) {
-                    contextWindow = context || window;
-                    if (!hyphRunForThis[contextWindow.location.href] && (!documentLoaded || !!contextWindow.frameElement)) {
-                        documentLoaded = true;
+                    if (!hyphRunForThis[context.location.href]) {
+                        contextWindow = context || window;
                         f();
                         hyphRunForThis[contextWindow.location.href] = true;
                     }
@@ -1109,77 +1107,72 @@ var Hyphenator = (function (window) {
                     try {
                         // If IE is used, use the trick by Diego Perini
                         // http://javascript.nwbox.com/IEContentLoaded/
-                        contextWindow.document.documentElement.doScroll("left");
+                        w.document.documentElement.doScroll("left");
                     } catch (error) {
                         window.setTimeout(doScrollCheck, 1);
                         return;
                     }
 
                     // and execute any waiting functions
-                    init(window);
+                    documentLoaded = true;
+                    init(w);
                 },
 
-                doOnLoad = function () {
-                    var i, haveAccess, fl = window.frames.length;
-                    if (doFrames && fl > 0) {
-                        for (i = 0; i < fl; i += 1) {
-                            haveAccess = undefined;
-                            //try catch isn't enough for webkit
-                            try {
-                                //opera throws only on document.toString-access
-                                haveAccess = window.frames[i].document.toString();
-                            } catch (e) {
+                doOnEvent = function (e) {
+                    var i, fl, haveAccess;
+                    if (!!e && e.type === 'readystatechange' && w.document.readyState !== 'interactive' && w.document.readyState !== 'complete') {
+                        return;
+                    }
+                    //DOM is ready/interactive, but frames may not be loaded yet!
+                    //cleanup events
+                    w.document[rem](pre + 'DOMContentLoaded', doOnEvent, false);
+                    w.document[rem](pre + 'readystatechange', doOnEvent, false);
+
+                    //check frames
+                    fl = w.frames.length;
+                    if (fl === 0) {
+                        //there are no frames!
+                        //cleanup events
+                        w[rem](pre + 'load', doOnEvent, false);
+                        documentLoaded = true;
+                    } else if (doFrames && fl > 0) {
+                        //we have frames, so wait for onload and then initiate runWhenLoaded recursevly for each frame:
+                        if (!!e && e.type === 'load') {
+                            //cleanup events
+                            w[rem](pre + 'load', doOnEvent, false);
+                            for (i = 0; i < fl; i += 1) {
                                 haveAccess = undefined;
-                            }
-                            if (!!haveAccess) {
-                                if (window.frames[i].location.href !== 'about:blank') {
-                                    init(window.frames[i]);
+                                //try catch isn't enough for webkit
+                                try {
+                                    //opera throws only on document.toString-access
+                                    haveAccess = window.frames[i].document.toString();
+                                } catch (err) {
+                                    haveAccess = undefined;
+                                }
+                                if (!!haveAccess) {
+                                    runWhenLoaded(w.frames[i], f);
                                 }
                             }
                         }
-                        contextWindow = window;
-                        f();
-                        hyphRunForThis[window.location.href] = true;
-                    } else {
-                        init(window);
                     }
-                },
-
-                // Cleanup functions for the document ready method
-                DOMContentLoaded = function (e) {
-                    if (e.type === 'readystatechange' && contextWindow.document.readyState !== 'complete') {
-                        return;
-                    }
-                    contextWindow.document[rem](pre + e.type, DOMContentLoaded, false);
-                    if (!doFrames && window.frames.length === 0) {
-                        init(window);
-                    } /* else {
-                        //we are in a frameset, so do nothing but wait for onload to fire
-                        
-                    }*/
+                    init(w);
                 };
-
-            if (documentLoaded && !hyphRunForThis[w.location.href]) {
-                f();
-                hyphRunForThis[w.location.href] = true;
-                return;
-            }
-
-            if (contextWindow.document.readyState === "complete" || contextWindow.document.readyState === "interactive") {
-                //Running Hyphenator.js if it has been loaded later
-                //Thanks to davenewtron http://code.google.com/p/hyphenator/issues/detail?id=158#c10
-                window.setTimeout(doOnLoad, 1);
+            if (documentLoaded || w.document.readyState === 'complete') {
+                //Hyphenator has run already (documentLoaded is true) or
+                //it has been loaded after onLoad
+                documentLoaded = true;
+                doOnEvent({type: 'load'});
             } else {
-                //registering events
-                contextWindow.document[add](pre + "DOMContentLoaded", DOMContentLoaded, false);
-                contextWindow.document[add](pre + 'readystatechange', DOMContentLoaded, false);
-                window[add](pre + 'load', doOnLoad, false);
+                //register events
+                w.document[add](pre + 'DOMContentLoaded', doOnEvent, false);
+                w.document[add](pre + 'readystatechange', doOnEvent, false);
+                w[add](pre + 'load', doOnEvent, false);
                 toplevel = false;
                 try {
                     toplevel = !window.frameElement;
                 } catch (e) {}
-                if (contextWindow.document.documentElement.doScroll && toplevel) {
-                    doScrollCheck();
+                if (toplevel && w.document.documentElement.doScroll) {
+                    doScrollCheck(); //calls init()
                 }
             }
         },
@@ -1647,7 +1640,6 @@ var Hyphenator = (function (window) {
                 return;
             }
             // get all languages that are used and preload the patterns
-            state = 1;
             for (lang in docLanguages) {
                 if (docLanguages.hasOwnProperty(lang)) {
                     if (!!storage && storage.test(lang)) {
@@ -2560,34 +2552,12 @@ var Hyphenator = (function (window) {
                 } catch (e) {
                     onError(e);
                 }
-            }, i, haveAccess, fl = window.frames.length;
+            };
 
             if (!storage) {
                 createStorage();
             }
-            if (!documentLoaded && !isBookmarklet) {
-                runOnContentLoaded(window, process);
-            }
-            if (isBookmarklet || documentLoaded) {
-                if (doFrames && fl > 0) {
-                    for (i = 0; i < fl; i += 1) {
-                        haveAccess = undefined;
-                        //try catch isn't enough for webkit
-                        try {
-                            //opera throws only on document.toString-access
-                            haveAccess = window.frames[i].document.toString();
-                        } catch (e) {
-                            haveAccess = undefined;
-                        }
-                        if (!!haveAccess) {
-                            contextWindow = window.frames[i];
-                            process();
-                        }
-                    }
-                }
-                contextWindow = window;
-                process();
-            }
+            runWhenLoaded(window, process);
         },
 
         /**
