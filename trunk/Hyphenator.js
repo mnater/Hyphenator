@@ -417,11 +417,15 @@ var Hyphenator = (function (window) {
                         f = function (lang) {
                             var shadow,
                                 computedHeight,
-                                bdy = window.document.getElementsByTagName('body')[0],
+                                bdy,
                                 r = false;
 
-                            if (supportedLangs.hasOwnProperty(lang)) {
+                            //check if lang has already been tested
+                            if (this.supportedBrowserLangs.hasOwnProperty(lang)) {
+                                r = this.supportedBrowserLangs[lang];
+                            } else if (supportedLangs.hasOwnProperty(lang)) {
                                 //create and append shadow-test-element
+                                bdy = window.document.getElementsByTagName('body')[0];
                                 shadow = createElem('div', window);
                                 shadow.id = 'Hyphenator_LanguageChecker';
                                 shadow.style.width = '5em';
@@ -439,6 +443,7 @@ var Hyphenator = (function (window) {
                                 //remove shadow element
                                 bdy.removeChild(shadow);
                                 r = (computedHeight > 12) ? true : false;
+                                this.supportedBrowserLangs[lang] = r;
                             } else {
                                 r = false;
                             }
@@ -448,12 +453,13 @@ var Hyphenator = (function (window) {
                 },
                 r = {
                     support: false,
+                    supportedBrowserLangs: {},
                     property: '',
                     checkLangSupport: function () {}
                 };
 
             if (window.getComputedStyle) {
-                s = contextWindow.getComputedStyle(contextWindow.document.getElementsByTagName('body')[0], null);
+                s = window.getComputedStyle(window.document.getElementsByTagName('body')[0], null);
             } else {
                 //ancient Browsers don't support CSS3 anyway
                 css3_h9n = r;
@@ -1294,48 +1300,105 @@ var Hyphenator = (function (window) {
          */
         gatherDocumentInfos = function () {
             var elToProcess, tmp, i = 0,
-                process = function (el, lang) {
-                    var n, i = 0, hyphenate = true;
+                process = function (el, pLang, isChild) {
+                    //el is the element processed
+                    //pLang is the language of the parent element
+                    //isChild is true, if the parent of el has been processed
+
+                    isChild = isChild || false;
+                    var n, i = 0, hyphenate = true, eLang,
+                        useCSS3 = function () {
+                            css3hyphenateClassHandle =  new CSSEdit(contextWindow);
+                            css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
+                            css3hyphenateClassHandle.setRule('.' + dontHyphenateClass, css3_h9n.property + ': manual;');
+                            if ((eLang !== pLang) && css3_h9n.property.indexOf('webkit') !== -1) {
+                                css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, '-webkit-locale : ' + eLang + ';');
+                            }
+                            el.className = el.className + ' ' + css3hyphenateClass;
+                        },
+                        useHyphenator = function() {
+                            if (supportedLangs.hasOwnProperty(eLang)) {
+                                docLanguages[eLang] = true;
+                            } else {
+                                if (supportedLangs.hasOwnProperty(eLang.split('-')[0])) { //try subtag
+                                    eLang = eLang.split('-')[0];
+                                    docLanguages[eLang] = true;
+                                } else if (!isBookmarklet) {
+                                    hyphenate = false;
+                                    onError(new Error('Language "' + eLang + '" is not yet supported.'));
+                                }
+                            }
+                            if (hyphenate) {
+                                if (intermediateState === 'hidden') {
+                                    el.className = el.className + ' ' + hideClass;
+                                }
+                                elements.add(el, eLang);
+                            }
+                        };
 
                     if (el.lang && typeof (el.lang) === 'string') {
-                        lang = el.lang.toLowerCase(); //copy attribute-lang to internal lang
-                    } else if (lang) {
-                        lang = lang.toLowerCase();
+                        eLang = el.lang.toLowerCase(); //copy attribute-lang to internal eLang
+                    } else if (!!pLang && pLang !== '') {
+                        eLang = pLang.toLowerCase();
                     } else {
-                        lang = getLang(el, true);
+                        eLang = getLang(el, true);
+                    }
+
+                    if (!isChild) {
+                        if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(eLang)) {
+                            useCSS3();
+                        } else {
+                            useHyphenator();
+                        }
+                    } else {
+                        if (eLang !== pLang) {
+                            if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(eLang)) {
+                                useCSS3();
+                            } else {
+                                useHyphenator();
+                            }
+                        } else {
+                            if (!css3 || !css3_h9n.checkLangSupport(eLang)) {
+                                useHyphenator();
+                            } // else do nothing
+                        }
                     }
                     //if css3-hyphenation is supported: use it!
-                    if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(lang)) {
-                        css3hyphenateClassHandle =  new CSSEdit(contextWindow);
-                        css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
-                        css3hyphenateClassHandle.setRule('.' + dontHyphenateClass, css3_h9n.property + ': none;');
-                        css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, '-webkit-locale : ' + lang + ';');
-
-                        el.className = el.className + ' ' + css3hyphenateClass;
+                    /*if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(eLang)) {
+                        if (!isChild) {
+                            css3hyphenateClassHandle =  new CSSEdit(contextWindow);
+                            css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
+                            css3hyphenateClassHandle.setRule('.' + dontHyphenateClass, css3_h9n.property + ': manual;');
+                            if ((eLang !== pLang) && css3_h9n.property.indexOf('webkit') !== -1) {
+                                css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, '-webkit-locale : ' + eLang + ';');
+                            }
+                            el.className = el.className + ' ' + css3hyphenateClass;
+                        }
                     } else {
-                        if (supportedLangs.hasOwnProperty(lang)) {
-                            docLanguages[lang] = true;
+                        //else register element for hyphenation by Hyphenator
+                        if (supportedLangs.hasOwnProperty(eLang)) {
+                            docLanguages[eLang] = true;
                         } else {
-                            if (supportedLangs.hasOwnProperty(lang.split('-')[0])) { //try subtag
-                                lang = lang.split('-')[0];
-                                docLanguages[lang] = true;
+                            if (supportedLangs.hasOwnProperty(eLang.split('-')[0])) { //try subtag
+                                eLang = eLang.split('-')[0];
+                                docLanguages[eLang] = true;
                             } else if (!isBookmarklet) {
                                 hyphenate = false;
-                                onError(new Error('Language "' + lang + '" is not yet supported.'));
+                                onError(new Error('Language "' + eLang + '" is not yet supported.'));
                             }
                         }
                         if (hyphenate) {
                             if (intermediateState === 'hidden') {
                                 el.className = el.className + ' ' + hideClass;
                             }
-                            elements.add(el, lang);
+                            elements.add(el, eLang);
                         }
-                    }
+                    }*/
                     n = el.childNodes[i];
                     while (!!n) {
                         if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
                                 n.className.indexOf(dontHyphenateClass) === -1 && !elToProcess[n]) {
-                            process(n, lang);
+                            process(n, eLang, true);
                         }
                         i += 1;
                         n = el.childNodes[i];
@@ -1346,7 +1409,7 @@ var Hyphenator = (function (window) {
             }
             if (isBookmarklet) {
                 elToProcess = contextWindow.document.getElementsByTagName('body')[0];
-                process(elToProcess, mainLanguage);
+                process(elToProcess, mainLanguage, false);
             } else {
                 if (!css3 && intermediateState === 'hidden') {
                     CSSEditors.push(new CSSEdit(contextWindow));
@@ -1357,7 +1420,7 @@ var Hyphenator = (function (window) {
                 elToProcess = selectElements();
                 tmp = elToProcess[i];
                 while (!!tmp) {
-                    process(tmp, '');
+                    process(tmp, '', false);
                     i += 1;
                     tmp = elToProcess[i];
                 }
