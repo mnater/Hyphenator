@@ -2262,9 +2262,13 @@ var Hyphenator = (function (window) {
                         s = undefined;
                         break;
                     }
+                    //check for private mode
+                    s.setItem('storageTest', '1');
+                    s.removeItem('storageTest');
                 }
             } catch (f) {
                 //FF throws an error if DOM.storage.enabled is set to false
+                s = undefined;
             }
             if (s) {
                 storage = {
