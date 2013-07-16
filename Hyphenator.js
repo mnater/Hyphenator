@@ -68,9 +68,9 @@
  * @namespace Holds all methods and properties
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
- * &lt;script type = "text/javascript"&gt;
- *   Hyphenator.run();
- * &lt;/script&gt;
+ * &lt;script type = "text/javascript"&gt;
+ *   Hyphenator.run();
+ * &lt;/script&gt;
  */
 var Hyphenator = (function (window) {
     'use strict';
@@ -2156,12 +2156,7 @@ var Hyphenator = (function (window) {
                 n = el.childNodes[i];
                 while (!!n) {
                     if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-                        //TODO: performance test, adding urlhyphenateclassname
-                        if (!!n.parentNode.className && n.parentNode.className.indexOf('urlhyphenate') !== -1) {
-                            n.data = hyphenateURL(n.data);
-                        } else {
-                            n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
-                        }
+                        n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
                         if (orphanControl !== 1) {
                             n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
                         }
