@@ -1620,6 +1620,7 @@ var Hyphenator = (function (window) {
                 script = createElem('script', window);
                 script.src = url;
                 script.type = 'text/javascript';
+                script.charset = 'utf8';
                 head.appendChild(script);
             }
         },
