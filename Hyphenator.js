@@ -803,7 +803,8 @@ var Hyphenator = (function (window) {
         /**
          * @name Hyphenator-onHyphenationDone
          * @description
-         * A method to be called, when the last element has been hyphenated
+         * A method to be called, when the last element has been hyphenated.
+         * If there are frames the method is called for each frame.
          * @see Hyphenator.config
          * @type {function()}
          * @private
@@ -1363,37 +1364,6 @@ var Hyphenator = (function (window) {
                             } // else do nothing
                         }
                     }
-                    //if css3-hyphenation is supported: use it!
-                    /*if (css3 && css3_h9n.support && !!css3_h9n.checkLangSupport(eLang)) {
-                        if (!isChild) {
-                            css3hyphenateClassHandle =  new CSSEdit(contextWindow);
-                            css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
-                            css3hyphenateClassHandle.setRule('.' + dontHyphenateClass, css3_h9n.property + ': manual;');
-                            if ((eLang !== pLang) && css3_h9n.property.indexOf('webkit') !== -1) {
-                                css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, '-webkit-locale : ' + eLang + ';');
-                            }
-                            el.className = el.className + ' ' + css3hyphenateClass;
-                        }
-                    } else {
-                        //else register element for hyphenation by Hyphenator
-                        if (supportedLangs.hasOwnProperty(eLang)) {
-                            docLanguages[eLang] = true;
-                        } else {
-                            if (supportedLangs.hasOwnProperty(eLang.split('-')[0])) { //try subtag
-                                eLang = eLang.split('-')[0];
-                                docLanguages[eLang] = true;
-                            } else if (!isBookmarklet) {
-                                hyphenate = false;
-                                onError(new Error('Language "' + eLang + '" is not yet supported.'));
-                            }
-                        }
-                        if (hyphenate) {
-                            if (intermediateState === 'hidden') {
-                                el.className = el.className + ' ' + hideClass;
-                            }
-                            elements.add(el, eLang);
-                        }
-                    }*/
                     n = el.childNodes[i];
                     while (!!n) {
                         if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
@@ -1431,7 +1401,7 @@ var Hyphenator = (function (window) {
                     CSSEditors[i].clearChanges();
                 }
                 state = 3;
-                onHyphenationDone();
+                onHyphenationDone(contextWindow.location.href);
             }
         },
 
@@ -2091,7 +2061,7 @@ var Hyphenator = (function (window) {
                     CSSEditors[i].clearChanges();
                 }
                 state = 3;
-                onHyphenationDone();
+                onHyphenationDone(contextWindow.location.href);
             }
         },
 
