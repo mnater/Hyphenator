@@ -1316,7 +1316,7 @@ var Hyphenator = (function (window) {
                             }
                             el.className = el.className + ' ' + css3hyphenateClass;
                         },
-                        useHyphenator = function() {
+                        useHyphenator = function () {
                             if (supportedLangs.hasOwnProperty(eLang)) {
                                 docLanguages[eLang] = true;
                             } else {
@@ -2156,7 +2156,12 @@ var Hyphenator = (function (window) {
                 n = el.childNodes[i];
                 while (!!n) {
                     if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-                        n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+                        //TODO: performance test, adding urlhyphenateclassname
+                        if (!!n.parentNode.className && n.parentNode.className.indexOf('urlhyphenate') !== -1) {
+                            n.data = hyphenateURL(n.data);
+                        } else {
+                            n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+                        }
                         if (orphanControl !== 1) {
                             n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
                         }
