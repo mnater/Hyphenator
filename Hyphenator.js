@@ -2714,7 +2714,7 @@ var Hyphenator = (function (window) {
         },
 
         getConfigFromURI: function () {
-            /****jslint evil: true*/
+            /*jslint evil: true*/
             var loc = null, re = {}, jsArray = contextWindow.document.getElementsByTagName('script'), i, j, l, s, gp, option;
             for (i = 0, l = jsArray.length; i < l; i += 1) {
                 if (!!jsArray[i].getAttribute('src')) {
