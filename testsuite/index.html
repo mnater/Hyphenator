@@ -64,16 +64,18 @@
         </ul>
         <iframe id="testframe" src="#"></iframe>
         <script type="text/javascript">
-              //clear Storage
-              if (window.localStorage) {
-                  window.localStorage.clear();
-              }
-              if (window.sessionStorage) {
-                  window.sessionStorage.clear();
-              }
+            //clear Storage
+            /*jslint browser:true*/
+            'use strict';
+            if (window.localStorage) {
+                window.localStorage.clear();
+            }
+            if (window.sessionStorage) {
+                window.sessionStorage.clear();
+            }
             var tests = [
                 {exec: false, path: 'test0.html'}, //dont exec!
-                {exec: true, path: 'test1.html'}, 
+                {exec: true, path: 'test1.html'},
                 {exec: true, path: 'test2.html'},
                 {exec: true, path: 'test3.html'},
                 {exec: true, path: 'test4.html'},
@@ -179,11 +181,9 @@
                 {exec: true, path: 'test104.html'},
                 {exec: true, path: 'test105.html'},
                 {exec: true, path: 'test106.html'}
-                
-                
             ],
-            testframe = document.getElementById('testframe'),
-            currentTest = 1, total = 'passed';
+                testframe = document.getElementById('testframe'),
+                currentTest = 1, total = 'passed';
 
             if (/msie 8/i.test(navigator.userAgent)) {
                 tests[16] = {exec: false, path: 'test16.html'};
@@ -195,34 +195,17 @@
                 tests[60] = {exec: false, path: 'test60.xml'};
                 tests[63] = {exec: false, path: 'test63.xhtml'};
             }
-                        
+
             function addTestResult(name, desc, result) {
                 var dl = document.getElementById('testresults'),
-                template = document.getElementById('template').innerHTML;
+                    template = document.getElementById('template').innerHTML;
                 template = template.replace(/@file@/g, name);
                 template = template.replace(/@desc@/, desc);
                 template = template.replace(/@result@/g, result);
                 dl.innerHTML = dl.innerHTML + template;
-                    window.scrollBy(0, 20);
+                window.scrollBy(0, 20);
             }
-            
-            if (window.addEventListener) {
-                window.addEventListener('message', function (e) {
-                    var msg = JSON.parse(e.data);
-                    addTestResult(tests[msg.index].path, msg.desc, msg.result);
-                    if (msg.result === 'failed') {
-                        total = 'failed';
-                    }
-                    run(msg.index + 1);
-                }, false);
-            } else if (window.attachEvent) {
-                window.attachEvent('onmessage', function (e) {
-                    var msg = JSON.parse(e.data);
-                    addTestResult(tests[msg.index].path, msg.desc, msg.result);
-                    run(msg.index + 1);
-                });
-            }
-            
+
             function run(index) {
                 if (tests[index]) {
                     currentTest = index;
@@ -240,7 +223,24 @@
                     return;
                 }
             }
-            
+
+            if (window.addEventListener) {
+                window.addEventListener('message', function (e) {
+                    var msg = JSON.parse(e.data);
+                    addTestResult(tests[msg.index].path, msg.desc, msg.result);
+                    if (msg.result === 'failed') {
+                        total = 'failed';
+                    }
+                    run(msg.index + 1);
+                }, false);
+            } else if (window.attachEvent) {
+                window.attachEvent('onmessage', function (e) {
+                    var msg = JSON.parse(e.data);
+                    addTestResult(tests[msg.index].path, msg.desc, msg.result);
+                    run(msg.index + 1);
+                });
+            }
+
             if (window.JSON) {
                 run(currentTest);
             } else {
