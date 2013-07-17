@@ -22,13 +22,13 @@
             if (parent != window) {
                 Hyphenator.config({
                     'onhyphenationdonecallback': function (href) {
-                        var t1, t2, r1, r2, des, msg;
+                        var t1, t2, r1, r2, desc, msg;
                         if (href.indexOf('test67_frame1.html') !== -1) {
-                            t1 = window.document.getElementById('test').innerHTML,
-                            r1 = window.document.getElementById('ref').innerHTML,
-                            t2 = frames.ifr.document.getElementById('test').innerHTML,
-                            r2 = frames.ifr.document.getElementById('ref').innerHTML,
-                            desc = window.document.getElementById('desc').innerHTML,
+                            t1 = window.document.getElementById('test').innerHTML;
+                            r1 = window.document.getElementById('ref').innerHTML;
+                            t2 = frames.ifr.document.getElementById('test').innerHTML;
+                            r2 = frames.ifr.document.getElementById('ref').innerHTML;
+                            desc = window.document.getElementById('desc').innerHTML;
                             msg = {
                                 desc: desc,
                                 index: 70
