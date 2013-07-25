@@ -33,6 +33,7 @@ Currently, there's support for
   * Esperanto (thanks to Sergio Pokrovskij)
   * Estonian (thanks to Enn Saar and Peeter Marvet)
   * Romanian (thanks to irragal)
+  * Slovak (thanks to Zdenko Podobný)
  
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
