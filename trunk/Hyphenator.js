@@ -477,126 +477,114 @@ var Hyphenator = (function (window) {
             css3_h9n = r;
         },
 
-        /****
-         * @name Hyphenator~hyphenateClass
+        /**
+         * @member {string} Hyphenator~hyphenateClass
          * @desc
          * A string containing the css-class-name for the hyphenate class
-         * @type {string}
          * @default 'hyphenate'
          * @access private
          * @example
          * &lt;p class = "hyphenate"&gt;Text&lt;/p&gt;
-         * @see Hyphenator.config
+         * @see {@link Hyphenator.config}
          */
         hyphenateClass = 'hyphenate',
 
-        /****
-         * @name Hyphenator~classPrefix
+        /**
+         * @member {string} Hyphenator~classPrefix
          * @desc
          * A string containing a unique className prefix to be used
          * whenever Hyphenator sets a CSS-class
-         * @type {string}
          * @access private
          */
         classPrefix = 'Hyphenator' + Math.round(Math.random() * 1000),
 
-        /****
-         * @name Hyphenator~hideClass
+        /**
+         * @member {string} Hyphenator~hideClass
          * @desc
          * The name of the class that hides elements
-         * @type {string}
          * @access private
          */
         hideClass = classPrefix + 'hide',
 
-        /****
-         * @name Hyphenator~hideClassRegExp
+        /**
+         * @member {RegExp} Hyphenator~hideClassRegExp
          * @desc
          * RegExp to remove hideClass from a list of classes
-         * @type {RegExp}
          * @access private
          */
         hideClassRegExp = new RegExp("\\s?\\b" + hideClass + "\\b", "g"),
 
-        /****
-         * @name Hyphenator~hideClass
+        /**
+         * @member {string} Hyphenator~hideClass
          * @desc
          * The name of the class that unhides elements
-         * @type {string}
          * @access private
          */
         unhideClass = classPrefix + 'unhide',
 
-        /****
-         * @name Hyphenator~hideClassRegExp
+        /**
+         * @member {RegExp} Hyphenator~hideClassRegExp
          * @desc
          * RegExp to remove unhideClass from a list of classes
-         * @type {RegExp}
          * @access private
          */
         unhideClassRegExp = new RegExp("\\s?\\b" + unhideClass + "\\b", "g"),
 
-        /****
-         * @name Hyphenator~css3hyphenateClass
+        /**
+         * @member {string} Hyphenator~css3hyphenateClass
          * @desc
          * The name of the class that hyphenates elements with css3
-         * @type {string}
          * @access private
          */
         css3hyphenateClass = classPrefix + 'css3hyphenate',
 
-        /****
-         * @name Hyphenator~css3hyphenateClass
+        /**
+         * @member {CSSEdit} Hyphenator~css3hyphenateClass
          * @desc
          * The var where CSSEdit class is stored
-         * @type {Object}
          * @access private
+         * @todo Use CSSEditors here, too
          */
         css3hyphenateClassHandle,
 
-        /****
-         * @name Hyphenator~dontHyphenateClass
+        /**
+         * @member {string} Hyphenator~dontHyphenateClass
          * @desc
          * A string containing the css-class-name for elements that should not be hyphenated
-         * @type {string}
          * @default 'donthyphenate'
          * @access private
          * @example
          * &lt;p class = "donthyphenate"&gt;Text&lt;/p&gt;
-         * @see Hyphenator.config
+         * @see {@link Hyphenator.config}
          */
         dontHyphenateClass = 'donthyphenate',
 
-        /****
-         * @name Hyphenator~min
+        /**
+         * @member {number} Hyphenator~min
          * @desc
          * A number wich indicates the minimal length of words to hyphenate.
-         * @type {number}
          * @default 6
          * @access private
-         * @see Hyphenator.config
+         * @see {@link Hyphenator.config}
          */
         min = 6,
 
-        /****
-         * @name Hyphenator~orphanControl
+        /**
+         * @member {number} Hyphenator~orphanControl
          * @desc
          * Control how the last words of a line are handled:
          * level 1 (default): last word is hyphenated
          * level 2: last word is not hyphenated
          * level 3: last word is not hyphenated and last space is non breaking
-         * @type {number}
          * @default 1
          * @access private
          */
         orphanControl = 1,
 
-        /****
-         * @name Hyphenator~isBookmarklet
+        /**
+         * @member {boolean} Hyphenator~isBookmarklet
          * @desc
-         * Indicates if Hyphanetor runs as bookmarklet or not.
-         * @type boolean
-         * @default false
+         * True if Hyphanetor runs as bookmarklet.
          * @access private
          */
         isBookmarklet = (function () {
@@ -615,75 +603,101 @@ var Hyphenator = (function (window) {
             return re;
         }()),
 
-        /****
-         * @name Hyphenator~mainLanguage
+        /**
+         * @member {string|null} Hyphenator~mainLanguage
          * @desc
          * The general language of the document. In contrast to {@link Hyphenator~defaultLanguage},
          * mainLanguage is defined by the client (i.e. by the html or by a prompt).
-         * @type {string|null}
          * @access private
-         * @see Hyphenator~autoSetMainLanguage
+         * @see {@link Hyphenator~autoSetMainLanguage}
          */
         mainLanguage = null,
 
-        /****
-         * @name Hyphenator~defaultLanguage
+        /**
+         * @member {string|null} Hyphenator~defaultLanguage
          * @desc
          * The language defined by the developper. This language setting is defined by a config option.
          * It is overwritten by any html-lang-attribute and only taken in count, when no such attribute can
          * be found (i.e. just before the prompt).
-         * @type {string|null}
          * @access private
-         * @see Hyphenator~autoSetMainLanguage
+         * @see {@link Hyphenator.config}
+         * @see {@link Hyphenator~autoSetMainLanguage}
          */
         defaultLanguage = '',
 
 
         /**
-         * @name Hyphenator~elements
+         * @member {ElementCollection} Hyphenator~elements
          * @desc
          * A class representing all elements (of type Element) that have to be hyphenated. This var is filled by
          * {@link Hyphenator~gatherDocumentInfos}
-         * @type {ElementCollection}
          * @access private
          */
         elements = (function () {
             /**
-             * @constructor
-             * @name Hyphenator~elements~ElementCollection~Element
+             * @constructor Hyphenator~elements~ElementCollection~Element
              * @desc represents a DOM Element with additional information
+             * @access private
              */
             var Element = function (element) {
                 /**
-                 * @name Hyphenator~elements~ElementCollection~Element~element
+                 * @member {Object} Hyphenator~elements~ElementCollection~Element~element
                  * @desc A DOM Element
-                 * @type {Object}
+                 * @access protected
                  */
                 this.element = element;
                 /**
-                 * @name Hyphenator~elements~ElementCollection~Element~hyphenated
+                 * @member {boolean} Hyphenator~elements~ElementCollection~Element~hyphenated
                  * @desc Marks if the element has been hyphenated
-                 * @type {boolean}
+                 * @access protected
                  */
                 this.hyphenated = false;
                 /**
-                 * @name Hyphenator~elements~ElementCollection~Element~treated
+                 * @member {boolean} Hyphenator~elements~ElementCollection~Element~treated
                  * @desc Marks if information of the element has been collected but not hyphenated (e.g. dohyphenation is off)
-                 * @type {boolean}
+                 * @access protected
                  */
                 this.treated = false;
             },
                 /**
-                 * @constructor
-                 * @name Hyphenator~elements~ElementCollection
+                 * @constructor Hyphenator~elements~ElementCollection
                  * @desc A collection of Elements to be hyphenated
+                 * @access protected
                  */
                 ElementCollection = function () {
+                    /**
+                     * @member {number} Hyphenator~elements~ElementCollection~count
+                     * @desc The Number of collected Elements
+                     * @access protected
+                     */
                     this.count = 0;
+                    /**
+                     * @member {number} Hyphenator~elements~ElementCollection~hyCount
+                     * @desc The Number of hyphenated Elements
+                     * @access protected
+                     */
                     this.hyCount = 0;
+                    /**
+                     * @member {Object.<string, Array.<Element>>} Hyphenator~elements~ElementCollection~list
+                     * @desc The collection of elements, where the key is a language code and the value is an array of elements
+                     * @access protected
+                     */
                     this.list = {};
                 };
+            /**
+             * @member {Object} Hyphenator~elements~ElementCollection.prototype
+             * @augments Hyphenator~elements~ElementCollection
+             * @access protected
+             */
             ElementCollection.prototype = {
+                /**
+                 * @method Hyphenator~elements~ElementCollection.prototype~add
+                 * @augments Hyphenator~elements~ElementCollection
+                 * @access protected
+                 * @desc adds a DOM element to the collection
+                 * @param {Object} el - The DOM element
+                 * @param {string} lang - The language of the element
+                 */
                 add: function (el, lang) {
                     if (!this.list.hasOwnProperty(lang)) {
                         this.list[lang] = [];
@@ -691,6 +705,19 @@ var Hyphenator = (function (window) {
                     this.list[lang].push(new Element(el));
                     this.count += 1;
                 },
+                /**
+                 * @callback Hyphenator~elements~ElementCollection.prototype~each~callback fn - The callback that is executed for each element
+                 * @param {string} [k] The key (i.e. language) of the collection
+                 * @param {Hyphenator~elements~ElementCollection~Element} element
+                 */
+
+                /**
+                 * @method Hyphenator~elements~ElementCollection.prototype~each
+                 * @augments Hyphenator~elements~ElementCollection
+                 * @access protected
+                 * @desc takes each element of the collection as an argument of fn
+                 * @param {Hyphenator~elements~ElementCollection.prototype~each~callback} fn - A function that takes an element as an argument
+                 */
                 each: function (fn) {
                     var k;
                     for (k in this.list) {
@@ -708,29 +735,28 @@ var Hyphenator = (function (window) {
         }()),
 
 
-        /****
-         * @name Hyphenator~exceptions
+        /**
+         * @member {Object.<sting, string>} Hyphenator~exceptions
          * @desc
          * An object containing exceptions as comma separated strings for each language.
          * When the language-objects are loaded, their exceptions are processed, copied here and then deleted.
-         * @see Hyphenator~prepareLanguagesObj
-         * @type {Object}
+         * Exceptions can also be set by the user.
+         * @see {@link Hyphenator~prepareLanguagesObj}
          * @access private
          */
         exceptions = {},
 
-        /****
-         * @name Hyphenator~docLanguages
+        /**
+         * @member {Object.<string, boolean>} Hyphenator~docLanguages
          * @desc
          * An object holding all languages used in the document. This is filled by
          * {@link Hyphenator~gatherDocumentInfos}
-         * @type {Object}
          * @access private
          */
         docLanguages = {},
 
-        /****
-         * @name Hyphenator~state
+        /**
+         * @member {number} Hyphenator~state
          * @desc
          * A number that inidcates the current state of the script
          * 0: not initialized
@@ -738,46 +764,43 @@ var Hyphenator = (function (window) {
          * 2: ready
          * 3: hyphenation done
          * 4: hyphenation removed
-         * @type {number}
          * @access private
+         * @todo looks like this is set but never used -> cleanup
          */
         state = 0,
 
-        /****
-         * @name Hyphenator~url
+        /**
+         * @member {string} Hyphenator~url
          * @desc
-         * A string containing a RegularExpression to match URL's
-         * @type {string}
+         * A string containing a insane RegularExpression to match URL's
          * @access private
          */
         url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([a-z]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
         //      protocoll     usr     pwd                    ip               or                          host                 tld        port               path
 
-        /****
-         * @name Hyphenator~mail
+        /**
+         * @member {string} Hyphenator~mail
          * @desc
          * A string containing a RegularExpression to match mail-adresses
-         * @type {string}
          * @access private
          */
         mail = '[\\w-\\.]+@[\\w\\.]+',
 
-        /****
-         * @name Hyphenator~urlRE
+        /**
+         * @member {RegExp} Hyphenator~urlRE
          * @desc
          * A RegularExpressions-Object for url- and mail adress matching
-         * @type {RegExp}
          * @access private
          */
         urlOrMailRE = new RegExp('(' + url + ')|(' + mail + ')', 'i'),
 
-        /****
-         * @name Hyphenator~zeroWidthSpace
+        /**
+         * @member {string} Hyphenator~zeroWidthSpace
          * @desc
          * A string that holds a char.
          * Depending on the browser, this is the zero with space or an empty string.
          * zeroWidthSpace is used to break URLs
-         * @type {string}
+         * @todo feature detect this!
          * @access private
          */
         zeroWidthSpace = (function () {
@@ -792,62 +815,68 @@ var Hyphenator = (function (window) {
             return zws;
         }()),
 
-        /****
-         * @name Hyphenator~onBeforeWordHyphenation
+        /**
+         * @method Hyphenator~onBeforeWordHyphenation
          * @desc
-         * A method to be called for each word to be hyphenated before it is hyphenated.
-         * Takes the word as a first parameter and its language as a second parameter.
-         * Returns a string that will replace the word to be hyphenated.
-         * @see Hyphenator.config
-         * @type {function()}
+         * This method is called just before a word is hyphenated.
+         * It is called with two parameters: the word and its language.
+         * The method must return a string (aka the word).
+         * @see {@link Hyphenator.config}
          * @access private
+         * @param {string} word
+         * @param {string} lang
+         * @return {string} The word that goes into hyphenation
          */
         onBeforeWordHyphenation = function (word) {
             return word;
         },
 
-        /****
-         * @name Hyphenator~onAfterWordHyphenation
+        /**
+         * @method Hyphenator~onAfterWordHyphenation
          * @desc
-         * A method to be called for each word to be hyphenated after it is hyphenated.
+         * This method is called for each word after it is hyphenated.
          * Takes the word as a first parameter and its language as a second parameter.
          * Returns a string that will replace the word that has been hyphenated.
-         * @see Hyphenator.config
-         * @type {function()}
+         * @see {@link Hyphenator.config}
          * @access private
+         * @param {string} word
+         * @param {string} lang
+         * @return {string} The word that goes into hyphenation
          */
         onAfterWordHyphenation = function (word) {
             return word;
         },
 
-        /****
-         * @name Hyphenator~onHyphenationDone
+        /**
+         * @method Hyphenator~onHyphenationDone
          * @desc
          * A method to be called, when the last element has been hyphenated.
          * If there are frames the method is called for each frame.
-         * @see Hyphenator.config
-         * @type {function()}
+         * Therefore the location.href of the contextWindow calling this method is given as a parameter
+         * @see {@link Hyphenator.config}
+         * @param {string} context
          * @access private
          */
         onHyphenationDone = function () {},
 
-        /****
+        /**
          * @name Hyphenator~selectorFunction
          * @desc
          * A function set by the user that has to return a HTMLNodeList or array of Elements to be hyphenated.
          * By default this is set to false so we can check if a selectorFunction is set…
-         * @see Hyphenator.config
-         * @type {function()}
+         * @see {@link Hyphenator.config}
+         * @see {@link Hyphenator~mySelectorFunction}
+         * @default false
+         * @type {function|boolean}
          * @access private
          */
         selectorFunction = false,
 
-        /****
-         * @name Hyphenator~mySelectorFunction
+        /**
+         * @method Hyphenator~mySelectorFunction
          * @desc
-         * A function that has to return a HTMLNodeList or array of Elements to be hyphenated.
+         * A function that returns a HTMLNodeList or array of Elements to be hyphenated.
          * By default it uses the classname ('hyphenate') to select the elements.
-         * @type {function()}
          * @access private
          */
         mySelectorFunction = function (hyphenateClass) {
@@ -868,13 +897,11 @@ var Hyphenator = (function (window) {
             return el;
         },
 
-        /****
-         * @name Hyphenator~selectElements
+        /**
+         * @method Hyphenator~selectElements
          * @desc
-         * A function that has to return a HTMLNodeList or array of Elements to be hyphenated.
-         * It uses either selectorFunction set by the user (and adds a unique class to each element)
+         * A function that uses either selectorFunction set by the user
          * or the default mySelectorFunction.
-         * @type {function()}
          * @access private
          */
         selectElements = function () {
@@ -887,51 +914,56 @@ var Hyphenator = (function (window) {
             return elements;
         },
 
-        /****
-         * @name Hyphenator~intermediateState
+        /**
+         * @member {string} Hyphenator~intermediateState
          * @desc
-         * The value of style.visibility of the text while it is hyphenated.
-         * @see Hyphenator.config
-         * @type {string}
+         * The visibility of elements while they are hyphenated:
+         * 'visible': unhyphenated text is visible and then redrawn when hyphenated.
+         * 'hidden': unhyphenated text is made invisible as soon as possible and made visible after hyphenation.
+         * @default 'hidden'
+         * @see {@link Hyphenator.config}
          * @access private
          */
         intermediateState = 'hidden',
 
-        /****
-         * @name Hyphenator~unhide
+        /**
+         * @member {string} Hyphenator~unhide
          * @desc
          * How hidden elements unhide: either simultaneous (default: 'wait') or progressively.
          * 'wait' makes Hyphenator.js to wait until all elements are hyphenated (one redraw)
          * With 'progressive' Hyphenator.js unhides elements as soon as they are hyphenated.
-         * @see Hyphenator.config
-         * @type {string}
+         * @see {@link Hyphenator.config}
          * @access private
          */
         unhide = 'wait',
 
-        /****
-         * @name Hyphenator~CSSEditors
+        /**
+         * @member {Array.<Hyphenator~CSSEdit>} Hyphenator~CSSEditors
          * @desc A container array that holds CSSEdit classes
          * For each window object one CSSEdit class is inserted
-         * @see Hyphenator~CSSEdit
-         * @type {array}
          * @access private
          */
         CSSEditors = [],
 
-        /****
-         * @name Hyphenator~CSSEditors
-         * @desc A custom class with two public methods: setRule() and clearChanges()
-         * Rather sets style for CSS-classes then for single elements
-         * This is used to hide/unhide elements when they are hyphenated.
-         * @see Hyphenator~gatherDocumentInfos
-         * @type {function ()}
+        /**
+         * @constructor Hyphenator~CSSEdit
+         * @desc
+         * This class handles access and editing of StyleSheets.
+         * Thanks to this styles (e.g. hiding and unhiding elements upon hyphenation)
+         * can be changed in one place instead for each element.
          * @access private
          */
         CSSEdit = function (w) {
             w = w || window;
             var doc = w.document,
-                //find/create an accessible StyleSheet
+                /**
+                 * @member {Object} Hyphenator~CSSEdit~sheet
+                 * @desc
+                 * A StyleSheet, where Hyphenator can write to.
+                 * If no StyleSheet can be found, lets create one. 
+                 * @access private
+                 * @todo Check if its faster to just create a Stylesheet, than search for one
+                 */
                 sheet = (function () {
                     var i,
                         l = doc.styleSheets.length,
@@ -955,7 +987,35 @@ var Hyphenator = (function (window) {
                     }
                     return r;
                 }()),
+
+                /**
+                 * @typedef Hyphenator~CSSEdit~changes
+                 * @property {Object} sheet - The StyleSheet where the change was made
+                 * @property {number} index - The index of the changed rule
+                 */
+
+                /**
+                 * @member {Array.<changes>} Hyphenator~CSSEdit~changes
+                 * @desc
+                 * Sets a CSS rule for a specified selector
+                 * @access private
+                 */
                 changes = [],
+
+                /**
+                 * @typedef Hyphenator~CSSEdit~rule
+                 * @property {number} index - The index of the rule
+                 * @property {Object} rule - The style rule
+                 */
+                /**
+                 * @method Hyphenator~CSSEdit~findRule
+                 * @desc
+                 * Searches the StyleSheets for a given selector and returns an object containing the rule.
+                 * If nothing can be found, false is returned.
+                 * @param {string} sel 
+                 * @return {Hyphenator~CSSEdit~rule|false}
+                 * @access private
+                 */
                 findRule = function (sel) {
                     var sheet, rule, sheets = w.document.styleSheets, rules, i, j, r = false;
                     for (i = 0; i < sheets.length; i += 1) {
@@ -969,7 +1029,6 @@ var Hyphenator = (function (window) {
                             }
                         } catch (e) {
                             //do nothing
-                            //console.log(e);
                         }
                         if (!!rules && !!rules.length) {
                             for (j = 0; j < rules.length; j += 1) {
@@ -985,6 +1044,15 @@ var Hyphenator = (function (window) {
                     }
                     return r;
                 },
+                /**
+                 * @method Hyphenator~CSSEdit~addRule
+                 * @desc
+                 * Adds a rule to the {@link Hyphenator~CSSEdit~sheet}
+                 * @param {string} sel - The selector to be added
+                 * @param {string} rulesStr - The rules for the specified selector
+                 * @return {number} index of the new rule
+                 * @access private
+                 */
                 addRule = function (sel, rulesStr) {
                     var i, r;
                     if (!!sheet.insertRule) {
@@ -1006,6 +1074,14 @@ var Hyphenator = (function (window) {
                     }
                     return r;
                 },
+                /**
+                 * @method Hyphenator~CSSEdit~removeRule
+                 * @desc
+                 * Removes a rule with the specified index from the specified sheet
+                 * @param {Object} sheet - The style sheet
+                 * @param {number} index - the index of the rule
+                 * @access private
+                 */
                 removeRule = function (sheet, index) {
                     if (sheet.deleteRule) {
                         sheet.deleteRule(index);
@@ -1016,6 +1092,14 @@ var Hyphenator = (function (window) {
                 };
 
             return {
+                /**
+                 * @method Hyphenator~CSSEdit.setRule
+                 * @desc
+                 * Sets a CSS rule for a specified selector
+                 * @access public
+                 * @param {string} sel - Selector
+                 * @param {string} rulesString - CSS-Rules
+                 */
                 setRule: function (sel, rulesString) {
                     var i, existingRule, cssText;
                     existingRule = findRule(sel);
@@ -1046,6 +1130,12 @@ var Hyphenator = (function (window) {
                         changes.push({sheet: sheet, index: i});
                     }
                 },
+                /**
+                 * @method Hyphenator~CSSEdit.clearChanges
+                 * @desc
+                 * Removes all changes Hyphenator has made from the StyleSheets
+                 * @access public
+                 */
                 clearChanges: function () {
                     var change = changes.pop();
                     while (!!change) {
@@ -1056,41 +1146,47 @@ var Hyphenator = (function (window) {
             };
         },
 
-        /****
-         * @name Hyphenator~hyphen
+        /**
+         * @member {string} Hyphenator~hyphen
          * @desc
          * A string containing the character for in-word-hyphenation
-         * @type {string}
          * @default the soft hyphen
          * @access private
-         * @see Hyphenator.config
+         * @see {@link Hyphenator.config}
          */
         hyphen = String.fromCharCode(173),
 
-        /****
-         * @name Hyphenator~urlhyphen
+        /**
+         * @member {string} Hyphenator~urlhyphen
          * @desc
          * A string containing the character for url/mail-hyphenation
-         * @type {string}
          * @default the zero width space
          * @access private
-         * @see Hyphenator.config
-         * @see Hyphenator~zeroWidthSpace
+         * @see {@link Hyphenator.config}
+         * @see {@link Hyphenator~zeroWidthSpace}
          */
         urlhyphen = zeroWidthSpace,
 
-        /****
-         * @name Hyphenator~safeCopy
+        /**
+         * @member {boolean} Hyphenator~safeCopy
          * @desc
          * Defines wether work-around for copy issues is active or not
-         * Not supported by Opera (no onCopy handler)
-         * @type boolean
          * @default true
          * @access private
-         * @see Hyphenator.config
-         * @see Hyphenator~registerOnCopy
+         * @see {@link Hyphenator.config}
+         * @see {@link Hyphenator~registerOnCopy}
          */
         safeCopy = true,
+
+        /**
+         * @member {Object} Hyphenator~hyphRunFor
+         * @desc
+         * stores location.href for documents where run() has been executed
+         * to make sure that Hyphenator.run() is only run once (singleton)
+         * @access private
+         * @see {@link Hyphenator~runWhenLoaded}
+         */
+        hyphRunFor = {},
 
         /****
          * runWhenLoaded is based od jQuery.bindReady()
@@ -1117,16 +1213,18 @@ var Hyphenator = (function (window) {
          */
         runWhenLoaded = function (w, f) {
             var
-                toplevel, hyphRunForThis = {},
+                toplevel,
                 add = window.document.addEventListener ? 'addEventListener' : 'attachEvent',
                 rem = window.document.addEventListener ? 'removeEventListener' : 'detachEvent',
                 pre = window.document.addEventListener ? '' : 'on',
 
                 init = function (context) {
-                    if (!hyphRunForThis[context.location.href]) {
+                    if (!hyphRunFor[context.location.href]) {
                         contextWindow = context || window;
                         f();
-                        hyphRunForThis[contextWindow.location.href] = true;
+                        hyphRunFor[contextWindow.location.href] = true;
+                    } else {
+                        onError(new Error('Only use Hyphenator.run() once on a document!'));
                     }
                 },
 
@@ -1150,6 +1248,7 @@ var Hyphenator = (function (window) {
                     if (!!e && e.type === 'readystatechange' && w.document.readyState !== 'interactive' && w.document.readyState !== 'complete') {
                         return;
                     }
+
                     //DOM is ready/interactive, but frames may not be loaded yet!
                     //cleanup events
                     w.document[rem](pre + 'DOMContentLoaded', doOnEvent, false);
@@ -1162,6 +1261,7 @@ var Hyphenator = (function (window) {
                         //cleanup events
                         w[rem](pre + 'load', doOnEvent, false);
                         documentLoaded = true;
+                        init(w);
                     } else if (doFrames && fl > 0) {
                         //we have frames, so wait for onload and then initiate runWhenLoaded recursevly for each frame:
                         if (!!e && e.type === 'load') {
@@ -1180,9 +1280,9 @@ var Hyphenator = (function (window) {
                                     runWhenLoaded(w.frames[i], f);
                                 }
                             }
+                            init(w);
                         }
                     }
-                    init(w);
                 };
             if (documentLoaded || w.document.readyState === 'complete') {
                 //Hyphenator has run already (documentLoaded is true) or
@@ -1325,7 +1425,6 @@ var Hyphenator = (function (window) {
                     //el is the element processed
                     //pLang is the language of the parent element
                     //isChild is true, if the parent of el has been processed
-
                     isChild = isChild || false;
                     var n, i = 0, hyphenate = true, eLang,
                         useCSS3 = function () {
@@ -1439,7 +1538,7 @@ var Hyphenator = (function (window) {
              */
             var size = 0,
                 tree = {
-                    tpoints: []
+                    //tpoints: []
                 },
                 patterns,
                 pattern,
@@ -1453,9 +1552,8 @@ var Hyphenator = (function (window) {
                 t,
                 p,
                 codePoint,
-                test = 'in3se',
-                rf,
                 getPoints = (function () {
+                    var test = 'in3se', rf;
                     //IE<9 doesn't act like other browsers: doesn't preserve the separators
                     if (test.split(/\D/).length === 1) {
                         rf = function (pattern) {
@@ -1468,7 +1566,10 @@ var Hyphenator = (function (window) {
                         };
                     }
                     return rf;
-                }());
+                }()),
+                getChars = function (pattern) {
+                    return pattern.replace(/[\d]/g, '').split('');
+                };
 
             for (size in patternObject) {
                 if (patternObject.hasOwnProperty(size)) {
@@ -1476,7 +1577,7 @@ var Hyphenator = (function (window) {
                     i = 0;
                     pattern = patterns[i];
                     while (!!pattern) {
-                        chars = pattern.replace(/[\d]/g, '').split('');
+                        chars = getChars(pattern);
                         points = getPoints(pattern);
                         t = tree;
 
@@ -1493,10 +1594,12 @@ var Hyphenator = (function (window) {
                             c = chars[j];
                         }
 
-                        t.tpoints = [];
+                        //t.tpoints = [];
+                        t.tpoints = new Array(points.length);
                         for (k = 0; k < points.length; k += 1) {
                             p = points[k];
-                            t.tpoints.push((p === "") ? 0 : p);
+                            //t.tpoints.push((p === "") ? 0 : p);
+                            t.tpoints[k] = (p === "") ? 0 : parseInt(p, 10);
                         }
                         i += 1;
                         pattern = patterns[i];
@@ -1682,7 +1785,23 @@ var Hyphenator = (function (window) {
          * @access private
          */
         prepare = function (callback) {
-            var lang, interval, tmp1, tmp2;
+            var lang, interval, tmp1, tmp2,
+                languagesLoaded = function () {
+                    var finishedLoading = true, lang;
+                    for (lang in docLanguages) {
+                        if (docLanguages.hasOwnProperty(lang)) {
+                            finishedLoading = false;
+                            if (!!Hyphenator.languages[lang]) {
+                                delete docLanguages[lang];
+                                //do conversion while other patterns are loading:
+                                prepareLanguagesObj(lang);
+                                callback(lang);
+                            }
+                        }
+                    }
+                    return finishedLoading;
+                };
+
             if (!enableRemoteLoading) {
                 for (lang in Hyphenator.languages) {
                     if (Hyphenator.languages.hasOwnProperty(lang)) {
@@ -1728,24 +1847,15 @@ var Hyphenator = (function (window) {
                 }
             }
             // else async wait until patterns are loaded, then hyphenate
-            interval = window.setInterval(function () {
-                var finishedLoading = true, lang;
-                for (lang in docLanguages) {
-                    if (docLanguages.hasOwnProperty(lang)) {
-                        finishedLoading = false;
-                        if (!!Hyphenator.languages[lang]) {
-                            delete docLanguages[lang];
-                            //do conversion while other patterns are loading:
-                            prepareLanguagesObj(lang);
-                            callback(lang);
-                        }
+            if (!languagesLoaded()) {
+                interval = window.setInterval(function () {
+                    var loadingDone = languagesLoaded();
+                    if (loadingDone) {
+                        window.clearInterval(interval);
+                        state = 2;
                     }
-                }
-                if (finishedLoading) {
-                    window.clearInterval(interval);
-                    state = 2;
-                }
-            }, 100);
+                }, 100);
+            }
         },
 
         /****
