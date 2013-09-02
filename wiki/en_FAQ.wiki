@@ -99,6 +99,10 @@ Here's the code:
 </script>
 }}}
 
+UPDATE:
+See https://code.google.com/p/hyphenator/issues/detail?id=192
+I'm working on a fix.
+
 [#FAQ > Go to top]
 
 == Can I use hyphenator.js in a frameset? ==
