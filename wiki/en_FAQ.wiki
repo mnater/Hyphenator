@@ -12,7 +12,7 @@ Modern browsers already support CSS3 hyphenation for a different set of language
 
 Since Version 4.0.0 Hyphenator.js respects those browsers and automatically activates css3-hyphenation if available. See [http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_useCSS3hyphenation the manual] on how to enable this in Hyphenator.js.
 
-An even if all browsers will generally support hyphenation one day they will not support all languages Hyphenator.js can deal with actually… So Hyphenator.js will remain as a polyfill for this browsers.
+And even if all browsers will generally support hyphenation one day they will not support all languages Hyphenator.js can deal with actually… So Hyphenator.js will remain as a polyfill for this browsers.
 
 [#FAQ > Go to top]
 
