@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="de">
+<html lang="en">
     <head>
         <title>Hyphenator.js &ndash; Test 107</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -9,11 +9,7 @@
                 margin-left:25%;
                 margin-right:25%;
             }
-            .hyphenate {
-                width: 5em;
-                border: 1px solid red;
-            }
-            #test {
+            #test1, #test2 {
                 background-color: #ffd6d6;
             }
             #ref {
@@ -22,65 +18,52 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
-            var i = 0;
-            function scroller() {
-                var words = [
-                    'Sonnenblumenkerne',
-                    'Schifffahrtsfahrplan',
-                    'Sofakissenbezüge',
-                    'Fensterreinigungsmittel',
-                    'Sonnenaufgangshimmel',
-                    'Niederschlagsradar',
-                    'Umkleidekabinenschlüssel',
-                    'Gletscherspaltenrettungsübung',
-                    'Autoradioantennenkabel',
-                    'Lampenschirmverkäufer'
-                ], rdm, elem, content, txt, bdy;
-                rdm = Math.floor(Math.random() * 10);
-                txt = words[rdm];
-                elem = document.createElement('p');
-                elem.className = 'hyphenate'
-                content = document.createTextNode(txt);
-                elem.appendChild(content);
-                bdy = document.getElementsByTagName('body')[0];
-                bdy.appendChild(elem);
-                Hyphenator.run();
-                i++;
-                if (i < 2) {
-                    window.setTimeout(scroller, 1000);
-                }
-            }
-
-            window.onload = function () {
-                Hyphenator.config({hyphenchar: '|', intermediatestate: 'visible'});
-                scroller();
-            };
-
-            /*if (parent != window) {
-                Hyphenator.config({
-                    'onhyphenationdonecallback': function () {
-                        var t1 = document.getElementById('test').innerHTML,
-                        t2 = document.getElementById('ref').innerHTML,
-                        desc = document.getElementById('desc').firstChild.data,
-                        msg = {
-                            desc: desc,
-                            index: 107
-                        };
-                        if (t1 == t2) {
-                            msg.result = 'passed';
-                        } else {
-                            msg.result = 'failed';
-                        }
-                        parent.postMessage(JSON.stringify(msg), window.location.href);
+            if (parent != window) {
+                cb = function () {
+                    var t1 = document.getElementById('test').innerHTML,
+                    t2 = document.getElementById('ref').innerHTML,
+                    desc = document.getElementById('desc').firstChild.data,
+                    msg = {
+                        desc: desc,
+                        index: 107
+                    };
+                    if (t1 == t2) {
+                        msg.result = 'passed';
+                    } else {
+                        msg.result = 'failed';
                     }
-                });         
-            }*/
-
+                    parent.postMessage(JSON.stringify(msg), window.location.href);
+                };
+            } else {
+                cb = function () {};
+            }
+            Hyphenator.config({
+                hyphenchar:'|',
+                displaytogglebox: true,
+                onhyphenationdonecallback: cb
+            });
+            Hyphenator.run();
+            window.setTimeout(function () {
+                var el = window.document.getElementById('test1'),
+                    elem, txtNode, bdy;
+                    if (!!el) {
+                        el.parentNode.removeChild(el);
+                    }
+                    bdy = document.getElementsByTagName('body')[0];
+                    elem = window.document.createElement('p');
+                    elem.id = 'test1';
+                    txtNode = window.document.createTextNode('To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.');
+                    elem.appendChild(txtNode);
+                    bdy.appendChild(elem);
+            }, 1000)
         </script>
     </head>
     <body>
         <p><a href="index.html">&lt;&lt;- index</a> | <a href="test105.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
         <h1>Test 107</h1>
-        <p id="desc">Check for leaks</p>
+        <p id="desc">Remove elements from ElementCollection when they are removed from the DOM.</p>
+        <p id="test1" class="hyphenate">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+        <p id="test2" class="hyphenate">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+        <p id="ref">To allow more ef|fi|cient usage of paper, more reg|u|lar ap|pear|ance of right-side mar|gins with|out re|quir|ing spac|ing ad|just|ments, and to elim|i|nate the need to erase hand-writ|ten long words begun near the end of a line that do not fit, words may be di|vided at the near|est break|point be|tween syl|la|bles and a hy|phen in|serted to in|di|cate that the let|ters form a word frag|ment, not a word.</p>
     </body>
 </html>
