@@ -2934,7 +2934,6 @@ var Hyphenator = (function (window) {
          * @param {string} lang the language patterns are stored for
          * @returns {Object.<string, string>}
          * @access public
-         * @todo: add test
          */
         getRedPatternSet: function (lang) {
             return Hyphenator.languages[lang].redPatSet;
