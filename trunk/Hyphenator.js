@@ -512,6 +512,18 @@ var Hyphenator = (function (window) {
         hyphenateClass = 'hyphenate',
 
         /**
+         * @member {string} Hyphenator~urlHyphenateClass
+         * @desc
+         * A string containing the css-class-name for the urlhyphenate class
+         * @default 'urlhyphenate'
+         * @access private
+         * @example
+         * &lt;p class = "urlhyphenate"&gt;Text&lt;/p&gt;
+         * @see {@link Hyphenator.config}
+         */
+        urlHyphenateClass = 'urlhyphenate',
+
+        /**
          * @member {string} Hyphenator~classPrefix
          * @desc
          * A string containing a unique className prefix to be used
@@ -565,7 +577,6 @@ var Hyphenator = (function (window) {
          * @desc
          * The var where CSSEdit class is stored
          * @access private
-         * @todo Use CSSEditors here, too
          */
         css3hyphenateClassHandle,
 
@@ -738,15 +749,13 @@ var Hyphenator = (function (window) {
                  */
                 remove: function (el) {
                     var lang, i, e, l;
-                    //console.log(JSON.stringify(this));
                     for (lang in this.list) {
                         if (this.list.hasOwnProperty(lang)) {
                             for (i = 0; i < this.list[lang].length; i += 1) {
-                                //console.log(this.list[lang][i]);
                                 if (this.list[lang][i].element === el) {
                                     e = i;
                                     l = lang;
-                                    //todo: break!!
+                                    break;
                                 }
                             }
                         }
@@ -1203,6 +1212,18 @@ var Hyphenator = (function (window) {
         urlhyphen = zeroWidthSpace,
 
         /**
+         * @method Hyphenator~hyphenateURL
+         * @desc
+         * Puts {@link Hyphenator~urlhyphen} (default: zero width space) after each no-alphanumeric char that my be in a URL.
+         * @param {string} url to hyphenate
+         * @returns string the hyphenated URL
+         * @access public
+         */
+        hyphenateURL = function (url) {
+            return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + urlhyphen);
+        },
+
+        /**
          * @member {boolean} Hyphenator~safeCopy
          * @desc
          * Defines wether work-around for copy issues is active or not
@@ -1277,7 +1298,7 @@ var Hyphenator = (function (window) {
 
                     //check frames
                     fl = w.frames.length;
-                    if (fl === 0) {
+                    if (fl === 0 || !doFrames) {
                         //there are no frames!
                         //cleanup events
                         w[rem](pre + 'load', doOnEvent, false);
@@ -1439,7 +1460,7 @@ var Hyphenator = (function (window) {
          * @access private
          */
         gatherDocumentInfos = function () {
-            var elToProcess, tmp, i = 0,
+            var elToProcess, urlhyphenEls, tmp, i = 0,
                 /**
                  * @method Hyphenator~gatherDocumentInfos
                  * @desc
@@ -1512,8 +1533,25 @@ var Hyphenator = (function (window) {
                     n = el.childNodes[j];
                     while (!!n) {
                         if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
-                                n.className.indexOf(dontHyphenateClass) === -1 && !elToProcess[n]) {
+                                n.className.indexOf(dontHyphenateClass) === -1 &&
+                                n.className.indexOf(urlHyphenateClass) === -1 && !elToProcess[n]) {
                             process(n, eLang, true);
+                        }
+                        j += 1;
+                        n = el.childNodes[j];
+                    }
+                },
+                processUrlStyled = function (el) {
+                    var n, j = 0;
+
+                    n = el.childNodes[j];
+                    while (!!n) {
+                        if (n.nodeType === 1 && !dontHyphenate[n.nodeName.toLowerCase()] &&
+                                n.className.indexOf(dontHyphenateClass) === -1 &&
+                                n.className.indexOf(hyphenateClass) === -1 && !urlhyphenEls[n]) {
+                            processUrlStyled(n);
+                        } else if (n.nodeType === 3) {
+                            n.data = hyphenateURL(n.data);
                         }
                         j += 1;
                         n = el.childNodes[j];
@@ -1538,6 +1576,15 @@ var Hyphenator = (function (window) {
                     process(tmp, '', false);
                     i += 1;
                     tmp = elToProcess[i];
+                }
+
+                urlhyphenEls = mySelectorFunction(urlHyphenateClass);
+                i = 0;
+                tmp = urlhyphenEls[i];
+                while (!!tmp) {
+                    processUrlStyled(tmp);
+                    i += 1;
+                    tmp = urlhyphenEls[i];
                 }
             }
             if (elements.count === 0) {
@@ -2034,18 +2081,6 @@ var Hyphenator = (function (window) {
         },
 
         /**
-         * @method Hyphenator~hyphenateURL
-         * @desc
-         * Puts {@link Hyphenator~urlhyphen} (default: zero width space) after each no-alphanumeric char that my be in a URL.
-         * @param {string} url to hyphenate
-         * @returns string the hyphenated URL
-         * @access public
-         */
-        hyphenateURL = function (url) {
-            return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + urlhyphen);
-        },
-
-        /**
          * @method Hyphenator~removeHyphenationFromElement
          * @desc
          * Removes all hyphens from the element. If there are other elements, the function is
@@ -2055,7 +2090,7 @@ var Hyphenator = (function (window) {
          * @access public
          */
         removeHyphenationFromElement = function (el) {
-            var h, i = 0, n;
+            var h, u, i = 0, n;
             switch (hyphen) {
             case '|':
                 h = '\\|';
@@ -2069,11 +2104,24 @@ var Hyphenator = (function (window) {
             default:
                 h = hyphen;
             }
+            switch (urlhyphen) {
+            case '|':
+                u = '\\|';
+                break;
+            case '+':
+                u = '\\+';
+                break;
+            case '*':
+                u = '\\*';
+                break;
+            default:
+                u = urlhyphen;
+            }
             n = el.childNodes[i];
             while (!!n) {
                 if (n.nodeType === 3) {
                     n.data = n.data.replace(new RegExp(h, 'g'), '');
-                    n.data = n.data.replace(new RegExp(zeroWidthSpace, 'g'), '');
+                    n.data = n.data.replace(new RegExp(u, 'g'), '');
                 } else if (n.nodeType === 1) {
                     removeHyphenationFromElement(n);
                 }
@@ -2082,119 +2130,94 @@ var Hyphenator = (function (window) {
             }
         },
 
-        /**
-         * @method Hyphenator~oncopyHandler
-         * @desc
-         * The function created an registered by {@link Hyphenator~registerOnCopy}
-         * @access private
-         * @todo: make a class
-         */
-        oncopyHandler = function () {
-            return undefined;
-        },
+        copy = (function () {
+            var Copy = function () {
 
-        /**
-         * @method Hyphenator~removeOnCopy
-         * @desc
-         * Method to remove copy event handler from the given element
-         * @param {Object} el DOM-Node from witch we remove the event
-         * @access private
-         * @todo: make a class
-         */
-        removeOnCopy = function (el) {
-            var body = el.ownerDocument.getElementsByTagName('body')[0];
-            if (!body) {
-                return;
-            }
-            el = el || body;
-            if (window.removeEventListener) {
-                el.removeEventListener("copy", oncopyHandler, true);
-            } else {
-                el.detachEvent("oncopy", oncopyHandler);
-            }
-        },
+                this.oncopyHandler = function (e) {
+                    e = e || window.event;
+                    var shadow, selection, range, rangeShadow, restore,
+                        target = e.target || e.srcElement,
+                        currDoc = target.ownerDocument,
+                        bdy = currDoc.getElementsByTagName('body')[0],
+                        targetWindow = currDoc.defaultView || currDoc.parentWindow;
+                    if (target.tagName && dontHyphenate[target.tagName.toLowerCase()]) {
+                        //Safari needs this
+                        return;
+                    }
+                    //create a hidden shadow element
+                    shadow = currDoc.createElement('div');
+                    //Moving the element out of the screen doesn't work for IE9 (https://connect.microsoft.com/IE/feedback/details/663981/)
+                    //shadow.style.overflow = 'hidden';
+                    //shadow.style.position = 'absolute';
+                    //shadow.style.top = '-5000px';
+                    //shadow.style.height = '1px';
+                    //doing this instead:
+                    shadow.style.color = window.getComputedStyle ? targetWindow.getComputedStyle(bdy, null).backgroundColor : '#FFFFFF';
+                    shadow.style.fontSize = '0px';
+                    bdy.appendChild(shadow);
+                    if (!!window.getSelection) {
+                        //FF3, Webkit, IE9
+                        e.stopPropagation();
+                        selection = targetWindow.getSelection();
+                        range = selection.getRangeAt(0);
+                        shadow.appendChild(range.cloneContents());
+                        removeHyphenationFromElement(shadow);
+                        selection.selectAllChildren(shadow);
+                        restore = function () {
+                            shadow.parentNode.removeChild(shadow);
+                            selection.removeAllRanges(); //IE9 needs that
+                            selection.addRange(range);
+                        };
+                    } else {
+                        // IE<9
+                        e.cancelBubble = true;
+                        selection = targetWindow.document.selection;
+                        range = selection.createRange();
+                        shadow.innerHTML = range.htmlText;
+                        removeHyphenationFromElement(shadow);
+                        rangeShadow = bdy.createTextRange();
+                        rangeShadow.moveToElementText(shadow);
+                        rangeShadow.select();
+                        restore = function () {
+                            shadow.parentNode.removeChild(shadow);
+                            if (range.text !== "") {
+                                range.select();
+                            }
+                        };
+                    }
+                    window.setTimeout(restore, 0);
+                };
 
-        /**
-         * @name Hyphenator~registerOnCopy
-         * @desc
-         * Huge work-around for browser-inconsistency when it comes to
-         * copying of hyphenated text.
-         * The idea behind this code has been provided by http://github.com/aristus/sweet-justice
-         * sweet-justice is under BSD-License
-         * @param {Object} el DOM-Node where the copy event will be registered to
-         * @access private
-         * @todo: make a class
-         */
-        registerOnCopy = function (el) {
-            var body = el.ownerDocument.getElementsByTagName('body')[0],
-                shadow,
-                selection,
-                range,
-                rangeShadow,
-                restore;
-            oncopyHandler = function (e) {
-                e = e || window.event;
-                var target = e.target || e.srcElement,
-                    currDoc = target.ownerDocument,
-                    bdy = currDoc.getElementsByTagName('bdy')[0],
-                    targetWindow = currDoc.defaultView || currDoc.parentWindow;
-                if (target.tagName && dontHyphenate[target.tagName.toLowerCase()]) {
-                    //Safari needs this
-                    return;
-                }
-                //create a hidden shadow element
-                shadow = currDoc.createElement('div');
-                //Moving the element out of the screen doesn't work for IE9 (https://connect.microsoft.com/IE/feedback/details/663981/)
-                //shadow.style.overflow = 'hidden';
-                //shadow.style.position = 'absolute';
-                //shadow.style.top = '-5000px';
-                //shadow.style.height = '1px';
-                //doing this instead:
-                shadow.style.color = window.getComputedStyle ? targetWindow.getComputedStyle(bdy, null).backgroundColor : '#FFFFFF';
-                shadow.style.fontSize = '0px';
-                bdy.appendChild(shadow);
-                if (!!window.getSelection) {
-                    //FF3, Webkit, IE9
-                    e.stopPropagation();
-                    selection = targetWindow.getSelection();
-                    range = selection.getRangeAt(0);
-                    shadow.appendChild(range.cloneContents());
-                    removeHyphenationFromElement(shadow);
-                    selection.selectAllChildren(shadow);
-                    restore = function () {
-                        shadow.parentNode.removeChild(shadow);
-                        selection.removeAllRanges(); //IE9 needs that
-                        selection.addRange(range);
-                    };
-                } else {
-                    // IE<9
-                    e.cancelBubble = true;
-                    selection = targetWindow.document.selection;
-                    range = selection.createRange();
-                    shadow.innerHTML = range.htmlText;
-                    removeHyphenationFromElement(shadow);
-                    rangeShadow = bdy.createTextRange();
-                    rangeShadow.moveToElementText(shadow);
-                    rangeShadow.select();
-                    restore = function () {
-                        shadow.parentNode.removeChild(shadow);
-                        if (range.text !== "") {
-                            range.select();
-                        }
-                    };
-                }
-                window.setTimeout(restore, 0);
+                this.removeOnCopy = function (el) {
+                    var body = el.ownerDocument.getElementsByTagName('body')[0];
+                    if (!body) {
+                        return;
+                    }
+                    el = el || body;
+                    if (window.removeEventListener) {
+                        el.removeEventListener("copy", this.oncopyHandler, true);
+                    } else {
+                        el.detachEvent("oncopy", this.oncopyHandler);
+                    }
+                };
+
+                this.registerOnCopy = function (el) {
+                    var body = el.ownerDocument.getElementsByTagName('body')[0];
+                    if (!body) {
+                        return;
+                    }
+                    el = el || body;
+                    if (window.addEventListener) {
+                        el.addEventListener("copy", this.oncopyHandler, true);
+                    } else {
+                        el.attachEvent("oncopy", this.oncopyHandler);
+                    }
+                };
             };
-            if (!body) {
-                return;
-            }
-            el = el || body;
-            if (window.addEventListener) {
-                el.addEventListener("copy", oncopyHandler, true);
-            } else {
-                el.attachEvent("oncopy", oncopyHandler);
-            }
-        },
+
+            return (safeCopy ? new Copy() : false);
+        }()),
+
 
         /**
          * @method Hyphenator~checkIfAllDone
@@ -2203,12 +2226,15 @@ var Hyphenator = (function (window) {
          * @access private
          */
         checkIfAllDone = function () {
-            console.log('ciad: ' + contextWindow.location.href);
-            var allDone = true, i;
+            var allDone = true, i, doclist = {}, doc;
             elements.each(function (ellist) {
                 var j, l = ellist.length;
                 for (j = 0; j < l; j += 1) {
                     allDone = allDone && ellist[j].hyphenated;
+                    if (!doclist.hasOwnProperty(ellist[j].element.baseURI)) {
+                        doclist[ellist[j].element.baseURI] = true;
+                    }
+                    doclist[ellist[j].element.baseURI] = doclist[ellist[j].element.baseURI] && ellist[j].hyphenated;
                 }
             });
             if (allDone) {
@@ -2227,7 +2253,11 @@ var Hyphenator = (function (window) {
                 for (i = 0; i < CSSEditors.length; i += 1) {
                     CSSEditors[i].clearChanges();
                 }
-                onHyphenationDone(contextWindow.location.href);
+                for (doc in doclist) {
+                    if (doclist.hasOwnProperty(doc)) {
+                        onHyphenationDone(doc);
+                    }
+                }
             }
         },
 
@@ -2243,7 +2273,6 @@ var Hyphenator = (function (window) {
          * @access private
          */
         hyphenateElement = function (lang, elo) {
-            console.log('he: ' + contextWindow.location.href);
             var el = elo.element,
                 hyphenate,
                 n,
@@ -2289,7 +2318,7 @@ var Hyphenator = (function (window) {
                     return r;
                 };
                 if (safeCopy && (el.tagName.toLowerCase() !== 'body')) {
-                    registerOnCopy(el);
+                    copy.registerOnCopy(el);
                 }
                 i = 0;
                 n = el.childNodes[i];
@@ -2331,7 +2360,6 @@ var Hyphenator = (function (window) {
          * Therefore a tricky bind()-function was necessary.
          * @param {string} lang The language of the elements to hyphenate
          * @access private
-         * @todo because of setTimeout the script loses correct contextWindow! -> test 70 breaks because allDone on frame is never fired -> include document in elements-List
          */
         hyphenateLanguageElements = function (lang) {
             function bind(fun, arg1, arg2) {
@@ -2340,7 +2368,6 @@ var Hyphenator = (function (window) {
                 };
             }
             var i, l;
-            console.log('hle: ' + contextWindow.location.href);
             if (lang === '*') {
                 elements.each(function (lang, ellist) {
                     var j, le = ellist.length;
@@ -2370,11 +2397,64 @@ var Hyphenator = (function (window) {
                 for (i = 0; i < l; i += 1) {
                     removeHyphenationFromElement(ellist[i].element);
                     if (safeCopy) {
-                        removeOnCopy(ellist[i].element);
+                        copy.removeOnCopy(ellist[i].element);
                     }
                     ellist[i].hyphenated = false;
                 }
             });
+        },
+
+        /**
+         * @member {boolean} Hyphenator~useObservers 
+         * @desc
+         * Set to true, if mutation observers shall be registered on the DOM
+         * May be set by {@link Hyphenator~config}
+         * @default false
+         */
+        useObservers = false,
+
+        /**
+         * @method Hyphenator~installObserver
+         * @desc
+         * registers observers on the body (to observe element addition and removel)
+         * and on elements to be hyphenated (to observe changed text)
+         * @todo: testing, documentation
+         */
+        installObserver = function () {
+            var mo = null,
+                cb = function (mutations) {
+                    mutations.forEach(function (mutation) {
+                        var i, e, lang;
+                        if (mutation.removedNodes.length > 0) {
+                            //remove from ElementCollection
+                            for (i = 0; i < mutation.removedNodes.length; i += 1) {
+                                elements.remove(mutation.removedNodes[i]);
+                            }
+                        }
+                        if (mutation.addedNodes.length > 0) {
+                            //hyphenate
+                            for (i = 0; i < mutation.addedNodes.length; i += 1) {
+                                lang = getLang(mutation.addedNodes[i]);
+                                e = elements.add(mutation.addedNodes[i], lang);
+                                hyphenateElement(lang, e);
+                                //Hyphenator.hyphenate(mutation.addedNodes[i], getLang(mutation.addedNodes[i]));
+                            }
+                        }
+                    });
+                };
+            try {
+                mo = new window.MutationObserver(cb);
+            } catch (e) {
+                try {
+                    //IE>=6
+                    mo  = new window.WebKitMutationObserver(cb);
+                } catch (e2) {
+                    mo = null;
+                }
+            }
+            if (!!mo) {
+                mo.observe(window.document.getElementsByTagName('body')[0], {childList: true, subTree: true, characterData: true});
+            }
         },
 
         /**
@@ -2444,6 +2524,7 @@ var Hyphenator = (function (window) {
             var settings = {
                 'STORED': true,
                 'classname': hyphenateClass,
+                'urlclassname': urlHyphenateClass,
                 'donthyphenateclassname': dontHyphenateClass,
                 'minwordlength': min,
                 'hyphenchar': hyphen,
@@ -2452,6 +2533,7 @@ var Hyphenator = (function (window) {
                 'displaytogglebox': displayToggleBox,
                 'remoteloading': enableRemoteLoading,
                 'enablecache': enableCache,
+                'enablereducedpatternset': enableReducedPatternSet,
                 'onhyphenationdonecallback': onHyphenationDone,
                 'onerrorhandler': onError,
                 'intermediatestate': intermediateState,
@@ -2466,7 +2548,8 @@ var Hyphenator = (function (window) {
                 'useCSS3hyphenation': css3,
                 'unhide': unhide,
                 'onbeforewordhyphenation': onBeforeWordHyphenation,
-                'onafterwordhyphenation': onAfterWordHyphenation
+                'onafterwordhyphenation': onAfterWordHyphenation,
+                'observe': useObservers
             };
             storage.setItem('config', window.JSON.stringify(settings));
         },
@@ -2482,60 +2565,6 @@ var Hyphenator = (function (window) {
             if (storage.test('config')) {
                 settings = window.JSON.parse(storage.getItem('config'));
                 Hyphenator.config(settings);
-            }
-        },
-
-        /**
-         * @member {boolean} Hyphenator~useObservers 
-         * @desc
-         * Set to true, if mutation observers shall be registered on the DOM
-         * May be set by {@link Hyphenator~config}
-         * @default false
-         */
-        useObservers = false,
-
-        /**
-         * @method Hyphenator~installObserver
-         * @desc
-         * registers observers on the body (to observe element addition and removel)
-         * and on elements to be hyphenated (to observe changed text)
-         * @todo: register on elements, testing, documentation
-         */
-        installObserver = function () {
-            var mo = null,
-                cb = function (mutations) {
-                    window.console.log(mutations);
-                    mutations.forEach(function (mutation) {
-                        var i, e, lang;
-                        if (mutation.removedNodes.length > 0) {
-                            //remove from ElementCollection
-                            for (i = 0; i < mutation.removedNodes.length; i += 1) {
-                                elements.remove(mutation.removedNodes[i]);
-                            }
-                        }
-                        if (mutation.addedNodes.length > 0) {
-                            //hyphenate
-                            for (i = 0; i < mutation.addedNodes.length; i += 1) {
-                                lang = getLang(mutation.addedNodes[i]);
-                                e = elements.add(mutation.addedNodes[i], lang);
-                                hyphenateElement(lang, e);
-                                //Hyphenator.hyphenate(mutation.addedNodes[i], getLang(mutation.addedNodes[i]));
-                            }
-                        }
-                    });
-                };
-            try {
-                mo = new window.MutationObserver(cb);
-            } catch (e) {
-                try {
-                    //IE>=6
-                    mo  = new window.WebKitMutationObserver(cb);
-                } catch (e2) {
-                    mo = null;
-                }
-            }
-            if (!!mo) {
-                mo.observe(window.document.getElementsByTagName('body')[0], {childList: true, subTree: true, characterData: true});
             }
         };
 
@@ -2581,11 +2610,6 @@ var Hyphenator = (function (window) {
          */
         languages: {},
 
-        /**
-         * @todo: complete commenting
-         * @typedef {Object} Hyphenator.config
-         * @property {string} classname - default: 'hyphenate' - the name of the class of elements to be hyphenated
-         */
 
         /**
          * @method Hyphenator.config
@@ -2635,6 +2659,11 @@ var Hyphenator = (function (window) {
                     case 'classname':
                         if (assert('classname', 'string')) {
                             hyphenateClass = obj[key];
+                        }
+                        break;
+                    case 'urlclassname':
+                        if (assert('urlclassname', 'string')) {
+                            urlHyphenateClass = obj[key];
                         }
                         break;
                     case 'donthyphenateclassname':
@@ -2762,8 +2791,8 @@ var Hyphenator = (function (window) {
                             onAfterWordHyphenation = obj[key];
                         }
                         break;
-                    case 'useobservers':
-                        if (assert('useobservers', 'boolean')) {
+                    case 'observe':
+                        if (assert('observe', 'boolean')) {
                             useObservers = obj[key];
                         }
                         break;

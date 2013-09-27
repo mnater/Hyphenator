@@ -25,8 +25,8 @@
             if (parent != window) {
                 Hyphenator.config({
                     'onhyphenationdonecallback': function () {
-                        var t1 = document.getElementById('test').innerHTML,
-                        t2 = document.getElementById('ref').innerHTML,
+                        var t1 = document.getElementById('test').innerText,
+                        t2 = document.getElementById('ref').innerText,
                         desc = document.getElementById('desc').firstChild.data,
                         msg = {
                             desc: desc,
@@ -43,8 +43,8 @@
             }
             Hyphenator.config({
                 hyphenchar:'|',
-                safecopy:false
-                //urlhyphenchar:'·'
+                safecopy:true,
+                urlhyphenchar:'·'
             });
             Hyphenator.run();
         </script>
@@ -55,6 +55,6 @@
         <p id="desc">Use URLHyphenation for a specific element.</p>
 
         <p id="test" class="hyphenate" lang="en">Hyphenation is not alway good. Things like <span class="code urlhyphenate">"Content-Type: application/json"</span> should not be hyphenated but treated like an URL instead.</p>
-        <p id="ref">…</p>
+        <p id="ref">Hy|phen|ation is not alway good. Things like <span class="code">"Content-Type:· application/·json"</span> should not be hy|phen|ated but treated like an URL in|stead.</p>
     </body>
 </html>
