@@ -225,7 +225,7 @@ var Hyphenator_Loader = (function (window) {
                 toplevel = false;
                 try {
                     toplevel = !window.frameElement;
-                } catch (e) {}
+                } catch (ignore) {}
                 if (window.document.documentElement.doScroll && toplevel) {
                     doScrollCheck();
                 }
