@@ -1525,7 +1525,7 @@ var Hyphenator = (function (window) {
                                 useHyphenator();
                             }
                         } else {
-                            if (!css3 || !css3_h9n.checkLangSupport(eLang)) {
+                            if (!css3 || !css3_h9n.support || !css3_h9n.checkLangSupport(eLang)) {
                                 useHyphenator();
                             } // else do nothing
                         }
@@ -2232,9 +2232,9 @@ var Hyphenator = (function (window) {
                 for (j = 0; j < l; j += 1) {
                     allDone = allDone && ellist[j].hyphenated;
                     if (!doclist.hasOwnProperty(ellist[j].element.baseURI)) {
-                        doclist[ellist[j].element.baseURI] = true;
+                        doclist[ellist[j].element.ownerDocument.location.href] = true;
                     }
-                    doclist[ellist[j].element.baseURI] = doclist[ellist[j].element.baseURI] && ellist[j].hyphenated;
+                    doclist[ellist[j].element.ownerDocument.location.href] = doclist[ellist[j].element.ownerDocument.location.href] && ellist[j].hyphenated;
                 }
             });
             if (allDone) {
@@ -2418,42 +2418,58 @@ var Hyphenator = (function (window) {
          * @desc
          * registers observers on the body (to observe element addition and removel)
          * and on elements to be hyphenated (to observe changed text)
-         * @todo: testing, documentation
+         * @param {Object} target The target to observe. If no target is defined, the body is observed
+         * @todo: targeting, testing, documentation
          */
-        installObserver = function () {
+        installObserver = function (target) {
             var mo = null,
-                cb = function (mutations) {
-                    mutations.forEach(function (mutation) {
-                        var i, e, lang;
-                        if (mutation.removedNodes.length > 0) {
+                handleMutation = function (mutation) {
+                    //window.console.log(mutation);
+                    var i, e, lang, type = mutation.type;
+                    switch (type) {
+                    case 'attributes':
+                            //todo
+                        break;
+                    case 'characterData':
+                        mo.disconnect();
+                        Hyphenator.hyphenate(mutation.target.parentNode, getLang(mutation.target.parentNode));
+                        mo.observe(target, {childList: true, subtree: true, characterData: true});
+                        break;
+                    case 'childList':
+                        if (mutation.removedNodes && mutation.removedNodes.length > 0) {
                             //remove from ElementCollection
                             for (i = 0; i < mutation.removedNodes.length; i += 1) {
                                 elements.remove(mutation.removedNodes[i]);
                             }
                         }
-                        if (mutation.addedNodes.length > 0) {
+                        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
                             //hyphenate
                             for (i = 0; i < mutation.addedNodes.length; i += 1) {
                                 lang = getLang(mutation.addedNodes[i]);
                                 e = elements.add(mutation.addedNodes[i], lang);
                                 hyphenateElement(lang, e);
-                                //Hyphenator.hyphenate(mutation.addedNodes[i], getLang(mutation.addedNodes[i]));
                             }
                         }
-                    });
+                        break;
+                    }
+                },
+                cb = function (mutations) {
+                    mutations.forEach(handleMutation);
                 };
+            if (!target) {
+                target = contextWindow.document.getElementsByTagName('body')[0];
+            }
             try {
                 mo = new window.MutationObserver(cb);
             } catch (e) {
                 try {
-                    //IE>=6
                     mo  = new window.WebKitMutationObserver(cb);
                 } catch (e2) {
                     mo = null;
                 }
             }
             if (!!mo) {
-                mo.observe(window.document.getElementsByTagName('body')[0], {childList: true, subTree: true, characterData: true});
+                mo.observe(target, {childList: true, subtree: true, characterData: true});
             }
         },
 
@@ -2955,7 +2971,6 @@ var Hyphenator = (function (window) {
          * @desc
          * reads and sets configurations from GET parameters in the URI
          * @access public
-         * @todo: extend for all config-options
          */
         getConfigFromURI: function () {
             /*jslint evil: true*/
@@ -2977,7 +2992,12 @@ var Hyphenator = (function (window) {
                             } else if (isFinite(option[1])) {
                                 option[1] = parseInt(option[1], 10);
                             }
-                            if (option[0] === 'onhyphenationdonecallback') {
+                            if (option[0] === 'togglebox' ||
+                                    option[0] === 'onhyphenationdonecallback' ||
+                                    option[0] === 'onerrorhandler' ||
+                                    option[0] === 'selectorfunction' ||
+                                    option[0] === 'onbeforewordhyphenation' ||
+                                    option[0] === 'onafterwordhyphenation') {
                                 option[1] = new Function('', option[1]);
                             }
                             re[option[0]] = option[1];
