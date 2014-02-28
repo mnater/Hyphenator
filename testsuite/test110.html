@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="de">
     <head>
-        <title>Hyphenator.js &ndash; Test 109</title>
+        <title>Hyphenator.js &ndash; Test 110</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -26,7 +26,7 @@
                         desc = document.getElementById('desc').firstChild.data,
                         msg = {
                             desc: desc,
-                            index: 109
+                            index: 110
                         };
                         if (t1 == t2) {
                             msg.result = 'passed';
@@ -39,18 +39,18 @@
             }
             Hyphenator.config({
                 hyphenchar:'|',
-                orphancontrol: 2,
+                orphancontrol: 3,
                 safecopy:false
             });
             Hyphenator.run();
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test108.html">&lt;- Prev</a> | <a href="test110.html">Next -&gt;</a></p>
-        <h1>Test 109</h1>
-        <p id="desc">Orphancontrol level 2 with no end tags</p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test109.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+        <h1>Test 110</h1>
+        <p id="desc">Orphancontrol level 3 with no end tags</p>
 
         <p id="test" class="hyphenate">&laquo;Wunderschönen guten Tag allerseits&raquo;, rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: &laquo;Himmelherrgott, so viele Leute hatte ich nicht erwartet!&raquo;
-        <p id="ref">&laquo;Wun|der|schö|nen guten Tag al|ler|seits&raquo;, rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: &laquo;Him|mel|herr|gott, so viele Leute hatte ich nicht erwartet!&raquo;</p>
+        <p id="ref">&laquo;Wun|der|schö|nen guten Tag al|ler|seits&raquo;, rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: &laquo;Him|mel|herr|gott, so viele Leute hatte ich nicht&nbsp;erwartet!&raquo;</p>
         </body>
 </html>
