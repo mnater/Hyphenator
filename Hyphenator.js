@@ -2292,6 +2292,8 @@ var Hyphenator = (function (window) {
                     default:
                         h = hyphen;
                     }
+                    //strip off blank space at the end (omitted closing tags)
+                    part = part.replace(/[\s]*$/, '');
                     if (orphanControl >= 2) {
                         //remove hyphen points from last word
                         r = part.split(' ');
@@ -2326,7 +2328,7 @@ var Hyphenator = (function (window) {
                     if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
                         n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
                         if (orphanControl !== 1) {
-                            n.data = n.data.replace(/[\S]+ [\S]+$/, controlOrphans);
+                            n.data = n.data.replace(/[\S]+ [\S]+[\s]*$/, controlOrphans);
                         }
                     }
                     i += 1;
