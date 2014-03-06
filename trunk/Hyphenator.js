@@ -1979,13 +1979,14 @@ var Hyphenator = (function (window) {
          * If there's a '-' hyphenate the parts.
          * The hyphenated word is returned and (if acivated) cached.
          * Both special Events onBeforeWordHyphenation and onAfterWordHyphenation are called for the word.
+         * @param {Object} lo A language object (containing the patterns)
          * @param {string} lang The language of the word
          * @param {string} word The word
          * @returns string The hyphenated word
          * @access public
          */
-        hyphenateWord = function (lang, word) {
-            var lo = Hyphenator.languages[lang], parts, l, subst,
+        hyphenateWord = function (lo, lang, word) {
+            var parts, l, subst,
                 w, characters, origWord, originalCharacters, wordLength, i, j, k, node, points = [],
                 characterPoints = [], nodePoints, nodePointsLength, m = Math.max, trie,
                 result = [''], pattern, r;
@@ -2003,7 +2004,7 @@ var Hyphenator = (function (window) {
                 //word contains '-' -> hyphenate the parts separated with '-'
                 parts = word.split('-');
                 for (i = 0, l = parts.length; i < l; i += 1) {
-                    parts[i] = hyphenateWord(lang, parts[i]);
+                    parts[i] = hyphenateWord(lo, lang, parts[i]);
                 }
                 r = parts.join('-');
             } else {
@@ -2273,6 +2274,7 @@ var Hyphenator = (function (window) {
                 hyphenate,
                 n,
                 i,
+                lo,
                 controlOrphans = function (part) {
                     var h, r;
                     switch (hyphen) {
@@ -2304,6 +2306,7 @@ var Hyphenator = (function (window) {
                     return r;
                 };
             if (Hyphenator.languages.hasOwnProperty(lang)) {
+                lo = Hyphenator.languages[lang];
                 hyphenate = function (word) {
                     var r;
                     if (!Hyphenator.doHyphenation) {
@@ -2311,7 +2314,7 @@ var Hyphenator = (function (window) {
                     } else if (urlOrMailRE.test(word)) {
                         r = hyphenateURL(word);
                     } else {
-                        r = hyphenateWord(lang, word);
+                        r = hyphenateWord(lo, lang, word);
                     }
                     return r;
                 };
@@ -2322,7 +2325,7 @@ var Hyphenator = (function (window) {
                 n = el.childNodes[i];
                 while (!!n) {
                     if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-                        n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+                        n.data = n.data.replace(lo.genRegExp, hyphenate);
                         if (orphanControl !== 1) {
                             n.data = n.data.replace(/[\S]+ [\S]+[\s]*$/, controlOrphans);
                         }
@@ -2907,9 +2910,10 @@ var Hyphenator = (function (window) {
          * &lt;/script&gt;
          */
         hyphenate: function (target, lang) {
-            var hyphenate, n, i;
+            var hyphenate, n, i, lo;
+            lo = Hyphenator.languages[lang];
             if (Hyphenator.languages.hasOwnProperty(lang)) {
-                if (!Hyphenator.languages[lang].prepared) {
+                if (!lo.prepared) {
                     prepareLanguagesObj(lang);
                 }
                 hyphenate = function (word) {
@@ -2917,7 +2921,7 @@ var Hyphenator = (function (window) {
                     if (urlOrMailRE.test(word)) {
                         r = hyphenateURL(word);
                     } else {
-                        r = hyphenateWord(lang, word);
+                        r = hyphenateWord(lo, lang, word);
                     }
                     return r;
                 };
@@ -2926,7 +2930,7 @@ var Hyphenator = (function (window) {
                     n = target.childNodes[i];
                     while (!!n) {
                         if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
-                            n.data = n.data.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+                            n.data = n.data.replace(lo.genRegExp, hyphenate);
                         } else if (n.nodeType === 1) {
                             if (n.lang !== '') {
                                 Hyphenator.hyphenate(n, n.lang);
@@ -2938,7 +2942,7 @@ var Hyphenator = (function (window) {
                         n = target.childNodes[i];
                     }
                 } else if (typeof target === 'string' || target.constructor === String) {
-                    return target.replace(Hyphenator.languages[lang].genRegExp, hyphenate);
+                    return target.replace(lo.genRegExp, hyphenate);
                 }
             } else {
                 onError(new Error('Language "' + lang + '" is not loaded.'));
