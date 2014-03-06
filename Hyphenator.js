@@ -1841,11 +1841,7 @@ var Hyphenator = (function (window) {
                 lo.prepared = true;
             }
             if (!!storage) {
-                try {
-                    storage.setItem(lang, window.JSON.stringify(lo));
-                } catch (e) {
-                    onError(e);
-                }
+                storage.setItem(lang, window.JSON.stringify(lo));
             }
 
         },
@@ -2521,7 +2517,11 @@ var Hyphenator = (function (window) {
                         return this.store.getItem(this.prefix + name);
                     },
                     setItem: function (name, value) {
-                        this.store.setItem(this.prefix + name, value);
+                        try {
+                            this.store.setItem(this.prefix + name, value);
+                        } catch (e) {
+                            onError(e);
+                        }
                     }
                 };
             } else {
