@@ -1608,7 +1608,7 @@ var Hyphenator = (function (window) {
              * The following code is based on code from hypher.js and adapted for Hyphenator.js
              * Copyright (c) 2011, Bram Stein
              */
-            var size = 0,
+            var size,
                 tree = {
                     //tpoints: []
                 },
@@ -1624,13 +1624,14 @@ var Hyphenator = (function (window) {
                 t,
                 p,
                 codePoint,
+                pa,
                 getPoints = (function () {
                     var test = 'in3se', rf;
                     //IE<9 doesn't act like other browsers: doesn't preserve the separators
                     if (test.split(/\D/).length === 1) {
                         rf = function (pattern) {
-                            pattern = pattern.replace(/\D/gi, ' ');
-                            return pattern.split(' ');
+                            pa = pattern.replace(/\D/gi, ' ');
+                            return pa.split(' ');
                         };
                     } else {
                         rf = function (pattern) {
@@ -1640,7 +1641,9 @@ var Hyphenator = (function (window) {
                     return rf;
                 }()),
                 getChars = function (pattern) {
-                    return pattern.replace(/[\d]/g, '').split('');
+                    pa = pattern.replace(/[\d]/g, '');
+                    return pa.split('');
+                    //return pattern.replace(/[\d]/g, '').split('');
                 };
 
             for (size in patternObject) {
@@ -1806,6 +1809,7 @@ var Hyphenator = (function (window) {
          */
         prepareLanguagesObj = function (lang) {
             var lo = Hyphenator.languages[lang], wrd;
+
             if (!lo.prepared) {
                 if (enableCache) {
                     lo.cache = {};
@@ -2349,7 +2353,6 @@ var Hyphenator = (function (window) {
                 checkIfAllDone();
             }
         },
-
 
         /**
          * @method Hyphenator~hyphenateLanguageElements
