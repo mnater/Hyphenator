@@ -1395,8 +1395,7 @@ var Hyphenator = (function (window) {
                         dY = Math.floor((w.outerHeight - dH) / 2) + window.screenY,
                         ul = '',
                         languageHint;
-                    //todo: check X-Domain instead of !isBookmarklet
-                    if (!!window.showModalDialog && !isBookmarklet) {
+                    if (!!window.showModalDialog && (w.location.href.indexOf(basePath) !== -1)) {
                         ml = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: " + dW + "px; dialogHeight: " + dH + "px; dialogtop: " + dY + "; dialogleft: " + dX + "; center: on; resizable: off; scroll: off;");
                     } else {
                         languageHint = (function () {
