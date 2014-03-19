@@ -1395,7 +1395,8 @@ var Hyphenator = (function (window) {
                         dY = Math.floor((w.outerHeight - dH) / 2) + window.screenY,
                         ul = '',
                         languageHint;
-                    if (!!window.showModalDialog) {
+                    //todo: check X-Domain instead of !isBookmarklet
+                    if (!!window.showModalDialog && !isBookmarklet) {
                         ml = window.showModalDialog(basePath + 'modalLangDialog.html', supportedLangs, "dialogWidth: " + dW + "px; dialogHeight: " + dH + "px; dialogtop: " + dY + "; dialogleft: " + dX + "; center: on; resizable: off; scroll: off;");
                     } else {
                         languageHint = (function () {
@@ -1484,6 +1485,10 @@ var Hyphenator = (function (window) {
                             el.className = el.className + ' ' + css3hyphenateClass;
                         },
                         useHyphenator = function () {
+                            //todo: weight elements!
+                            if (isBookmarklet && eLang !== mainLanguage) {
+                                return;
+                            }
                             if (supportedLangs.hasOwnProperty(eLang)) {
                                 docLanguages[eLang] = true;
                             } else {
@@ -2423,7 +2428,7 @@ var Hyphenator = (function (window) {
          * registers observers on the body (to observe element addition and removel)
          * and on elements to be hyphenated (to observe changed text)
          * @param {Object} target The target to observe. If no target is defined, the body is observed
-         * @todo: targeting, testing, documentation
+         * @todo: targeting, testing (specially for mem leaks), documentation
          */
         installObserver = function (target) {
             var mo = null,
@@ -3064,7 +3069,7 @@ window['Hyphenator'] = Hyphenator;
  * call Hyphenator if it is a Bookmarklet
  */
 if (Hyphenator.isBookmarklet()) {
-    Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', doframes: true, useCSS3hyphenation: true});
+    Hyphenator.config({displaytogglebox: true, intermediatestate: 'visible', storagetype: 'local', doframes: true, useCSS3hyphenation: true});
     Hyphenator.config(Hyphenator.getConfigFromURI());
     Hyphenator.run();
 }
