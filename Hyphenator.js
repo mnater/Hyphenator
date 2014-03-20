@@ -1484,7 +1484,8 @@ var Hyphenator = (function (window) {
                             el.className = el.className + ' ' + css3hyphenateClass;
                         },
                         useHyphenator = function () {
-                            //todo: weight elements!
+                            //quick fix for test111.html
+                            //better: weight elements
                             if (isBookmarklet && eLang !== mainLanguage) {
                                 return;
                             }
