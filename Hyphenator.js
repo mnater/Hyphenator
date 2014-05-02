@@ -1647,7 +1647,6 @@ var Hyphenator = (function (window) {
                             //add last point (0)
                             if (!lastwasp) {
                                 points[ppos] = 0;
-                                ppos += 1;
                             }
                             //write points
                             t.tpoints = points;
@@ -1679,7 +1678,6 @@ var Hyphenator = (function (window) {
          */
         recreatePattern = function (pattern, nodePoints) {
             var r = [], c = pattern.split(''), i;
-            console.log(pattern, nodePoints);
             for (i = 0; i < nodePoints.length; i += 1) {
                 if (nodePoints[i] !== 0) {
                     r.push(nodePoints[i]);
