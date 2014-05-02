@@ -106,6 +106,7 @@ By default Hyphenator.js only hyphenates words with a minimum of 6 letters. You 
 ----
 ==== property `hyphenchar` ====
 By default Hyphenator.js puts the [http://en.wikipedia.org/wiki/Hyphen#Hyphens_in_computing soft hyphen] in each possible hyphenation point. Soft hyphens are invisible unless the line is breaked. To check hyphenation you can set `hyphenchar` to a visible character (such as the pipe '|').
+
 *Note:* Use `String.fromCharCode()` for HTML-Entities!
 
 ===== Example 4 – redefining hyphenchar =====
@@ -119,6 +120,7 @@ By default Hyphenator.js puts the [http://en.wikipedia.org/wiki/Hyphen#Hyphens_i
 ----
 ==== property `urlhyphenchar` ====
 When processing URLs and email-adresses a hyphen would invalidate the text. Thus, by default, a [http://en.wikipedia.org/wiki/Zero_width_space zero width space] is used instead. You can change this character, too.
+
 *Note:* Use `String.fromCharCode()` for HTML-Entities!
 
 ===== Example 5 – redefining urlhyphenchar =====
