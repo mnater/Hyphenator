@@ -38,8 +38,11 @@
                     }
                 });
             }
-                Hyphenator.config({urlhyphenchar:'|'});
-                Hyphenator.run();
+            Hyphenator.config({
+                urlhyphenchar:'•',
+                safecopy: false
+            });
+            Hyphenator.run();
         </script>
     </head>
     <body>
@@ -60,21 +63,25 @@
             <a href="#">pre.name@subdomain2.host.com</a><br>
             <a href="#">http://www.radio1.ch/</a><br>
             <a href="#">http://radio1.ch/</a><br>
+            <a href="#">http://www.domain.com/?adid=b2plbm5pbmdzLjY1NDM1LjU0MDNAbmluZXNoYXJwLmFwbGl0cmFrLmNvbQ</a><br>
+            <a href="#">http://www.einsehrlangerdomainname.com/</a><br>
         </p>
 
          <p id="ref">
-            <a href="#">http://|www.|domain.|tld/|</a><br>
-            <a href="#">http://|www.|domain.|tld/|path/|to/|dir/|file.|html</a><br>
-            <a href="#">http://|www.|domain.|tld/|file.|html#|anchor</a><br>
-            <a href="#">http://|domain.|tld/|</a><br>
-            <a href="#">http://|192.|168.|0.|1/|</a><br>
-            <a href="#">www.|example.|com</a><br>
-            <a href="#">example.|com</a><br>
-            <a href="#">http://|192.|168.|0.|1:|80/|</a><br>
-            <a href="#">name@|host.|com</a><br>
-            <a href="#">pre.|name@|subdomain2.|host.|com</a><br>
-            <a href="#">http://|www.|radio1.|ch/|</a><br>
-            <a href="#">http://|radio1.|ch/|</a><br>
+            <a href="#">http://•www.•domain.•tld/•</a><br>
+            <a href="#">http://•www.•domain.•tld/•path/•to/•dir/•file.•html</a><br>
+            <a href="#">http://•www.•domain.•tld/•file.•html#•anchor</a><br>
+            <a href="#">http://•domain.•tld/•</a><br>
+            <a href="#">http://•192.•168.•0.•1/•</a><br>
+            <a href="#">www.•example.•com</a><br>
+            <a href="#">example.•com</a><br>
+            <a href="#">http://•192.•168.•0.•1:•80/•</a><br>
+            <a href="#">name@•host.•com</a><br>
+            <a href="#">pre.•name@•subdomain2.•host.•com</a><br>
+            <a href="#">http://•www.•radio1.•ch/•</a><br>
+            <a href="#">http://•radio1.•ch/•</a><br>
+            <a href="#">http://•www.•domain.•com/?•adid=•b2•plb•m5pbmdzLjY1ND•M1L•jU0MD•NAbm•lu•ZX•NoYX•JwLmFwbGl0cm•FrLm•NvbQ</a><br>
+            <a href="#">http://•www.•ein•sehr•lan•ger•do•main•na•me.•com/•</a><br>
         </p>
 
      </body>
