@@ -5,12 +5,16 @@
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.3.0.zip 4.3.0] (October XX, 2014) ==
 This minor release brings the following changes:
   * jsdoc3 formatted code comments in the source file
+  * the core functions are slightly faster (specially in chrome: removed some deopts)
   * better performance when checking for CSS3 hyphens support
-  * new method for hyphenating URL-styled text (issue198)
+  * new method for hyphenating URL-styled text (issue188 and issue198)
   * prevention of a memory leak in some rare cases (issue192)
   * Hyphenator. emits a warning to the console, when it is invoked twice
   * Code refactoring for better readability
 And some bugfixes:
+  * fixed an issue with Hyphenator.js running in private mode (fixed issue108)
+  * fixed an issue with the Bookmarklet (fixed issue185)
+  * fixed an issue with ommited tags (fixed issue194)
   * workaround for a bug in Konqueror 4.8.4 (fixed issue202)
 </wiki:comment>
 
