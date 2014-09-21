@@ -1,6 +1,18 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
+<wiki:comment>
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.3.0.zip 4.3.0] (October XX, 2014) ==
+This minor release brings the following changes:
+  * jsdoc3 formatted code comments in the source file
+  * better performance when checking for CSS3 hyphens support
+  * new method for hyphenating URL-styled text (issue198)
+  * prevention of a memory leak in some rare cases (issue192)
+  * Hyphenator. emits a warning to the console, when it is invoked twice
+  * Code refactoring for better readability
+And some bugfixes:
+  * workaround for a bug in Konqueror 4.8.4 (fixed issue202)
+</wiki:comment>
 
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.2.0.zip 4.2.0] (April 25, 2013) ==
 This minor release brings the following changes:
