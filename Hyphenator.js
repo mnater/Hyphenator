@@ -254,7 +254,7 @@ var Hyphenator = (function (window) {
          * A key-value object containing all html-tags whose content should not be hyphenated
          * @access private
          */
-        dontHyphenate = {'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true, 'math': true, 'svg': true, 'style': true},
+        dontHyphenate = {'video': true, 'audio': true, 'script': true, 'code': true, 'pre': true, 'img': true, 'br': true, 'samp': true, 'kbd': true, 'var': true, 'abbr': true, 'acronym': true, 'sub': true, 'sup': true, 'button': true, 'option': true, 'label': true, 'textarea': true, 'input': true, 'math': true, 'svg': true, 'style': true},
 
         /**
          * @member {boolean} Hyphenator~enableCache
@@ -1220,7 +1220,18 @@ var Hyphenator = (function (window) {
          * @access public
          */
         hyphenateURL = function (url) {
-            return url.replace(/([:\/\.\?#&_,;!@]+)/gi, '$&' + urlhyphen);
+            var tmp = url.replace(/([:\/\.\?#&\-_,;!@]+)/gi, '$&' + urlhyphen),
+                parts = tmp.split(urlhyphen),
+                i;
+            for (i = 0; i < parts.length; i += 1) {
+                if (parts[i].length > (2 * min)) {
+                    parts[i] = parts[i].replace(/(\w{3})(\w)/gi, "$1" + urlhyphen + "$2");
+                }
+            }
+            if (parts[parts.length - 1] === "") {
+                parts.pop();
+            }
+            return parts.join(urlhyphen);
         },
 
         /**
