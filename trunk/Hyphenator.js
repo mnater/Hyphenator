@@ -199,7 +199,8 @@ var Hyphenator = (function (window) {
                 i += 1;
                 t = s[i];
             }
-            return !!r ? r : 'http://hyphenator.googlecode.com/svn/trunk/';
+            window.console.log(r);
+            return !!r ? r : '//hyphenator.googlecode.com/svn/trunk/';
         }()),
 
         /**
