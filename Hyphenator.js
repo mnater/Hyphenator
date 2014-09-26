@@ -56,10 +56,7 @@
  */
 
 /* The following comment is for JSLint: */
-/*global window */
-/*jslint
-    browser: true, todo: false
-*/
+/*jslint browser: true */
 
 /**
  * @desc Provides all functionality to do hyphenation, except the patterns that are loaded externally

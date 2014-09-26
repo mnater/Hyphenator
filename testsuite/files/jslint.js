@@ -1,5 +1,5 @@
 // jslint.js
-// 2013-08-26
+// 2014-07-08
 
 // Copyright (c) 2002 Douglas Crockford  (www.JSLint.com)
 
@@ -172,7 +172,7 @@
 // For example:
 
 /*jslint
-    es5: true, evil: true, nomen: true, regexp: true, todo: true
+    evil: true, nomen: true, regexp: true, todo: true
 */
 
 // The current option set is
@@ -185,7 +185,6 @@
 //     debug      true, if debugger statements should be allowed
 //     devel      true, if logging should be allowed (console, alert, etc.)
 //     eqeq       true, if == should be allowed
-//     es5        true, if ES5 syntax should be allowed
 //     evil       true, if eval should be allowed
 //     forin      true, if for in statements need not filter
 //     indent     the indentation factor
@@ -216,16 +215,16 @@
 /*properties
     '\b', '\t', '\n', '\f', '\r', '!', '!=', '!==', '"', '%', '\'', '(begin)',
     '(error)', '*', '+', '-', '/', '<', '<=', '==', '===', '>', '>=', '\\', a,
-    a_label, a_scope, already_defined, and, arguments, arity, ass, assign,
-    assignment_expression, assignment_function_expression, at, avoid_a, b,
-    bad_assignment, bad_constructor, bad_in_a, bad_invocation, bad_new,
-    bad_number, bad_operand, bad_wrap, bitwise, block, browser, c, call, charAt,
-    charCodeAt, character, closure, code, color, combine_var, comments,
-    conditional_assignment, confusing_a, confusing_regexp, constructor_name_a,
-    continue, control_a, couch, create, d, dangling_a, data, dead, debug,
-    deleted, devel, disrupt, duplicate_a, edge, edition, else, empty_block,
-    empty_case, empty_class, entityify, eqeq, error_report, errors, es5,
-    evidence, evil, exception, exec, expected_a_at_b_c, expected_a_b,
+    a_label, a_scope, already_defined, and, apply, arguments, arity, ass,
+    assign, assignment_expression, assignment_function_expression, at, avoid_a,
+    b, bad_assignment, bad_constructor, bad_in_a, bad_invocation, bad_new,
+    bad_number, bad_operand, bad_wrap, bitwise, block, break, breakage, browser,
+    c, call, charAt, charCodeAt, character, closure, code, color, combine_var,
+    comments, conditional_assignment, confusing_a, confusing_regexp,
+    constructor_name_a, continue, control_a, couch, create, d, dangling_a, data,
+    dead, debug, deleted, devel, disrupt, duplicate_a, edge, edition, elif,
+    else, empty_block, empty_case, empty_class, entityify, eqeq, error_report,
+    errors, evidence, evil, exception, exec, expected_a_at_b_c, expected_a_b,
     expected_a_b_from_c_d, expected_id_a, expected_identifier_a,
     expected_identifier_a_reserved, expected_number_a, expected_operator_a,
     expected_positive_a, expected_small_a, expected_space_a_b,
@@ -241,7 +240,7 @@
     newcap, node, nomen, not, not_a_constructor, not_a_defined, not_a_function,
     not_a_label, not_a_scope, not_greater, nud, number, octal_a, open, outer,
     parameter, parameter_a_get_b, parameter_arguments_a, parameter_set_a,
-    params, paren, passfail, plusplus, postscript, predef, properties,
+    params, paren, passfail, plusplus, pop, postscript, predef, properties,
     properties_report, property, prototype, push, quote, r, radix, raw,
     read_only, reason, redefinition_a_b, regexp, relation, replace, report,
     reserved, reserved_a, rhino, right, scanned_a_b, scope, search, second,
@@ -254,11 +253,11 @@
     unexpected_property_a, unexpected_space_a_b, unexpected_typeof_a,
     uninitialized_a, unnecessary_else, unnecessary_initialize, unnecessary_use,
     unparam, unreachable_a_b, unsafe, unused_a, url, use_array, use_braces,
-    use_object, use_or, use_param, use_spaces, used, used_before_a, var,
-    var_a_not, var_loop, vars, varstatement, warn, warning, was,
-    weird_assignment, weird_condition, weird_new, weird_program, weird_relation,
-    weird_ternary, white, wrap, wrap_immediate, wrap_regexp, write_is_wrong,
-    writeable
+    use_nested_if, use_object, use_or, use_param, use_spaces, used,
+    used_before_a, var, var_a_not, var_loop, vars, varstatement, warn, warning,
+    was, weird_assignment, weird_condition, weird_new, weird_program,
+    weird_relation, weird_ternary, white, wrap, wrap_immediate, wrap_regexp,
+    write_is_wrong, writeable
 */
 
 // The global directive is used to declare global variables that can
@@ -295,7 +294,6 @@ var JSLINT = (function () {
             debug     : true,
             devel     : true,
             eqeq      : true,
-            es5       : true,
             evil      : true,
             forin     : true,
             indent    :   10,
@@ -383,7 +381,6 @@ var JSLINT = (function () {
             empty_block: "Empty block.",
             empty_case: "Empty case.",
             empty_class: "Empty class.",
-            es5: "This is an ES5 feature.",
             evil: "eval is evil.",
             expected_a_b: "Expected '{a}' and instead saw '{b}'.",
             expected_a_b_from_c_d: "Expected '{a}' to match '{b}' from line " +
@@ -479,6 +476,7 @@ var JSLINT = (function () {
             url: "JavaScript URL.",
             use_array: "Use the array literal notation [].",
             use_braces: "Spaces are hard to count. Use {{a}}.",
+            use_nested_if: "Expected 'else { if' and instead saw 'else if'.",
             use_object: "Use the object literal notation {} or Object.create(null).",
             use_or: "Use the || operator.",
             use_param: "Use a named parameter.",
@@ -552,7 +550,7 @@ var JSLINT = (function () {
         lookahead,
         node = array_to_object([
             'Buffer', 'clearImmediate', 'clearInterval', 'clearTimeout',
-            'console', 'exports', 'global', 'module', 'process', 'querystring',
+            'console', 'exports', 'global', 'module', 'process',
             'require', 'setImmediate', 'setInterval', 'setTimeout',
             '__dirname', '__filename'
         ], false),
@@ -584,9 +582,11 @@ var JSLINT = (function () {
         standard = array_to_object([
             'Array', 'Boolean', 'Date', 'decodeURI', 'decodeURIComponent',
             'encodeURI', 'encodeURIComponent', 'Error', 'eval', 'EvalError',
-            'Function', 'isFinite', 'isNaN', 'JSON', 'Math', 'Number',
-            'Object', 'parseInt', 'parseFloat', 'RangeError', 'ReferenceError',
-            'RegExp', 'String', 'SyntaxError', 'TypeError', 'URIError'
+            'Function', 'isFinite', 'isNaN', 'JSON', 'Map', 'Math', 'Number',
+            'Object', 'parseInt', 'parseFloat', 'Promise', 'Proxy',
+            'RangeError', 'ReferenceError', 'Reflect', 'RegExp', 'Set',
+            'String', 'Symbol', 'SyntaxError', 'System', 'TypeError',
+            'URIError', 'WeakMap', 'WeakSet'
         ], false),
 
         strict_mode,
@@ -678,7 +678,6 @@ var JSLINT = (function () {
         if (option.couch) {
             add_to_predefined(couch);
             option.couch = false;
-            option.es5 = true;
         }
         if (option.devel) {
             add_to_predefined(devel);
@@ -687,7 +686,6 @@ var JSLINT = (function () {
         if (option.node) {
             add_to_predefined(node);
             option.node = false;
-            option.es5 = true;
             node_js = true;
         }
         if (option.rhino) {
@@ -906,9 +904,7 @@ var JSLINT = (function () {
                     ch = source_row.charAt(at);
                     switch (ch) {
                     case '':
-                        if (!option.es5) {
-                            warn('es5', line, character);
-                        }
+                        warn('unexpected_a', line, character, '\\');
                         next_line();
                         at = -1;
                         break;
@@ -1334,7 +1330,7 @@ klass:              do {
         token.kind = kind;
         token.master = master;
         token.used = 0;
-        token.writeable = false;
+        token.writeable = true;
 
 // Global variables are a little weird. They can be defined multiple times.
 // Some predefined global vars are (or should) not be writeable.
@@ -1951,7 +1947,21 @@ klass:              do {
     }
 
     function labeled_stmt(s, f) {
-        var x = stmt(s, f);
+        var x = stmt(s, function labeled() {
+            var the_statement;
+            if (funct.breakage) {
+                funct.breakage.push(this);
+            } else {
+                funct.breakage = [this];
+            }
+            the_statement = f.apply(this);
+            if (funct.breakage.length > 1) {
+                funct.breakage.pop();
+            } else {
+                delete funct.breakage;
+            }
+            return the_statement;
+        });
         x.labeled = true;
     }
 
@@ -2173,6 +2183,8 @@ klass:              do {
                 if (s === '=') {
                     master.init = true;
                 }
+            } else if (that.reserved) {
+                that.warn('expected_identifier_a_reserved');
             }
         } else if (that.id === '.' || that.id === '[') {
             if (!that.first || that.first.string === 'arguments') {
@@ -2242,7 +2254,7 @@ klass:              do {
     function optional_identifier(variable) {
         if (next_token.identifier) {
             advance();
-            if (token.reserved && (!option.es5 || variable)) {
+            if (token.reserved && variable) {
                 token.warn('expected_identifier_a_reserved');
             }
             return token.string;
@@ -2288,6 +2300,7 @@ klass:              do {
             }
             next_token.label = label;
             label.init = true;
+            label.statement = next_token;
         }
 
 // Parse the statement.
@@ -2408,7 +2421,7 @@ klass:              do {
             array = [statement()];
             array.disrupt = array[0].disrupt;
         }
-        if (kind !== 'catch' && array.length === 0) {
+        if (kind !== 'catch' && array.length === 0 && !option.debug) {
             curly.warn('empty_block');
         }
         block_var.forEach(function (name) {
@@ -2589,11 +2602,7 @@ klass:              do {
 
     prefix('void', function (that) {
         that.first = expression(0);
-        if (option.es5 || strict_mode) {
-            that.warn('expected_a_b', 'undefined', 'void');
-        } else if (that.first.number !== 0) {
-            that.first.warn('expected_a_b', '0', artifact(that.first));
-        }
+        that.warn('expected_a_b', 'undefined', 'void');
         return that;
     });
 
@@ -2807,7 +2816,7 @@ klass:              do {
                         if (next_token.id !== ')') {
                             n = expression(0);
                             p.second = [n];
-                            if (n.id !== '(number)' || next_token.id === ',') {
+                            if (n.id === '(string)' || next_token.id === ',') {
                                 p.warn('use_array');
                             }
                             while (next_token.id === ',') {
@@ -3001,6 +3010,8 @@ klass:              do {
             left.warn('write_is_wrong');
         } else if (!option.stupid && syx.test(name)) {
             token.warn('sync_a');
+        } else if (left && left.id === '{') {
+            that.warn('unexpected_a');
         }
         if (!option.evil && (name === 'eval' || name === 'execScript')) {
             next_token.warn('evil');
@@ -3034,6 +3045,9 @@ klass:              do {
             tally_property(e.string);
             break;
         }
+        if (left && (left.id === '{' || (left.id === '[' && left.arity === 'prefix'))) {
+            that.warn('unexpected_a');
+        }
         step_out(']', that);
         no_space(prev_token, token);
         that.first = left;
@@ -3057,7 +3071,7 @@ klass:              do {
             that.first.push(expression(10));
             if (next_token.id === ',') {
                 comma();
-                if (next_token.id === ']' && !option.es5) {
+                if (next_token.id === ']') {
                     token.warn('unexpected_a');
                     break;
                 }
@@ -3111,6 +3125,9 @@ klass:              do {
             for (;;) {
                 edge();
                 id = identifier();
+                if (token.reserved) {
+                    token.warn('expected_identifier_a_reserved');
+                }
                 define('parameter', token);
                 parameters.push(id);
                 token.init = true;
@@ -3181,9 +3198,6 @@ klass:              do {
 
             edge();
             if (next_token.string === 'get' && peek().id !== ':') {
-                if (!option.es5) {
-                    next_token.warn('es5');
-                }
                 get = next_token;
                 advance('get');
                 one_space_only();
@@ -3248,7 +3262,7 @@ klass:              do {
                 }
                 next_token.warn('unexpected_a');
             }
-            if (next_token.id === '}' && !option.es5) {
+            if (next_token.id === '}') {
                 token.warn('unexpected_a');
             }
         }
@@ -3300,6 +3314,9 @@ klass:              do {
             define('var', name);
             name.dead = funct;
             if (next_token.id === '=') {
+                if (funct === global_funct && !name.writeable) {
+                    name.warn('read_only');
+                }
                 assign = next_token;
                 assign.first = name;
                 spaces();
@@ -3347,6 +3364,9 @@ klass:              do {
         var name = next_token,
             id = identifier(true);
         define('var', name);
+        if (!name.writeable) {
+            name.warn('read_only');
+        }
         name.init = true;
         name.statement = true;
         no_space();
@@ -3411,14 +3431,17 @@ klass:              do {
         this.block = block('if');
         if (next_token.id === 'else') {
             if (this.block.disrupt) {
-                next_token.warn('unnecessary_else');
+                next_token.warn(this.elif ? 'use_nested_if' : 'unnecessary_else');
             }
             one_space();
             advance('else');
             one_space();
-            this.else = next_token.id === 'if' || next_token.id === 'switch'
-                ? statement(true)
-                : block('else');
+            if (next_token.id === 'if') {
+                next_token.elif = true;
+                this.else = statement(true);
+            } else {
+                this.else = block('else');
+            }
             if (this.else.disrupt && this.block.disrupt) {
                 this.disrupt = true;
             }
@@ -3515,8 +3538,7 @@ klass:              do {
             old_in_block = in_block,
             particular,
             that = token,
-            the_case = next_token,
-            unbroken = true;
+            the_case = next_token;
 
         function find_duplicate_case(value) {
             if (are_similar(particular, value)) {
@@ -3542,13 +3564,12 @@ klass:              do {
         }
         while (next_token.id === 'case') {
             the_case = next_token;
-            cases.forEach(find_duplicate_case);
             the_case.first = [];
             the_case.arity = 'case';
-            spaces();
-            edge('case');
-            advance('case');
             for (;;) {
+                spaces();
+                edge('case');
+                advance('case');
                 one_space();
                 particular = expression(0);
                 cases.forEach(find_duplicate_case);
@@ -3562,19 +3583,11 @@ klass:              do {
                 if (next_token.id !== 'case') {
                     break;
                 }
-                spaces();
-                edge('case');
-                advance('case');
             }
             spaces();
             the_case.second = statements();
             if (the_case.second && the_case.second.length > 0) {
-                particular = the_case.second[the_case.second.length - 1];
-                if (particular.disrupt) {
-                    if (particular.id === 'break') {
-                        unbroken = false;
-                    }
-                } else {
+                if (!the_case.second[the_case.second.length - 1].disrupt) {
                     next_token.warn('missing_a_after_b', 'break', 'case');
                 }
             } else {
@@ -3596,12 +3609,14 @@ klass:              do {
             spaces();
             the_case.second = statements();
             if (the_case.second && the_case.second.length > 0) {
-                particular = the_case.second[the_case.second.length - 1];
-                if (unbroken && particular.disrupt && particular.id !== 'break') {
-                    this.disrupt = true;
-                }
+                this.disrupt = the_case.second[the_case.second.length - 1].disrupt;
+            } else {
+                the_case.warn('empty_case');
             }
             this.second.push(the_case);
+        }
+        if (this.break) {
+            this.disrupt = false;
         }
         spaces();
         step_out('}', this);
@@ -3666,6 +3681,9 @@ klass:              do {
                 this.forin = true;
                 value = expression(1000);
                 master = value.master;
+                if (!master) {
+                    value.stop('bad_in_a');
+                }
                 if (master.kind !== 'var' || master.function !== funct ||
                         !master.writeable || master.dead) {
                     value.warn('bad_in_a');
@@ -3772,7 +3790,9 @@ klass:              do {
         var label = next_token.string,
             master;
         that.arity = 'statement';
-        if (next_token.identifier && token.line === next_token.line) {
+        if (!funct.breakage || (!option.continue && that.id === 'continue')) {
+            that.warn('unexpected_a');
+        } else if (next_token.identifier && token.line === next_token.line) {
             one_space_only();
             master = scope[label];
             if (!master || master.kind !== 'label') {
@@ -3781,9 +3801,19 @@ klass:              do {
                 next_token.warn('not_a_scope');
             } else {
                 master.used += 1;
+                if (that.id === 'break') {
+                    master.statement.break = true;
+                }
+                if (funct.breakage[funct.breakage.length - 1] === master.statement) {
+                    next_token.warn('unexpected_a');
+                }
             }
             that.first = next_token;
             advance();
+        } else {
+            if (that.id === 'break') {
+                funct.breakage[funct.breakage.length - 1].break = true;
+            }
         }
         return that;
 
@@ -3794,9 +3824,6 @@ klass:              do {
     });
 
     disrupt_stmt('continue', function () {
-        if (!option.continue) {
-            this.warn('unexpected_a');
-        }
         return optional_label(this);
     });
 
@@ -4015,7 +4042,8 @@ klass:              do {
 
                     step_in(1);
                     if (next_token.id === ';' && !node_js) {
-                        semicolon();
+                        next_token.edge = true;
+                        advance(';');
                     }
                     tree = statements();
                     begin.first = tree;
@@ -4195,7 +4223,7 @@ klass:              do {
         var i,
             key,
             keys = Object.keys(property).sort(),
-            mem = '    ',
+            mem = '   ',
             name,
             not_first = false,
             output = ['/*properties'];
@@ -4203,7 +4231,7 @@ klass:              do {
             key = keys[i];
             if (property[key] > 0) {
                 if (not_first) {
-                    mem += ', ';
+                    mem += ',';
                 }
                 name = ix.test(key)
                     ? key
@@ -4211,6 +4239,8 @@ klass:              do {
                 if (mem.length + name.length >= 80) {
                     output.push(mem);
                     mem = '    ';
+                } else {
+                    mem += ' ';
                 }
                 mem += name;
                 not_first = true;
@@ -4252,7 +4282,7 @@ klass:              do {
 
     itself.jslint = itself;
 
-    itself.edition = '2013-08-26';
+    itself.edition = '2014-07-08';
 
     return itself;
 }());
