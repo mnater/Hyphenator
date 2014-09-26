@@ -199,7 +199,6 @@ var Hyphenator = (function (window) {
                 i += 1;
                 t = s[i];
             }
-            window.console.log(r);
             return !!r ? r : '//hyphenator.googlecode.com/svn/trunk/';
         }()),
 
@@ -2407,75 +2406,6 @@ var Hyphenator = (function (window) {
         },
 
         /**
-         * @member {boolean} Hyphenator~useObservers 
-         * @desc
-         * Set to true, if mutation observers shall be registered on the DOM
-         * May be set by {@link Hyphenator~config}
-         * @default false
-         */
-        useObservers = false,
-
-        /**
-         * @method Hyphenator~installObserver
-         * @desc
-         * registers observers on the body (to observe element addition and removel)
-         * and on elements to be hyphenated (to observe changed text)
-         * @param {Object} target The target to observe. If no target is defined, the body is observed
-         * @todo: targeting, testing (specially for mem leaks), documentation
-         */
-        installObserver = function (target) {
-            var mo = null,
-                handleMutation = function (mutation) {
-                    //window.console.log(mutation);
-                    var i, e, lang, type = mutation.type;
-                    switch (type) {
-                    case 'attributes':
-                            //todo
-                        break;
-                    case 'characterData':
-                        mo.disconnect();
-                        Hyphenator.hyphenate(mutation.target.parentNode, getLang(mutation.target.parentNode));
-                        mo.observe(target, {childList: true, subtree: true, characterData: true});
-                        break;
-                    case 'childList':
-                        if (mutation.removedNodes && mutation.removedNodes.length > 0) {
-                            //remove from ElementCollection
-                            for (i = 0; i < mutation.removedNodes.length; i += 1) {
-                                elements.remove(mutation.removedNodes[i]);
-                            }
-                        }
-                        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-                            //hyphenate
-                            for (i = 0; i < mutation.addedNodes.length; i += 1) {
-                                lang = getLang(mutation.addedNodes[i]);
-                                e = elements.add(mutation.addedNodes[i], lang);
-                                hyphenateElement(lang, e);
-                            }
-                        }
-                        break;
-                    }
-                },
-                cb = function (mutations) {
-                    mutations.forEach(handleMutation);
-                };
-            if (!target) {
-                target = contextWindow.document.getElementsByTagName('body')[0];
-            }
-            try {
-                mo = new window.MutationObserver(cb);
-            } catch (e) {
-                try {
-                    mo  = new window.WebKitMutationObserver(cb);
-                } catch (e2) {
-                    mo = null;
-                }
-            }
-            if (!!mo) {
-                mo.observe(target, {childList: true, subtree: true, characterData: true});
-            }
-        },
-
-        /**
          * @method Hyphenator~createStorage
          * @desc
          * inits the private var {@link Hyphenator~storage) depending of the setting in {@link Hyphenator~storageType}
@@ -2570,8 +2500,7 @@ var Hyphenator = (function (window) {
                 'useCSS3hyphenation': css3,
                 'unhide': unhide,
                 'onbeforewordhyphenation': onBeforeWordHyphenation,
-                'onafterwordhyphenation': onAfterWordHyphenation,
-                'observe': useObservers
+                'onafterwordhyphenation': onAfterWordHyphenation
             };
             storage.setItem('config', window.JSON.stringify(settings));
         },
@@ -2813,11 +2742,6 @@ var Hyphenator = (function (window) {
                             onAfterWordHyphenation = obj[key];
                         }
                         break;
-                    case 'observe':
-                        if (assert('observe', 'boolean')) {
-                            useObservers = obj[key];
-                        }
-                        break;
                     default:
                         onError(new Error('Hyphenator.config: property ' + key + ' not known.'));
                     }
@@ -2854,9 +2778,6 @@ var Hyphenator = (function (window) {
                     prepare(hyphenateLanguageElements);
                     if (displayToggleBox) {
                         toggleBox();
-                    }
-                    if (useObservers) {
-                        installObserver();
                     }
                 } catch (e) {
                     onError(e);
