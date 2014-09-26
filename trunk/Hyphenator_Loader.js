@@ -8,8 +8,8 @@
  */
 
 /* The following comment is for JSLint: */
-/*global Hyphenator: false, Hyphenator_Loader: false */
 /*jslint browser: true */
+/*global Hyphenator: false */
 
 var Hyphenator_Loader = (function (window) {
     'use strict';
