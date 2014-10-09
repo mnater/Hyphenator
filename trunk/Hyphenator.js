@@ -326,6 +326,13 @@ var Hyphenator = (function (window) {
             window.alert("Hyphenator.js says:\n\nAn Error occurred:\n" + e.message);
         },
 
+        /**
+         * @method Hyphenator~onWarning
+         * @desc
+         * A function that can be called upon a warning.
+         * @see {@link Hyphenator.config}
+         * @access private
+         */
         onWarning = function (e) {
             window.console.log(e.message);
         },
@@ -898,8 +905,8 @@ var Hyphenator = (function (window) {
          * @param {string} context
          * @access private
          */
-        onHyphenationDone = function () {
-            return undefined;
+        onHyphenationDone = function (context) {
+            return context;
         },
 
         /**
@@ -1164,7 +1171,8 @@ var Hyphenator = (function (window) {
                             // clear existing def
                             existingRule.rule.style.visibility = '';
                         } else {
-                            addRule(sel, rulesString);
+                            i = addRule(sel, rulesString);
+                            changes.push({sheet: sheet, index: i});
                         }
                     } else {
                         i = addRule(sel, rulesString);
@@ -1570,6 +1578,7 @@ var Hyphenator = (function (window) {
                         n = el.childNodes[j];
                     }
                 };
+
             if (css3) {
                 css3_gethsupport();
             }
@@ -2485,6 +2494,7 @@ var Hyphenator = (function (window) {
                 'enablereducedpatternset': enableReducedPatternSet,
                 'onhyphenationdonecallback': onHyphenationDone,
                 'onerrorhandler': onError,
+                'onwarninghandler': onWarning,
                 'intermediatestate': intermediateState,
                 'selectorfunction': selectorFunction || mySelectorFunction,
                 'safecopy': safeCopy,
@@ -2672,6 +2682,11 @@ var Hyphenator = (function (window) {
                     case 'onerrorhandler':
                         if (assert('onerrorhandler', 'function')) {
                             onError = obj[key];
+                        }
+                        break;
+                    case 'onwarninghandler':
+                        if (assert('onwarninghandler', 'function')) {
+                            onWarning = obj[key];
                         }
                         break;
                     case 'intermediatestate':
