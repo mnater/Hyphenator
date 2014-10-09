@@ -114,7 +114,7 @@ var Hyphenator_Loader = (function (window) {
             head.appendChild(script);
 
             interval = window.setInterval(function () {
-                if (!!Hyphenator) {
+                if (typeof Hyphenator !== 'undefined') {
                     window.clearInterval(interval);
                     Hyphenator.config(config);
                     Hyphenator.run();
