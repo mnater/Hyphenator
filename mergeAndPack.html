@@ -543,10 +543,13 @@ function jsmin(comment, input, level) {
                 case true:
                     $('useLoader_block').style.display='block';
                     $('languageSelector').style.display='none';
+                    $('useCSS3hyphenation').checked = true;
+                    toggleAllLanguages(false);
                 break;
                  case false:
                     $('useLoader_block').style.display='none';
                     $('languageSelector').style.display='block';
+                    //$('useCSS3hyphenation').checked = false;
                 break;
                }
         }
@@ -850,6 +853,7 @@ function jsmin(comment, input, level) {
                 if(useCSS3hyphenation === true) {
                     config += 'useCSS3hyphenation : true,\n\t';
                 }
+                alert($('useLoader').checked);
                 if(!$('useLoader').checked) {
                     if(config.length > 0) {
                         script1 += config_head + config.slice(0,-3) + '\n});\n\n';                    
@@ -870,6 +874,19 @@ function jsmin(comment, input, level) {
                     output1.select();
                     return false;               
                 } else {
+
+                    if(navigator.userAgent.indexOf('MSIE') != -1) {
+                        script1 = script1.replace(/\n/gi, "\r");
+                    }
+                    if(pack) {
+                        var license = script1.slice(script1.indexOf('/** @license'), script1.indexOf('*/')+2).replace('* @license', '\n * ');
+                        script1 = jsmin(license, script1, packlevel);
+                    }
+                    var output1 = $('output1');
+                    output1.firstChild.data = '';
+                    output1.firstChild.data = script1;
+                    $('Hyphenator_output_block').style.display = 'block';
+
                     var loaderLanguages = $('LoaderLanguages').value;
                     var loaderPath = $('LoaderPath').value
                     var output2 = $('output2');
@@ -879,7 +896,9 @@ function jsmin(comment, input, level) {
                     } else {
                         script2 += 'Hyphenator_Loader.init(' + loaderLanguages + ', "' + loaderPath + '");'
                     }
-
+                    if(navigator.userAgent.indexOf('MSIE') != -1) {
+                        script2 = script2.replace(/\n/gi, "\r");
+                    }
                     if(pack) {
                         var license = script2.slice(script2.indexOf('/** @license'), script2.indexOf('*/')+2).replace('* @license', '\n * ');
                         script2 = jsmin(license, script2, packlevel);
@@ -932,10 +951,10 @@ function jsmin(comment, input, level) {
                 <div id="useLoader_box" class="info_box">Hyphenator_Loader.js needs some information:</div>
                 <div id="useLoader_block">
                     <p>Test language(s):</p>
-                    <div class="info_box" style="display:block">Create an object where the keys are the language codes and the values are a long word in that language (at least 12 characters long). If the website is written in one language only one key/value pair is needed (the example shows the entries for a dual language site: english and german).</div>
+                    <div class="info_box" style="display:block">Create an object where the keys are the language codes and the values are a long word in that language (at least 12 characters long). If the website is written in one language only one key/value pair is needed (the example shows the entries for a dual language site: english and armenian).</div>
                     <textarea cols="80" rows="5" id="LoaderLanguages" name="LoaderLanguages">{
     "en": "hyphenationalgorithm",
-    "de": "silbentrennungsalgorithmus"
+    "hy": "Հայերենն"
 }</textarea>
 
                     <p>Path to Hyphenator.js:</p>
@@ -1084,9 +1103,10 @@ function jsmin(comment, input, level) {
                 </div>
 
                 <p>
-                <label><input type="checkbox" id="useCSS3hyphenation" name="useCSS3hyphenation" title="useCSS3hyphenation"> Use the in-browser CSS3 hyphenation if available. </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="useCSS3hyphenation_btn" class="info_btn" alt="Show-Info Button"></p>
+                <label><input type="checkbox" id="useCSS3hyphenation" name="useCSS3hyphenation" title="useCSS3hyphenation" checked> Use the in-browser CSS3 hyphenation if available. </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="useCSS3hyphenation_btn" class="info_btn" alt="Show-Info Button"></p>
                 <div id="useCSS3hyphenation_box" class="info_box">With this option enabled Hyphenator.js checks if the browser supports CSS3-hyphenation. If so, the elements are hyphenated by the browser instead of Hyphenator.js.<br>
-                For unsupported languages or other browsers Hyphenator.js fills the gap and hyphenates as expected.
+                For unsupported languages or other browsers Hyphenator.js fills the gap and hyphenates as expected.<br>
+                Make sure to check this box if you use Hyphenator_Loader.js!
                 </div>
                 <p>
                 
