@@ -4,6 +4,7 @@
 <wiki:comment>
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.3.0.zip 4.3.0] (October XX, 2014) ==
 This minor release brings the following changes:
+  * added support for Serbian Cyrillic (thanks to Milan Gurjanov)
   * jsdoc3 formatted code comments in the source file
   * the core functions are slightly faster (specially in chrome: removed some deopts)
   * better performance when checking for CSS3 hyphens support
