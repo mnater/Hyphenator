@@ -853,7 +853,7 @@ function jsmin(comment, input, level) {
                 if(useCSS3hyphenation === true) {
                     config += 'useCSS3hyphenation : true,\n\t';
                 }
-                alert($('useLoader').checked);
+
                 if(!$('useLoader').checked) {
                     if(config.length > 0) {
                         script1 += config_head + config.slice(0,-3) + '\n});\n\n';                    
@@ -1010,6 +1010,7 @@ function jsmin(comment, input, level) {
                     <li><label><input type="checkbox" id="ru" name="language[]" value="ru">Pyccĸий (Russian)</label></li>
                     <li><label><input type="checkbox" id="sk" name="language[]" value="sk">Slovenčina (Slovak)</label></li>
                     <li><label><input type="checkbox" id="sl" name="language[]" value="sl">Slovenščina (Slovenian)</label></li>
+                    <li><label><input type="checkbox" id="sr-cyrl" name="language[]" value="sr-cyrl">Српски (Serbian, Cyrillic script)</label></li>
                     <li><label><input type="checkbox" id="sr-latn" name="language[]" value="sr-latn">Srpski (Serbian, Latin script)</label></li>
                     <li><label><input type="checkbox" id="sv" name="language[]" value="sv">Svenska (Swedish)</label></li>
                     <li><label><input type="checkbox" id="ta" name="language[]" value="ta">தமிழ் (Tamil)</label></li>
