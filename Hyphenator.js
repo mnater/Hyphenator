@@ -1,5 +1,5 @@
 /** @license Hyphenator X.Y.Z - client side hyphenation for webbrowsers
- *  Copyright (C) 2013  Mathias Nater, Zürich (mathias at mnn dot ch)
+ *  Copyright (C) 2014  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
  *  This JavaScript code is free software: you can redistribute
