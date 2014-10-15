@@ -18,7 +18,7 @@ E.g. `bm=true&safecopy=false&displaytogglebox=false`
 == Using Hyphenator on your website ==
 For a webdeveloper who wishes to hyphenate his website, things are slightly more complicated. You'll need basic knowledge about HTML and !JavaScript to do the following steps.
 
-=== Step by Step (easy) ===
+=== Step by Step (easy): w/o Hyphenator_Loader.js ===
   # Prepare your HTML-documents by
     * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
@@ -32,7 +32,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
 }}}
   It will then load and execute automatically.
 
-=== Step by Step (advanced) ===
+=== Step by Step (advanced): w/o Hyphenator_Loader.js ===
   # [http://code.google.com/p/hyphenator/downloads/list Download] an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
   # Prepare your HTML-documents by
     * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
@@ -94,6 +94,27 @@ What could be better than a [http://hyphenator.googlecode.com/svn/tags/Version%2
     </body>
 </html>
 }}}
+
+== Hyphenator_Loader.js ==
+Loading Hyphenator.js and the pattern files is expensive in matters of loading time: Even if you merge and minify the script and the pattern files it's kind of wheighty (~74kB for Hyphenator.js plus the patterns for us-en).
+
+In many cases it's not necessary nor advisable to load the full package:
+* more and more browsers support css3 hyphenation for a certain set of languages (http://caniuse.com/#feat=css-hyphens).
+* on a mobile client Hyphenator.js is too expensive in matters of loaded data and computation.
+
+This is where Hyphenator_Loader.js comes in handy. It tests if the client supports css3 hyphenation for the required languages and only loads Hyphenator.js if at least one of the required languages isn't supported.
+
+To use Hyphenator_Loader.js follow the following steps:
+
+=== Step by Step (easy): with Hyphenator_Loader.js ===
+  # Prepare your HTML-documents by
+    * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
+    * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
+    * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
+    * Validating (not absolutely necessary, but again highly recommended): http://validator.w3.org/
+  # Use the [http://hyphenator.googlecode.com/svn/trunk/mergeAndPack.html mergeAndPack-Tool]. Here you can opt-in for Hyphenator_Loader and set all the configuration options you want (click the info buttons for details).
+  # Hit 'create' and save the resulting scripts as described at the bottom of the mergeAndPack-page.
+
 
 == Legal ==
 Hyphenator.js and its documentation are published under the [http://www.gnu.org/licenses/lgpl.html LGPL v3]:
