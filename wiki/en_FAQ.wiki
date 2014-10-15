@@ -28,7 +28,7 @@ But I believe that hyphenation belongs to the client:
 [#FAQ > Go to top]
 
 == Hyphenator breaks the search functionality of my browser ==
-Your browser has a bug (currently, only Firefox3 finds hyphenated words). So I don't want/can't fix this in Hyphenator.js.
+Your browser has a bug (Standards are very clear in this point: "For operations such as searching and sorting, the soft hyphen should always be ignored." http://www.w3.org/TR/html401/struct/text.html#h-9.3.3). So I don't want/can't fix this in Hyphenator.js.
 The only thing we can do is to turn hyphenation off before searching.
 
 [#FAQ > Go to top]
