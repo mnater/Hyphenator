@@ -1,11 +1,14 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
+<xsl:output method="html"
+ encoding="UTF-8"
+ doctype-public="-//W3C//DTD HTML 4.01//EN"
+ doctype-system="http://www.w3.org/TR/html4/strict.dtd"/>
 <xsl:template match="/">
 	<html lang="de">
 	<head>
 		<title>Hyphenator.js - Test 58</title>
-        <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <style type="text/css">
             body {
                 width:50%;
@@ -24,7 +27,7 @@
 		<![CDATA[
         	if (parent != window) {
 				Hyphenator.config({
-					'onhyphenationdonecallback': function () {
+					'onhyphenationdonecallback': function ()Â {
 						var t1 = document.getElementById('test').innerHTML,
 						t2 = document.getElementById('ref').innerHTML,
 						desc = document.getElementById('desc').firstChild.data,
