@@ -70,7 +70,7 @@
 					if (!loaded) {
 						//fallback for ie<9
 						interval = setInterval(function() {
-							if (!!Hyphenator) {
+							if (window.Hyphenator !== undefined) {
 								clearInterval(interval);
 								if(!loaded) {
 									init();
