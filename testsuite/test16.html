@@ -46,13 +46,11 @@
         <p id="desc">Check Hyphenator with <a href="http://www.jslint.com/">JSLint</a>!</p>
         <pre><script type="text/javascript">
             JSLINT(loadScript());
-            //console.log(JSLINT.data());
             var errors = JSLINT.errors, l = errors.length, i, global = JSLINT.data().global, lg = global.length, unused, lu = 0;
             if (JSLINT.data().unused) {
                 unused = JSLINT.data().unused;
                 lu = unused.length;
             }
-            console.log(JSLINT.data());
             if (l > 0 || lg > 9 || lu > 0) {
                 if (window != parent) {
                     var msg = {
