@@ -1,4 +1,4 @@
-/** @license Hyphenator X.Y.Z - client side hyphenation for webbrowsers
+/** @license Hyphenator 4.3.0 - client side hyphenation for webbrowsers
  *  Copyright (C) 2014  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
@@ -2538,7 +2538,7 @@ var Hyphenator = (function (window) {
          * minor release: new languages, improvements
          * @access public
          */
-        version: 'X.Y.Z',
+        version: '4.3.0',
 
         /**
          * @member {boolean} Hyphenator.doHyphenation
