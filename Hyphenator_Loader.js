@@ -1,22 +1,3 @@
-/** @license Hyphenator_Loader 1.1.0 - client side hyphenation for webbrowsers
- *  Copyright (C) 2014  Mathias Nater, Zürich (mathias at mnn dot ch)
- *  Project and Source hosted on http://code.google.com/p/hyphenator/
- * 
- *  This JavaScript code is free software: you can redistribute
- *  it and/or modify it under the terms of the GNU Lesser
- *  General Public License (GNU LGPL) as published by the Free Software
- *  Foundation, either version 3 of the License, or (at your option)
- *  any later version.  The code is distributed WITHOUT ANY WARRANTY;
- *  without even the implied warranty of MERCHANTABILITY or FITNESS
- *  FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- *  As additional permission under GNU GPL version 3 section 7, you
- *  may distribute non-source (e.g., minimized or compacted) forms of
- *  that code without the copy of the GNU GPL normally required by
- *  section 4, provided you include this license notice and a URL
- *  through which recipients can access the Corresponding Source.
- */
-
 /**
  * @constructor
  * @description Checks if there's CSS-hyphenation available for the given languages and
@@ -27,14 +8,14 @@
  */
 
 /* The following comment is for JSLint: */
+/*global Hyphenator: false, Hyphenator_Loader: false */
 /*jslint browser: true */
-/*global Hyphenator: false */
 
 var Hyphenator_Loader = (function (window) {
     'use strict';
-    var languages,
+    var
+        languages,
         config,
-        path,
 
         /**
          * @name Hyphenator-createElem
@@ -64,7 +45,8 @@ var Hyphenator_Loader = (function (window) {
          * @private
          */
         checkLangSupport = function (lang, longword) {
-            var shadow,
+            var
+                shadow,
                 computedHeight,
                 //to be checked: may be this could be set in a different DOM (don't wait for loading…)
                 bdy = window.document.getElementsByTagName('body')[0];
@@ -109,17 +91,17 @@ var Hyphenator_Loader = (function (window) {
 
             head = window.document.getElementsByTagName('head').item(0);
             script = createElem('script');
-            script.src = path;
+            script.src = '../Hyphenator.js';
             script.type = 'text/javascript';
             head.appendChild(script);
 
             interval = window.setInterval(function () {
-                if (window.Hyphenator !== undefined) {
+                if (!!Hyphenator) {
                     window.clearInterval(interval);
                     Hyphenator.config(config);
                     Hyphenator.run();
                 }
-            }, 10);
+            }, 100);
         },
 
         runner = function () {
@@ -162,7 +144,8 @@ var Hyphenator_Loader = (function (window) {
          * @private
          */
         runOnContentLoaded = function (window, f) {
-            var toplevel, hyphRunForThis = {}, doFrames = false, contextWindow, documentLoaded,
+            var
+                toplevel, hyphRunForThis = {}, doFrames = false, contextWindow, documentLoaded,
                 add = window.document.addEventListener ? 'addEventListener' : 'attachEvent',
                 rem = window.document.addEventListener ? 'removeEventListener' : 'detachEvent',
                 pre = window.document.addEventListener ? '' : 'on',
@@ -242,7 +225,7 @@ var Hyphenator_Loader = (function (window) {
                 toplevel = false;
                 try {
                     toplevel = !window.frameElement;
-                } catch (ignore) {}
+                } catch (e) {}
                 if (window.document.documentElement.doScroll && toplevel) {
                     doScrollCheck();
                 }
@@ -257,9 +240,8 @@ var Hyphenator_Loader = (function (window) {
          * @param {Object} config the Hyphenator.js configuration object
          * @public
          */
-        init: function (langs, p, configs) {
+        init: function (langs, configs) {
             languages = langs;
-            path = p;
             config = configs || {};
             runOnContentLoaded(window, runner);
         }

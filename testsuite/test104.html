@@ -41,12 +41,12 @@
         </script>
     </head>
     <body>
-		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test103.html">&lt;- Prev</a> | <a href="test105.html">Next -&gt;</a></p>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test103.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
         <h1>Test 104</h1>
         <p id="desc">Check Hyphenator_Loader.js with <a href="http://www.jslint.com/" target="_blank">JSLint</a>!</p>
 		<pre><script type="text/javascript">
 			JSLINT(loadScript());
-			var errors = JSLINT.errors, l = errors.length, i, global = JSLINT.data().global, lg = global.length, unused, lu = 0;
+			var errors = JSLINT.errors, l = errors.length, i, globals = JSLINT.data().globals, lg = globals.length, unused, lu = 0;
 			if (JSLINT.data().unused) {
 				unused = JSLINT.data().unused;
 				lu = unused.length;
@@ -66,9 +66,9 @@
 						document.writeln("    Problem at line " + errors[i].line + " character " + errors[i].character + ": " + errors[i].reason);
 					}
 					for (i = 0; i < lg; i++ ) {
-						if (global[i] !== 'Hyphenator' && global[i] !== 'window' && global[i] !== 'Hyphenator_Loader') {
+						if (globals[i] !== 'Hyphenator' && globals[i] !== 'window' && globals[i] !== 'Hyphenator_Loader') {
 							document.writeln("\n bad global:\n");
-							document.writeln("    " + global[i]);
+							document.writeln("    " + globals[i]);
 						}
 					}
 					for (i = 0; i < lu; i++ ) {
