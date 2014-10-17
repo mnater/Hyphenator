@@ -2,15 +2,15 @@
 
 = Version History =
 <wiki:comment>
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.3.0.zip 4.3.0] (October XX, 2014) ==
+== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.3.0.zip 4.3.0] (October 17, 2014) ==
 This minor release brings the following changes:
   * added support for Serbian Cyrillic (thanks to Milan Gurjanov)
   * jsdoc3 formatted code comments in the source file
   * the core functions are slightly faster (specially in chrome: removed some deopts)
   * better performance when checking for CSS3 hyphens support
-  * new method for hyphenating URL-styled text (issue188 and issue198)
-  * prevention of a memory leak in some rare cases (issue192)
-  * Hyphenator. emits a warning to the console, when it is invoked twice
+  * new method for hyphenating URL-styled text (fixed issue188 and issue198)
+  * prevention of a memory leak in some rare cases (fixed issue192)
+  * Hyphenator. emits a warning to the console, when it is invoked twice (see [https://code.google.com/p/hyphenator/wiki/en_repeatedRunsOfHyphenator documentation])
   * Code refactoring for better readability
 And some bugfixes:
   * fixed an issue with Hyphenator.js running in private mode (fixed issue108)
