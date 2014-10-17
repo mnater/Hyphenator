@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 89</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+                font-family:'Times';
+            }
+            #test1, #test2 {
+            	background-color: #ffd6d6;
+            }
+            #ref1, #ref2 {
+            	background-color: #d6ffd6;
+            }
+            .hyphenate {
+            	width:30px;
+            }
+            .hyph {
+            	width:30px;
+            	hyphens: auto;
+            	-Moz-hyphens:auto;
+            	-webkit-hyphens:auto;
+            	-ms-hyphens:auto;
+            }
+            .hyph[lang='en'] {
+            	-webkit-locale: 'en';
+            }
+            .hyph[lang='de'] {
+            	-webkit-locale: 'de';
+            }
+            
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var i, last = 2, t1, t2, r = true,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 89
+						};
+						for (i = 1; i <= last; i++) {
+							t1 = document.getElementById('test' + i).offsetHeight;
+							t2 = document.getElementById('ref' + i).offsetHeight;
+							r = r && (t1 == t2);
+						}
+						if (r) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+			Hyphenator.config({
+				displaytogglebox:true,
+				minwordlength: 4,
+				useCSS3hyphenation: true,
+				storagetype: 'none'
+			});
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test88.html">&lt;- Prev</a> | <a href="test90.html">Next -&gt;</a></p>
+        <h1>Test 89</h1>
+        <p id="desc">Test CSS3 property "hyphenate"</p>
+		<h2>Hyphenated by CSS3:</h2>
+		<p id="test1" class="hyph" lang="en">
+			taken possession
+		</p>
+		<p id="test2" class="hyph" lang="de">
+			meine gleich
+		</p>
+		<h2>Hyphenated by Hyphenator:</h2>
+		<p id="ref1" class="hyphenate" lang="en">
+			taken possession
+		</p>
+		<p id="ref2" class="hyphenate" lang="de">
+			meine gleich
+		</p>
+    </body>
+</html>

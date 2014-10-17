@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 104</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script id="h" src="../Hyphenator_Loader.js" type="text/javascript"></script>
+        <script src="files/jslint.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			function loadScript() {
+				var xhr = null;
+				if (typeof XMLHttpRequest !== 'undefined') {
+					xhr = new XMLHttpRequest();
+				}
+				if (!xhr) {
+					try {
+						xhr  = new ActiveXObject("Msxml2.XMLHTTP");
+					} catch (e) {
+						xhr  = null;
+					}
+				}
+				if (xhr) {
+					xhr.open('GET', "../Hyphenator_Loader.js", false);
+					xhr.setRequestHeader('Cache-Control', 'no-cache');
+					xhr.send(null);
+					return xhr.responseText;
+				}
+			}
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test103.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+        <h1>Test 104</h1>
+        <p id="desc">Check Hyphenator_Loader.js with <a href="http://www.jslint.com/" target="_blank">JSLint</a>!</p>
+		<pre><script type="text/javascript">
+			JSLINT(loadScript());
+			var errors = JSLINT.errors, l = errors.length, i, globals = JSLINT.data().globals, lg = globals.length, unused, lu = 0;
+			if (JSLINT.data().unused) {
+				unused = JSLINT.data().unused;
+				lu = unused.length;
+			}
+			if (l > 0 || lg > 3 || lu > 0) {
+				if (window != parent) {
+					var msg = {
+						desc: "Make JSLint happy with Hyphenator_Loader.js",
+						index: 104,
+						result: 'failed'
+					};
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				} else {
+					document.writeln("JSLint error(s):\n");
+					for (i = 0; i < l; i++ ) {
+						document.writeln("\n" + errors[i].evidence + "\n");
+						document.writeln("    Problem at line " + errors[i].line + " character " + errors[i].character + ": " + errors[i].reason);
+					}
+					for (i = 0; i < lg; i++ ) {
+						if (globals[i] !== 'Hyphenator' && globals[i] !== 'window' && globals[i] !== 'Hyphenator_Loader') {
+							document.writeln("\n bad global:\n");
+							document.writeln("    " + globals[i]);
+						}
+					}
+					for (i = 0; i < lu; i++ ) {
+						document.writeln("    unused variable \'" + unused[i].name + "\' at line: " + unused[i].line + " in function: " + unused[i]['function']);
+					}
+				}
+			} else {
+				if (window != parent) {
+					var msg = {
+						desc: "Make JSLint happy with Hyphenator_Loader.js",
+						index: 104,
+						result: 'passed'
+					};
+					parent.postMessage(JSON.stringify(msg), window.location.href);
+				} else {
+					document.writeln("Hyphenator.js has JSLint check passed." );
+				}
+			}
+		</script></pre>
+     </body>
+</html>
