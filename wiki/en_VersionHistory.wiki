@@ -1,7 +1,7 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-== [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.3.0.zip 4.3.0] (October 17, 2014) ==
+== [https://docs.google.com/folderview?id=0B70aJF1epiRqa3BLWnpVRzh0Ym8&usp=docslist_api# Download from Google Drive] (October 17, 2014) ==
 This minor release brings the following changes:
   * added support for Serbian Cyrillic (thanks to Milan Gurjanov)
   * jsdoc3 formatted code comments in the source file
