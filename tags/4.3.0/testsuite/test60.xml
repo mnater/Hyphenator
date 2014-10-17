@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 60</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <style type="text/css">
+        /* <![CDATA[ */
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        /* ]]> */
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        /* <![CDATA[ */
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						t2 = document.getElementById('ref').innerHTML,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 60
+						};
+						if (t1 == t2) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+                Hyphenator.config({hyphenchar:'|',displaytogglebox:true});
+                Hyphenator.run();
+        /* ]]> */
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test59.html">&lt;- Prev</a> | <a href="test61.html">Next -&gt;</a></p>
+        <h1>Test 60</h1>
+        <p id="desc">Hyphenating an xhtml document (parsed as xml). This test will alway fail in IE since it doesn't support XML.</p>
+        <div id="test" class="hyphenate" lang="en">Hyphenation</div>
+        <div id="ref">Hy|phen|ation</div>
+    </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Hyphenator.js &ndash; Test 84</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref1, #ref2 {
+            	background-color: #d6ffd6;
+            }
+            .boxwrapper {
+				position: absolute;
+				top: 0px;
+				right: 0px;
+				margin: 0;
+				background-color: #AAAAAA;
+				color: #FFFFFF;
+				font: 6pt Arial;
+				letter-spacing: 0.2em;
+				padding: 3px;
+				border-bottom-left-radius: 4px;
+				-webkit-border-bottom-left-radius: 4px;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var t1 = document.getElementById('test').innerHTML,
+						r1 = document.getElementById('ref1').innerHTML,
+						r2 = document.getElementById('ref2').innerHTML,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 84
+						};
+						if (Hyphenator.doHyphenation) {
+							if (t1 == r1) {
+								msg.result = 'passed';
+							} else {
+								msg.result = 'failed';
+							}
+						} else {
+							if (t1 == r2) {
+								msg.result = 'passed';
+							} else {
+								msg.result = 'failed';
+							}
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+						document.getElementById('hyphenate').onclick();
+						if (Hyphenator.doHyphenation) {
+							window.location.reload();
+						}
+					}
+				});     	
+			}
+			
+			var hyphenatorSettings = {
+				hyphenchar: '|',
+				defaultlanguage: 'de',
+        		togglebox: function () {
+        			var myBoxWrapper, myBox, bdy, id, type, text, checked, classAttr;
+					if (!!(myBox = document.getElementById('hyphenate'))) {
+						myBox.checked = Hyphenator.doHyphenation;
+					} else {
+						bdy = document.getElementsByTagName('body')[0];
+						myBoxWrapper = document.createElement('div');
+						
+						myBox = document.createElement('input');
+						myBox.setAttribute('id', 'hyphenate');
+						myBox.setAttribute('type', 'checkbox');
+						
+						if (Hyphenator.doHyphenation) {
+							myBox.setAttribute('checked', 'checked');
+						}
+						
+						text = document.createTextNode('hyphenate!');
+												
+						myBoxWrapper.appendChild(myBox);
+						myBoxWrapper.appendChild(text);
+
+						myBoxWrapper.setAttribute('class', 'boxwrapper');
+						
+						myBox.onclick = Hyphenator.toggleHyphenation;
+						
+						bdy.appendChild(myBoxWrapper);
+					}
+        		},
+        		displaytogglebox: true,
+        		storagetype: 'local',
+				persistentconfig: true
+        	};
+			Hyphenator.config(hyphenatorSettings);
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test83.html">&lt;- Prev</a> | <a href="test85.html">Next -&gt;</a></p>
+        <h1>Test 84</h1>
+        <p id="desc">Use a checkbox to toggle hyphenation on/off.</p>
+
+        <p id="test" class="hyphenate">&laquo;Wunderschönen guten Tag allerseits&raquo;, rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: &laquo;Himmelherrgott, so viele Leute hatte ich nicht erwartet!&raquo;</p>
+        <p id="ref1">«Wun|der|schö|nen guten Tag al|ler|seits», rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: «Him|mel|herr|gott, so viele Leute hatte ich nicht er|war|tet!»</p>
+		<p id="ref2">«Wunderschönen guten Tag allerseits», rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: «Himmelherrgott, so viele Leute hatte ich nicht erwartet!»</p>
+    </body>
+</html>

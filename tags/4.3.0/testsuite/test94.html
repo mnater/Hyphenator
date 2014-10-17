@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 94</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+            	background-color: #ffd6d6;
+            }
+            #ref {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <!--<script src="../Hyphenator.js" type="text/javascript"></script>-->
+        <script type="text/javascript">
+			function init() {
+				document.getElementById('log').innerHTML+='Hyphenator loaded<br>';
+				if (parent != window) {
+					Hyphenator.config({
+						'onhyphenationdonecallback': function () {
+							var t1 = document.getElementById('test').innerHTML,
+							t2 = document.getElementById('ref').innerHTML,
+							desc = document.getElementById('desc').firstChild.data,
+							msg = {
+								desc: desc,
+								index: 94
+							};
+							if (t1 == t2) {
+								msg.result = 'passed';
+							} else {
+								msg.result = 'failed';
+							}
+							parent.postMessage(JSON.stringify(msg), window.location.href);
+						}
+					});     	
+				}
+				Hyphenator.config({
+					hyphenchar:'|',
+					classname:'content'
+				});
+				document.getElementById('log').innerHTML+='run Hyphenator<br>';
+				Hyphenator.run();
+			}
+        	window.onload = function () {
+        		document.getElementById('log').innerHTML+='onload event fired<br>';
+        		var head, script, loaded = false, interval;
+					createElem = function (tagname, context) {
+						context = context || window;
+						if (document.createElementNS) {
+							return context.document.createElementNS('http://www.w3.org/1999/xhtml', tagname);
+						} else if (document.createElement) {
+							return context.document.createElement(tagname);
+						}
+					};
+        		if (createElem) {
+					head = window.document.getElementsByTagName('head').item(0);
+					script = createElem('script', window);
+					script.src = '../Hyphenator.js';
+					script.type = 'text/javascript';
+					script.onload = function () {
+						loaded = true;
+						init()
+					};
+					if (!loaded) {
+						//fallback for ie<9
+						interval = setInterval(function() {
+							if (window.Hyphenator !== undefined) {
+								clearInterval(interval);
+								if(!loaded) {
+									init();
+								}
+							}						
+						}, 50);
+					}
+					head.appendChild(script);
+					document.getElementById('log').innerHTML+='Hyphenator added<br>';
+					
+				}
+				
+				
+			};
+        </script>
+    </head>
+    <body>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test93.html">&lt;- Prev</a> | <a href="test95.html">Next -&gt;</a></p>
+        <h1>Test 94</h1>
+        <p id="desc">Tests if Hyphenator.js runs when it is loaded after onload-event.</p>
+
+        <p id="test" class="content" lang="en">Hyphenation</p>
+        <p id="ref">Hy|phen|ation</p>
+        <pre id="log">…<br></pre>
+    </body>
+</html>

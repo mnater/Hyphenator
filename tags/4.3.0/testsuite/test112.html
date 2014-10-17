@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 112</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+                background-color: #ffd6d6;
+            }
+            #ref {
+                background-color: #d6ffd6;
+            }
+        </style>
+        <script type="text/javascript">
+            if (parent != window) {
+                window.onload = function () {
+                    var desc = document.getElementById('desc').innerHTML,
+                    msg = {
+                        desc: desc,
+                        index: 112,
+                        result: 'visual'
+                    };
+                    window.setTimeout(function () {
+                        parent.postMessage(JSON.stringify(msg), window.location.href);
+                    }, 500);
+                };      
+            }
+        </script>
+    </head>
+    <body>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test111.html">&lt;- Prev</a> | <a href="test113.html">Next -&gt;</a></p>
+        <h1>Test 112</h1>
+        <p id="desc">Test Bookmarklet on an external site (X-Domain inhibits usage of modalDialog).</p>
+        <p>Go to <a href="http://www.mnn.ch/diversa/ext112.html">http://www.mnn.ch/diversa/ext112.html</a> and use the bookmarklet! Prompt should appear to ask for language instead of modalDialog.</p>
+</ul>
+</body>
+</html>
