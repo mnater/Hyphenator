@@ -1,7 +1,6 @@
 ﻿#summary Version History and note about versioning
 
 = Version History =
-<wiki:comment>
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.3.0.zip 4.3.0] (October 17, 2014) ==
 This minor release brings the following changes:
   * added support for Serbian Cyrillic (thanks to Milan Gurjanov)
@@ -17,7 +16,6 @@ And some bugfixes:
   * fixed an issue with the Bookmarklet (fixed issue185)
   * fixed an issue with ommited tags (fixed issue194)
   * workaround for a bug in Konqueror 4.8.4 (fixed issue202)
-</wiki:comment>
 
 == [http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.2.0.zip 4.2.0] (April 25, 2013) ==
 This minor release brings the following changes:
