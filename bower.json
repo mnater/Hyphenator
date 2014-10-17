@@ -1,0 +1,17 @@
+{
+  "name": "Hyphenator",
+  "version": "4.2.0",
+  "description": "Hyphenation done by JavaScript",
+  "main": "Hyphenator.js",
+  "keywords": [
+    "hyphenation",
+    "language",
+    "javascript"
+  ],
+  "authors": [
+    "Mathias Nater"
+  ],
+  "license": "LGPL v3",
+  "homepage": "https://code.google.com/p/hyphenator/",
+  "private": true
+}
