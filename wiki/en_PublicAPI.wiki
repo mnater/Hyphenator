@@ -95,8 +95,12 @@ As of version 2.0.0 you can redefine the classname that marks elements that shou
 ----
 ==== property `urlclassname` ====
 *new in 4.3.0*
-URLs are automatically detected and Hyphenator.js inserts zero width spaces (or whatever is stored in `urlhyphenchar`) at good breaking points (i.e. after the characters `:/.?#&\-_,;!@` and if there are longer 'words' inbetween after 2 * `minwordlength` characters).
-For some texts (e.g. JSON-Data) this behaviour is more suitable than normal hyphenation which inserts hyphens. Elements that have a class called 'urlhyphenate' (default) are splitted with the same method as normal URLs. You can change this class name.
+
+URLs are automatically detected and Hyphenator.js inserts zero width spaces (or whatever is stored in `urlhyphenchar`) at good breaking points (i.e. after the characters `:/.?#&\-_,;!@` and if there are longer 'words' inbetween after 2`*``minwordlength` characters).
+
+For some texts (e.g. JSON-Data) this behaviour is more suitable than normal hyphenation which inserts hyphens. Elements that have a class called 'urlhyphenate' (default) are splitted with the same method as normal URLs.
+
+You can change this class name.
 ----
 ==== property `minwordlength` ====
 By default Hyphenator.js only hyphenates words with a minimum of 6 letters. You can change this values. The higher the value, the faster the script; the lower the value, the better the result.
