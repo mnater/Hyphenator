@@ -388,6 +388,8 @@ Be carefull with this option!
 
 ==== property `defaultlanguage` ====
 *new in version 3.2.0*
+`defaultlanguage` is the fallback-language if no lang-attribute is set in the HTML.
+
 If you can't set a lang-attribute to the appropriate html-tag it may be interesting to set the default language.
 This language is only taken in count, if no actual lang-tag can be found (i.e. just before the language-prompt occurs). In other words, setting this property prevents the language-prompt to ask you for the language…
 
