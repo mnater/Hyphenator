@@ -33,7 +33,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
   It will then load and execute automatically.
 
 === Step by Step (advanced): w/o Hyphenator_Loader.js ===
-  # [http://code.google.com/p/hyphenator/downloads/list Download] an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
+  # [https://docs.google.com/folderview?id=0B70aJF1epiRqa3BLWnpVRzh0Ym8&usp=docslist_api# Download] an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
   # Prepare your HTML-documents by
     * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
