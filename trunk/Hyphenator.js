@@ -923,6 +923,30 @@ var Hyphenator = (function (window) {
          */
         selectorFunction = false,
 
+        flattenNodeList = function (nl) {
+            var parentElements = [],
+                i = 0,
+                j = 0,
+                isParent = true;
+
+            parentElements.push(nl[0]); //add the first item, since this is always an parent
+
+            for (i = 1; i < nl.length; i += 1) { //cycle through nodeList
+                for (j = 0; j < parentElements.length; j += 1) { //cycle through parentElements
+                    if (parentElements[j].contains(nl[i])) {
+                        isParent = false;
+                        break;
+                    }
+                }
+                if (isParent) {
+                    parentElements.push(nl[i]);
+                }
+                isParent = true;
+            }
+
+            return parentElements;
+        },
+
         /**
          * @method Hyphenator~mySelectorFunction
          * @desc
@@ -961,6 +985,9 @@ var Hyphenator = (function (window) {
                 elems = selectorFunction();
             } else {
                 elems = mySelectorFunction(hyphenateClass);
+            }
+            if (elems.length !== 0) {
+                elems = flattenNodeList(elems);
             }
             return elems;
         },
@@ -2069,7 +2096,7 @@ var Hyphenator = (function (window) {
                         }
                     }
                 }
-                //return wwhp
+
                 for (hp = 0; hp < wordLength; hp += 1) {
                     if (hp >= lo.leftmin && hp <= (wordLength - lo.rightmin) && (wwhp[hp + 1] % 2) !== 0) {
                         hw += hyphen + word.charAt(hp);
@@ -2332,7 +2359,9 @@ var Hyphenator = (function (window) {
                 i = 0;
                 n = el.childNodes[i];
                 while (!!n) {
-                    if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
+                    if (n.nodeType === 3 //type 3 = #text
+                            && /\S/.test(n.data) //not just white space
+                            && n.data.length >= min) { //longer then min
                         n.data = n.data.replace(lo.genRegExp, hyphenate);
                         if (orphanControl !== 1) {
                             n.data = n.data.replace(/[\S]+ [\S]+[\s]*$/, controlOrphans);
