@@ -2903,7 +2903,9 @@ var Hyphenator = (function (window) {
                     i = 0;
                     n = target.childNodes[i];
                     while (!!n) {
-                        if (n.nodeType === 3 && n.data.length >= min) { //type 3 = #text -> hyphenate!
+                        if (n.nodeType === 3 //type 3 = #text
+                                && /\S/.test(n.data) //not just white space
+                                && n.data.length >= min) { //longer then min
                             n.data = n.data.replace(lo.genRegExp, hyphenate);
                         } else if (n.nodeType === 1) {
                             if (n.lang !== '') {
