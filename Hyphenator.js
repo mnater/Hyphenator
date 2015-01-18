@@ -923,6 +923,16 @@ var Hyphenator = (function (window) {
          */
         selectorFunction = false,
 
+        /**
+         * @name Hyphenator~flattenNodeList
+         * @desc
+         * Takes a nodeList and returns an array with all elements that are not contained by another element in the nodeList
+         * By using this function the elements returned by selectElements can be 'flattened'.
+         * @see {@link Hyphenator~selectElements}
+         * @param {nodeList} nl
+         * @return {Array} Array of 'parent'-elements
+         * @access private
+         */
         flattenNodeList = function (nl) {
             var parentElements = [],
                 i = 0,
