@@ -478,6 +478,7 @@ This function must return a string (aka the word).
     Hyphenator.config({
         'onafterwordhyphenation': function (hword, lang) {
         	console.log(lang + ': ' + hword.replace(new RegExp(String.fromCharCode(173), 'g'), '-'));
+                return hword;
         }
     });
 	Hyphenator.run();
