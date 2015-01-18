@@ -17,8 +17,6 @@
                 background-color: #d6ffd6;
             }
         </style>
-        <script src="./files/jquery.js"></script>
-        <script src="./files/jquery.expander.js"></script>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
             if (parent != window) {
@@ -40,19 +38,31 @@
                     }
                 });         
             }
-            Hyphenator.config({hyphenchar:'|'});
-            Hyphenator.run();
-            $(document).ready(function() {
-              $('p').expander();
+
+            Hyphenator.config({
+                hyphenchar:'_',
+                useCSS3hyphenation: false,
+                enablecache: false,
+                'onafterwordhyphenation': function (hword, lang) {
+                    hword = "# " + hword;
+                    return hword;
+                }
             });
+            Hyphenator.run();
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="index.html">&lt;- Prev</a> | <a href="test2.html">Next -&gt;</a></p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test113.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
         <h1>Test 114</h1>
-        <p id="desc">Test jquery.expander.js</p>
+        <p id="desc">Test nested classes (elements should only be hyphenated once!)</p>
 
-        <p id="test" class="hyphenate" lang="en">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
-        <p id="ref">To allow more ef|fi|cient usage of paper, more reg|u|lar ap|pear|ance of right-side mar|gins with|out re|quir|ing spac|ing ad|just|ments, and to elim|i|nate the need to erase hand-writ|ten long words begun near the end of a line that do not fit, words may be di|vided at the near|est break|point be|tween syl|la|bles and a hy|phen in|serted to in|di|cate that the let|ters form a word frag|ment, not a word.</p>
+        <div id="outer_wrapper" class="hyphenate">
+            <div id="inner_wrapper" class="hyphenate">
+                <p id="test" class="hyphenate" lang="en">Hyphenation</p>
+            </div>
+        </div>
+
+        <p id="ref"># Hy_phen_ation</p>
+        
     </body>
 </html>
