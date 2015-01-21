@@ -1899,9 +1899,9 @@ var Hyphenator = (function (window) {
          * @access private
          */
         prepare = function (callback) {
-            var lang, interval, tmp1, tmp2,
+            var lang, tmp1, tmp2,
                 languagesLoaded = function () {
-                    var finishedLoading = true, l;
+                    var l, finishedLoading = true;
                     for (l in docLanguages) {
                         if (docLanguages.hasOwnProperty(l)) {
                             finishedLoading = false;
@@ -1913,7 +1913,11 @@ var Hyphenator = (function (window) {
                             }
                         }
                     }
-                    return finishedLoading;
+                    if (!finishedLoading) {
+                        window.setTimeout(function () {
+                            languagesLoaded();
+                        }, 10);
+                    }
                 };
 
             if (!enableRemoteLoading) {
@@ -1959,15 +1963,7 @@ var Hyphenator = (function (window) {
                     }
                 }
             }
-            // else async wait until patterns are loaded, then hyphenate
-            if (!languagesLoaded()) {
-                interval = window.setInterval(function () {
-                    var loadingDone = languagesLoaded();
-                    if (loadingDone) {
-                        window.clearInterval(interval);
-                    }
-                }, 100);
-            }
+            languagesLoaded();
         },
 
         /**
