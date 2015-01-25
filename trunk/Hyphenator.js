@@ -1892,8 +1892,8 @@ var Hyphenator = (function (window) {
          * This funtion prepares the Hyphenator~Object: If RemoteLoading is turned off, it assumes
          * that the patternfiles are loaded, all conversions are made and the callback is called.
          * If storage is active the object is retrieved there.
-         * If RemoteLoading is on (default), it loads the pattern files and waits until they are loaded,
-         * by repeatedly checking Hyphenator.languages. If a patternfile is loaded the patterns are
+         * If RemoteLoading is on (default), it loads the pattern files and repeatedly checks Hyphenator.languages.
+         * If a patternfile is loaded the patterns are
          * converted to their object style and the lang-object extended.
          * Finally the callback is called.
          * @access private
@@ -1904,12 +1904,12 @@ var Hyphenator = (function (window) {
                     var l, finishedLoading = true;
                     for (l in docLanguages) {
                         if (docLanguages.hasOwnProperty(l)) {
-                            finishedLoading = false;
-                            if (!!Hyphenator.languages[l]) {
+                            if (Hyphenator.languages.hasOwnProperty(l)) {
                                 delete docLanguages[l];
-                                //do conversion while other patterns are loading:
                                 prepareLanguagesObj(l);
                                 callback(l);
+                            } else {
+                                finishedLoading = false;
                             }
                         }
                     }
