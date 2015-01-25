@@ -1671,7 +1671,6 @@ var Hyphenator = (function (window) {
                         t = tree,
                         cc = 0,
                         points = [],
-                        ppos = 0,
                         lastwasp = false,
                         len = 0;
                     while (i < patterns.length) {
@@ -1679,8 +1678,7 @@ var Hyphenator = (function (window) {
                             cc = patterns.charCodeAt(i);
                             if (cc >= 49 && cc <= 57) {
                                 //this is a hpoint (1-9)
-                                points[ppos] = cc - 48;
-                                ppos += 1;
+                                points.push(cc - 48);
                                 lastwasp = true;
                             } else {
                                 //this is a alphabetic char --> extend the tree?
@@ -1689,8 +1687,7 @@ var Hyphenator = (function (window) {
                                 }
                                 t = t[cc]; //go to subtree
                                 if (!lastwasp) {
-                                    points[ppos] = 0;
-                                    ppos += 1;
+                                    points.push(0);
                                 }
                                 lastwasp = false;
                             }
@@ -1701,14 +1698,13 @@ var Hyphenator = (function (window) {
                         if (len === psize) {
                             //add last point (0)
                             if (!lastwasp) {
-                                points[ppos] = 0;
+                                points.push(0);
                             }
                             //write points
                             t.tpoints = points;
                             //reset
                             t = tree;
                             points = [];
-                            ppos = 0;
                             lastwasp = false;
                             len = 0;
                         }
