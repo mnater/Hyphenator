@@ -1664,58 +1664,57 @@ var Hyphenator = (function (window) {
          * @param {Object} language object whose patterns shall be converted
          */
         convertPatterns = function (lo) {
-            var size,
-                tree = {},
-                convert = function (psize, patterns) {
-                    var i = 0,
-                        t = tree,
-                        cc = 0,
-                        points = [],
-                        lastwasp = false,
-                        len = 0;
-                    while (i < patterns.length) {
-                        if (len < psize) {
-                            cc = patterns.charCodeAt(i);
-                            if (cc >= 49 && cc <= 57) {
+            var patternsSizeString,
+                treeRoot = {},
+                convert = function (patternSizeInt, patterns) {
+                    var charPos = 0,
+                        subtreeRef = treeRoot,
+                        charCode = 0,
+                        positions = [],
+                        prevWasPosition = false,
+                        subLength = 0;
+                    for (charPos = 0; charPos < patterns.length; charPos += 1) {
+                        if (subLength < patternSizeInt) {
+                            charCode = patterns.charCodeAt(charPos);
+                            if (charCode >= 49 && charCode <= 57) {
                                 //this is a hpoint (1-9)
-                                points.push(cc - 48);
-                                lastwasp = true;
+                                positions.push(charCode - 48);
+                                prevWasPosition = true;
                             } else {
                                 //this is a alphabetic char --> extend the tree?
-                                if (!t[cc]) {
-                                    t[cc] = {};
+                                if (!subtreeRef[charCode]) {
+                                    subtreeRef[charCode] = {};
                                 }
-                                t = t[cc]; //go to subtree
-                                if (!lastwasp) {
-                                    points.push(0);
+                                subtreeRef = subtreeRef[charCode]; //go to subtree
+                                if (!prevWasPosition) {
+                                    positions.push(0);
                                 }
-                                lastwasp = false;
+                                prevWasPosition = false;
                             }
-                            len += 1;
-                            i += 1;
+                            subLength += 1;
                         }
 
-                        if (len === psize) {
+                        if (subLength === patternSizeInt) {
                             //add last point (0)
-                            if (!lastwasp) {
-                                points.push(0);
+                            if (!prevWasPosition) {
+                                positions.push(0);
                             }
-                            //write points
-                            t.tpoints = points;
+                            //write and empty points
+                            subtreeRef.tpoints = positions;
                             //reset
-                            t = tree;
-                            points = [];
-                            lastwasp = false;
-                            len = 0;
+                            subtreeRef = treeRoot;
+                            positions = [];
+                            prevWasPosition = false;
+                            subLength = 0;
                         }
                     }
                 };
-            for (size in lo.patterns) {
-                if (lo.patterns.hasOwnProperty(size)) {
-                    convert(parseInt(size, 10), lo.patterns[size]);
+            for (patternsSizeString in lo.patterns) {
+                if (lo.patterns.hasOwnProperty(patternsSizeString)) {
+                    convert(parseInt(patternsSizeString, 10), lo.patterns[patternsSizeString]);
                 }
             }
-            lo.patterns = tree;
+            lo.patterns = treeRoot;
         },
 
         /**
