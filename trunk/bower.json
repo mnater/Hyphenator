@@ -2,5 +2,9 @@
   "name": "Hyphenator.js",
   "version": "4.3.0",
   "main": "Hyphenator.js",
-  "ignore": "testsuite"
+  "ignore": [
+  	"testsuite",
+  	"favicon.ico",
+  	"Hyphenator_observable.js"
+  ]
 }
