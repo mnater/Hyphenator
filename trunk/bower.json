@@ -1,0 +1,6 @@
+{
+  "name": "Hyphenator.js",
+  "version": "4.3.0",
+  "main": "Hyphenator.js",
+  "ignore": "testsuite"
+}
