@@ -1657,6 +1657,141 @@ var Hyphenator = (function (window) {
         },
 
         /**
+         * @method Hyphenator~createCharMap
+         * @desc
+         * reads the charCodes from lo.characters and stores them in a bidi map:
+         * charMap.keys =  [0: 97, //a
+         *                  1: 98, //b
+         *                  2: 99] //c etc.
+         * charMap.values = ["97": 0, //a
+         *                   "98": 1, //b
+         *                   "99": 2] //c etc.
+         * @access private
+         * @param {Object} language object
+         */
+        createCharMap = function (lo) {
+            var CharMap = function () {
+                this.keys = [];
+                this.values = {};
+                this.add = function (newValue) {
+                    if (!this.values[newValue]) {
+                        this.keys.push(newValue);
+                        this.values[newValue] = this.keys.length - 1;
+                    }
+                };
+            }, i;
+            lo.charMap = new CharMap();
+            for (i = 0; i < lo.characters.length; i += 1) {
+                lo.charMap.add(lo.characters.charCodeAt(i));
+            }
+        },
+
+        convertPatternsToTypedArray = function (lo) {
+            var indexedTrieMaxRow = 0,
+                patternsSizeString,
+                extractTyped = function (patternSizeInt, patterns) {
+                    //window.console.log("== convert(" + patternSizeInt + ", " + patterns + ") ==");
+                    var charPos = 0,
+                        charCode = 0,
+                        prevMappedCharCode = 0,
+                        mappedCharCode = 0,
+                        valueLink = lo.valueStore.push([], []) - 1,
+                        row = 0,
+                        nextRow = 0,
+                        prevWasPosition = false;
+
+                    for (charPos = 0; charPos < patterns.length; charPos += 1) {
+                        charCode = patterns.charCodeAt(charPos);
+                        if ((charPos + 1) % patternSizeInt !== 0) {
+                            //window.console.log(String.fromCharCode(charCode) + " ...");
+                            if (charCode >= 49 && charCode <= 57) {
+                                lo.valueStore[valueLink].push(charCode - 48);
+                                prevWasPosition = true;
+                            } else {
+                                if (!prevWasPosition) {
+                                    lo.valueStore[valueLink].push(0);
+                                }
+                                prevWasPosition = false;
+                                mappedCharCode = lo.charMap.values[charCode];
+                                //window.console.log("    mapped: " + mappedCharCode);
+                                if (nextRow === -1) {
+                                    nextRow = indexedTrieMaxRow + lo.charMap.keys.length * 2;
+                                    indexedTrieMaxRow = nextRow;
+                                    //window.console.log("new nextRow: " + nextRow);
+                                    //window.console.log("    @ row " + row + ": updating link for " + prevMappedCharCode + " to " + nextRow);
+                                    lo.indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                    //window.console.log("    @ row " + row + ": updated link for " + prevMappedCharCode + " to " + nextRow);
+                                }
+                                row = nextRow;
+                                //window.console.log("    -> row " + row);
+                                if (lo.indexedTrie[row + mappedCharCode * 2] !== 0) {
+                                    //window.console.log("    @row " + row + ": entry for " + mappedCharCode + " found");
+                                    nextRow = lo.indexedTrie[row + mappedCharCode * 2];
+                                    //window.console.log("        linking to: " + nextRow);
+                                } else {
+                                    //window.console.log("    @row " + row + ": NO entry for " + mappedCharCode + " found");
+                                    lo.indexedTrie[row + mappedCharCode * 2] = -1;
+                                    lo.indexedTrie[row + mappedCharCode * 2 + 1] = -1;
+                                    nextRow = -1;
+                                    //window.console.log("        @row " + row + ": added entry for " + mappedCharCode + " linking to -1");
+                                }
+                                prevMappedCharCode = mappedCharCode;
+                            }
+                        } else {
+                            //window.console.log(String.fromCharCode(charCode) + " (last)");
+                            if (charCode >= 49 && charCode <= 57) {
+                                lo.valueStore[valueLink].push(charCode - 48);
+                                lo.indexedTrie[row + mappedCharCode * 2 + 1] = valueLink;
+                                //window.console.log("        @row " + row + ": updated valueLink " + valueLink + " for " + mappedCharCode);
+                            } else {
+                                if (!prevWasPosition) {
+                                    lo.valueStore[valueLink].push(0);
+                                }
+                                lo.valueStore[valueLink].push(0);
+                                mappedCharCode = lo.charMap.values[charCode];
+                                //window.console.log("    mapped: " + mappedCharCode);
+                                if (nextRow === -1) {
+                                    nextRow = indexedTrieMaxRow + lo.charMap.keys.length * 2;
+                                    indexedTrieMaxRow = nextRow;
+                                    lo.indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                    //window.console.log("new nextRow: " + nextRow);
+                                    //window.console.log("    @ row " + row + ": updated link for " + prevMappedCharCode + " to " + nextRow);
+                                }
+                                row = nextRow;
+                                //window.console.log("    -> row " + row);
+                                if (lo.indexedTrie[row + mappedCharCode * 2] !== 0) {
+                                    //window.console.log("    @row " + row + ": entry for " + mappedCharCode + " found");
+                                    lo.indexedTrie[row + mappedCharCode * 2 + 1] = valueLink;
+                                    //window.console.log("        @row " + row + ": updated valueLink " + valueLink + " for " + mappedCharCode);
+                                } else {
+                                    //window.console.log("    @row " + row + ": NO entry for " + mappedCharCode + " found");
+                                    lo.indexedTrie[row + mappedCharCode * 2] = -1;
+                                    lo.indexedTrie[row + (mappedCharCode * 2) + 1] = valueLink;
+                                    //window.console.log("        @row " + row + ": added entry with valueLink " + valueLink + " for " + mappedCharCode + " linking to -1 at pos " + (row + (mappedCharCode * 2) + 1));
+                                }
+                            }
+                            //window.console.log("--------" + lo.valueStore[valueLink] + "--------");
+                            valueLink = lo.valueStore.push([]) - 1;
+                            row = 0;
+                            nextRow = 0;
+                            prevMappedCharCode = 0;
+                            prevWasPosition = false;
+                        }
+                    }
+                };
+
+            lo.valueStore = [];
+            lo.indexedTrie = new window.Int32Array(lo.meta_arrayLength * 2); //4 Bytes for rowLink and 4 bytes for valueLink
+            createCharMap(lo);
+
+            for (patternsSizeString in lo.patterns) {
+                if (lo.patterns.hasOwnProperty(patternsSizeString)) {
+                    extractTyped(parseInt(patternsSizeString, 10), lo.patterns[patternsSizeString]);
+                }
+            }
+        },
+
+        /**
          * @method Hyphenator~convertPatterns
          * @desc
          * converts patterns of the given language to a trie
@@ -1870,7 +2005,11 @@ var Hyphenator = (function (window) {
                 } else {
                     lo.exceptions = {};
                 }
-                convertPatterns(lo);
+                if (window.hasOwnProperty('Int32Array')) {
+                    convertPatternsToTypedArray(lo);
+                } else {
+                    convertPatterns(lo);
+                }
                 wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                 lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
                 lo.prepared = true;
@@ -2071,7 +2210,7 @@ var Hyphenator = (function (window) {
                 for (hp = 0; hp < wwlen + 1; hp += 1) {
                     wwhp[hp] = 0;
                 }
-                for (pstart = 0; pstart < wwlen; pstart += 1) {
+                /*for (pstart = 0; pstart < wwlen; pstart += 1) {
                     node = trie;
                     pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
@@ -2092,6 +2231,31 @@ var Hyphenator = (function (window) {
                                     wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], nodePoints[hp]);
                                 }
                             }
+                        } else {
+                            break;
+                        }
+                    }
+                }*/
+                var charCode, mappedCharCode, row = 0, nextRow = 0, link = 0, value = 0;
+                for (pstart = 0; pstart < wwlen; pstart += 1) {
+                    //window.console.log("========== Start at " + pstart);
+                    row = 0;
+                    for (plen = pstart; plen < wwlen; plen += 1) {
+                        charCode = ww.charCodeAt(plen);
+                        mappedCharCode = lo.charMap.values[charCode];
+                        //window.console.log(ww.charAt(plen) + " " + charCode + " " + mappedCharCode + " @row " + row);
+                        link = lo.indexedTrie[row + mappedCharCode * 2];
+                        value = lo.indexedTrie[row + mappedCharCode * 2 + 1];
+                        //window.console.log("link: " + link);
+                        //window.console.log("value: " + value);
+                        if (value > 0) {
+                            //window.console.log("found value: " + lo.valueStore[value]);
+                            for (hp = 0; hp < lo.valueStore[value].length; hp += 1) {
+                                wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], lo.valueStore[value][hp]);
+                            }
+                        }
+                        if (link > 0) {
+                            row = link;
                         } else {
                             break;
                         }
