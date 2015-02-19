@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 76</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            h2 + p {
+            	background-color: #ffd6d6;
+            }
+            h2 + p + p {
+            	background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	if (parent != window) {
+				Hyphenator.config({
+					'onhyphenationdonecallback': function () {
+						var i, last = 3, t1, t2, r = true,
+						desc = document.getElementById('desc').firstChild.data,
+						msg = {
+							desc: desc,
+							index: 76
+						};
+						for (i = 1; i <= last; i++) {
+							t1 = document.getElementById('test' + i).innerHTML;
+							t2 = document.getElementById('ref' + i).innerHTML;
+							r = r && (t1 == t2);
+						}
+						if (r) {
+							msg.result = 'passed';
+						} else {
+							msg.result = 'failed';
+						}
+						parent.postMessage(JSON.stringify(msg), window.location.href);
+					}
+				});     	
+			}
+
+			Hyphenator.config({
+				hyphenchar: '|',
+				storagetype: 'none',
+				safecopy: false
+			});
+			Hyphenator.run();
+        </script>
+    </head>
+    <body>
+		<p><a href="index.html">&lt;&lt;- index</a> | <a href="test75.html">&lt;- Prev</a> | <a href="test77.html">Next -&gt;</a></p>
+        <h1>Test 76</h1>
+        <p id="desc">Test hyphenation of greek.</p>
+		<h2>el-monoton</h2>
+        <p id="test1" class="hyphenate" lang="el-monoton">Πάτερ ημών ο εν τοις ουρανοίς αγιασθήτω το όνομά σου· ελθέτω η βασιλεία σου· γεννηθήτω το θέλημά σου, ως εν ουρανώ και επί της γης·</p>
+        <p id="ref1" lang="el-monoton">Πάτερ ημών ο εν τοις ου|ρα|νοίς αγια|σθή|τω το όνομά σου· ελ|θέ|τω η βα|σι|λεία σου· γεν|νη|θή|τω το θέ|λη|μά σου, ως εν ου|ρα|νώ και επί της γης·</p>
+
+		<h2>el-polyton</h2>
+        <p id="test2" class="hyphenate" lang="el-polyton">Πάτερ ημών ο εν τοις ουρανοίς αγιασθήτω το όνομά σου· ελθέτω η βασιλεία σου· γεννηθήτω το θέλημά σου, ως εν ουρανώ και επί της γης·</p>
+        <p id="ref2" lang="el-polyton">Πάτερ ημών ο εν τοις ου|ρα|νοίς αγια|σθή|τω το όνομά σου· ελ|θέ|τω η βα|σι|λεία σου· γεν|νη|θή|τω το θέ|λη|μά σου, ως εν ου|ρα|νώ και επί της γης·</p>
+
+		<h2>grc</h2>
+        <p id="test3" class="hyphenate" lang="el-polyton">Ὅτι μὲν ὑμεῖς, ὦ ἄνδρες Άθηναῖοι, πεπόνθατε ὑπὸ τῶν ἐμῶν κατηγόρων, οὐκ οἶδα: ἐγὼ δ' οὖν καὶ αὐτὸς ὑπ' αὐτῶν ὀλίγου ἐμαυτοῦ ἐπελαθόμην, οὕτω πιθανῶς ἔλεγον.</p>
+        <p id="ref3" lang="el-polyton">Ὅτι μὲν ὑμεῖς, ὦ ἄν|δρες Άθη|ναῖ|οι, πε|πόν|θα|τε ὑπὸ τῶν ἐμῶν κα|τη|γό|ρων, οὐκ οἶδα: ἐγὼ δ' οὖν καὶ αὐτὸς ὑπ' αὐτῶν ὀλί|γου ἐμαυ|τοῦ ἐπε|λα|θό|μην, οὕτω πι|θα|νῶς ἔλε|γον.</p>
+
+    </body>
+</html>

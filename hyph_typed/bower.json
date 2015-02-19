@@ -1,0 +1,9 @@
+{
+  "name": "Hyphenator",
+  "version": "trunk",
+  "main": "Hyphenator.js",
+  "ignore": [
+    "favicon.ico",
+    "Hyphenator_observable.js"
+  ]
+}
