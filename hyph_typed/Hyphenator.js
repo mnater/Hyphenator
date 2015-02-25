@@ -1686,16 +1686,37 @@ var Hyphenator = (function (window) {
             }
         },
 
-        convertPatternsToTypedArray = function (lo) {
+        createValueStore = function (lo) {
+            var ValueStore = function () {
+                this.keys = [];
+                this.values = {};
+                this.add = function (newValue) {
+                    var index;
+                    if (!this.values[newValue]) {
+                        this.keys.push(newValue);
+                        index = this.keys.length - 1;
+                        this.values[newValue] = index;
+                    } else {
+                        index = this.values[newValue];
+                    }
+                    return index;
+                };
+            };
+            lo.valueStore = new ValueStore();
+        },
+
+        convertPatternsToArray = function (lo) {
+
             var indexedTrieMaxRow = 0,
-                patternsSizeString,
-                extractTyped = function (patternSizeInt, patterns) {
+                i,
+
+                extract = function (patternSizeInt, patterns) {
                     //window.console.log("== convert(" + patternSizeInt + ", " + patterns + ") ==");
                     var charPos = 0,
                         charCode = 0,
                         prevMappedCharCode = 0,
                         mappedCharCode = 0,
-                        valueLink = lo.valueStore.push([], []) - 1,
+                        tmpValues = [],
                         row = 0,
                         nextRow = 0,
                         prevWasPosition = false;
@@ -1705,11 +1726,11 @@ var Hyphenator = (function (window) {
                         if ((charPos + 1) % patternSizeInt !== 0) {
                             //window.console.log(String.fromCharCode(charCode) + " ...");
                             if (charCode >= 49 && charCode <= 57) {
-                                lo.valueStore[valueLink].push(charCode - 48);
+                                tmpValues.push(charCode - 48);
                                 prevWasPosition = true;
                             } else {
                                 if (!prevWasPosition) {
-                                    lo.valueStore[valueLink].push(0);
+                                    tmpValues.push(0);
                                 }
                                 prevWasPosition = false;
                                 mappedCharCode = lo.charMap.values[charCode];
@@ -1740,14 +1761,14 @@ var Hyphenator = (function (window) {
                         } else {
                             //window.console.log(String.fromCharCode(charCode) + " (last)");
                             if (charCode >= 49 && charCode <= 57) {
-                                lo.valueStore[valueLink].push(charCode - 48);
-                                lo.indexedTrie[row + mappedCharCode * 2 + 1] = valueLink;
+                                tmpValues.push(charCode - 48);
+                                lo.indexedTrie[row + mappedCharCode * 2 + 1] = lo.valueStore.add(tmpValues);
                                 //window.console.log("        @row " + row + ": updated valueLink " + valueLink + " for " + mappedCharCode);
                             } else {
                                 if (!prevWasPosition) {
-                                    lo.valueStore[valueLink].push(0);
+                                    tmpValues.push(0);
                                 }
-                                lo.valueStore[valueLink].push(0);
+                                tmpValues.push(0);
                                 mappedCharCode = lo.charMap.values[charCode];
                                 //window.console.log("    mapped: " + mappedCharCode);
                                 if (nextRow === -1) {
@@ -1761,17 +1782,17 @@ var Hyphenator = (function (window) {
                                 //window.console.log("    -> row " + row);
                                 if (lo.indexedTrie[row + mappedCharCode * 2] !== 0) {
                                     //window.console.log("    @row " + row + ": entry for " + mappedCharCode + " found");
-                                    lo.indexedTrie[row + mappedCharCode * 2 + 1] = valueLink;
+                                    lo.indexedTrie[row + mappedCharCode * 2 + 1] = lo.valueStore.add(tmpValues);
                                     //window.console.log("        @row " + row + ": updated valueLink " + valueLink + " for " + mappedCharCode);
                                 } else {
                                     //window.console.log("    @row " + row + ": NO entry for " + mappedCharCode + " found");
                                     lo.indexedTrie[row + mappedCharCode * 2] = -1;
-                                    lo.indexedTrie[row + (mappedCharCode * 2) + 1] = valueLink;
+                                    lo.indexedTrie[row + (mappedCharCode * 2) + 1] = lo.valueStore.add(tmpValues);
                                     //window.console.log("        @row " + row + ": added entry with valueLink " + valueLink + " for " + mappedCharCode + " linking to -1 at pos " + (row + (mappedCharCode * 2) + 1));
                                 }
                             }
                             //window.console.log("--------" + lo.valueStore[valueLink] + "--------");
-                            valueLink = lo.valueStore.push([]) - 1;
+                            tmpValues = [];
                             row = 0;
                             nextRow = 0;
                             prevMappedCharCode = 0;
@@ -1779,77 +1800,23 @@ var Hyphenator = (function (window) {
                         }
                     }
                 };
-
-            lo.valueStore = [];
-            lo.indexedTrie = new window.Int32Array(lo.meta_arrayLength * 2); //4 Bytes for rowLink and 4 bytes for valueLink
+            createValueStore(lo);
+            if (window.hasOwnProperty('Int32Array')) {
+                lo.indexedTrie = new window.Int32Array(lo.meta_arrayLength * 2);
+            } else {
+                lo.indexedTrie = [];
+                lo.indexedTrie.length = lo.meta_arrayLength * 2;
+                for (i = lo.indexedTrie.length - 1; i >= 0; i -= 1) {
+                    lo.indexedTrie[i] = 0;
+                }
+            }
             createCharMap(lo);
 
-            for (patternsSizeString in lo.patterns) {
-                if (lo.patterns.hasOwnProperty(patternsSizeString)) {
-                    extractTyped(parseInt(patternsSizeString, 10), lo.patterns[patternsSizeString]);
+            for (i in lo.patterns) {
+                if (lo.patterns.hasOwnProperty(i)) {
+                    extract(parseInt(i, 10), lo.patterns[i]);
                 }
             }
-        },
-
-        /**
-         * @method Hyphenator~convertPatterns
-         * @desc
-         * converts patterns of the given language to a trie
-         * @access private
-         * @param {Object} language object whose patterns shall be converted
-         */
-        convertPatterns = function (lo) {
-            var patternsSizeString,
-                treeRoot = {},
-                convert = function (patternSizeInt, patterns) {
-                    var charPos = 0,
-                        subtreeRef = treeRoot,
-                        charCode = 0,
-                        positions = [],
-                        prevWasPosition = false,
-                        subLength = 0;
-                    for (charPos = 0; charPos < patterns.length; charPos += 1) {
-                        if (subLength < patternSizeInt) {
-                            charCode = patterns.charCodeAt(charPos);
-                            if (charCode >= 49 && charCode <= 57) {
-                                //this is a hpoint (1-9)
-                                positions.push(charCode - 48);
-                                prevWasPosition = true;
-                            } else {
-                                //this is a alphabetic char --> extend the tree?
-                                if (!subtreeRef[charCode]) {
-                                    subtreeRef[charCode] = {};
-                                }
-                                subtreeRef = subtreeRef[charCode]; //go to subtree
-                                if (!prevWasPosition) {
-                                    positions.push(0);
-                                }
-                                prevWasPosition = false;
-                            }
-                            subLength += 1;
-                        }
-
-                        if (subLength === patternSizeInt) {
-                            //add last point (0)
-                            if (!prevWasPosition) {
-                                positions.push(0);
-                            }
-                            //write and empty points
-                            subtreeRef.tpoints = positions;
-                            //reset
-                            subtreeRef = treeRoot;
-                            positions = [];
-                            prevWasPosition = false;
-                            subLength = 0;
-                        }
-                    }
-                };
-            for (patternsSizeString in lo.patterns) {
-                if (lo.patterns.hasOwnProperty(patternsSizeString)) {
-                    convert(parseInt(patternsSizeString, 10), lo.patterns[patternsSizeString]);
-                }
-            }
-            lo.patterns = treeRoot;
         },
 
         /**
@@ -1974,7 +1941,8 @@ var Hyphenator = (function (window) {
          * @param {string} lang The language of the language object
          */
         prepareLanguagesObj = function (lang) {
-            var lo = Hyphenator.languages[lang], wrd;
+            var lo = Hyphenator.languages[lang], wrd,
+                loForStorage;
 
             if (!lo.prepared) {
                 if (enableCache) {
@@ -2005,19 +1973,26 @@ var Hyphenator = (function (window) {
                 } else {
                     lo.exceptions = {};
                 }
-                if (window.hasOwnProperty('Int32Array')) {
-                    convertPatternsToTypedArray(lo);
-                } else {
-                    convertPatterns(lo);
-                }
+                convertPatternsToArray(lo);
                 wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                 lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
                 lo.prepared = true;
             }
             if (!!storage) {
-                storage.setItem(lang, window.JSON.stringify(lo));
+                loForStorage = {
+                    charMap: {values: lo.charMap.values},
+                    charSubstitution: lo.charSubstitution,
+                    exceptions: lo.exceptions,
+                    indexedTrie: Array.prototype.slice.call(lo.indexedTrie),
+                    leftmin: lo.leftmin,
+                    prepared: lo.prepared,
+                    rightmin: lo.rightmin,
+                    specialChars: lo.specialChars,
+                    valueStore: {keys: lo.valueStore.keys}
+                };
+                storage.setItem(lang, window.JSON.stringify(loForStorage));
+                console.log(window.JSON.stringify(loForStorage));
             }
-
         },
 
         /****
@@ -2089,7 +2064,11 @@ var Hyphenator = (function (window) {
                         //Replace genRegExp since it may have been changed:
                         tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                         Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
-
+                        if (enableCache) {
+                            if (!Hyphenator.languages[lang].cache) {
+                                Hyphenator.languages[lang].cache = {};
+                            }
+                        }
                         delete docLanguages[lang];
                         callback(lang);
                     } else {
@@ -2164,9 +2143,6 @@ var Hyphenator = (function (window) {
                 wwhp = [],
                 pstart,
                 plen,
-                trie = lo.patterns,
-                node,
-                nodePoints,
                 hp,
                 wordLength = word.length,
                 hw = '',
@@ -2178,11 +2154,16 @@ var Hyphenator = (function (window) {
                         }
                     }
                     return r;
-                };
+                },
+                charCode,
+                mappedCharCode,
+                row = 0,
+                link = 0,
+                value = 0;
             word = onBeforeWordHyphenation(word, lang);
             if (word === '') {
                 hw = '';
-            } else if (enableCache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
+            } else if (enableCache && lo.cache && lo.cache.hasOwnProperty(word)) { //the word is in the cache
                 hw = lo.cache[word];
             } else if (word.indexOf(hyphen) !== -1) {
                 //word already contains shy; -> leave at it is!
@@ -2210,39 +2191,17 @@ var Hyphenator = (function (window) {
                 for (hp = 0; hp < wwlen + 1; hp += 1) {
                     wwhp[hp] = 0;
                 }
-                /*for (pstart = 0; pstart < wwlen; pstart += 1) {
-                    node = trie;
-                    pattern = '';
-                    for (plen = pstart; plen < wwlen; plen += 1) {
-                        node = node[ww.charCodeAt(plen)]; //go sub trie
-                        if (node) {
-                            if (enableReducedPatternSet) {
-                                pattern += ww.charAt(plen);
-                            }
-                            nodePoints = node.tpoints;
-                            if (nodePoints) {
-                                if (enableReducedPatternSet) {
-                                    if (!lo.redPatSet) {
-                                        lo.redPatSet = {};
-                                    }
-                                    lo.redPatSet[pattern] = recreatePattern(pattern, nodePoints);
-                                }
-                                for (hp = 0; hp < nodePoints.length; hp += 1) {
-                                    wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], nodePoints[hp]);
-                                }
-                            }
-                        } else {
-                            break;
-                        }
-                    }
-                }*/
-                var charCode, mappedCharCode, row = 0, nextRow = 0, link = 0, value = 0;
+
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     //window.console.log("========== Start at " + pstart);
                     row = 0;
+                    pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
                         charCode = ww.charCodeAt(plen);
                         mappedCharCode = lo.charMap.values[charCode];
+                        if (enableReducedPatternSet) {
+                            pattern += ww.charAt(plen);
+                        }
                         //window.console.log(ww.charAt(plen) + " " + charCode + " " + mappedCharCode + " @row " + row);
                         link = lo.indexedTrie[row + mappedCharCode * 2];
                         value = lo.indexedTrie[row + mappedCharCode * 2 + 1];
@@ -2250,8 +2209,14 @@ var Hyphenator = (function (window) {
                         //window.console.log("value: " + value);
                         if (value > 0) {
                             //window.console.log("found value: " + lo.valueStore[value]);
-                            for (hp = 0; hp < lo.valueStore[value].length; hp += 1) {
-                                wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], lo.valueStore[value][hp]);
+                            if (enableReducedPatternSet) {
+                                if (!lo.redPatSet) {
+                                    lo.redPatSet = {};
+                                }
+                                lo.redPatSet[pattern] = recreatePattern(pattern, lo.valueStore.keys[value]);
+                            }
+                            for (hp = 0; hp < lo.valueStore.keys[value].length; hp += 1) {
+                                wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], lo.valueStore.keys[value][hp]);
                             }
                         }
                         if (link > 0) {
@@ -2732,7 +2697,7 @@ var Hyphenator = (function (window) {
          * minor release: new languages, improvements
          * @access public
          */
-        version: 'X.Y.Z',
+        version: 'X.Y.Ztyped',
 
         /**
          * @member {boolean} Hyphenator.doHyphenation
