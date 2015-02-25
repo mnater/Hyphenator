@@ -51,7 +51,7 @@
                 unused = JSLINT.data().unused;
                 lu = unused.length;
             }
-            if (l > 0 || lg > 9 || lu > 0) {
+            if (l > 0 || lg > 11 || lu > 0) {
                 if (window != parent) {
                     var msg = {
                         desc: "Make JSLint happy ;-)",
@@ -67,7 +67,7 @@
                     }
                     for (i = 0; i < lg; i++ ) {
                         //if (global[i] !== 'Hyphenator' && global[i] !== 'window') {
-                        if ('Hyphenator, window, Error, Function, Math, RegExp, String, isFinite, parseInt'.indexOf(global[i]) === -1) {
+                        if ('Hyphenator, window, Error, Function, Math, RegExp, String, isFinite, parseInt, Array, Object'.indexOf(global[i]) === -1) {
                             document.writeln("\n bad global:\n");
                             document.writeln("    " + global[i]);
                         }

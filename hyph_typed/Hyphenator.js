@@ -2615,9 +2615,25 @@ var Hyphenator = (function (window) {
                         return (!!val) ? true : false;
                     },
                     getItem: function (name) {
-                        return this.store.getItem(this.prefix + name);
+                        var value = this.store.getItem(this.prefix + name);
+                        /*jslint unparam: true*/
+                        value = value.replace(/-(\d+)/g, function (ignore, p1) {
+                            var r = parseInt(p1, 10), i, str = "";
+                            if (r > 1) {
+                                for (i = 0; i < r; i += 1) {
+                                    str += "0,";
+                                }
+                                return str.slice(0, -1);
+                            }
+                            return "-1";
+                        });
+                        return value;
                     },
                     setItem: function (name, value) {
+                        /*jslint unparam: true*/
+                        value = value.replace(/((0,){2,})/g, function (ignore, p1) {
+                            return p1.length / -2 + ",";
+                        });
                         try {
                             this.store.setItem(this.prefix + name, value);
                         } catch (e) {
