@@ -12,5 +12,7 @@ Hyphenator.languages['lt'] = {
         6: "_arbi1_arti1_dina1_nusi1_pie2č_sida1_su5kr_te3s2_šven1a5grioan3k2lap1a4kap3i2mar1eitat3augat3i2mau4t3rbalta1ei4k3l2eis3tema5s4en3k2lenk4laere3a44g4rioi3antęi3antėie4d3rie4p5rio4g3rira3s2jauna1kavar1keren1kri5stlg3s2t2m3aidmas3kine3s2tneįs3tnt2ruoparsi1p4s3tyrai4tįri2ma_2r3imtrivin12r3orgrs4ko_rti5k4rti3s22s1amžsarka1senat4si3auksi3a2vsi3a2šsi5š2v5s4ken5s4kle3s2tovst2raitaura1ti4k3ltskri1ug5riou2s1alvi4s5kvi4t3r2vydau2š5istžants5",
         7: "_kirti1ate5isteist2rapa4r1ė2pe2r3imprau2sipusiau1rau4ka_viesia1šsikap1",
         8: "lap4s3to"
-    }
+    },
+    patternChars: "_abcdefghijklmnoprstuvwyząčėęįšūųž",
+    patternArrayLength: 18580
 };

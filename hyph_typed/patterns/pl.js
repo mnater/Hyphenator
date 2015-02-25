@@ -22,5 +22,7 @@ Hyphenator.languages['pl'] = {
         17: "_podzi2e1le1ni2e1_gdzienie9g8dzie__po8d9ó8w9cza8s_",
         18: "_przy9naj9m8nie8j_",
         20: "_gdzi2e1ni2e1gdzi2e1"
-    }
+    },
+    patternChars: "_abcdefghijklmnoprstuvwxyzóąćęłńśźż",
+    patternArrayLength: 84001
 };

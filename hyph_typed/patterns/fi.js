@@ -12,5 +12,7 @@ Hyphenator.languages['fi'] = {
         8: "2s1a2sia2n1o2pet2s1a2loialkei2s12n1e2dus2s1ajatu2s1y2rit2s1y2hti2n1a2jan2n1o2mai2n1y2lit2s1a2len2n1a2len",
         9: "2s1o2pisk2n1o2pist2s1o2pist2s1i2dea_2s1i2dean2s1e2sity_suu2r1a2",
         11: "1a2siaka2s1"
-    }
+    },
+    patternChars: "_abcdefghijklmnopqrstuvyäö",
+    patternArrayLength: 4336
 };

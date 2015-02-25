@@ -21,5 +21,7 @@ Hyphenator.languages['fr'] = {
         14: "privatdo3cent_diaphrag2ment_privatdo3zent_ventripo3tent__contre3maître",
         15: "grandilo3quent_",
         16: "_chè2vre3feuille"
-    }
+    },
+    patternChars: "_abcdefghijklmnopqrstuvwxyzàâçèéêîïôûœ’",
+    patternArrayLength: 79410
 };

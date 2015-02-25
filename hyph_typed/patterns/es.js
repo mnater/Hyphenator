@@ -22,5 +22,7 @@ Hyphenator.languages['es'] = {
         15: "4e3ra3blemente_4i3gá3monoslas_4i3gá3monosles_4i3gá3monoslos_4i3gá3mos3mela_4i3gá3mosmeles_4i3gá3mosmelos_4i3gá3mos3tela_4i3gá3mosteles_4i3gá3mostelos_4o3lógicamente_",
         16: "4i3gá3mos3melas_4i3gá3mos3telas_",
         17: "_de3s4in3ter2e3sa_de3s4in3ter2e3sá_de3s4in3ter2e3se_de3s4in3ter2e3sé_de3s4in3ter2e3so_de3s4in3ter2e3só"
-    }
+    },
+    patternChars: "X_abcdefghijklmnopqrstuvwxyzáéíñóúü",
+    patternArrayLength: 79623
 };

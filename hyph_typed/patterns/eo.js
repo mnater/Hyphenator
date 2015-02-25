@@ -20,5 +20,7 @@ Hyphenator.languages['eo'] = {
         13: "_pedik2u3l2ar1an2t1i2najn_1an2t1i2nojn_1e2str1i2naj_1e2str1i2nan_1e2str1i2noj_1e2str1i2non_1i2s2t1i2naj_1i2s2t1i2nan_1i2s2t1i2noj_1i2s2t1i2non_dakt2i3l2a3rbfrit2i3l2a3rigal2a4n3t2i3nhermafrod2i3tpterodakt2i3luniversit2a3t",
         14: "1e2str1i2najn_1e2str1i2nojn_1i2s2t1i2najn_1i2s2t1i2nojn_adam2a4n3t2i3nbrig2a4n3t2i3npartik2u3l2a3r",
         15: "prestid2i3g2i3tstrof2a4n3t2i3n"
-    }
+    },
+    patternChars: "_abcdefghijklmnoprstuvzĉĝĥĵŝŭ",
+    patternArrayLength: 95106
 };

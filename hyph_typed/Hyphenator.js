@@ -1681,23 +1681,24 @@ var Hyphenator = (function (window) {
                 };
             }, i;
             lo.charMap = new CharMap();
-            for (i = 0; i < lo.characters.length; i += 1) {
-                lo.charMap.add(lo.characters.charCodeAt(i));
+            for (i = 0; i < lo.patternChars.length; i += 1) {
+                lo.charMap.add(lo.patternChars.charCodeAt(i));
             }
         },
 
         createValueStore = function (lo) {
             var ValueStore = function () {
-                this.keys = [];
+                this.keys = [[]];
                 this.values = {};
                 this.add = function (newValue) {
-                    var index;
-                    if (!this.values[newValue]) {
+                    var index,
+                        valueString = newValue.join("");
+                    if (!this.values[valueString]) {
                         this.keys.push(newValue);
                         index = this.keys.length - 1;
-                        this.values[newValue] = index;
+                        this.values[valueString] = index;
                     } else {
-                        index = this.values[newValue];
+                        index = this.values[valueString];
                     }
                     return index;
                 };
@@ -1801,11 +1802,11 @@ var Hyphenator = (function (window) {
                     }
                 };
             createValueStore(lo);
-            if (window.hasOwnProperty('Int32Array')) {
-                lo.indexedTrie = new window.Int32Array(lo.meta_arrayLength * 2);
+            if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
+                lo.indexedTrie = new window.Int32Array(lo.patternArrayLength * 2);
             } else {
                 lo.indexedTrie = [];
-                lo.indexedTrie.length = lo.meta_arrayLength * 2;
+                lo.indexedTrie.length = lo.patternArrayLength * 2;
                 for (i = lo.indexedTrie.length - 1; i >= 0; i -= 1) {
                     lo.indexedTrie[i] = 0;
                 }
@@ -1817,6 +1818,7 @@ var Hyphenator = (function (window) {
                     extract(parseInt(i, 10), lo.patterns[i]);
                 }
             }
+            //console.log(JSON.stringify(lo));
         },
 
         /**
@@ -1991,7 +1993,6 @@ var Hyphenator = (function (window) {
                     valueStore: {keys: lo.valueStore.keys}
                 };
                 storage.setItem(lang, window.JSON.stringify(loForStorage));
-                console.log(window.JSON.stringify(loForStorage));
             }
         },
 

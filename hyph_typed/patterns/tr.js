@@ -10,5 +10,7 @@ Hyphenator.languages['tr'] = {
         4: "a3a2a3â2a3e2a3ı2a3i2a3î2a3o2a3ö2a3u2a3ü2a3û2â3a2â3â2â3e2â3ı2â3i2â3î2â3o2â3ö2â3u2â3ü2â3û2e3a2e3â2e3e2e3ı2e3i2e3î2e3o2e3ö2e3u2e3ü2e3û2ı3a2ı3â2ı3e2ı3ı2ı3i2ı3î2ı3o2ı3ö2ı3u2ı3ü2ı3û2i3a2i3â2i3e2i3ı2i3i2i3î2i3o2i3ö2i3u2i3ü2i3û2î3a2î3â2î3e2î3ı2î3i2î3î2î3o2î3ö2î3u2î3ü2î3û2o3a2o3â2o3e2o3ı2o3i2o3î2o3o2o3ö2o3u2o3ü2o3û2ö3a2ö3â2ö3e2ö3ı2ö3i2ö3î2ö3o2ö3ö2ö3u2ö3ü2ö3û2u3a2u3â2u3e2u3ı2u3i2u3î2u3o2u3ö2u3u2u3ü2u3û2ü3a2ü3â2ü3e2ü3ı2ü3i2ü3î2ü3o2ü3ö2ü3u2ü3ü2ü3û2û3a2û3â2û3e2û3ı2û3i2û3î2û3o2û3ö2û3u2û3ü2û3û2",
         6: "tu4r4k",
         7: "2e2cek_m1t4rak"
-    }
+    },
+    patternChars: "_abcdefghijklmnoprstuvyzâçîöûüğış",
+    patternArrayLength: 1332
 };
