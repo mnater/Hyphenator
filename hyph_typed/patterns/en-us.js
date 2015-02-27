@@ -18,5 +18,7 @@ Hyphenator.languages['en-us'] = Hyphenator.languages['en'] = {
         12: "3ra4m5e1triz1e6p3i3neph1"
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyz",
-    patternArrayLength: 113949
+    patternArrayLength: 113949,
+    //valueStoreLength: 4029
+    valueStoreLength: 30737
 };

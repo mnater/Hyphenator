@@ -11,5 +11,6 @@ Hyphenator.languages['ml'] = {
         4: unescape("2ന്%u200D2ര്%u200D2ല്%u200D2ള്%u200D2ണ്%u200D2ക്%u200D")
     },
     patternChars: "ംഃഅആഇഈഉഊഋഌഎഏഐഒഓഔകഖഗഘങചഛജഝഞടഠഡഢണതഥദധനപഫബഭമയരറലളഴവശഷസഹാിീുൂൃെേൈൊോൌ്ൗൠൡൺൻർൽൾൿ‍",
-    patternArrayLength: 975
+    patternArrayLength: 975,
+    valueStoreLength: 277
 };

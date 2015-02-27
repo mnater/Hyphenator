@@ -10,5 +10,6 @@ Hyphenator.languages['kn'] = {
         3: "2ಃ12ಂ1"
     },
     patternChars: "ಂಃಅಆಇಈಉಊಋಎಏಐಒಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಱಲಳವಶಷಸಹೀುೂೃೆೇೊೋೌ್",
-    patternArrayLength: 59
+    patternArrayLength: 59,
+    valueStoreLength: 184
 };

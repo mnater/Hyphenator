@@ -17,5 +17,6 @@ Hyphenator.languages['sr-cyrl'] = {
 		13 : "_пре2д3убијеђ_бе2з3алкохол"
 	},
 	patternChars: "_абвгдежзиклмнопрстуфхцчшђјљњћџ",
-	patternArrayLength: 41645
+	patternArrayLength: 41645,
+    valueStoreLength: 16341
 };

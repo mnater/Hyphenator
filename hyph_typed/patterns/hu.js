@@ -20,5 +20,7 @@ Hyphenator.languages['hu'] = {
         20: "_le3g2esle3g2esle2g1"
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyzáäéíóöúüőű",
-    patternArrayLength: 1583830
+    patternArrayLength: 1583830,
+    //valueStoreLength: 3329
+    valueStoreLength: 440210
 };

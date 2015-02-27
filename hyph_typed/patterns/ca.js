@@ -17,5 +17,6 @@ Hyphenator.languages['ca'] = {
         12: "ru1t2herfordni2etz1sc2he"
     },
     patternChars: "_abcdefghijlmnopqrstuvxyzàçèéíïòóúü",
-    patternArrayLength: 8091
+    patternArrayLength: 8091,
+    valueStoreLength: 4187
 };

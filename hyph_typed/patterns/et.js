@@ -22,5 +22,6 @@ Hyphenator.languages['et'] = {
         9: "5elevaato5standarddep5ressi5etendus_5arvestusro5staati"
     },
     patternChars: "_abdefghijklmnoprstuvzäõöüšž",
-    patternArrayLength: 84961
+    patternArrayLength: 84961,
+    valueStoreLength: 22153
 };

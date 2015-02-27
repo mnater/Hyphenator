@@ -16,5 +16,6 @@ Hyphenator.languages['nl'] = {
         9: "_acht5end_handels5_ker5sten_laat5ste_mor5sten_pers5te__pits5te__raads5le_spoor5tj_wals5te_asting5spboots5te_brie5tje_ebots5te_ekwet5steemor5stenepers5te_espit5steewens5te_flens5te_fpers5te_fpits5te_gfijn5stehaats5te_heers5takhielsges5hts5trekki5otorensjspoort5jkaart5jeskaats5te_ka4t5a4leketting5skinds5te_kkers5tenklots5te_koets5te_kwens5te_lands5te_loens5te_nbots5te_n4d5e4recngels5te_n5opleidinpers5te_ntene5tenomen5ste_poets5te_r4d5e4lasrke5streerke5strerrlaat5sterlinks5ter5treden_rvals5te_rvers5te_rwens5te_slens5te_5smuildenteeds5te_toets5te_udi5ologevens5taakvens5takewrens5te_zwets5te_"
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyzäçèéêëîïñöûü",
-    patternArrayLength: 299326
+    patternArrayLength: 299326,
+    valueStoreLength: 80301
 };

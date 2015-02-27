@@ -14,5 +14,6 @@ Hyphenator.languages['lt'] = {
         8: "lap4s3to"
     },
     patternChars: "_abcdefghijklmnoprstuvwyząčėęįšūųž",
-    patternArrayLength: 18580
+    patternArrayLength: 18580,
+    valueStoreLength: 7211
 };

@@ -15,5 +15,6 @@ Hyphenator.languages['ro'] = {
         8: "copia2tăteri6alăimateri6rografi6vorbito2omedi2e_"
     },
     patternChars: "_abcdefghijklmnoprstuvxzîășț",
-    patternArrayLength: 10249
+    patternArrayLength: 10249,
+    valueStoreLength: 3149
 };

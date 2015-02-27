@@ -14,5 +14,6 @@ Hyphenator.languages['fi'] = {
         11: "1a2siaka2s1"
     },
     patternChars: "_abcdefghijklmnopqrstuvyäö",
-    patternArrayLength: 4336
+    patternArrayLength: 4336,
+    valueStoreLength: 1367
 };

@@ -11,5 +11,6 @@ Hyphenator.languages['or'] = {
         4: unescape("2ନ୍%u200D2ର୍%u200D2ଲ୍%u200D2ଳ୍%u200D2ଣ୍%u200D")
     },
     patternChars: "ଂଃଅଆଇଈଉଊଋଏଐଔକଖଗଘଙଚଛଜଝଞଟଠଡଢଣତଥଦଧନପଫବଭମଯରଲଳଵଶଷସହାିୀୁୂୃେୋୌ୍ୗ‍",
-    patternArrayLength: 638
+    patternArrayLength: 638,
+    valueStoreLength: 197
 };

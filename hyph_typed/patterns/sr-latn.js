@@ -18,5 +18,6 @@ Hyphenator.languages['sr-latn'] = {
         13: "_be2z3alkohol_pre2d3ubijeđ"
     },
     patternChars: "_abcdefghijklmnoprstuvzćčđšž",
-    patternArrayLength: 74114
+    patternArrayLength: 74114,
+    valueStoreLength: 17775
 };

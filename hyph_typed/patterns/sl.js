@@ -14,5 +14,6 @@ Hyphenator.languages['sl'] = {
         8: "_pre6d7ne4z5u4m5"
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyzčšž",
-    patternArrayLength: 21944
+    patternArrayLength: 21944,
+    valueStoreLength: 5606
 };

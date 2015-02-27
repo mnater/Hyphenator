@@ -1687,23 +1687,34 @@ var Hyphenator = (function (window) {
         },
 
         createValueStore = function (lo) {
-            var ValueStore = function () {
-                this.keys = [[]];
-                this.values = {};
-                this.add = function (newValue) {
-                    var index,
-                        valueString = newValue.join("");
-                    if (!this.values[valueString]) {
-                        this.keys.push(newValue);
-                        index = this.keys.length - 1;
-                        this.values[valueString] = index;
-                    } else {
-                        index = this.values[valueString];
+            var ValueStore = function (len) {
+                this.keys = (function () {
+                    var i, r;
+                    if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
+                        return new window.Uint8Array(len);
                     }
-                    return index;
+                    r = [];
+                    r.length = len;
+                    for (i = r.length - 1; i >= 0; i -= 1) {
+                        r[i] = 0;
+                    }
+                    return r;
+                }());
+                this.startIndex = 1;
+                this.actualIndex = 2;
+                this.add = function (p) {
+                    this.keys[this.actualIndex] = p;
+                    this.actualIndex += 1;
+                };
+                this.finalize = function () {
+                    var start = this.startIndex;
+                    this.keys[start] = this.actualIndex - 1 - start;
+                    this.startIndex = this.actualIndex;
+                    this.actualIndex += 1;
+                    return start;
                 };
             };
-            lo.valueStore = new ValueStore();
+            lo.valueStore = new ValueStore(lo.valueStoreLength);
         },
 
         convertPatternsToArray = function (lo) {
@@ -1717,43 +1728,49 @@ var Hyphenator = (function (window) {
                         charCode = 0,
                         prevMappedCharCode = 0,
                         mappedCharCode = 0,
-                        tmpValues = [],
+                        //tmpValues = [],
                         row = 0,
                         nextRow = 0,
-                        prevWasPosition = false;
+                        prevWasPosition = false,
+                        charMapValues = lo.charMap.values,
+                        valueStore = lo.valueStore,
+                        indexedTrie = lo.indexedTrie,
+                        steps = lo.charMap.keys.length * 2;
 
                     for (charPos = 0; charPos < patterns.length; charPos += 1) {
                         charCode = patterns.charCodeAt(charPos);
                         if ((charPos + 1) % patternSizeInt !== 0) {
                             //window.console.log(String.fromCharCode(charCode) + " ...");
                             if (charCode >= 49 && charCode <= 57) {
-                                tmpValues.push(charCode - 48);
+                                ////tmpValues.push(charCode - 48);
+                                valueStore.add(charCode - 48);
                                 prevWasPosition = true;
                             } else {
                                 if (!prevWasPosition) {
-                                    tmpValues.push(0);
+                                    ////tmpValues.push(0);
+                                    valueStore.add(0);
                                 }
                                 prevWasPosition = false;
-                                mappedCharCode = lo.charMap.values[charCode];
+                                mappedCharCode = charMapValues[charCode];
                                 //window.console.log("    mapped: " + mappedCharCode);
                                 if (nextRow === -1) {
-                                    nextRow = indexedTrieMaxRow + lo.charMap.keys.length * 2;
+                                    nextRow = indexedTrieMaxRow + steps;
                                     indexedTrieMaxRow = nextRow;
                                     //window.console.log("new nextRow: " + nextRow);
                                     //window.console.log("    @ row " + row + ": updating link for " + prevMappedCharCode + " to " + nextRow);
-                                    lo.indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                    indexedTrie[row + prevMappedCharCode * 2] = nextRow;
                                     //window.console.log("    @ row " + row + ": updated link for " + prevMappedCharCode + " to " + nextRow);
                                 }
                                 row = nextRow;
                                 //window.console.log("    -> row " + row);
-                                if (lo.indexedTrie[row + mappedCharCode * 2] !== 0) {
+                                if (indexedTrie[row + mappedCharCode * 2] !== 0) {
                                     //window.console.log("    @row " + row + ": entry for " + mappedCharCode + " found");
-                                    nextRow = lo.indexedTrie[row + mappedCharCode * 2];
+                                    nextRow = indexedTrie[row + mappedCharCode * 2];
                                     //window.console.log("        linking to: " + nextRow);
                                 } else {
                                     //window.console.log("    @row " + row + ": NO entry for " + mappedCharCode + " found");
-                                    lo.indexedTrie[row + mappedCharCode * 2] = -1;
-                                    lo.indexedTrie[row + mappedCharCode * 2 + 1] = -1;
+                                    indexedTrie[row + mappedCharCode * 2] = -1;
+                                    indexedTrie[row + mappedCharCode * 2 + 1] = -1;
                                     nextRow = -1;
                                     //window.console.log("        @row " + row + ": added entry for " + mappedCharCode + " linking to -1");
                                 }
@@ -1762,38 +1779,43 @@ var Hyphenator = (function (window) {
                         } else {
                             //window.console.log(String.fromCharCode(charCode) + " (last)");
                             if (charCode >= 49 && charCode <= 57) {
-                                tmpValues.push(charCode - 48);
-                                lo.indexedTrie[row + mappedCharCode * 2 + 1] = lo.valueStore.add(tmpValues);
+                                ////tmpValues.push(charCode - 48);
+                                valueStore.add(charCode - 48);
+                                ////indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.add(tmpValues);
+                                indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
                                 //window.console.log("        @row " + row + ": updated valueLink " + valueLink + " for " + mappedCharCode);
                             } else {
                                 if (!prevWasPosition) {
-                                    tmpValues.push(0);
+                                    ////tmpValues.push(0);
+                                    valueStore.add(0);
                                 }
-                                tmpValues.push(0);
-                                mappedCharCode = lo.charMap.values[charCode];
+                                ////tmpValues.push(0);
+                                valueStore.add(0);
+                                mappedCharCode = charMapValues[charCode];
                                 //window.console.log("    mapped: " + mappedCharCode);
                                 if (nextRow === -1) {
-                                    nextRow = indexedTrieMaxRow + lo.charMap.keys.length * 2;
+                                    nextRow = indexedTrieMaxRow + steps;
                                     indexedTrieMaxRow = nextRow;
-                                    lo.indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                    indexedTrie[row + prevMappedCharCode * 2] = nextRow;
                                     //window.console.log("new nextRow: " + nextRow);
                                     //window.console.log("    @ row " + row + ": updated link for " + prevMappedCharCode + " to " + nextRow);
                                 }
                                 row = nextRow;
                                 //window.console.log("    -> row " + row);
-                                if (lo.indexedTrie[row + mappedCharCode * 2] !== 0) {
+                                if (indexedTrie[row + mappedCharCode * 2] !== 0) {
                                     //window.console.log("    @row " + row + ": entry for " + mappedCharCode + " found");
-                                    lo.indexedTrie[row + mappedCharCode * 2 + 1] = lo.valueStore.add(tmpValues);
+                                    ////indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.add(tmpValues);
+                                    indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
                                     //window.console.log("        @row " + row + ": updated valueLink " + valueLink + " for " + mappedCharCode);
                                 } else {
                                     //window.console.log("    @row " + row + ": NO entry for " + mappedCharCode + " found");
-                                    lo.indexedTrie[row + mappedCharCode * 2] = -1;
-                                    lo.indexedTrie[row + (mappedCharCode * 2) + 1] = lo.valueStore.add(tmpValues);
+                                    indexedTrie[row + mappedCharCode * 2] = -1;
+                                    //indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.add(tmpValues);
+                                    indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
                                     //window.console.log("        @row " + row + ": added entry with valueLink " + valueLink + " for " + mappedCharCode + " linking to -1 at pos " + (row + (mappedCharCode * 2) + 1));
                                 }
                             }
                             //window.console.log("--------" + lo.valueStore[valueLink] + "--------");
-                            tmpValues = [];
                             row = 0;
                             nextRow = 0;
                             prevMappedCharCode = 0;
@@ -1818,7 +1840,6 @@ var Hyphenator = (function (window) {
                     extract(parseInt(i, 10), lo.patterns[i]);
                 }
             }
-            //console.log(JSON.stringify(lo));
         },
 
         /**
@@ -1990,7 +2011,9 @@ var Hyphenator = (function (window) {
                     prepared: lo.prepared,
                     rightmin: lo.rightmin,
                     specialChars: lo.specialChars,
-                    valueStore: {keys: lo.valueStore.keys}
+                    valueStore: {
+                        keys: Array.prototype.slice.call(lo.valueStore.keys)
+                    }
                 };
                 storage.setItem(lang, window.JSON.stringify(loForStorage));
             }
@@ -2160,7 +2183,8 @@ var Hyphenator = (function (window) {
                 mappedCharCode,
                 row = 0,
                 link = 0,
-                value = 0;
+                value = 0,
+                values;
             word = onBeforeWordHyphenation(word, lang);
             if (word === '') {
                 hw = '';
@@ -2210,14 +2234,19 @@ var Hyphenator = (function (window) {
                         //window.console.log("value: " + value);
                         if (value > 0) {
                             //window.console.log("found value: " + lo.valueStore[value]);
+                            if (lo.valueStore.keys.subarray) {
+                                values = lo.valueStore.keys.subarray(value + 1, value + 1 + lo.valueStore.keys[value]);
+                            } else {
+                                values = lo.valueStore.keys.slice(value + 1, value + 1 + lo.valueStore.keys[value]);
+                            }
                             if (enableReducedPatternSet) {
                                 if (!lo.redPatSet) {
                                     lo.redPatSet = {};
                                 }
-                                lo.redPatSet[pattern] = recreatePattern(pattern, lo.valueStore.keys[value]);
+                                lo.redPatSet[pattern] = recreatePattern(pattern, values);
                             }
-                            for (hp = 0; hp < lo.valueStore.keys[value].length; hp += 1) {
-                                wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], lo.valueStore.keys[value][hp]);
+                            for (hp = 0; hp < values.length; hp += 1) {
+                                wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], values[hp]);
                             }
                         }
                         if (link > 0) {

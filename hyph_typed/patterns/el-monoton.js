@@ -17,5 +17,6 @@ Hyphenator.languages['el-monoton'] = Hyphenator.languages['el'] = {
         10: "4χτ_4γκ1μπ"
     },
     patternChars: "'_ʼΐάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώϲάέήίόύώ᾽᾿’",
-    patternArrayLength: 5775
+    patternArrayLength: 5775,
+    valueStoreLength: 2401
 };

@@ -24,5 +24,6 @@ Hyphenator.languages['pl'] = {
         20: "_gdzi2e1ni2e1gdzi2e1"
     },
     patternChars: "_abcdefghijklmnoprstuvwxyzóąćęłńśźż",
-    patternArrayLength: 84001
+    patternArrayLength: 84001,
+    valueStoreLength: 32609
 };

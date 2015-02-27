@@ -11,5 +11,6 @@ Hyphenator.languages['ta'] = {
         4: "2க்12ங்12ச்12ஞ்12ட்12ண்12த்12ன்12ந்12ப்12ம்12ய்12ர்12ற்12ல்12ள்12ழ்12வ்12ஷ்12ஸ்12ஹ்1"
     },
     patternChars: "ஂஃஅஆஇஈஉஊஎஏஐஒஓஔகஙசஜஞடணதநனபமயரறலளழவஷஸஹாிீுூெேைொோௌ்ௗ",
-    patternArrayLength: 1077
+    patternArrayLength: 1077,
+    valueStoreLength: 229
 };

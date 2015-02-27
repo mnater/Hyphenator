@@ -23,5 +23,6 @@ Hyphenator.languages['fr'] = {
         16: "_chè2vre3feuille"
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyzàâçèéêîïôûœ’",
-    patternArrayLength: 79410
+    patternArrayLength: 79410,
+    valueStoreLength: 8110
 };

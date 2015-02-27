@@ -19,5 +19,6 @@ Hyphenator.languages['la'] = {
         10: "_di2s3cine"
     },
     patternChars: "_abcdefghijklmnopqrstuvxzæœ",
-    patternArrayLength: 3273
+    patternArrayLength: 3273,
+    valueStoreLength: 1633
 };

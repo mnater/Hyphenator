@@ -19,5 +19,6 @@ Hyphenator.languages['ru'] = {
         10: "но4л1а2мин"
     },
     patternChars: "_абвгдежзийклмнопрстуфхцчшщъыьэюяё",
-    patternArrayLength: 92699
+    patternArrayLength: 92699,
+    valueStoreLength: 27226
 };

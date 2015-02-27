@@ -21,5 +21,6 @@ Hyphenator.languages['be'] = {
         12: "слова1ў8тваркрова3ў8твар"
     },
     patternChars: "'_абвгдежзйклмнопрстуфхцчшыьэюяёіўґ’",
-    patternArrayLength: 24930
+    patternArrayLength: 24930,
+    valueStoreLength: 11212
 };

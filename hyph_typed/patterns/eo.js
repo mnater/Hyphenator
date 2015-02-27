@@ -22,5 +22,6 @@ Hyphenator.languages['eo'] = {
         15: "prestid2i3g2i3tstrof2a4n3t2i3n"
     },
     patternChars: "_abcdefghijklmnoprstuvzĉĝĥĵŝŭ",
-    patternArrayLength: 95106
+    patternArrayLength: 95106,
+    valueStoreLength: 15839
 };

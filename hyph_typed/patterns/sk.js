@@ -22,5 +22,6 @@ Hyphenator.languages['sk'] = {
         15: "ôs4t3k2ár3s4t4v_po6s4t5s4k4rip5boh3vi4e3o2d3k"
     },
     patternChars: "_abcdefghijklmnoprstuvwxyzáäéíóôúýčďľňŕšťž",
-    patternArrayLength: 75654
+    patternArrayLength: 75654,
+    valueStoreLength: 14880
 };
