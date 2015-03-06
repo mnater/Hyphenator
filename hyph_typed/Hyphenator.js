@@ -1978,8 +1978,8 @@ var Hyphenator = (function (window) {
                     lo.exceptions = {};
                 }
                 convertPatternsToArray(lo);
-                wrd = '[\\w' + lo.specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
-                lo.genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + wrd + ')', 'gi');
+                wrd = '[\\w' + lo.specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                lo.genRegExp = new RegExp('(' + wrd + ')|(' + url + ')|(' + mail + ')', 'gi');
                 lo.prepared = true;
             }
             if (!!storage) {
@@ -2068,8 +2068,8 @@ var Hyphenator = (function (window) {
                             delete exceptions[lang];
                         }
                         //Replace genRegExp since it may have been changed:
-                        tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + '@' + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
-                        Hyphenator.languages[lang].genRegExp = new RegExp('(' + url + ')|(' + mail + ')|(' + tmp1 + ')', 'gi');
+                        tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                        Hyphenator.languages[lang].genRegExp = new RegExp('(' + tmp1 + ')|(' + url + ')|(' + mail + ')', 'gi');
                         if (enableCache) {
                             if (!Hyphenator.languages[lang].cache) {
                                 Hyphenator.languages[lang].cache = {};
@@ -2189,10 +2189,9 @@ var Hyphenator = (function (window) {
                 }
                 hw = parts.join('-');
             } else {
-                //console.time("prepare");
                 ww = word.toLowerCase();
 
-                if (!!lo.charSubstitution) {
+                if (lo.hasOwnProperty("charSubstitution")) {
                     ww = doCharSubst(ww);
                 }
                 if (word.indexOf("'") !== -1) {
@@ -2210,15 +2209,10 @@ var Hyphenator = (function (window) {
                         wwhp[hp] = 0;
                     }
                 }
-                //console.timeEnd("prepare");
-                //console.time("map");
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     wwAsMappedCharCode[pstart] = charMap[ww.charCodeAt(pstart)];
                 }
-                //console.timeEnd("map");
-                //console.time("cycle");
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
-                    //window.console.log("========== Start at " + pstart);
                     row = 0;
                     pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
@@ -2255,8 +2249,6 @@ var Hyphenator = (function (window) {
                         }
                     }
                 }
-                //console.timeEnd("cycle");
-                //console.time("set hw");
                 for (hp = 0; hp < wordLength; hp += 1) {
                     if (hp >= lo.leftmin && hp <= (wordLength - lo.rightmin) && (wwhp[hp + 1] % 2) !== 0) {
                         hw += hyphen + word.charAt(hp);
@@ -2264,7 +2256,6 @@ var Hyphenator = (function (window) {
                         hw += word.charAt(hp);
                     }
                 }
-                //console.timeEnd("set hw");
             }
             hw = onAfterWordHyphenation(hw, lang);
             if (enableCache) { //put the word in the cache
@@ -2454,6 +2445,36 @@ var Hyphenator = (function (window) {
             }
         },
 
+        controlOrphans = function (part) {
+            var h, r;
+            switch (hyphen) {
+            case '|':
+                h = '\\|';
+                break;
+            case '+':
+                h = '\\+';
+                break;
+            case '*':
+                h = '\\*';
+                break;
+            default:
+                h = hyphen;
+            }
+            //strip off blank space at the end (omitted closing tags)
+            part = part.replace(/[\s]*$/, '');
+            if (orphanControl >= 2) {
+                //remove hyphen points from last word
+                r = part.split(' ');
+                r[1] = r[1].replace(new RegExp(h, 'g'), '');
+                r[1] = r[1].replace(new RegExp(zeroWidthSpace, 'g'), '');
+                r = r.join(' ');
+            }
+            if (orphanControl === 3) {
+                //replace spaces by non breaking spaces
+                r = r.replace(/[ ]+/g, String.fromCharCode(160));
+            }
+            return r;
+        },
 
         /**
          * @method Hyphenator~hyphenateElement
@@ -2470,41 +2491,12 @@ var Hyphenator = (function (window) {
                 hyphenate,
                 n,
                 i,
-                lo,
-                controlOrphans = function (part) {
-                    var h, r;
-                    switch (hyphen) {
-                    case '|':
-                        h = '\\|';
-                        break;
-                    case '+':
-                        h = '\\+';
-                        break;
-                    case '*':
-                        h = '\\*';
-                        break;
-                    default:
-                        h = hyphen;
-                    }
-                    //strip off blank space at the end (omitted closing tags)
-                    part = part.replace(/[\s]*$/, '');
-                    if (orphanControl >= 2) {
-                        //remove hyphen points from last word
-                        r = part.split(' ');
-                        r[1] = r[1].replace(new RegExp(h, 'g'), '');
-                        r[1] = r[1].replace(new RegExp(zeroWidthSpace, 'g'), '');
-                        r = r.join(' ');
-                    }
-                    if (orphanControl === 3) {
-                        //replace spaces by non breaking spaces
-                        r = r.replace(/[ ]+/g, String.fromCharCode(160));
-                    }
-                    return r;
-                };
+                lo;
             if (Hyphenator.languages.hasOwnProperty(lang)) {
                 lo = Hyphenator.languages[lang];
-                hyphenate = function (match, url, mail, word) {
+                hyphenate = function (match, word, url, mail) {
                     var r;
+                    //console.log(match, word, url, mail);
                     if (!Hyphenator.doHyphenation) {
                         r = match;
                     } else if (url !== undefined || mail !== undefined) {
@@ -3058,7 +3050,7 @@ var Hyphenator = (function (window) {
                 if (!lo.prepared) {
                     prepareLanguagesObj(lang);
                 }
-                hyphenate = function (match, url, mail, word) {
+                hyphenate = function (match, word, url, mail) {
                     var r;
                     if (url !== undefined || mail !== undefined) {
                         r = hyphenateURL(match);
