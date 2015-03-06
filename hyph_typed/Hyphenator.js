@@ -1723,7 +1723,7 @@ var Hyphenator = (function (window) {
         /**
          * @method Hyphenator~convertPatternsToArray
          * @desc
-         * converts the patterns to a (typed, if possible) array.
+         * converts the patterns to a (typed, if possible) array as described by Liang
          * 
          * @access private
          * @param {Object} language object
@@ -2445,6 +2445,16 @@ var Hyphenator = (function (window) {
             }
         },
 
+        /**
+         * @method Hyphenator~controlOrphans
+         * @desc
+         * removes orphans depending on the 'orphanControl'-setting:
+         * orphanControl === 1: do nothing
+         * orphanControl === 2: prevent last word to be hyphenated
+         * orphanControl === 3: prevent one word on a last line (inserts a nobreaking space)
+         * @param {string} part - The sring where orphans have to be removed
+         * @access private
+         */
         controlOrphans = function (part) {
             var h, r;
             switch (hyphen) {
@@ -2496,7 +2506,6 @@ var Hyphenator = (function (window) {
                 lo = Hyphenator.languages[lang];
                 hyphenate = function (match, word, url, mail) {
                     var r;
-                    //console.log(match, word, url, mail);
                     if (!Hyphenator.doHyphenation) {
                         r = match;
                     } else if (url !== undefined || mail !== undefined) {
@@ -2640,14 +2649,16 @@ var Hyphenator = (function (window) {
                         var value = this.store.getItem(this.prefix + name);
                         /*jslint unparam: true*/
                         value = value.replace(/-(\d+)/g, function unpack(ignore, p1) {
-                            var r, i, str = "";
+                            //convert negative numbers to zeros e.g. '-3' -> '0,0,0'
+                            var n, i, str = [];
                             if (p1 === "1") {
                                 return -1;
                             }
-                            r = parseInt(p1, 10);
-                            for (i = 0; i < r; i += 1) {
-                                str += "0,";
+                            n = parseInt(p1, 10);
+                            for (i = 0; i < n; i += 1) {
+                                str.push("0,");
                             }
+                            str = str.join("");
                             return str.slice(0, -1);
                         });
                         return value;
@@ -2655,6 +2666,7 @@ var Hyphenator = (function (window) {
                     setItem: function (name, value) {
                         /*jslint unparam: true*/
                         value = value.replace(/((0,){2,})/g, function pack(ignore, p1) {
+                            //converts a series of zeros to a negative number e.g. '0,0,0' -> '-3'
                             return p1.length / -2 + ",";
                         });
                         try {
