@@ -24,5 +24,5 @@ Hyphenator.languages['el-polyton'] = {
     },
     patternChars: "'_ʼΐάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώϲἀἁἂἃἄἅἆἇἐἑἒἓἔἕἠἡἢἣἤἥἦἧἰἱἲἳἴἵἶἷὀὁὂὃὄὅὐὑὒὓὔὕὖὗὠὡὢὣὤὥὦὧὰάὲέὴήὶίὸόὺύὼώᾀᾁᾂᾃᾄᾅᾆᾇᾐᾑᾒᾓᾔᾕᾖᾗᾠᾡᾢᾣᾤᾥᾦᾧᾲᾳᾴᾶᾷ᾽᾿ῂῃῄῆῇῒΐῖῗῢΰῤῥῦῧῲῳῴῶῷ’",
     patternArrayLength: 154381,
-    valueStoreLength: 6703
+    valueStoreLength: 4907
 };

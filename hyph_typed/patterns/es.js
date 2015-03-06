@@ -25,5 +25,5 @@ Hyphenator.languages['es'] = {
     },
     patternChars: "X_abcdefghijklmnopqrstuvwxyzáéíñóúü",
     patternArrayLength: 79623,
-    valueStoreLength: 21865
+    valueStoreLength: 15424
 };

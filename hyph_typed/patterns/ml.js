@@ -12,5 +12,5 @@ Hyphenator.languages['ml'] = {
     },
     patternChars: "ംഃഅആഇഈഉഊഋഌഎഏഐഒഓഔകഖഗഘങചഛജഝഞടഠഡഢണതഥദധനപഫബഭമയരറലളഴവശഷസഹാിീുൂൃെേൈൊോൌ്ൗൠൡൺൻർൽൾൿ‍",
     patternArrayLength: 975,
-    valueStoreLength: 277
+    valueStoreLength: 217
 };

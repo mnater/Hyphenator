@@ -825,7 +825,7 @@ var Hyphenator = (function (window) {
          * A string containing a insane RegularExpression to match URL's
          * @access private
          */
-        url = '(\\w*:\/\/)?((\\w*:)?(\\w*)@)?((([\\d]{1,3}\\.){3}([\\d]{1,3}))|((www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.([a-z]{2,4})))(:\\d*)?(\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
+        url = '(?:\\w*:\/\/)?(?:(?:\\w*:)?(?:\\w*)@)?(?:(?:(?:[\\d]{1,3}\\.){3}(?:[\\d]{1,3}))|(?:(?:www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.(?:[a-z]{2,4})))(?::\\d*)?(?:\/[\\w#!:\\.?\\+=&%@!\\-]*)*',
         //      protocoll     usr     pwd                    ip               or                          host                 tld        port               path
 
         /**
@@ -835,14 +835,6 @@ var Hyphenator = (function (window) {
          * @access private
          */
         mail = '[\\w-\\.]+@[\\w\\.]+',
-
-        /**
-         * @member {RegExp} Hyphenator~urlRE
-         * @desc
-         * A RegularExpressions-Object for url- and mail adress matching
-         * @access private
-         */
-        urlOrMailRE = new RegExp('(' + url + ')|(' + mail + ')', 'i'),
 
         /**
          * @member {string} Hyphenator~zeroWidthSpace
@@ -1663,9 +1655,9 @@ var Hyphenator = (function (window) {
          * charMap.keys =  [0: 97, //a
          *                  1: 98, //b
          *                  2: 99] //c etc.
-         * charMap.values = ["97": 0, //a
+         * charMap.values = {"97": 0, //a
          *                   "98": 1, //b
-         *                   "99": 2] //c etc.
+         *                   "99": 2} //c etc.
          * @access private
          * @param {Object} language object
          */
@@ -1709,15 +1701,19 @@ var Hyphenator = (function (window) {
                 }());
                 this.startIndex = 1;
                 this.actualIndex = 2;
+                this.lastValueIndex = 2;
                 this.add = function (p) {
-                    this.keys[this.actualIndex] = p;
+                    if (p !== 0) {
+                        this.keys[this.actualIndex] = p;
+                        this.lastValueIndex = this.actualIndex;
+                    }
                     this.actualIndex += 1;
                 };
                 this.finalize = function () {
                     var start = this.startIndex;
-                    this.keys[start] = this.actualIndex - 1 - start;
-                    this.startIndex = this.actualIndex;
-                    this.actualIndex += 1;
+                    this.keys[start] = this.lastValueIndex - start;
+                    this.startIndex = this.lastValueIndex + 1;
+                    this.actualIndex = this.startIndex + 1;
                     return start;
                 };
             };
@@ -1772,7 +1768,6 @@ var Hyphenator = (function (window) {
                                     nextRow = indexedTrie[row + mappedCharCode * 2];
                                 } else {
                                     indexedTrie[row + mappedCharCode * 2] = -1;
-                                    indexedTrie[row + mappedCharCode * 2 + 1] = -1;
                                     nextRow = -1;
                                 }
                                 prevMappedCharCode = mappedCharCode;
@@ -1839,8 +1834,8 @@ var Hyphenator = (function (window) {
          */
         recreatePattern = function (pattern, nodePoints) {
             var r = [], c = pattern.split(''), i;
-            for (i = 0; i < nodePoints.length; i += 1) {
-                if (nodePoints[i] !== 0) {
+            for (i = 0; i <= c.length; i += 1) {
+                if (nodePoints[i] && nodePoints[i] !== 0) {
                     r.push(nodePoints[i]);
                 }
                 if (c[i]) {
@@ -2002,6 +1997,7 @@ var Hyphenator = (function (window) {
                     }
                 };
                 storage.setItem(lang, window.JSON.stringify(loForStorage));
+                //console.log(window.JSON.stringify(loForStorage.valueStore));
             }
         },
 
@@ -2166,14 +2162,14 @@ var Hyphenator = (function (window) {
                     return r;
                 },
                 charMap = lo.charMap.values,
-                charCode,
                 mappedCharCode,
                 row = 0,
                 link = 0,
                 value = 0,
                 values,
                 indexedTrie = lo.indexedTrie,
-                valueStore = lo.valueStore.keys;
+                valueStore = lo.valueStore.keys,
+                wwAsMappedCharCode;
 
             word = onBeforeWordHyphenation(word, lang);
             if (word === '') {
@@ -2193,6 +2189,7 @@ var Hyphenator = (function (window) {
                 }
                 hw = parts.join('-');
             } else {
+                //console.time("prepare");
                 ww = word.toLowerCase();
 
                 if (!!lo.charSubstitution) {
@@ -2205,33 +2202,39 @@ var Hyphenator = (function (window) {
                 wwlen = ww.length;
                 if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
                     wwhp = new window.Uint8Array(wwlen - 1);
+                    wwAsMappedCharCode = new window.Uint8Array(wwlen);
                 } else {
                     wwhp = [];
+                    wwAsMappedCharCode = [];
                     for (hp = 0; hp < wwlen - 1; hp += 1) {
                         wwhp[hp] = 0;
                     }
                 }
-
+                //console.timeEnd("prepare");
+                //console.time("map");
+                for (pstart = 0; pstart < wwlen; pstart += 1) {
+                    wwAsMappedCharCode[pstart] = charMap[ww.charCodeAt(pstart)];
+                }
+                //console.timeEnd("map");
+                //console.time("cycle");
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     //window.console.log("========== Start at " + pstart);
                     row = 0;
                     pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
-                        charCode = ww.charCodeAt(plen);
-                        mappedCharCode = charMap[charCode];
+                        mappedCharCode = wwAsMappedCharCode[plen];
                         if (enableReducedPatternSet) {
                             pattern += ww.charAt(plen);
                         }
-                        //window.console.log(ww.charAt(plen) + " " + charCode + " " + mappedCharCode + " @row " + row);
                         link = indexedTrie[row + mappedCharCode * 2];
                         value = indexedTrie[row + mappedCharCode * 2 + 1];
-                        //window.console.log("    link: " + link);
-                        //window.console.log("    value: " + value);
                         if (value > 0) {
                             hp = valueStore[value];
                             while (hp) {
                                 hp -= 1;
-                                wwhp[pstart + hp] = Math.max(wwhp[pstart + hp], valueStore[value + 1 + hp]);
+                                if (valueStore[value + 1 + hp] > wwhp[pstart + hp]) {
+                                    wwhp[pstart + hp] = valueStore[value + 1 + hp];
+                                }
                             }
                             if (enableReducedPatternSet) {
                                 if (!lo.redPatSet) {
@@ -2244,7 +2247,6 @@ var Hyphenator = (function (window) {
                                 }
                                 lo.redPatSet[pattern] = recreatePattern(pattern, values);
                             }
-                            //window.console.log("found value: " + lo.valueStore[value]);
                         }
                         if (link > 0) {
                             row = link;
@@ -2253,7 +2255,8 @@ var Hyphenator = (function (window) {
                         }
                     }
                 }
-
+                //console.timeEnd("cycle");
+                //console.time("set hw");
                 for (hp = 0; hp < wordLength; hp += 1) {
                     if (hp >= lo.leftmin && hp <= (wordLength - lo.rightmin) && (wwhp[hp + 1] % 2) !== 0) {
                         hw += hyphen + word.charAt(hp);
@@ -2261,6 +2264,7 @@ var Hyphenator = (function (window) {
                         hw += word.charAt(hp);
                     }
                 }
+                //console.timeEnd("set hw");
             }
             hw = onAfterWordHyphenation(hw, lang);
             if (enableCache) { //put the word in the cache
@@ -2499,12 +2503,12 @@ var Hyphenator = (function (window) {
                 };
             if (Hyphenator.languages.hasOwnProperty(lang)) {
                 lo = Hyphenator.languages[lang];
-                hyphenate = function (word) {
+                hyphenate = function (match, url, mail, word) {
                     var r;
                     if (!Hyphenator.doHyphenation) {
-                        r = word;
-                    } else if (urlOrMailRE.test(word)) {
-                        r = hyphenateURL(word);
+                        r = match;
+                    } else if (url !== undefined || mail !== undefined) {
+                        r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
                     }
@@ -3054,10 +3058,10 @@ var Hyphenator = (function (window) {
                 if (!lo.prepared) {
                     prepareLanguagesObj(lang);
                 }
-                hyphenate = function (word) {
+                hyphenate = function (match, url, mail, word) {
                     var r;
-                    if (urlOrMailRE.test(word)) {
-                        r = hyphenateURL(word);
+                    if (url !== undefined || mail !== undefined) {
+                        r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
                     }

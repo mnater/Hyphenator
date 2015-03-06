@@ -15,5 +15,5 @@ Hyphenator.languages['cs'] = {
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyzáéíóúýčďěňřšťůž",
     patternArrayLength: 91005,
-    valueStoreLength: 19811
+    valueStoreLength: 12949
 };

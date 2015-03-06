@@ -14,5 +14,5 @@ Hyphenator.languages['da'] = {
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyzåæø",
     patternArrayLength: 19050,
-    valueStoreLength: 5935
+    valueStoreLength: 3779
 };

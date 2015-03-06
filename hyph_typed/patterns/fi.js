@@ -15,5 +15,5 @@ Hyphenator.languages['fi'] = {
     },
     patternChars: "_abcdefghijklmnopqrstuvyäö",
     patternArrayLength: 4336,
-    valueStoreLength: 1367
+    valueStoreLength: 889
 };

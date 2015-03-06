@@ -18,5 +18,5 @@ Hyphenator.languages['it'] = {
     },
     patternChars: "_abcdefghijklmnopqrstuvwxyz’",
     patternArrayLength: 3842,
-    valueStoreLength: 1541
+    valueStoreLength: 931
 };

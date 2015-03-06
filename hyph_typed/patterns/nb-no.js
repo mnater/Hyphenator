@@ -129,5 +129,5 @@ Hyphenator.languages['nb'] = Hyphenator.languages['no'] = Hyphenator.languages['
     exceptions: 'atten-de, aust-røn, aviser, betre, bortan-for, bortre, Dansk-øya, der-etter, dess-uak-tet, dit-over, fram-ifrå, før-enn, her-etter, her-etter-dags, hvor-etter, hvor-over, høyt-ærede, gi-vet-vis, lands-øl, lands-ølet, lands-ølets, langt-ifra, ned-imot, noens, Not-odden, Not-oddens, nøye-reg-nen-de, opp-imot, oven-ikjøpet, promp-te, spleen, sel-ves-te, smal-enden, sørpe-is, sørpe-isen, skrov-is, skrov-isen, Steins-land, syd-enden, tvert-om, velan, velet, welt-schmerz',
     patternChars: "_abcdefghijklmnopqrstuvwxyzåæèéêòóôø",
     patternArrayLength: 694050,
-    valueStoreLength: 181738
+    valueStoreLength: 110679
 };

@@ -16,5 +16,5 @@ Hyphenator.languages['ro'] = {
     },
     patternChars: "_abcdefghijklmnoprstuvxzîășț",
     patternArrayLength: 10249,
-    valueStoreLength: 3149
+    valueStoreLength: 2115
 };

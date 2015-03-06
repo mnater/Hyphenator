@@ -23,5 +23,5 @@ Hyphenator.languages['sk'] = {
     },
     patternChars: "_abcdefghijklmnoprstuvwxyzáäéíóôúýčďľňŕšťž",
     patternArrayLength: 75654,
-    valueStoreLength: 14880
+    valueStoreLength: 11646
 };

@@ -10,5 +10,5 @@ Hyphenator.languages['pa'] = {
     },
     patternChars: "ਂਃਅਆਇਈਉਊਏਐਔਕਖਗਘਙਚਛਜਝਞਟਠਡਢਣਤਥਦਧਨਪਫਬਭਮਯਰਲਲ਼ਵਸ਼ਸਹਾਿੀੁੂੇੋੌ੍",
     patternArrayLength: 53,
-    valueStoreLength: 160
+    valueStoreLength: 127
 };

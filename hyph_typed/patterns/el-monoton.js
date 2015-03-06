@@ -18,5 +18,5 @@ Hyphenator.languages['el-monoton'] = Hyphenator.languages['el'] = {
     },
     patternChars: "'_ʼΐάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώϲάέήίόύώ᾽᾿’",
     patternArrayLength: 5775,
-    valueStoreLength: 2401
+    valueStoreLength: 1648
 };

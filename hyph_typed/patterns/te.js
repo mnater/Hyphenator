@@ -10,5 +10,5 @@ Hyphenator.languages['te'] = {
     },
     patternChars: "ంఃఅఆఇఈఉఊఋఎఏఐఒఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరఱలళవశషసహాిీుూృెేొోౌ్",
     patternArrayLength: 61,
-    valueStoreLength: 184
+    valueStoreLength: 149
 };

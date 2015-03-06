@@ -10,5 +10,5 @@ Hyphenator.languages['gu'] = {
     },
     patternChars: "ંઃઅઆઇઈઉઊઋએઐઔકખગઘઙચછજઝઞટઠડઢણતથદધનપફબભમયરલળવશષસહાિીુૂૃેોૌ્",
     patternArrayLength: 56,
-    valueStoreLength: 169
+    valueStoreLength: 135
 };

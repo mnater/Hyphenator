@@ -13,5 +13,5 @@ Hyphenator.languages['tr'] = {
     },
     patternChars: "_abcdefghijklmnoprstuvyzâçîöûüğış",
     patternArrayLength: 1332,
-    valueStoreLength: 2365
+    valueStoreLength: 1475
 };
