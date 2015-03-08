@@ -1689,7 +1689,7 @@ var Hyphenator = (function (window) {
             var ValueStore = function (len) {
                 this.keys = (function () {
                     var i, r;
-                    if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
+                    if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
                         return new window.Uint8Array(len);
                     }
                     r = [];
@@ -1731,6 +1731,10 @@ var Hyphenator = (function (window) {
         convertPatternsToArray = function (lo) {
             var indexedTrieMaxRow = 0,
                 i,
+                charMapValues,
+                valueStore,
+                indexedTrie,
+                steps,
 
                 extract = function (patternSizeInt, patterns) {
                     var charPos = 0,
@@ -1739,12 +1743,7 @@ var Hyphenator = (function (window) {
                         mappedCharCode = 0,
                         row = 0,
                         nextRow = 0,
-                        prevWasPosition = false,
-                        charMapValues = lo.charMap.values,
-                        valueStore = lo.valueStore,
-                        indexedTrie = lo.indexedTrie,
-                        steps = lo.charMap.keys.length * 2;
-
+                        prevWasPosition = false;
                     for (charPos = 0; charPos < patterns.length; charPos += 1) {
                         charCode = patterns.charCodeAt(charPos);
                         if ((charPos + 1) % patternSizeInt !== 0) {
@@ -1815,6 +1814,11 @@ var Hyphenator = (function (window) {
                 }
             }
             createCharMap(lo);
+
+            charMapValues = lo.charMap.values;
+            valueStore = lo.valueStore;
+            indexedTrie = lo.indexedTrie;
+            steps = lo.charMap.keys.length * 2;
 
             for (i in lo.patterns) {
                 if (lo.patterns.hasOwnProperty(i)) {
@@ -1997,7 +2001,6 @@ var Hyphenator = (function (window) {
                     }
                 };
                 storage.setItem(lang, window.JSON.stringify(loForStorage));
-                //console.log(window.JSON.stringify(loForStorage.valueStore));
             }
         },
 
@@ -2049,6 +2052,12 @@ var Hyphenator = (function (window) {
                 if (docLanguages.hasOwnProperty(lang)) {
                     if (!!storage && storage.test(lang)) {
                         Hyphenator.languages[lang] = window.JSON.parse(storage.getItem(lang));
+
+                        if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) {
+                            Hyphenator.languages[lang].indexedTrie = new window.Int32Array(Hyphenator.languages[lang].indexedTrie);
+                            Hyphenator.languages[lang].valueStore.keys = new window.Uint8Array(Hyphenator.languages[lang].valueStore.keys);
+                        }
+                        //console.log(Hyphenator.languages[lang]);
                         if (exceptions.hasOwnProperty('global')) {
                             tmp1 = convertExceptionsToObject(exceptions.global);
                             for (tmp2 in tmp1) {
@@ -2200,7 +2209,7 @@ var Hyphenator = (function (window) {
                 ww = '_' + ww + '_';
                 wwlen = ww.length;
                 if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
-                    wwhp = new window.Uint8Array(wwlen - 1);
+                    wwhp = new window.Uint8Array(wwlen);
                     wwAsMappedCharCode = new window.Uint8Array(wwlen);
                 } else {
                     wwhp = [];
@@ -2649,7 +2658,7 @@ var Hyphenator = (function (window) {
                         var value = this.store.getItem(this.prefix + name);
                         /*jslint unparam: true*/
                         value = value.replace(/-(\d+)/g, function unpack(ignore, p1) {
-                            //convert negative numbers to zeros e.g. '-3' -> '0,0,0'
+                            //convert negative numbers < -1 to zeros e.g. '-3' -> '0,0,0'
                             var n, i, str = [];
                             if (p1 === "1") {
                                 return -1;
@@ -2666,7 +2675,7 @@ var Hyphenator = (function (window) {
                     setItem: function (name, value) {
                         /*jslint unparam: true*/
                         value = value.replace(/((0,){2,})/g, function pack(ignore, p1) {
-                            //converts a series of zeros to a negative number e.g. '0,0,0' -> '-3'
+                            //converts a series of zeros > 2 to a negative number e.g. '0,0,0' -> '-3'
                             return p1.length / -2 + ",";
                         });
                         try {
