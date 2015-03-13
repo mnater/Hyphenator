@@ -1949,8 +1949,7 @@ var Hyphenator = (function (window) {
          * @param {string} lang The language of the language object
          */
         prepareLanguagesObj = function (lang) {
-            var lo = Hyphenator.languages[lang], wrd,
-                loForStorage;
+            var lo = Hyphenator.languages[lang], wrd;
 
             if (!lo.prepared) {
                 if (enableCache) {
@@ -1987,20 +1986,22 @@ var Hyphenator = (function (window) {
                 lo.prepared = true;
             }
             if (!!storage) {
-                loForStorage = {
-                    charMap: {values: lo.charMap.values},
-                    charSubstitution: lo.charSubstitution,
-                    exceptions: lo.exceptions,
-                    indexedTrie: Array.prototype.slice.call(lo.indexedTrie),
-                    leftmin: lo.leftmin,
-                    prepared: lo.prepared,
-                    rightmin: lo.rightmin,
-                    specialChars: lo.specialChars,
-                    valueStore: {
-                        keys: Array.prototype.slice.call(lo.valueStore.keys)
-                    }
+                storage.deferred.whenAllDone = function () {
+                    var loForStorage = {
+                        charMap: {values: lo.charMap.values},
+                        charSubstitution: lo.charSubstitution,
+                        exceptions: lo.exceptions,
+                        indexedTrie: Array.prototype.slice.call(lo.indexedTrie),
+                        leftmin: lo.leftmin,
+                        prepared: lo.prepared,
+                        rightmin: lo.rightmin,
+                        specialChars: lo.specialChars,
+                        valueStore: {
+                            keys: Array.prototype.slice.call(lo.valueStore.keys)
+                        }
+                    };
+                    storage.setItem(lang, window.JSON.stringify(loForStorage));
                 };
-                storage.setItem(lang, window.JSON.stringify(loForStorage));
             }
         },
 
@@ -2178,6 +2179,7 @@ var Hyphenator = (function (window) {
                 values,
                 indexedTrie = lo.indexedTrie,
                 valueStore = lo.valueStore.keys,
+                charCode,
                 wwAsMappedCharCode;
 
             word = onBeforeWordHyphenation(word, lang);
@@ -2210,7 +2212,7 @@ var Hyphenator = (function (window) {
                 wwlen = ww.length;
                 if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
                     wwhp = new window.Uint8Array(wwlen);
-                    wwAsMappedCharCode = new window.Uint8Array(wwlen);
+                    wwAsMappedCharCode = new window.Int32Array(wwlen);
                 } else {
                     wwhp = [];
                     wwAsMappedCharCode = [];
@@ -2219,13 +2221,17 @@ var Hyphenator = (function (window) {
                     }
                 }
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
-                    wwAsMappedCharCode[pstart] = charMap[ww.charCodeAt(pstart)];
+                    charCode = charMap[ww.charCodeAt(pstart)];
+                    wwAsMappedCharCode[pstart] = (charCode === undefined ? -1 : charCode);
                 }
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     row = 0;
                     pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
                         mappedCharCode = wwAsMappedCharCode[plen];
+                        if (mappedCharCode === -1) {
+                            break;
+                        }
                         if (enableReducedPatternSet) {
                             pattern += ww.charAt(plen);
                         }
@@ -2451,6 +2457,10 @@ var Hyphenator = (function (window) {
                         onHyphenationDone(doc);
                     }
                 }
+                if (!!storage && !!storage.deferred.whenAllDone) {
+                    storage.deferred.whenAllDone.call();
+                    storage.deferred.whenAllDone = undefined;
+                }
             }
         },
 
@@ -2517,7 +2527,7 @@ var Hyphenator = (function (window) {
                     var r;
                     if (!Hyphenator.doHyphenation) {
                         r = match;
-                    } else if (url !== undefined || mail !== undefined) {
+                    } else if ((url !== undefined && url !== "") || (mail !== "" && mail !== undefined)) { //IE<=8 returns "" instead of undefined
                         r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
@@ -2650,6 +2660,7 @@ var Hyphenator = (function (window) {
                 storage = {
                     prefix: 'Hyphenator_' + Hyphenator.version + '_',
                     store: s,
+                    deferred: {},
                     test: function (name) {
                         var val = this.store.getItem(this.prefix + name);
                         return (!!val) ? true : false;
@@ -2657,18 +2668,15 @@ var Hyphenator = (function (window) {
                     getItem: function (name) {
                         var value = this.store.getItem(this.prefix + name);
                         /*jslint unparam: true*/
-                        value = value.replace(/-(\d+)/g, function unpack(ignore, p1) {
+                        value = value.replace(/-(\d{2,}|[2-9])/g, function unpack(ignore, p1) {
                             //convert negative numbers < -1 to zeros e.g. '-3' -> '0,0,0'
-                            var n, i, str = [];
-                            if (p1 === "1") {
-                                return -1;
+                            var n = parseInt(p1, 10),
+                                res = "";
+                            while (n > 0) {
+                                res += "0,";
+                                n -= 1;
                             }
-                            n = parseInt(p1, 10);
-                            for (i = 0; i < n; i += 1) {
-                                str.push("0,");
-                            }
-                            str = str.join("");
-                            return str.slice(0, -1);
+                            return res.slice(0, -1);
                         });
                         return value;
                     },
@@ -3073,7 +3081,7 @@ var Hyphenator = (function (window) {
                 }
                 hyphenate = function (match, word, url, mail) {
                     var r;
-                    if (url !== undefined || mail !== undefined) {
+                    if ((url !== undefined && url !== "") || (mail !== "" && mail !== undefined)) {
                         r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
