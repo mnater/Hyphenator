@@ -18,5 +18,8 @@ Hyphenator.languages['de'] = {
     },
     charSubstitution: {
         'ſ': 's'
-    }
+    },
+    patternChars: "_abcdefghijklmnopqrstuvwxyzßäöü",
+    patternArrayLength: 257332,
+    valueStoreLength: 56157
 };

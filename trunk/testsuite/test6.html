@@ -22,7 +22,7 @@
             if (parent != window) {
                 Hyphenator.config({
                     'onhyphenationdonecallback': function () {
-                        var i, last = 24, t1, t2, r = true,
+                        var i, last = 25, t1, t2, r = true,
                         desc = document.getElementById('desc').firstChild.data,
                         msg = {
                             desc: desc,
@@ -132,5 +132,8 @@
         <h2>ro</h2>
         <p id="test24" class="hyphenate" lang="ro">Tipografia reprezintă arta și tehnica tipăritului, a formei și aranjării literelor pe un document scris.</p>
         <p id="ref24" lang="ro">Ti|po|gra|fia re|pre|zintă arta și teh|nica ti|pă|ri|tu|lui, a for|mei și aran|jă|rii li|te|re|lor pe un do|cu|ment scris.</p>
+        <h2>et</h2>
+        <p id="test25" class="hyphenate" lang="et">Tüpograafia ehk trükikunst on trükiste valmistamise oskus, täpsemini sõnastatult trükimärkide kujundamise ja paigutamise kunst ja tehnika.</p>
+        <p id="ref25" lang="et">Tüpog|raa|fia ehk trü|ki|kunst on trükiste val|mis|ta|mise oskus, täp|se|mini sõnas|ta|tult trü|ki|mär|kide kujun|da|mise ja pai|gu|ta|mise kunst ja teh|nika.</p>
     </body>
 </html>

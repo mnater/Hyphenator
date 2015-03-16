@@ -39,6 +39,7 @@
             }
             Hyphenator.config({
                 urlhyphenchar:'•',
+                hyphenchar:'|',
                 safecopy: false
             });
             Hyphenator.run();
@@ -73,7 +74,7 @@
             <a href="#">http://•domain.•tld/</a><br>
             <a href="#">http://•192.•168.•0.•1/</a><br>
             <a href="#">www.•example.•com</a><br>
-            <a href="#">example.•com</a><br>
+            <a href="#">ex|amp|le.com</a><br>
             <a href="#">http://•192.•168.•0.•1:•80/</a><br>
             <a href="#">name@•host.•com</a><br>
             <a href="#">pre.•name@•subdomain2.•host.•com</a><br>

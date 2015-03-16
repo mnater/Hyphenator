@@ -20,5 +20,8 @@ Hyphenator.languages['sk'] = {
         12: "3c2h2r4c4h3l3c2h2r4c4h3ľ3c4h4r4s4t3n3c4v4r4n3g4n3š4k4v4r4k3n3š4k4v4ŕ4k3n_akcie3s2c2h_cirkevno5p4_ďatelino5t4_na5d4robno__o5k4resávať_pravicovo5o_pred5ostatn5jedenás4t5k5m4ladis4t3v5š4tyri5s4to5vy5s4t4rája5s4to5k4rát_",
         13: "5boh3vi4e3a2k5š4t4v4r4ť5k45š4t4v4r4ť5l45š4t4v4r4ť5r45š4t4v4r4ť5s4",
         15: "ôs4t3k2ár3s4t4v_po6s4t5s4k4rip5boh3vi4e3o2d3k"
-    }
+    },
+    patternChars: "_abcdefghijklmnoprstuvwxyzáäéíóôúýčďľňŕšťž",
+    patternArrayLength: 75654,
+    valueStoreLength: 11646
 };
