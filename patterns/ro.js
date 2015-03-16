@@ -13,5 +13,8 @@ Hyphenator.languages['ro'] = {
         6: "te3s2pso3ric_de2aj_de2z12ri3unri4ali_pre3șani3ș4puri2epecți2otați4or2te_3b4limbo3ricci3aleoi3s2pdez3india2tămblîn3e3i3s2etan4ținți4ii4n1edi3ți2o",
         7: "rtua2leedi4uluecla2re_a4n3isoiecti2larați2bți4ne_oplagi2recizi2re3s2criitu2ră",
         8: "copia2tăteri6alăimateri6rografi6vorbito2omedi2e_"
-    }
+    },
+    patternChars: "_abcdefghijklmnoprstuvxzîășț",
+    patternArrayLength: 10249,
+    valueStoreLength: 2115
 };

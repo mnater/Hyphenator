@@ -15,5 +15,8 @@ Hyphenator.languages['it'] = {
         8: "_contro1_fran2k3_li3p2sa_orto3p2_poli3p2_sha2re3_su2b3lu",
         9: "_anti3m2n_circu2m1_re1i2scr_tran2s3c_tran2s3d_tran2s3l_tran2s3n_tran2s3p_tran2s3r_tran2s3t",
         10: "_di2s3cine"
-    }
+    },
+    patternChars: "_abcdefghijklmnopqrstuvwxyz’",
+    patternArrayLength: 3842,
+    valueStoreLength: 931
 };
