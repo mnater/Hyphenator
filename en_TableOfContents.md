@@ -1,8 +1,8 @@
 # Table of Contents #
 
   * [How to use Hyphenator](https://github.com/mnater/Hyphenator.js/blob/wiki/en_HowToUseHyphenator.md)
-    * [As a bookmarklet](https://github.com/mnater/Hyphenator.js/blob/wiki/en_HowToUseHyphenator.md#using-Hyphenator-as-a-Bookmarklet)
-    * [On your website](https://github.com/mnater/Hyphenator.js/blob/wiki/en_HowToUseHyphenator.md#using-Hyphenator-on-your-website)
+    * [As a bookmarklet](https://github.com/mnater/Hyphenator.js/blob/wiki/en_HowToUseHyphenator.md#using-hyphenator-as-a-bookmarklet)
+    * [On your website](https://github.com/mnater/Hyphenator.js/blob/wiki/en_HowToUseHyphenator.md#using-hyphenator-on-your-website)
     * [Legal](https://github.com/mnater/Hyphenator.js/blob/wiki/en_HowToUseHyphenator.md#legal)
     * [Stay up to date](https://github.com/mnater/Hyphenator.js/blob/wiki/en_HowToUseHyphenator.md#stay-up-to-date)
   * [The Public API](https://github.com/mnater/Hyphenator.js/blob/wiki/en_PublicAPI.md)
