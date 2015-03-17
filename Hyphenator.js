@@ -2766,7 +2766,7 @@ var Hyphenator = (function (window) {
          * minor release: new languages, improvements
          * @access public
          */
-        version: 'X.Y.Ztyped',
+        version: 'X.Y.Z',
 
         /**
          * @member {boolean} Hyphenator.doHyphenation
