@@ -1,6 +1,8 @@
 # Hyphenator.js
 
-This repository will replace https://code.google.com/p/hyphenator/ when it is ready.
-There's some work to do.
+This repository will replace https://code.google.com/p/hyphenator/
 
-Please use https://code.google.com/p/hyphenator/ until then.
+During this transition phase, please:
+
+- see https://code.google.com/p/hyphenator/ for documentation and
+- use this GitHub project page to submit issues.
