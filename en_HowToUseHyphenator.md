@@ -9,7 +9,7 @@ javascript:if(document.createElement){void(head=document.getElementsByTagName('h
 When you're on the website to be hyphenated you click on that bookmarklet to start hyphenating the page.
 If the pages language isn't set, you will have to edit it manually in a popping-up prompt.
 
-All [settings](http://code.google.com/p/hyphenator/wiki/en_PublicAPI#void_Hyphenator.config(object_settings)) that are not functions (the literals) can be made in the Bookmarklet, too. Append them as query string in the link above (just after `bm=true`):
+All [settings](https://github.com/mnater/Hyphenator.js/blob/wiki/en_PublicAPI.md#void-hyphenatorconfigobject-settings) that are not functions (the literals) can be made in the Bookmarklet, too. Append them as query string in the link above (just after `bm=true`):
 E.g. `bm=true&safecopy=false&displaytogglebox=false`
 
 ## Using Hyphenator on your website ##
@@ -30,7 +30,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
 > It will then load and execute automatically.
 
 ### Step by Step (advanced): w/o Hyphenator\_Loader.js ###
-  1. [Download](https://docs.google.com/folderview?id=0B70aJF1epiRqa3BLWnpVRzh0Ym8&usp=docslist_api#) an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
+  1. [Download](https://github.com/mnater/Hyphenator.js/releases/tag/4.3.0) an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
   1. Prepare your HTML-documents by
     * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
@@ -48,7 +48,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
 </script>
 ```
 > Done.
-> There are many interesting and useful settings you can change before you invoke the script. See [Documentation](http://code.google.com/p/hyphenator/wiki/en_PublicAPI) for more details.
+> There are many interesting and useful settings you can change before you invoke the script. See [Documentation](https://github.com/mnater/Hyphenator.js/blob/wiki/en_PublicAPI.md) for more details.
 
 ### Example ###
 What could be better than a [working example](http://hyphenator.googlecode.com/svn/tags/Version%204.2.0/WorkingExample.html)?
@@ -115,8 +115,8 @@ To use Hyphenator\_Loader.js follow the following steps:
 ## Legal ##
 Hyphenator.js and its documentation are published under the [LGPL v3](http://www.gnu.org/licenses/lgpl.html):
 ```
-/** @license Hyphenator 4.2.0 - client side hyphenation for webbrowsers
- *  Copyright (C) 2013  Mathias Nater, Zürich (mathias at mnn dot ch)
+/** @license Hyphenator 4.3.0 - client side hyphenation for webbrowsers
+ *  Copyright (C) 2014  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  Project and Source hosted on http://code.google.com/p/hyphenator/
  * 
  *  This JavaScript code is free software: you can redistribute
@@ -165,7 +165,6 @@ Hyphenator.js and its documentation are published under the [LGPL v3](http://www
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
  *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *  
  */
 ```
 Most of the patterns in the pattern files have different licenses specified in the pattern files.
