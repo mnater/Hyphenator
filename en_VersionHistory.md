@@ -1,7 +1,14 @@
 ﻿#summary Version History and note about versioning
 
 # Version History #
-## [Version 4.3.0 (Download from Google Drive)](https://docs.google.com/folderview?id=0B70aJF1epiRqa3BLWnpVRzh0Ym8&usp=docslist_api#) (October 17, 2014) ##
+<!--
+## [Version 4.4.0](https://github.com/mnater/Hyphenator/releases/tag/4.3.0) (Release date tbd) ##
+This minor release brings the following changes:
+  * better performance 1: The way how the patterns are represented in memory has changed. Instead of a huge objegt tree a (typed) array is used. Arrays use less memory and typed arrays are not garbage collected. To build the typed array information about the length of the arrays are necessary. This information is stored in the pattern files. Make sure to also replace old pattern files by new ones!
+  * better performance 2: the regular expressions for finding words are less captive
+-->
+
+## [Version 4.3.0](https://github.com/mnater/Hyphenator/releases/tag/4.3.0) (October 17, 2014) ##
 This minor release brings the following changes:
   * added support for Serbian Cyrillic (thanks to Milan Gurjanov)
   * jsdoc3 formatted code comments in the source file
@@ -17,7 +24,7 @@ And some bugfixes:
   * fixed an issue with ommited tags (fixed [issue194](https://code.google.com/p/hyphenator/issues/detail?id=194))
   * workaround for a bug in Konqueror 4.8.4 (fixed [issue202](https://code.google.com/p/hyphenator/issues/detail?id=202))
 
-## [4.2.0](http://code.google.com/p/hyphenator/downloads/detail?name=Version%204.2.0.zip) (April 25, 2013) ##
+## [4.2.0](https://github.com/mnater/Hyphenator/releases/tag/4.2.0) (April 25, 2013) ##
 This minor release brings the following changes:
   * added support for Romanian (thanks to irragal)
   * hiding and unhiding of elements is now done by adding classes
@@ -32,7 +39,7 @@ And some bugfixes:
   * some general refactoring and code changes
 
 
-## [4.1.0](http://code.google.com/p/hyphenator/downloads/detail?name=Hyphenator%204.1.0.zip) (October 18, 2012) ##
+## [4.1.0](https://github.com/mnater/Hyphenator/releases/tag/4.1.0) (October 18, 2012) ##
 This minor release brings the following changes:
   * bookmarklet uses CSS3hyphenation
   * updated jslint and made it happier
