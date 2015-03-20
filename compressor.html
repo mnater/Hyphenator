@@ -84,6 +84,7 @@
             }
 
         </style>
+        <script type="text/javascript" src="Hyphenator.js"></script>
         <script type="text/javascript">
 			var oldpatterns, newpatterns, specialChars;
 			
@@ -91,7 +92,7 @@
 				return a.length - b.length;
 			}
 						
-			function output2String() {
+			function output2String(meta) {
 				var tmp, len;
 				tmp = 'Hyphenator.languages[\'' + document.getElementsByName('language')[0].value + '\'] = {\n';
 				tmp += '\tleftmin : ' + document.getElementsByName('leftmin')[0].value + ',\n';
@@ -104,10 +105,165 @@
 					}
 				}
 				tmp = tmp.slice(0, -2);
-				tmp += '\n\t}\n};';
+				tmp += '\n\t},\n';
+                tmp += '\tpatternChars : "' + meta.patternChars + '",\n';
+                tmp += '\tpatternArrayLength : ' + meta.patternArrayLength + ',\n';
+                tmp += '\tvalueStoreLength : ' + meta.valueStoreLength + '\n};';
 				document.getElementsByName('newpattern')[0].value = tmp;
 			}
-			
+
+			function createAndMeasure () {
+                var valueStore = (function () {
+                        var ValueStore = function () {
+                            this.keys = [];
+                            this.startIndex = 1;
+                            this.actualIndex = 2;
+                            this.lastValueIndex = 2;
+                            this.add = function (p) {
+                                this.keys[this.actualIndex] = p;
+                                if (p !== 0) {
+                                    this.lastValueIndex = this.actualIndex;
+                                }
+                                this.actualIndex += 1;
+                            };
+                            this.finalize = function () {
+                                var start = this.startIndex;
+                                this.keys[start] = this.lastValueIndex - start;
+                                this.startIndex = this.lastValueIndex + 1;
+                                this.actualIndex = this.startIndex + 1;
+                                return start;
+                            };
+                        };
+                        return new ValueStore();
+                    }()),
+                    indexedTrie = [],
+                    charMap = (function () {
+                        var CharMap = function () {
+                            this.keys = [];
+                            this.values = {};
+                            this.add = function (newValue) {
+                                if (!this.values[newValue]) {
+                                    this.keys.push(newValue);
+                                    this.values[newValue] = this.keys.length - 1;
+                                }
+                            };
+                        };
+                        return new CharMap();
+                    }()),
+                    collected = {},
+                    collectPatternChars = function (patterns) {
+                        var chr = "",
+                            str = "", i;
+                        for (i = 0; i < patterns.length; i += 1) {
+                            chr = patterns.charAt(i);
+                            if (chr === ".") {
+                                chr = "_";
+                            }
+                            if (!chr.match(/\d/) && chr !== " " && !collected.hasOwnProperty(chr)) {
+                                collected[chr] = true;
+                            }
+                        }
+                    },
+                    patternChars,
+                    charMapValues,
+                    steps,
+                    indexedTrieMaxRow,
+                    extract = function (patternSizeInt, patterns) {
+                        var charPos = 0,
+                            charCode = 0,
+                            prevMappedCharCode = 0,
+                            mappedCharCode = 0,
+                            row = 0,
+                            nextRow = 0,
+                            prevWasPosition = false;
+                        for (charPos = 0; charPos < patterns.length; charPos += 1) {
+                            charCode = patterns.charCodeAt(charPos);
+                            if ((charPos + 1) % patternSizeInt !== 0) {
+                                //more to come…
+                                if (charCode >= 49 && charCode <= 57) {
+                                    valueStore.add(charCode - 48);
+                                    prevWasPosition = true;
+                                } else {
+                                    if (!prevWasPosition) {
+                                        valueStore.add(0);
+                                    }
+                                    prevWasPosition = false;
+                                    mappedCharCode = charMapValues[charCode];
+                                    if (nextRow === -1) {
+                                        nextRow = indexedTrieMaxRow + steps;
+                                        indexedTrieMaxRow = nextRow;
+                                        indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                    }
+                                    row = nextRow;
+                                    if (indexedTrie[row + mappedCharCode * 2] !== undefined && indexedTrie[row + mappedCharCode * 2] !== 0) {
+                                        nextRow = indexedTrie[row + mappedCharCode * 2];
+                                    } else {
+                                        indexedTrie[row + mappedCharCode * 2] = -1;
+                                        nextRow = -1;
+                                    }
+                                    prevMappedCharCode = mappedCharCode;
+                                }
+                            } else {
+                                //last part of pattern
+                                if (charCode >= 49 && charCode <= 57) {
+                                    valueStore.add(charCode - 48);
+                                    indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
+                                } else {
+                                    if (!prevWasPosition) {
+                                        valueStore.add(0);
+                                    }
+                                    valueStore.add(0);
+                                    mappedCharCode = charMapValues[charCode];
+                                    if (nextRow === -1) {
+                                        nextRow = indexedTrieMaxRow + steps;
+                                        indexedTrieMaxRow = nextRow;
+                                        indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                    }
+                                    row = nextRow;
+                                    if (indexedTrie[row + mappedCharCode * 2] !== undefined && indexedTrie[row + mappedCharCode * 2] !== 0) {
+                                        indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
+                                    } else {
+                                        indexedTrie[row + mappedCharCode * 2] = -1;
+                                        indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
+                                    }
+                                }
+                                row = 0;
+                                nextRow = 0;
+                                prevMappedCharCode = 0;
+                                prevWasPosition = false;
+                            }
+                        }
+                    }, i;
+                for (i in newpatterns) {
+                    if (newpatterns.hasOwnProperty(i)) {
+                        collectPatternChars(newpatterns[i]);
+                    }
+                }
+                patternChars = [];
+                for (i in collected) {
+                    if (collected.hasOwnProperty(i)) {
+                        patternChars.push(i);
+                        charMap.add(i.charCodeAt(0));
+                    }
+                }
+                patternChars.sort();
+                patternChars = patternChars.join("");
+
+                charMapValues = charMap.values;
+                steps = charMap.keys.length * 2;
+                indexedTrieMaxRow = 0;
+                for (i in newpatterns) {
+                    if (newpatterns.hasOwnProperty(i)) {
+                        extract(parseInt(i, 10), newpatterns[i]);
+                    }
+                }
+                return {
+                    "patternChars": patternChars,
+                    "patternArrayLength": indexedTrie.length / 2,
+                    "valueStoreLength": valueStore.lastValueIndex + 1
+                }
+            }
+
 			function startConversion() {
 				var len, i, curlen, key, special, s;
 				newpatterns = {};
@@ -140,9 +296,12 @@
 						newpatterns[curlen] = oldpatterns[i].replace(/\./g, '_');
 					}
 				}
-				output2String();
+                var meta = createAndMeasure();
+				output2String(meta);
 			}
-						
+
+            Hyphenator.run();
+
 			window.onload = function () {
 				var desc = document.getElementById('desc');
 				document.getElementsByName('language')[0].onfocus = function () {
@@ -225,7 +384,7 @@
 					<input type="text" name="rightmin" value="rightmin">
 					</p>
 					<p id="desc"></p>
-				<textarea name="oldpattern" cols="80" rows="20">.a5 .rt4 .d4gt2 asdf2 9kas3</textarea>
+				<textarea name="oldpattern" cols="80" rows="20">.hy3ph he2n hena4 hen5at 1na n2at 1tio 2io o2n</textarea>
 				<input type="submit" value="Convert!"><input type="reset" value="Reset">
 			</fieldset>
 			<fieldset>
