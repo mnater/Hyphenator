@@ -104,8 +104,17 @@ var Hyphenator_Loader = (function (window) {
          * @private
          */
         loadNrunHyphenator = function (config) {
-            var head, script, interval;
-
+            var head, script,
+                hyphenatorLoaded = function () {
+                    if (window.Hyphenator !== undefined) {
+                        Hyphenator.config(config);
+                        Hyphenator.run();
+                    } else {
+                        window.setTimeout(function () {
+                            hyphenatorLoaded();
+                        }, 10);
+                    }
+                };
 
             head = window.document.getElementsByTagName('head').item(0);
             script = createElem('script');
@@ -113,13 +122,7 @@ var Hyphenator_Loader = (function (window) {
             script.type = 'text/javascript';
             head.appendChild(script);
 
-            interval = window.setInterval(function () {
-                if (window.Hyphenator !== undefined) {
-                    window.clearInterval(interval);
-                    Hyphenator.config(config);
-                    Hyphenator.run();
-                }
-            }, 10);
+            hyphenatorLoaded();
         },
 
         runner = function () {
