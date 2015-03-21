@@ -4,12 +4,12 @@ There is no answer to this question despite of: “it depends on a lot of parame
 For most tasks Hyphenator is fast enough, but speed is cool and there are things you can do to make Hyphenator faster and thus even cooler ;-)
 
 ## CSS3 hyphenation ##
-Some browsers already support the not yet fully standardized CSS hyphenation properties ([css3-text](http://www.w3.org/TR/css3-text/#hyphenation)). If you develop for a specific platform supporting css3-hyphenation (like e.g. WebKit/Safari on iOS) and your language is supported you will not need Hyphenator.js.
+Most modern browsers support the not yet fully standardized CSS hyphenation properties ([css3-text](http://www.w3.org/TR/css3-text/#hyphenation)). If you develop for a specific platform supporting css3-hyphenation (like e.g. WebKit/Safari on iOS) and your language is supported you will not need Hyphenator.js.
 For all other cases Hyphenator.js polyfills the gap.
-If you develop for all platforms don't forget to set the switch: [useCSS3hyphenation](http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_useCSS3hyphenation).
+If you develop for all platforms don't forget to set the switch: [useCSS3hyphenation](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#property-usecss3hyphenation).
 If set to true Hyphenator.js takes himself back.
 
-You may also be interested in [Hyphenator\_Loader.js](https://code.google.com/p/hyphenator/wiki/en_HowToUseHyphenator#.js), which is a small script that loads Hyphenator.js (and the patterns) only if necessary.
+You may also be interested in [Hyphenator\_Loader.js](https://github.com/mnater/Hyphenator/blob/wiki/en_HowToUseHyphenator.md), which is a small script that loads Hyphenator.js (and the patterns) only if necessary.
 
 ## Execution speed ##
 I'm permanently tweaking the code for execution speed. If there's a millisecond to save, I want to save it!

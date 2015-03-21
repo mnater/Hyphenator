@@ -10,7 +10,7 @@
 There's work going on on standardizing hyphenation in CSS 3 ([css3-text](http://www.w3.org/TR/css3-text/#hyphenation)).
 Modern browsers already support CSS3 hyphenation for a different set of languages and support is growing.
 
-Since Version 4.0.0 Hyphenator.js respects those browsers and automatically activates css3-hyphenation if available. See [the manual](http://code.google.com/p/hyphenator/wiki/en_PublicAPI#property_useCSS3hyphenation) on how to enable this in Hyphenator.js.
+Since Version 4.0.0 Hyphenator.js respects those browsers and automatically activates css3-hyphenation if available. See [the manual](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#property-usecss3hyphenation) on how to enable this in Hyphenator.js.
 
 And even if all browsers will generally support hyphenation one day they will not support all languages Hyphenator.js can deal with actually… So Hyphenator.js will remain as a polyfill for this browsers.
 
@@ -75,7 +75,7 @@ Some screen readers have issues with words that contain soft hyphens (they read 
 The simple answer is: just call Hyphenator.run() again.
 The problem with this is, that Hyphenator.js will process the whole file again (and not just the reloaded text).
 Instead you can redefine `selectorfunction` in a way that it just returns the elements that have been loaded by AJAX.
-I've created a testcase (http://hyphenator.googlecode.com/svn/trunk/testsuite/test44.html) where you can have a look how this works (using jQuery).
+I've created a testcase (http://mnater.github.io/Hyphenator/testsuite/test44.html) where you can have a look how this works (using jQuery).
 Here's the code:
 ```
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>

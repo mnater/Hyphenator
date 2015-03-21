@@ -2,7 +2,7 @@
 
 ## Preamble ##
 Before creating and uploading a new version-package, I run hundreds of tests to ensure functionality and quality of Hyphenator.js
-Nevertheless, there might be problems, errors and bugs that I don't see and that are nor revealed by my testsuite. Please don't hesitate to report these issues either by mail (mathias at mnn dot ch) or directly in the [issue-tracker](http://code.google.com/p/hyphenator/issues/list).
+Nevertheless, there might be problems, errors and bugs that I don't see and that are nor revealed by my testsuite. Please don't hesitate to report these issues either by mail (mathiasnater at gmail dot com) or directly in the [issue-tracker](https://github.com/mnater/Hyphenator/issues).
 
 Since I really want to solve the problem, it is very important to me, to get a good description of it. This page should help you to help me to (maybe help you  to;-) get it workin'.
 
@@ -14,8 +14,8 @@ _Hi, I updated to the new version. It does not work._
 ## A good description ##
   * Gives me an exact description of the problem (what do you see / see not, what happens / happens not, what is expected)
   * Tells me what **version** you where using before the error occurred.
-  * Tells me in wich version the error occurred.
-  * Tells me what **browser** or other environment with wich version on which system you where using (or simply: in all browsers)
+  * Tells me in which version the error occurred (also make sure to use the [latest version](https://github.com/mnater/Hyphenator/releases/latest))
+  * Tells me what **browser** or other environment with which version on which system you where using (or simply: in all browsers)
   * Gives me a **link or a file**, where I can see and reproduce the problem live or on my system. A screenshot is fine, too but a html-page is highly preferred.
 
 ## How do I work, when I get a issue report? ##
