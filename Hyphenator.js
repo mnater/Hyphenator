@@ -1768,7 +1768,19 @@ var Hyphenator = (function (window) {
                             prevWasPosition = false;
                         }
                     }
-                };
+                };/*,
+                prettyPrintIndexedTrie = function (rowLength) {
+                    var s = "0: ",
+                        idx;
+                    for (idx = 0; idx < indexedTrie.length; idx += 1) {
+                        s += indexedTrie[idx];
+                        s += ",";
+                        if ((idx + 1) % rowLength === 0) {
+                            s += "\n" + (idx + 1) + ": ";
+                        }
+                    }
+                    console.log(s);
+                };*/
 
             createValueStore(lo);
             if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
@@ -1792,6 +1804,7 @@ var Hyphenator = (function (window) {
                     extract(parseInt(i, 10), lo.patterns[i]);
                 }
             }
+            //prettyPrintIndexedTrie(lo.charMap.keys.length * 2);
         },
 
         /**
