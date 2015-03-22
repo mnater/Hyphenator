@@ -3,7 +3,7 @@
 As a normal websurfer you'll have to create a [bookmarklet](http://en.wikipedia.org/wiki/Bookmarklet) by saving the following line of code as a bookmark:
 
 ```
-javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://hyphenator.googlecode.com/svn/tags/4.3.0/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
+javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='https://github.com/mnater/Hyphenator/raw/4.3.0/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
 ```
 
 When you're on the website to be hyphenated you click on that bookmarklet to start hyphenating the page.
@@ -21,7 +21,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
     * Validating (not absolutely necessary, but again highly recommended): http://validator.w3.org/
-  1. Use the [mergeAndPack-Tool](https://hyphenator.googlecode.com/svn/tags/4.3.0/mergeAndPack.html). Here you can define what languages will be used and set all the configuration options you want (click the info buttons for details).
+  1. Use the [mergeAndPack-Tool](http://mnater.github.io/Hyphenator/mergeAndPack.html). Here you can define what languages will be used and set all the configuration options you want (click the info buttons for details).
   1. Save the resulting "all-in-one"-script in a file (call it for example "hyphenate.js") load it to the server and hook it into your html:
 ```
 <script src="http://yourdomain.com/path/hyphenate.js" type="text/javascript">
@@ -51,7 +51,7 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
 > There are many interesting and useful settings you can change before you invoke the script. See [Documentation](https://github.com/mnater/Hyphenator.js/blob/wiki/en_PublicAPI.md) for more details.
 
 ### Example ###
-What could be better than a [working example](http://hyphenator.googlecode.com/svn/tags/Version%204.2.0/WorkingExample.html)?
+What could be better than a [working example](http://mnater.github.io/Hyphenator/WorkingExample.html)?
 ```
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
@@ -87,7 +87,7 @@ What could be better than a [working example](http://hyphenator.googlecode.com/s
         <p class="hyphenate text" lang="en">English words are shorter in the average then german words. <span lang="de">«Silbentrennungsalgorithmus»</span> for example is quite long.</p>
         <p class="hyphenate text" lang="en">Resize the window to see hyphenation in effect.</p>
         <h2>Links</h2>
-        <p class="hyphenate text" lang="en">Not only words but also links like <a href="http://code.google.com/p/hyphenator/">http://code.google.com/p/hyphenator/</a> are processed. But in a special manner (using zero width space).</p>
+        <p class="hyphenate text" lang="en">Not only words but also links like <a href="http://mnater.github.io/Hyphenator/">http://mnater.github.io/Hyphenator/</a> are processed. But in a special manner (using zero width space).</p>
     </body>
 </html>
 ```
@@ -108,7 +108,7 @@ To use Hyphenator\_Loader.js follow the following steps:
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
     * Validating (not absolutely necessary, but again highly recommended): http://validator.w3.org/
-  1. Use the [mergeAndPack-Tool](http://hyphenator.googlecode.com/svn/trunk/mergeAndPack.html). Here you can opt-in for Hyphenator\_Loader and set all the configuration options you want (click the info buttons for details).
+  1. Use the [mergeAndPack-Tool](http://mnater.github.io/Hyphenator/mergeAndPack.html). Here you can opt-in for Hyphenator\_Loader and set all the configuration options you want (click the info buttons for details).
   1. Hit 'create' and save the resulting scripts as described at the bottom of the mergeAndPack-page.
 
 

@@ -8,7 +8,7 @@ Methods and fields that are accessible (public) are defined in the following.
 String that holds the version number.
 
 ### languages ###
-Object that holds a key-value pairs, where key is the language and the value is the language-object loaded from (and set by) the pattern files. See [en\_PatternFilesFormat](http://code.google.com/p/hyphenator/wiki/en_PatternFilesFormat) for details.
+Object that holds a key-value pairs, where key is the language and the value is the language-object loaded from (and set by) the pattern files. See [en\_PatternFilesFormat](https://github.com/mnater/Hyphenator/blob/wiki/en_PatternFilesFormat.md) for details.
 
 ## Methods ##
 ### void Hyphenator.config(object settings) ###

@@ -14,7 +14,7 @@ Since Version 4.0.0 Hyphenator.js respects those browsers and automatically acti
 
 And even if all browsers will generally support hyphenation one day they will not support all languages Hyphenator.js can deal with actually… So Hyphenator.js will remain as a polyfill for this browsers.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## Shouldn't hyphenation be done on the server side? ##
 There are some arguments against client side hyphenation - true. It costs a lot of computing time and the patterns have to be loaded for each language, everytime.
@@ -25,23 +25,23 @@ But I believe that hyphenation belongs to the client:
   * as JavaScript-engines are in focus of development, they become faster and faster.
   * there are billions of mostly underworked clients vs. millions of often overloaded servers.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## Hyphenator breaks the search functionality of my browser ##
 Your browser has a bug (Standards are very clear in this point: "For operations such as searching and sorting, the soft hyphen should always be ignored." http://www.w3.org/TR/html401/struct/text.html#h-9.3.3). So I don't want/can't fix this in Hyphenator.js.
 The only thing we can do is to turn hyphenation off before searching.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## When I copy/paste hyphenated texts from a website, spaces/hyphens are inserted in allmost all words ##
 This is fixed since version 3.0.0. Make sure that the option `safecopy` is set to `true`.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## I want to set a value for the minimum of letters that remain on the old line/come to the new line. ##
 In CSS3 are parameters hyphenate-before and hyphenate-before. These setting are made per language in the pattern files. You'll have to change them there.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## Could you write an extension/plugin for … ##
 Maybe I could. But
@@ -50,26 +50,26 @@ Maybe I could. But
 The coolest thing is, when YOU decide to write a plugin or whatever for your favorite environment, based on Hyphenator.js.
 If you need a special feature, send me an e-mail, We'll found a solution.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## Why are the pattern files so different in size? ##
 Patterns depend highly on linguistics and grammar of the respective language. Where it seems (I suppose) to be enough for some Indian languages to break a word after some special characters the hyphenation rules for german are quite complex.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## JavaScript is insecure and evil. It should be turned off in every browser! ##
 Welcome to Web 2.0, the world of AJAX and modern browsers!
 It's true, JavaScript had a very bad reputation - not because JavaScript itself is bad, but because of a very poor implementation in some browsers. As of today JavaScripts influence is growing and browser developers put a lot of work in making their JavaScript engines better, secure and really fast. There are a lot of webpages using JavaScript in a good manner.
 Further, Hyphenator.js follows the rules of **[unobtrusive JavaScript](http://en.wikipedia.org/wiki/Unobtrusive_JavaScript)**.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## How about Accessibility? ##
 Following the rules of **[unobtrusive JavaScript](http://en.wikipedia.org/wiki/Unobtrusive_JavaScript)** Hyphenator.js has AFAIK no influence on accessibility of your webpage. It just adds a feature that will not be missed by a screen reader.
 
 Some screen readers have issues with words that contain soft hyphens (they read syllables instead of words). Please note that this is not an issue of Hyphenator but a bug in the screen reader. Please contact the makers of the screen reader application.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## How to hyphenate text that has been loaded with AJAX? ##
 The simple answer is: just call Hyphenator.run() again.
@@ -103,10 +103,10 @@ UPDATE:
 See https://code.google.com/p/hyphenator/issues/detail?id=192
 I'm working on a fix.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)
 
 ## Can I use hyphenator.js in a frameset? ##
 Yes, this feature is new in version 3.0.0 but turned off by default. You can turn it on with the option `doframes`.
 Due to the [Same Origin Policy](http://en.wikipedia.org/wiki/Same_origin_policy) only frames with the same origin can be hyphenated.
 
-[> Go to top](#FAQ.md)
+[> Go to top](#faq)

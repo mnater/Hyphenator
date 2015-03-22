@@ -51,6 +51,7 @@ There are four mandatory fields in the object:
 
 ### optional fields ###
 Additionally to the mandatory fields there are two optional fields in the object:
+
 | name | type | description |
 | :-------- | :--------- | :------------------------------------------------------------------------- |
 |`charSubstitution`|object| characters to be replaced for hyphenation (see below)|
