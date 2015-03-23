@@ -1,4 +1,4 @@
-﻿#summary Version History and note about versioning
+# Version History and note about versioning
 
 # Version History #
 <!--
