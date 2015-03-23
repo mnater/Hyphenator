@@ -78,6 +78,7 @@ var Hyphenator_Loader = (function (window) {
             shadow.style.hyphens = 'auto';
             shadow.style.fontSize = '12px';
             shadow.style.lineHeight = '12px';
+            shadow.style.wordWrap = 'normal';
             shadow.style.visibility = 'hidden';
 
             shadow.lang = lang;
