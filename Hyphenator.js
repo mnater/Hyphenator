@@ -2113,6 +2113,15 @@ var Hyphenator = (function (window) {
             }
         },
 
+        doCharSubst = function (loCharSubst, w) {
+            var subst, r;
+            for (subst in loCharSubst) {
+                if (loCharSubst.hasOwnProperty(subst)) {
+                    r = w.replace(new RegExp(subst, 'g'), loCharSubst[subst]);
+                }
+            }
+            return r;
+        },
 
         /**
          * @method Hyphenator~hyphenateWord
@@ -2142,15 +2151,6 @@ var Hyphenator = (function (window) {
                 hp,
                 wordLength = word.length,
                 hw = '',
-                doCharSubst = function (w) {
-                    var subst, r;
-                    for (subst in lo.charSubstitution) {
-                        if (lo.charSubstitution.hasOwnProperty(subst)) {
-                            r = w.replace(new RegExp(subst, 'g'), lo.charSubstitution[subst]);
-                        }
-                    }
-                    return r;
-                },
                 charMap = lo.charMap.values,
                 mappedCharCode,
                 row = 0,
@@ -2183,10 +2183,10 @@ var Hyphenator = (function (window) {
                 ww = word.toLowerCase();
 
                 if (lo.hasOwnProperty("charSubstitution")) {
-                    ww = doCharSubst(ww);
+                    ww = doCharSubst(lo.charSubstitution, ww);
                 }
                 if (word.indexOf("'") !== -1) {
-                    ww = ww.replace("'", "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
+                    ww = ww.replace(/'/g, "’"); //replace APOSTROPHE with RIGHT SINGLE QUOTATION MARK (since the latter is used in the patterns)
                 }
                 ww = '_' + ww + '_';
                 wwlen = ww.length;
