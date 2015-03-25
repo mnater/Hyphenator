@@ -2015,7 +2015,7 @@ var Hyphenator = (function (window) {
                     if (!finishedLoading) {
                         window.setTimeout(function () {
                             languagesLoaded();
-                        }, 10);
+                        }, 0);
                     }
                 };
 
