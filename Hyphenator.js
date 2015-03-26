@@ -2032,12 +2032,15 @@ var Hyphenator = (function (window) {
             for (lang in docLanguages) {
                 if (docLanguages.hasOwnProperty(lang)) {
                     if (!!storage && storage.test(lang)) {
+                        window.console.time("jsparse");
                         Hyphenator.languages[lang] = window.JSON.parse(storage.getItem(lang));
-
+                        window.console.timeEnd("jsparse");
+                        window.console.time("arrconv");
                         if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) {
                             Hyphenator.languages[lang].indexedTrie = new window.Int32Array(Hyphenator.languages[lang].indexedTrie);
                             Hyphenator.languages[lang].valueStore.keys = new window.Uint8Array(Hyphenator.languages[lang].valueStore.keys);
                         }
+                        window.console.timeEnd("arrconv");
                         //console.log(Hyphenator.languages[lang]);
                         if (exceptions.hasOwnProperty('global')) {
                             tmp1 = convertExceptionsToObject(exceptions.global);
@@ -2652,11 +2655,16 @@ var Hyphenator = (function (window) {
                             //convert negative numbers < -1 to zeros e.g. '-3' -> '0,0,0'
                             var n = parseInt(p1, 10),
                                 res = "";
-                            while (n > 0) {
-                                res += "0,";
-                                n -= 1;
+                            if (String.prototype.repeat) {
+                                res = "0,".repeat(n - 1);
+                            } else {
+                                while (n > 1) {
+                                    res += "0,";
+                                    n -= 1;
+                                }
                             }
-                            return res.slice(0, -1);
+                            res += "0";
+                            return res;
                         });
                         return value;
                     },
