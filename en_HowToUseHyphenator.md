@@ -96,7 +96,7 @@ What could be better than a [working example](http://mnater.github.io/Hyphenator
 Loading Hyphenator.js and the pattern files is expensive in matters of loading time: Even if you merge and minify the script and the pattern files it's kind of wheighty (~74kB for Hyphenator.js plus the patterns for us-en).
 
 In many cases it's not necessary nor advisable to load the full package:
-**more and more browsers support css3 hyphenation for a certain set of languages (http://caniuse.com/#feat=css-hyphens).** on a mobile client Hyphenator.js is too expensive in matters of loaded data and computation.
+**more and more browsers support css3 hyphenation for a certain set of languages (http://caniuse.com/#feat=css-hyphens).** On a mobile client Hyphenator.js is too expensive in matters of loaded data and computation.
 
 This is where Hyphenator\_Loader.js comes in handy. It tests if the client supports css3 hyphenation for the required languages and only loads Hyphenator.js if at least one of the required languages isn't supported.
 
@@ -107,10 +107,57 @@ To use Hyphenator\_Loader.js follow the following steps:
     * Encoding them in UTF-8 (not absolutely necessary, but highly recommended)
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
+    * In CSS set the class `.hyphenate` to `hyphens: auto; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto;`
     * Validating (not absolutely necessary, but again highly recommended): http://validator.w3.org/
   1. Use the [mergeAndPack-Tool](http://mnater.github.io/Hyphenator/mergeAndPack.html). Here you can opt-in for Hyphenator\_Loader and set all the configuration options you want (click the info buttons for details).
   1. Hit 'create' and save the resulting scripts as described at the bottom of the mergeAndPack-page.
 
+### Example ###
+See this [example](https://github.com/mnater/Hyphenator/blob/master/Loader_Example.html):
+```
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Hyphenator.js</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:30%;
+                margin-left:35%;
+                margin-right:35%;
+            }
+            .hyphenate {
+                text-align:justify;
+                hyphens: auto;
+                -webkit-hyphens: auto;
+                -ms-hyphens: auto;
+                -moz-hyphens: auto;
+            }
+        </style>
+        <script src="Hyphenator_Loader.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            Hyphenator_Loader.init(
+                {
+                    "en": "automatically",
+                    "de": "Silbentrennungsalgorithmus"
+                },
+                "./Hyphenator.js"
+            );
+        </script>
+    </head>
+    <body>
+        <h1>Example of using Hyphenator.js</h1>
+        <h2>Deutsch</h2>
+        <p class="hyphenate" lang="de">Deutschsprachige Beispieltexte haben natürlicherweise längere Wortzusammensetzungen als englischsprachige. Aber auch <span lang="en">“hyphenation”</span> ist ein ziemlich langes Kompositum.</p>
+        <p class="hyphenate" lang="de">Verändern Sie die Fenstergrösse um den Effekt der Silbentrennung zu sehen.</p>
+        <h2>English</h2>
+        <p class="hyphenate" lang="en">English words are shorter in the average then german words. <span lang="de">«Silbentrennungsalgorithmus»</span> for example is quite long.</p>
+        <p class="hyphenate" lang="en">Resize the window to see hyphenation in effect.</p>
+        <h2>Links</h2>
+        <p class="hyphenate" lang="en">Not only words but also links like <a href="https://github.com/mnater/Hyphenator">https://github.com/mnater/Hyphenator</a> are processed. But in a special manner (using zero width space).</p>
+    </body>
+</html>
+```
 
 ## Legal ##
 Hyphenator.js and its documentation are published under the [LGPL v3](http://www.gnu.org/licenses/lgpl.html):
