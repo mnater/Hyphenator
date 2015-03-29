@@ -1619,23 +1619,23 @@ var Hyphenator = (function (window) {
          * @method Hyphenator~createCharMap
          * @desc
          * reads the charCodes from lo.characters and stores them in a bidi map:
-         * charMap.keys =  [0: 97, //a
-         *                  1: 98, //b
-         *                  2: 99] //c etc.
-         * charMap.values = {"97": 0, //a
-         *                   "98": 1, //b
-         *                   "99": 2} //c etc.
+         * charMap.int2code =  [0: 97, //a
+         *                      1: 98, //b
+         *                      2: 99] //c etc.
+         * charMap.code2int = {"97": 0, //a
+         *                     "98": 1, //b
+         *                     "99": 2} //c etc.
          * @access private
          * @param {Object} language object
          */
         createCharMap = function (lo) {
             var CharMap = function () {
-                this.keys = [];
-                this.values = {};
+                this.int2code = [];
+                this.code2int = {};
                 this.add = function (newValue) {
-                    if (!this.values[newValue]) {
-                        this.keys.push(newValue);
-                        this.values[newValue] = this.keys.length - 1;
+                    if (!this.code2int[newValue]) {
+                        this.int2code.push(newValue);
+                        this.code2int[newValue] = this.int2code.length - 1;
                     }
                 };
             }, i;
@@ -1690,82 +1690,112 @@ var Hyphenator = (function (window) {
         /**
          * @method Hyphenator~convertPatternsToArray
          * @desc
-         * converts the patterns to a (typed, if possible) array as described by Liang
+         * converts the patterns to a (typed, if possible) array as described by Liang:
+         *
+         * 1. Create the CharMap: an alphabet of used character codes mapped to an int (e.g. a: "97" -> 0)
+         *    This map is bidirectional:
+         *    charMap.code2int is an object with charCodes as keys and corresponging ints as values
+         *    charMao.int2code is an array of charCodes at int indizes
+         *    the length of charMao.int2code is equal the length of the alphabet
+         *
+         * 2. Create a ValueStore: (typed) array that holds "values", i.e. the digits extracted from the patterns
+         *    The first value starts at index 1 (since the trie is initialized with zeroes, starting at 0 would create errors)
+         *    Each value starts with its length at index i, actual values are stored in i + n where n < length
+         *    Trailing 0 are not stored. So pattern values like e.g. "010200" will become […,4,0,1,0,2,…]
+         *    The ValueStore-Object manages handling of indizes automatically. Use ValueStore.add(p) to add a running value.
+         *    Use ValueStore.finalize() when the last value of a pattern is added. It will set the length and return the starting index of the pattern.
+         *    To prevent doubles we could temporarly store the values in a object {value: startIndex} and only add new values,
+         *    but this object deoptimizes very fast (new hidden map for each entry); here we gain speed and pay memory
+         *    
+         * 3. Create and zero initialize a (typed) array to store the trie. The trie uses two slots for each entry/node:
+         *    i: a link to another position in the array or -1 if the pattern ends here or more rows have to be added.
+         *    i + 1: a link to a value in the ValueStore or 0 if there's no value for the path to this node.
+         *    Although the array is one-dimensional it can be described as an array of "rows",
+         *    where each "row" is an array of length trieRowLength (see below).
+         *    The first entry of this "row" represents the first character of the alphabet, the second a possible link to value store,
+         *    the third represents the second character of the alphabet and so on…
+         *
+         * 4. Initialize trieRowLength (length of the alphabet * 2)
+         *
+         * 5. Now we apply extract to each pattern collection (patterns of the same length are collected and concatenated to one string)
+         *    extract goes through these pattern collections char by char and adds them either to the ValueStore (if they are digits) or
+         *    to the trie (adding more "rows" if necessary, i.e. if the last link pointed to -1).
+         *    So the first "row" holds all starting characters, where the subsequent rows hold the characters that follow the
+         *    character that link to this row. Therefor the array is dense at the beginning and very sparse at the end.
+         * 
          * 
          * @access private
          * @param {Object} language object
          */
         convertPatternsToArray = function (lo) {
-            var indexedTrieMaxRow = 0,
+            var trieNextEmptyRow = 0,
                 i,
-                charMapValues,
+                charMapc2i,
                 valueStore,
                 indexedTrie,
-                steps,
+                trieRowLength,
 
                 extract = function (patternSizeInt, patterns) {
                     var charPos = 0,
                         charCode = 0,
-                        prevMappedCharCode = 0,
                         mappedCharCode = 0,
-                        row = 0,
-                        nextRow = 0,
-                        prevWasPosition = false;
+                        rowStart = 0,
+                        nextRowStart = 0,
+                        prevWasDigit = false;
                     for (charPos = 0; charPos < patterns.length; charPos += 1) {
                         charCode = patterns.charCodeAt(charPos);
                         if ((charPos + 1) % patternSizeInt !== 0) {
                             //more to come…
                             if (charCode >= 49 && charCode <= 57) {
+                                //charCode is a digit
                                 valueStore.add(charCode - 48);
-                                prevWasPosition = true;
+                                prevWasDigit = true;
                             } else {
-                                if (!prevWasPosition) {
+                                //charCode is alphabetical
+                                if (!prevWasDigit) {
                                     valueStore.add(0);
                                 }
-                                prevWasPosition = false;
-                                mappedCharCode = charMapValues[charCode];
-                                if (nextRow === -1) {
-                                    nextRow = indexedTrieMaxRow + steps;
-                                    indexedTrieMaxRow = nextRow;
-                                    indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                prevWasDigit = false;
+                                if (nextRowStart === -1) {
+                                    nextRowStart = trieNextEmptyRow + trieRowLength;
+                                    trieNextEmptyRow = nextRowStart;
+                                    indexedTrie[rowStart + mappedCharCode * 2] = nextRowStart;
                                 }
-                                row = nextRow;
-                                if (indexedTrie[row + mappedCharCode * 2] !== 0) {
-                                    nextRow = indexedTrie[row + mappedCharCode * 2];
-                                } else {
-                                    indexedTrie[row + mappedCharCode * 2] = -1;
-                                    nextRow = -1;
+                                mappedCharCode = charMapc2i[charCode];
+                                rowStart = nextRowStart;
+                                nextRowStart = indexedTrie[rowStart + mappedCharCode * 2];
+                                if (nextRowStart === 0) {
+                                    indexedTrie[rowStart + mappedCharCode * 2] = -1;
+                                    nextRowStart = -1;
                                 }
-                                prevMappedCharCode = mappedCharCode;
                             }
                         } else {
                             //last part of pattern
                             if (charCode >= 49 && charCode <= 57) {
+                                //the last charCode is a digit
                                 valueStore.add(charCode - 48);
-                                indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
+                                indexedTrie[rowStart + mappedCharCode * 2 + 1] = valueStore.finalize();
                             } else {
-                                if (!prevWasPosition) {
+                                //the last charCode is alphabetical
+                                if (!prevWasDigit) {
                                     valueStore.add(0);
                                 }
                                 valueStore.add(0);
-                                mappedCharCode = charMapValues[charCode];
-                                if (nextRow === -1) {
-                                    nextRow = indexedTrieMaxRow + steps;
-                                    indexedTrieMaxRow = nextRow;
-                                    indexedTrie[row + prevMappedCharCode * 2] = nextRow;
+                                if (nextRowStart === -1) {
+                                    nextRowStart = trieNextEmptyRow + trieRowLength;
+                                    trieNextEmptyRow = nextRowStart;
+                                    indexedTrie[rowStart + mappedCharCode * 2] = nextRowStart;
                                 }
-                                row = nextRow;
-                                if (indexedTrie[row + mappedCharCode * 2] !== 0) {
-                                    indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
-                                } else {
-                                    indexedTrie[row + mappedCharCode * 2] = -1;
-                                    indexedTrie[row + mappedCharCode * 2 + 1] = valueStore.finalize();
+                                mappedCharCode = charMapc2i[charCode];
+                                rowStart = nextRowStart;
+                                if (indexedTrie[rowStart + mappedCharCode * 2] === 0) {
+                                    indexedTrie[rowStart + mappedCharCode * 2] = -1;
                                 }
+                                indexedTrie[rowStart + mappedCharCode * 2 + 1] = valueStore.finalize();
                             }
-                            row = 0;
-                            nextRow = 0;
-                            prevMappedCharCode = 0;
-                            prevWasPosition = false;
+                            rowStart = 0;
+                            nextRowStart = 0;
+                            prevWasDigit = false;
                         }
                     }
                 };/*,
@@ -1782,7 +1812,12 @@ var Hyphenator = (function (window) {
                     console.log(s);
                 };*/
 
+            createCharMap(lo);
+            charMapc2i = lo.charMap.code2int;
+
             createValueStore(lo);
+            valueStore = lo.valueStore;
+
             if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
                 lo.indexedTrie = new window.Int32Array(lo.patternArrayLength * 2);
             } else {
@@ -1792,19 +1827,15 @@ var Hyphenator = (function (window) {
                     lo.indexedTrie[i] = 0;
                 }
             }
-            createCharMap(lo);
-
-            charMapValues = lo.charMap.values;
-            valueStore = lo.valueStore;
             indexedTrie = lo.indexedTrie;
-            steps = lo.charMap.keys.length * 2;
+            trieRowLength = lo.charMap.int2code.length * 2;
 
             for (i in lo.patterns) {
                 if (lo.patterns.hasOwnProperty(i)) {
                     extract(parseInt(i, 10), lo.patterns[i]);
                 }
             }
-            //prettyPrintIndexedTrie(lo.charMap.keys.length * 2);
+            //prettyPrintIndexedTrie(lo.charMap.int2code.length * 2);
         },
 
         /**
@@ -1896,12 +1927,13 @@ var Hyphenator = (function (window) {
                     xhr.open('HEAD', location, true);
                     xhr.setRequestHeader('Cache-Control', 'no-cache');
                     xhr.onreadystatechange = function () {
-                        if (xhr.readyState === 4) {
-                            if (xhr.status === 404) {
+                        if (xhr.readyState === 2) {
+                            if (xhr.status >= 400) {
                                 onError(new Error('Could not load\n' + location));
                                 delete docLanguages[lang];
                                 return;
                             }
+                            xhr.abort();
                         }
                     };
                     xhr.send(null);
@@ -1968,7 +2000,7 @@ var Hyphenator = (function (window) {
             if (!!storage) {
                 storage.deferred.whenAllDone = function () {
                     var loForStorage = {
-                        charMap: {values: lo.charMap.values},
+                        charMap: {code2int: lo.charMap.code2int},
                         charSubstitution: lo.charSubstitution,
                         exceptions: lo.exceptions,
                         indexedTrie: Array.prototype.slice.call(lo.indexedTrie),
@@ -2032,15 +2064,11 @@ var Hyphenator = (function (window) {
             for (lang in docLanguages) {
                 if (docLanguages.hasOwnProperty(lang)) {
                     if (!!storage && storage.test(lang)) {
-                        window.console.time("jsparse");
                         Hyphenator.languages[lang] = window.JSON.parse(storage.getItem(lang));
-                        window.console.timeEnd("jsparse");
-                        window.console.time("arrconv");
                         if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) {
                             Hyphenator.languages[lang].indexedTrie = new window.Int32Array(Hyphenator.languages[lang].indexedTrie);
                             Hyphenator.languages[lang].valueStore.keys = new window.Uint8Array(Hyphenator.languages[lang].valueStore.keys);
                         }
-                        window.console.timeEnd("arrconv");
                         //console.log(Hyphenator.languages[lang]);
                         if (exceptions.hasOwnProperty('global')) {
                             tmp1 = convertExceptionsToObject(exceptions.global);
@@ -2154,7 +2182,7 @@ var Hyphenator = (function (window) {
                 hp,
                 wordLength = word.length,
                 hw = '',
-                charMap = lo.charMap.values,
+                charMap = lo.charMap.code2int,
                 mappedCharCode,
                 row = 0,
                 link = 0,
