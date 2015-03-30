@@ -2532,13 +2532,11 @@ var Hyphenator = (function (window) {
                 n,
                 i,
                 lo;
-            if (Hyphenator.languages.hasOwnProperty(lang)) {
+            if (Hyphenator.languages.hasOwnProperty(lang) && Hyphenator.doHyphenation) {
                 lo = Hyphenator.languages[lang];
                 hyphenate = function (match, word, url, mail) {
                     var r;
-                    if (!Hyphenator.doHyphenation) {
-                        r = match;
-                    } else if ((url !== undefined && url !== "") || (mail !== "" && mail !== undefined)) { //IE<=8 returns "" instead of undefined
+                    if ((url !== undefined && url !== "") || (mail !== "" && mail !== undefined)) { //IE<=8 returns "" instead of undefined
                         r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
@@ -3215,8 +3213,8 @@ var Hyphenator = (function (window) {
                 if (!!css3hyphenateClassHandle) {
                     css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
                 }
-                hyphenateLanguageElements('*');
                 Hyphenator.doHyphenation = true;
+                hyphenateLanguageElements('*');
                 storeConfiguration();
                 toggleBox();
             }
