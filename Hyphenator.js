@@ -1932,7 +1932,7 @@ var Hyphenator = (function (window) {
          * @access private
          * @see {@link Hyphenator~basePath}
          */
-        loadPatterns = function (lang) {
+        loadPatterns = function (lang, cb) {
             var location, xhr, head, script;
             if (supportedLangs.hasOwnProperty(lang) && !Hyphenator.languages[lang]) {
                 location = basePath + 'patterns/' + supportedLangs[lang].file;
@@ -1981,6 +1981,10 @@ var Hyphenator = (function (window) {
                 script.src = location;
                 script.type = 'text/javascript';
                 script.charset = 'utf8';
+                script.onload = function () {
+                    script.onload = null;
+                    cb();
+                };
                 head.appendChild(script);
             }
         },
@@ -2068,20 +2072,15 @@ var Hyphenator = (function (window) {
         prepare = function (callback) {
             var lang, tmp1, tmp2,
                 languagesLoaded = function () {
-                    var l, finishedLoading = true;
+                    var l;
                     for (l in docLanguages) {
                         if (docLanguages.hasOwnProperty(l)) {
                             if (Hyphenator.languages.hasOwnProperty(l)) {
                                 delete docLanguages[l];
                                 prepareLanguagesObj(l);
                                 callback(l);
-                            } else {
-                                finishedLoading = false;
                             }
                         }
-                    }
-                    if (!finishedLoading) {
-                        window.setTimeout(languagesLoaded, 0);
                     }
                 };
 
@@ -2133,10 +2132,12 @@ var Hyphenator = (function (window) {
                         delete docLanguages[lang];
                         callback(lang);
                     } else {
-                        loadPatterns(lang);
+                        loadPatterns(lang, languagesLoaded);
                     }
                 }
             }
+            //call languagesLoaded in case language has been loaded manually
+            //and remoteLoading is on (onload won't fire)
             languagesLoaded();
         },
 
