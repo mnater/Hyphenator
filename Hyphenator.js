@@ -1248,6 +1248,42 @@ var Hyphenator = (function (window) {
         safeCopy = true,
 
         /**
+         * @method Hyphenator~zeroTimeOut
+         * @desc
+         * defer execution of a function on the call stack
+         * Analog to window.setTimeout(fn, 0) but without a clamped delay if postMessage is supported
+         * @access private
+         * @see {@link http://dbaron.org/log/20100309-faster-timeouts}
+         */
+        zeroTimeOut = (function () {
+            if (window.postMessage) {
+                return (function () {
+                    var timeouts = [],
+                        msg = "Hyphenator_zeroTimeOut_message",
+                        setZeroTimeOut = function (fn) {
+                            timeouts.push(fn);
+                            window.postMessage(msg, "*");
+                        },
+                        handleMessage = function (event) {
+                            if (event.source === window && event.data === msg) {
+                                event.stopPropagation();
+                                if (timeouts.length > 0) {
+                                    //var efn = timeouts.shift();
+                                    //efn();
+                                    timeouts.shift()();
+                                }
+                            }
+                        };
+                    window.addEventListener("message", handleMessage, true);
+                    return setZeroTimeOut;
+                }());
+            }
+            return function (fn) {
+                window.setTimeout(fn, 0);
+            };
+        }()),
+
+        /**
          * @member {Object} Hyphenator~hyphRunFor
          * @desc
          * stores location.href for documents where run() has been executed
@@ -1288,7 +1324,7 @@ var Hyphenator = (function (window) {
                         // http://javascript.nwbox.com/IEContentLoaded/
                         w.document.documentElement.doScroll("left");
                     } catch (error) {
-                        window.setTimeout(doScrollCheck, 1);
+                        zeroTimeOut(doScrollCheck);
                         return;
                     }
                     //maybe modern IE fired DOMContentLoaded
@@ -2045,9 +2081,7 @@ var Hyphenator = (function (window) {
                         }
                     }
                     if (!finishedLoading) {
-                        window.setTimeout(function () {
-                            languagesLoaded();
-                        }, 0);
+                        zeroTimeOut(languagesLoaded);
                     }
                 };
 
@@ -2395,7 +2429,7 @@ var Hyphenator = (function (window) {
                             }
                         };
                     }
-                    window.setTimeout(restore, 0);
+                    zeroTimeOut(restore);
                 };
 
                 this.removeOnCopy = function (el) {
@@ -2588,6 +2622,7 @@ var Hyphenator = (function (window) {
          * @param {string} lang The language of the elements to hyphenate
          * @access private
          */
+
         hyphenateLanguageElements = function (lang) {
             function bind(fun, arg1, arg2) {
                 return function () {
@@ -2599,14 +2634,14 @@ var Hyphenator = (function (window) {
                 elements.each(function (lang, ellist) {
                     var j, le = ellist.length;
                     for (j = 0; j < le; j += 1) {
-                        window.setTimeout(bind(hyphenateElement, lang, ellist[j]), 0);
+                        zeroTimeOut(bind(hyphenateElement, lang, ellist[j]));
                     }
                 });
             } else {
                 if (elements.list.hasOwnProperty(lang)) {
                     l = elements.list[lang].length;
                     for (i = 0; i < l; i += 1) {
-                        window.setTimeout(bind(hyphenateElement, lang, elements.list[lang][i]), 0);
+                        zeroTimeOut(bind(hyphenateElement, lang, elements.list[lang][i]));
                     }
                 }
             }
