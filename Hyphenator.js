@@ -2081,7 +2081,7 @@ var Hyphenator = (function (window) {
                         }
                     }
                     if (!finishedLoading) {
-                        zeroTimeOut(languagesLoaded);
+                        window.setTimeout(languagesLoaded, 0);
                     }
                 };
 
