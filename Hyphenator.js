@@ -1025,7 +1025,6 @@ var Hyphenator = (function (window) {
                             }
                         } catch (ignore) {}
                     }
-                    r = false;
                     if (r === false) {
                         element = doc.createElement('style');
                         element.type = 'text/css';
@@ -1155,19 +1154,14 @@ var Hyphenator = (function (window) {
                             // IE < 9
                             cssText = existingRule.rule.style.cssText.toLowerCase();
                         }
-                        if (cssText === '.' + hyphenateClass + ' { visibility: hidden; }') {
-                            //browsers w/o IE < 9 and no additional style defs:
-                            //add to [changes] for later removal
-                            changes.push({sheet: existingRule.rule.parentStyleSheet, index: existingRule.index});
-                        } else if (cssText.indexOf('visibility: hidden') !== -1) {
-                            // IE < 9 or additional style defs:
-                            // add new rule
-                            i = addRule(sel, rulesString);
-                            //add to [changes] for later removal
-                            changes.push({sheet: sheet, index: i});
-                            // clear existing def
-                            existingRule.rule.style.visibility = '';
-                        } else {
+                        if (cssText !== sel + ' { ' + rulesString + ' }') {
+                            //cssText of the found rule is not uniquely selector + rulesString,
+                            if (cssText.indexOf(rulesString) !== -1) {
+                                //maybe there are other rules or IE < 9
+                                //clear existing def
+                                existingRule.rule.style.visibility = '';
+                            }
+                            //add rule and register for later removal
                             i = addRule(sel, rulesString);
                             changes.push({sheet: sheet, index: i});
                         }
@@ -1256,7 +1250,7 @@ var Hyphenator = (function (window) {
          * @see {@link http://dbaron.org/log/20100309-faster-timeouts}
          */
         zeroTimeOut = (function () {
-            if (window.postMessage) {
+            if (window.postMessage && window.addEventListener) {
                 return (function () {
                     var timeouts = [],
                         msg = "Hyphenator_zeroTimeOut_message",
