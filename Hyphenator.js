@@ -1,6 +1,6 @@
 /** @license Hyphenator X.Y.Z - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
- *  Project and Source hosted on http://code.google.com/p/hyphenator/
+ *  Project and Source hosted on https://github.com/mnater/Hyphenator
  * 
  *  This JavaScript code is free software: you can redistribute
  *  it and/or modify it under the terms of the GNU Lesser
@@ -147,7 +147,7 @@ var Hyphenator = (function (window) {
          * A string storing the basepath from where Hyphenator.js was loaded.
          * This is used to load the pattern files.
          * The basepath is determined dynamically by searching all script-tags for Hyphenator.js
-         * If the path cannot be determined {@link http://hyphenator.googlecode.com/svn/trunk/} is used as fallback.
+         * If the path cannot be determined {@link http://mnater.github.io/Hyphenator/} is used as fallback.
          * @access private
          * @see {@link Hyphenator~loadPatterns}
          */
@@ -164,7 +164,7 @@ var Hyphenator = (function (window) {
                 i += 1;
                 t = s[i];
             }
-            return !!r ? r : '//hyphenator.googlecode.com/svn/trunk/';
+            return !!r ? r : '//mnater.github.io/Hyphenator/';
         }()),
 
         /**
@@ -172,7 +172,7 @@ var Hyphenator = (function (window) {
          * @access private
          * @desc
          * isLocal is true, if Hyphenator is loaded from the same domain, as the webpage, but false, if
-         * it's loaded from an external source (i.e. directly from google.code)
+         * it's loaded from an external source (i.e. directly from github)
          */
         isLocal = (function () {
             var re = false;
