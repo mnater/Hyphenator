@@ -1318,7 +1318,7 @@ var Hyphenator = (function (window) {
                         // http://javascript.nwbox.com/IEContentLoaded/
                         w.document.documentElement.doScroll("left");
                     } catch (error) {
-                        zeroTimeOut(doScrollCheck);
+                        window.setTimeout(doScrollCheck, 1);
                         return;
                     }
                     //maybe modern IE fired DOMContentLoaded
@@ -1927,7 +1927,7 @@ var Hyphenator = (function (window) {
          * @see {@link Hyphenator~basePath}
          */
         loadPatterns = function (lang, cb) {
-            var location, xhr, head, script;
+            var location, xhr, head, script, done = false;
             if (supportedLangs.hasOwnProperty(lang) && !Hyphenator.languages[lang]) {
                 location = basePath + 'patterns/' + supportedLangs[lang].file;
             } else {
@@ -1975,9 +1975,18 @@ var Hyphenator = (function (window) {
                 script.src = location;
                 script.type = 'text/javascript';
                 script.charset = 'utf8';
-                script.onload = function () {
-                    script.onload = null;
-                    cb();
+                script.onload = script.onreadystatechange = function () {
+                    if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {
+                        done = true;
+
+                        cb();
+
+                        // Handle memory leak in IE
+                        script.onload = script.onreadystatechange = null;
+                        if (head && script.parentNode) {
+                            head.removeChild(script);
+                        }
+                    }
                 };
                 head.appendChild(script);
             }
@@ -2682,6 +2691,7 @@ var Hyphenator = (function (window) {
             var s;
             try {
                 if (storageType !== 'none' &&
+                        window.JSON !== undefined &&
                         window.localStorage !== undefined &&
                         window.sessionStorage !== undefined &&
                         window.JSON.stringify !== undefined &&
