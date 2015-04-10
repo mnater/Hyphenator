@@ -2173,6 +2173,16 @@ var Hyphenator = (function (window) {
             }
         },
 
+        /**
+         * @method Hyphenator~doCharSubst
+         * @desc
+         * Replace chars in a word
+         *
+         * @param {Object} loCharSubst Map of substitutions ({'ä': 'a', 'ü': 'u', …})
+         * @param {string} w the word
+         * @returns string The word with substituted characers
+         * @access private
+         */
         doCharSubst = function (loCharSubst, w) {
             var subst, r;
             for (subst in loCharSubst) {
@@ -2197,7 +2207,7 @@ var Hyphenator = (function (window) {
          * @param {string} lang The language of the word
          * @param {string} word The word
          * @returns string The hyphenated word
-         * @access public
+         * @access private
          */
         hyphenateWord = function (lo, lang, word) {
             var parts,
