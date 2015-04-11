@@ -2202,6 +2202,13 @@ var Hyphenator = (function (window) {
             return r;
         },
 
+        /**
+         * @member {Array} Hyphenator~wwAsMappedCharCodeStore
+         * @desc
+         * Array (typed if supported) container for charCodes
+         * @access private
+         * @see {@link Hyphenator~hyphenateWord}
+         */
         wwAsMappedCharCodeStore = (function () {
             if (Object.prototype.hasOwnProperty.call(window, "Uint32Array")) {
                 return new window.Uint32Array(32);
@@ -2209,6 +2216,13 @@ var Hyphenator = (function (window) {
             return [];
         }()),
 
+        /**
+         * @member {Array} Hyphenator~wwhpStore
+         * @desc
+         * Array (typed if supported) container for hyphenation points
+         * @access private
+         * @see {@link Hyphenator~hyphenateWord}
+         */
         wwhpStore = (function () {
             var r;
             if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
@@ -2286,11 +2300,13 @@ var Hyphenator = (function (window) {
                 }
                 ww = '_' + ww + '_';
                 wwlen = ww.length;
+                //prepare wwhp and wwAsMappedCharCode
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     wwhp[pstart] = 0;
                     charCode = charMap[ww.charCodeAt(pstart)];
                     wwAsMappedCharCode[pstart] = (charCode === undefined ? 0 : charCode);
                 }
+                //get hyphenation points for all substrings
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     row = 0;
                     pattern = '';
@@ -2331,6 +2347,7 @@ var Hyphenator = (function (window) {
                         }
                     }
                 }
+                //create hyphenated word
                 for (hp = 0; hp < wordLength; hp += 1) {
                     if (hp >= lo.leftmin && hp <= (wordLength - lo.rightmin) && (wwhp[hp + 1] % 2) !== 0) {
                         hw += hyphen + word.charAt(hp);
