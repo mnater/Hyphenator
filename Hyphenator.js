@@ -2210,8 +2210,8 @@ var Hyphenator = (function (window) {
          * @see {@link Hyphenator~hyphenateWord}
          */
         wwAsMappedCharCodeStore = (function () {
-            if (Object.prototype.hasOwnProperty.call(window, "Uint32Array")) {
-                return new window.Uint32Array(32);
+            if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) {
+                return new window.Int32Array(32);
             }
             return [];
         }()),
@@ -2304,7 +2304,7 @@ var Hyphenator = (function (window) {
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     wwhp[pstart] = 0;
                     charCode = charMap[ww.charCodeAt(pstart)];
-                    wwAsMappedCharCode[pstart] = (charCode === undefined ? 0 : charCode);
+                    wwAsMappedCharCode[pstart] = (charCode === undefined ? -1 : charCode);
                 }
                 //get hyphenation points for all substrings
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
@@ -2312,7 +2312,7 @@ var Hyphenator = (function (window) {
                     pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
                         mappedCharCode = wwAsMappedCharCode[plen];
-                        if (mappedCharCode === 0) {
+                        if (mappedCharCode === -1) {
                             break;
                         }
                         if (enableReducedPatternSet) {
