@@ -2202,6 +2202,23 @@ var Hyphenator = (function (window) {
             return r;
         },
 
+        wwAsMappedCharCodeStore = (function () {
+            if (Object.prototype.hasOwnProperty.call(window, "Uint32Array")) {
+                return new window.Uint32Array(32);
+            }
+            return [];
+        }()),
+
+        wwhpStore = (function () {
+            var r;
+            if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
+                r = new window.Uint8Array(32);
+            } else {
+                r = [];
+            }
+            return r;
+        }()),
+
         /**
          * @method Hyphenator~hyphenateWord
          * @desc
@@ -2224,7 +2241,7 @@ var Hyphenator = (function (window) {
                 pattern = "",
                 ww,
                 wwlen,
-                wwhp,
+                wwhp = wwhpStore,
                 pstart,
                 plen,
                 hp,
@@ -2239,7 +2256,7 @@ var Hyphenator = (function (window) {
                 indexedTrie = lo.indexedTrie,
                 valueStore = lo.valueStore.keys,
                 charCode,
-                wwAsMappedCharCode;
+                wwAsMappedCharCode = wwAsMappedCharCodeStore;
 
             word = onBeforeWordHyphenation(word, lang);
             if (word === '') {
@@ -2269,26 +2286,17 @@ var Hyphenator = (function (window) {
                 }
                 ww = '_' + ww + '_';
                 wwlen = ww.length;
-                if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
-                    wwhp = new window.Uint8Array(wwlen);
-                    wwAsMappedCharCode = new window.Int32Array(wwlen);
-                } else {
-                    wwhp = [];
-                    wwAsMappedCharCode = [];
-                    for (hp = 0; hp < wwlen - 1; hp += 1) {
-                        wwhp[hp] = 0;
-                    }
-                }
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
+                    wwhp[pstart] = 0;
                     charCode = charMap[ww.charCodeAt(pstart)];
-                    wwAsMappedCharCode[pstart] = (charCode === undefined ? -1 : charCode);
+                    wwAsMappedCharCode[pstart] = (charCode === undefined ? 0 : charCode);
                 }
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     row = 0;
                     pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
                         mappedCharCode = wwAsMappedCharCode[plen];
-                        if (mappedCharCode === -1) {
+                        if (mappedCharCode === 0) {
                             break;
                         }
                         if (enableReducedPatternSet) {
