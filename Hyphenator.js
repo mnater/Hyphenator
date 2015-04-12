@@ -2027,7 +2027,11 @@ var Hyphenator = (function (window) {
                     lo.exceptions = {};
                 }
                 convertPatternsToArray(lo);
-                wrd = '[\\w' + lo.specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                if (String().normalize) {
+                    wrd = '[\\w' + lo.specialChars + lo.specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                } else {
+                    wrd = '[\\w' + lo.specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                }
                 lo.genRegExp = new RegExp('(' + wrd + ')|(' + url + ')|(' + mail + ')', 'gi');
                 lo.prepared = true;
             }
@@ -2116,7 +2120,11 @@ var Hyphenator = (function (window) {
                             delete exceptions[lang];
                         }
                         //Replace genRegExp since it may have been changed:
-                        tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                        if (String().normalize) {
+                            tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + Hyphenator.languages[lang].specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                        } else {
+                            tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
+                        }
                         Hyphenator.languages[lang].genRegExp = new RegExp('(' + tmp1 + ')|(' + url + ')|(' + mail + ')', 'gi');
                         if (enableCache) {
                             if (!Hyphenator.languages[lang].cache) {
@@ -2282,7 +2290,9 @@ var Hyphenator = (function (window) {
                 hw = parts.join('-');
             } else {
                 ww = word.toLowerCase();
-
+                if (String().normalize) {
+                    ww = ww.normalize();
+                }
                 if (lo.hasOwnProperty("charSubstitution")) {
                     ww = doCharSubst(lo.charSubstitution, ww);
                 }
