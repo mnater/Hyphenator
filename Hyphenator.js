@@ -1658,63 +1658,52 @@ var Hyphenator = (function (window) {
          * @access private
          * @param {Object} language object
          */
-        createCharMap = function (lo) {
-            var CharMap = function () {
-                this.int2code = [];
-                this.code2int = {};
-                this.add = function (newValue) {
-                    if (!this.code2int[newValue]) {
-                        this.int2code.push(newValue);
-                        this.code2int[newValue] = this.int2code.length - 1;
-                    }
-                };
-            }, i;
-            lo.charMap = new CharMap();
-            for (i = 0; i < lo.patternChars.length; i += 1) {
-                lo.charMap.add(lo.patternChars.charCodeAt(i));
-            }
+        CharMap = function () {
+            this.int2code = [];
+            this.code2int = {};
+            this.add = function (newValue) {
+                if (!this.code2int[newValue]) {
+                    this.int2code.push(newValue);
+                    this.code2int[newValue] = this.int2code.length - 1;
+                }
+            };
         },
 
         /**
-         * @method Hyphenator~createValueStore
-         * @desc
-         * creates an (typed, if possible) Array to store the hyphenation values (i.e. the digits) from the patterns.
+         * @constructor Hyphenator~ValueStore
+         * @desc Storage-Object for storing hyphenation points (aka values)
          * @access private
-         * @param {Object} language object
          */
-        createValueStore = function (lo) {
-            var ValueStore = function (len) {
-                this.keys = (function () {
-                    var i, r;
-                    if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
-                        return new window.Uint8Array(len);
-                    }
-                    r = [];
-                    r.length = len;
-                    for (i = r.length - 1; i >= 0; i -= 1) {
-                        r[i] = 0;
-                    }
-                    return r;
-                }());
-                this.startIndex = 1;
-                this.actualIndex = 2;
-                this.lastValueIndex = 2;
-                this.add = function (p) {
-                    if (p !== 0) {
-                        this.keys[this.actualIndex] = p;
-                        this.lastValueIndex = this.actualIndex;
-                    }
-                    this.actualIndex += 1;
-                };
-                this.finalize = function () {
-                    var start = this.startIndex;
-                    this.keys[start] = this.lastValueIndex - start;
-                    this.startIndex = this.lastValueIndex + 1;
-                    this.actualIndex = this.startIndex + 1;
-                    return start;
-                };
+        ValueStore = function (len) {
+            this.keys = (function () {
+                var i, r;
+                if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
+                    return new window.Uint8Array(len);
+                }
+                r = [];
+                r.length = len;
+                for (i = r.length - 1; i >= 0; i -= 1) {
+                    r[i] = 0;
+                }
+                return r;
+            }());
+            this.startIndex = 1;
+            this.actualIndex = 2;
+            this.lastValueIndex = 2;
+            this.add = function (p) {
+                if (p !== 0) {
+                    this.keys[this.actualIndex] = p;
+                    this.lastValueIndex = this.actualIndex;
+                }
+                this.actualIndex += 1;
             };
-            lo.valueStore = new ValueStore(lo.valueStoreLength);
+            this.finalize = function () {
+                var start = this.startIndex;
+                this.keys[start] = this.lastValueIndex - start;
+                this.startIndex = this.lastValueIndex + 1;
+                this.actualIndex = this.startIndex + 1;
+                return start;
+            };
         },
 
         /**
@@ -1842,11 +1831,13 @@ var Hyphenator = (function (window) {
                     console.log(s);
                 };*/
 
-            createCharMap(lo);
+            lo.charMap = new CharMap();
+            for (i = 0; i < lo.patternChars.length; i += 1) {
+                lo.charMap.add(lo.patternChars.charCodeAt(i));
+            }
             charMapc2i = lo.charMap.code2int;
 
-            createValueStore(lo);
-            valueStore = lo.valueStore;
+            lo.valueStore = valueStore = new ValueStore(lo.valueStoreLength);
 
             if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
                 lo.indexedTrie = new window.Int32Array(lo.patternArrayLength * 2);
@@ -2262,6 +2253,7 @@ var Hyphenator = (function (window) {
                 wordLength = word.length,
                 hw = '',
                 charMap = lo.charMap.code2int,
+                charCode,
                 mappedCharCode,
                 row = 0,
                 link = 0,
@@ -2269,7 +2261,6 @@ var Hyphenator = (function (window) {
                 values,
                 indexedTrie = lo.indexedTrie,
                 valueStore = lo.valueStore.keys,
-                charCode,
                 wwAsMappedCharCode = wwAsMappedCharCodeStore;
 
             word = onBeforeWordHyphenation(word, lang);
@@ -2303,8 +2294,12 @@ var Hyphenator = (function (window) {
                 //prepare wwhp and wwAsMappedCharCode
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     wwhp[pstart] = 0;
-                    charCode = charMap[ww.charCodeAt(pstart)];
-                    wwAsMappedCharCode[pstart] = (charCode === undefined ? -1 : charCode);
+                    charCode = ww.charCodeAt(pstart);
+                    if (charMap.hasOwnProperty(charCode)) {
+                        wwAsMappedCharCode[pstart] = charMap[ww.charCodeAt(pstart)];
+                    } else {
+                        wwAsMappedCharCode[pstart] = -1;
+                    }
                 }
                 //get hyphenation points for all substrings
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
@@ -2770,10 +2765,11 @@ var Hyphenator = (function (window) {
                         return value;
                     },
                     setItem: function (name, value) {
-                        /*jslint unparam: true*/
+                        /*jslint unparam: true, bitwise: true*/
                         value = value.replace(/((0,){2,})/g, function pack(ignore, p1) {
                             //converts a series of zeros > 2 to a negative number e.g. '0,0,0' -> '-3'
-                            return p1.length / -2 + ",";
+                            //return p1.length / -2 + ",";
+                            return ~(p1.length >> 1) + 1 + ",";
                         });
                         try {
                             this.store.setItem(this.prefix + name, value);
@@ -3170,7 +3166,7 @@ var Hyphenator = (function (window) {
                 }
                 hyphenate = function (match, word, url, mail) {
                     var r;
-                    if ((url !== undefined && url !== "") || (mail !== "" && mail !== undefined)) {
+                    if (!!url || !!mail) {
                         r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
