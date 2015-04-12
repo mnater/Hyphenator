@@ -2,11 +2,15 @@
 
 # Version History #
 <!--
-## [Version 5.0.0](https://github.com/mnater/Hyphenator/releases/tag/4.3.0) (Release date tbd) ##
+## [Version 5.0.0](https://github.com/mnater/Hyphenator/releases/tag/5.0.0) (Release date tbd) ##
 This major release brings the following changes:
   * better performance 1: The way how the patterns are represented in memory has changed. Instead of a huge objegt tree a (typed) array is used. Arrays use less memory and typed arrays are not garbage collected. To build the typed array information about the length of the arrays are necessary. This information is stored in the pattern files. Make sure to also replace old pattern files by new ones! Since the format of the pattern files changes mergeAndPack.html and compressor.html have changed, too. So this is seen as a major release.
   * better performance 2: the regular expressions for finding words are less captive
+  * better performance 3: messaging and waiting for patterns to be loaded is more accurate
+  * better performance 4: some rare-case and not so rare JIT deoptimizations are gone
   * fixes [issue215](https://github.com/mnater/Hyphenator/issues/215)
+  * fixes issues with compound characters (only if String().normalize is supported)
+  * fixes an issue where a DOM Exception 1: Index greater as allowed occured
 -->
 
 ## [Version 4.3.0](https://github.com/mnater/Hyphenator/releases/tag/4.3.0) (October 17, 2014) ##
