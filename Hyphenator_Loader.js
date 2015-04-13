@@ -1,4 +1,4 @@
-/** @license Hyphenator_Loader X.Y.Z - client side hyphenation for webbrowsers
+/** @license Hyphenator_Loader 5.0.0 - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
  * 
