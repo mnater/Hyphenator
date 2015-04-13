@@ -452,7 +452,7 @@ Modern browsers are implementing CSS3-Hyphenation. In cases where CSS3-Hyphenati
 By default `useCSS3hyphenation` is off but you can make Hyphenator.js to use CSS3-Hyphenation by setting this option to true.
 
 ##### Example 20 – turning `useCSS3hyphenation`on #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({
@@ -492,7 +492,7 @@ The function is called with two arguments:
 The first argument is the word to be hyphenated, the second argument is the language of the element.
 This function must return a string (aka the word).
 ##### Example 22 – using `onbeforewordhyphenation` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
     Hyphenator.config({
