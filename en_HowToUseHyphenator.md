@@ -2,7 +2,7 @@
 ## Using Hyphenator as a Bookmarklet ##
 As a normal websurfer you'll have to create a [bookmarklet](http://en.wikipedia.org/wiki/Bookmarklet) by saving the following line of code as a bookmark:
 
-```
+```JavaScript
 javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='https://github.com/mnater/Hyphenator/raw/5.0.0/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
 ```
 
@@ -23,11 +23,12 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
     * Validating (not absolutely necessary, but again highly recommended): http://validator.w3.org/
   1. Use the [mergeAndPack-Tool](http://mnater.github.io/Hyphenator/mergeAndPack.html). Here you can define what languages will be used and set all the configuration options you want (click the info buttons for details).
   1. Save the resulting "all-in-one"-script in a file (call it for example "hyphenate.js") load it to the server and hook it into your html:
-```
+```HTML
 <script src="http://yourdomain.com/path/hyphenate.js" type="text/javascript">
 </script>
 ```
-> It will then load and execute automatically.
+
+It will then load and execute automatically.
 
 ### Step by Step (advanced): w/o Hyphenator\_Loader.js ###
   1. [Download](https://github.com/mnater/Hyphenator.js/releases/tag/5.0.0) an actual version of Hyphenator.js and copy it to your server (make sure to copy the folder called `patterns`, too).
@@ -37,22 +38,24 @@ For a webdeveloper who wishes to hyphenate his website, things are slightly more
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
     * Validating (not absolutely necessary, but again highly recommended): http://validator.w3.org/
   1. Include the script by adding the following code to your HTML-document:
-```
+```HTML
 <script src="http://yourdomain.com/path/Hyphenator.js" type="text/javascript">
 </script>
 ```
+
   1. Invoke the script:
-```
+```HTML
 <script type="text/javascript">
 	    Hyphenator.run();
 </script>
 ```
-> Done.
-> There are many interesting and useful settings you can change before you invoke the script. See [Documentation](https://github.com/mnater/Hyphenator.js/blob/wiki/en_PublicAPI.md) for more details.
+
+Done.
+There are many interesting and useful settings you can change before you invoke the script. See [Documentation](https://github.com/mnater/Hyphenator.js/blob/wiki/en_PublicAPI.md) for more details.
 
 ### Example ###
 What could be better than a [working example](http://mnater.github.io/Hyphenator/WorkingExample.html)?
-```
+```HTML
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
@@ -114,7 +117,7 @@ To use Hyphenator\_Loader.js follow the following steps:
 
 ### Example ###
 See this [example](https://github.com/mnater/Hyphenator/blob/master/Loader_Example.html):
-```
+```HTML
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
