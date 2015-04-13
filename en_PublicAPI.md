@@ -49,7 +49,7 @@ For detailed description of each property see below.
 
 #### Example 1 – defining a named object ####
 Define a special object `hyphenatorSettings` and pass it to `Hyphenator.config()`:
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var hyphenatorSettings = {
@@ -62,7 +62,7 @@ Define a special object `hyphenatorSettings` and pass it to `Hyphenator.config()
 ```
 
 #### Example 2 – defining an anonymous object ####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({
@@ -80,7 +80,7 @@ By default Hyphenator.js looks for elements with a classname `hyphenate`. Instea
 As of version 2.0.0 you can redefine the classname that marks elements that should not be hyphenated (defaults to `donthyphenate`).
 
 ##### Example 3 – redefining a classname #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({
@@ -108,7 +108,7 @@ You can change this class name.
 By default Hyphenator.js only hyphenates words with a minimum of 6 letters. You can change this values. The higher the value, the faster the script; the lower the value, the better the result.
 
 ##### Example 3 – redefining minwordlength #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({minwordlength : 8});
@@ -124,7 +124,7 @@ By default Hyphenator.js puts the [soft hyphen](http://en.wikipedia.org/wiki/Hyp
 **Note:** Use `String.fromCharCode()` for HTML-Entities!
 
 ##### Example 4 – redefining hyphenchar #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({hyphenchar : '|'});
@@ -140,7 +140,7 @@ When processing URLs and email-adresses a hyphen would invalidate the text. Thus
 **Note:** Use `String.fromCharCode()` for HTML-Entities!
 
 ##### Example 5 – redefining urlhyphenchar #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({urlhyphenchar : '·'});
@@ -154,7 +154,7 @@ When processing URLs and email-adresses a hyphen would invalidate the text. Thus
 If you want the user to be able to turn off an back on hyphenation, you can display the 'toggleBox' - by default a small light-grey button in the top right corner of the screen.
 
 ##### Example 6 – setting `displaytogglebox` to true #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({displaytogglebox : true});
@@ -172,7 +172,7 @@ Call the function Hyphenator.toggleHyphenation() to toggle hyphenation.
 Don't forget to set `displaytogglebox`!
 
 ##### Example 7 – redefining togglebox #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var hyphenatorSettings = {
@@ -207,7 +207,7 @@ Alternatively you can load the pattern files manually and disable the remote loa
 It's very important, that pattern files are loaded AFTER Hyphenator.js
 
 ##### Example 8 – setting `remoteloading` to false #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script src="patterns/en.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -222,7 +222,7 @@ It's very important, that pattern files are loaded AFTER Hyphenator.js
 Hyphenator caches words that have been hyphenated to fasten execution. If for some reason (memory?) you want to disable caching, you can do it.
 
 ##### Example 9 – setting `enablecache` to false #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({enablecache : false});
@@ -242,7 +242,7 @@ Hyphenator.js calls the function `onhyphenationdonecallback()` when hyphenation 
 
 You can redefine it to execute any code upon completing hyphenation.
 ##### Example 10 – redefining `onhyphenationdonecallback` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var hyphenatorSettings = {
@@ -262,7 +262,7 @@ In some cases, Hyphenator.js calls a method called error(). By default this meth
 This may not be suitable for deploymet, thus you can redefine the error()-method.
 
 ##### Example 11 – redefining `onerrorhandler` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var hyphenatorSettings = {
@@ -285,7 +285,7 @@ By default Hyphenator.js hides elements when they are hyphenated an makes them v
 You can change this behaviour in such a manner, that elements stay visible.
 
 ##### Example 12 – redefining `intermediatestate` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({intermediatestate : 'visible'});
@@ -302,7 +302,7 @@ By default Hyphenator.js looks for all elements with classname='hyphenate'. If y
 
 `selectorfunction` is really powerful, if it's used with a JavaScript-Framework like jQuery (see example), prototype or similar. These frameworks include functionalities to adress elements by special selectors.
 ##### Example 13 – defining `selectorfunction` #####
-```
+```HTML
 <script src="jquery.js" type="text/javascript"></script>
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -323,7 +323,7 @@ This property this property tells Hyphenator.js if it should remove hyphenation 
 
 By default this feature is enabled but you can turn it off if you like so.
 ##### Example 14 – setting `safecopy` to `false` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({safecopy: false});
@@ -339,7 +339,7 @@ Remember: due to the Same Origin Policy scripts can only access frames with the 
 
 By default this feature is turned off.
 ##### Example 15 – setting `doframes` to `true` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({doframes: true});
@@ -354,7 +354,7 @@ To speed up Hyphenator.js the pattern files are stored in [DOM storage](http://e
 
 By default the storage method is `localStorage` but you can change this to `sessionStorage` (option `'session'`)or turn this feature off (by setting `storagetype` to `'none'`.
 ##### Example 15 – setting `storagetype` to `none` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({storagetype: 'none'});
@@ -373,7 +373,7 @@ In some cases it may happen that one single syllable comes to the last line. To 
   * 3: last word is not hyphenated and last space is non breaking
 
 ##### Example 16 – setting `orphancontrol` to `2` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({orphancontrol: 2});
@@ -389,7 +389,7 @@ In some cases it may happen that one single syllable comes to the last line. To 
 Sometimes you like to run the script, prepare everything, but not to hyphenate yet. In this case you can set the option `dohyphenation` to false. Hyphenation can later be executed by calling Hyphenator.toggleHyphenation();
 
 ##### Example 17 – setting `dohyphenation` to `false` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({dohyphenation: false});
@@ -409,7 +409,7 @@ This is very and specially usefull for the toggle-button.
 Be carefull with this option!
 
 ##### Example 18 – setting `persistentconfig` to `true` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({
@@ -432,7 +432,7 @@ If you can't set a lang-attribute to the appropriate html-tag it may be interest
 This language is only taken in count, if no actual lang-tag can be found (i.e. just before the language-prompt occurs). In other words, setting this property prevents the language-prompt to ask you for the language…
 
 ##### Example 19 – setting `defaultlanguage` to `de` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({
@@ -472,7 +472,7 @@ In some cases (e.g. in multilanguage documents, where multiple patterns have to 
 Default: `unhide = 'wait'`
 
 ##### Example 21 – setting `unhide` to `progressive` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.config({
@@ -518,7 +518,7 @@ The function is called with two arguments:
 The first argument is the hyphenated word, the second argument is the language of the element.
 This function must return a string (aka the word).
 ##### Example 23 – using `onbeforewordhyphenation` #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
     Hyphenator.config({
@@ -537,7 +537,7 @@ This function must return a string (aka the word).
 ### void Hyphenator.run() ###
 Calling this method invokes hyphenation.
 #### Example ####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.run();
@@ -552,7 +552,7 @@ The second argumet takes a comma separated string (WITH spaces) of prehyphenated
 For Hyphenator.js >=2.0.0:
 If the first argument is an empty string, the exception is 'global', not for a specific language, but for all languages.
 #### Example ####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	Hyphenator.addExceptions('en','man-u-script, man-u-scripts');
@@ -568,7 +568,7 @@ On this page, the word FORTRAN will not be hyphenated at all.
 Hyphenates the target. If the target is a string, the hyphenated string is returned. If the target is an DOM-Object (an element), it will be hyphenated directly (as are its children).
 The patterns indicated by the 2nd attribute (`lang`) have to be loaded; if not, an error is thrown.
 #### Example ####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script src="patterns/en.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -592,7 +592,7 @@ Returns true if Hyphenator.js has been called by a bookmarklet.
 Calls Hyphenator.removeHyphenationFromDocument() if the state of Hyphenator is 3 or calls Hyphenator.hyphenateDocument() if the state is 4.
 Use his function when implementing  your own toggleBox.
 ##### Example – using Hyphenator.toggleHyphenation() #####
-```
+```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var hyphenatorSettings = {
