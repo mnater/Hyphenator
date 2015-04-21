@@ -1,8 +1,6 @@
-//use the following command to install Hyphenator.js:
-//bower install git://github.com/mnater/Hyphenator
 {
   "name": "Hyphenator",
-  "version": "X.Y.Z",
+  "version": "5.0.1",
   "main": "Hyphenator.js",
   "ignore": [
     "favicon.ico",
