@@ -2,7 +2,7 @@
 //bower install git://github.com/mnater/Hyphenator
 {
   "name": "Hyphenator",
-  "version": "5.0.0",
+  "version": "5.0.0(devel)",
   "main": "Hyphenator.js",
   "ignore": [
     "favicon.ico",
