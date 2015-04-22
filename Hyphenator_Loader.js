@@ -46,44 +46,48 @@ var Hyphenator_Loader = (function (window) {
         /**
          * @name Hyphenator-checkLangSupport
          * @description
-         * A function alias to document.createElementNS or document.createElement
-         * @type {function(string, string)}
-         * @param {string} lang language code of the language to check
-         * @param {string} longword a word (best 12 characters or longer) to be hyphenated
+         * Checks if hyphenation for all languages are supported
+         * @type {function()}
+         * @return {bool}
          * @private
          */
-        checkLangSupport = function (lang, longword) {
-            var shadow,
-                computedHeight,
-                //to be checked: may be this could be set in a different DOM (don't wait for loading…)
+        checkLangSupport = function () {
+            var shadowContainer,
+                shadow,
+                shadows = [],
+                lang,
+                i,
+                r = true,
                 bdy = window.document.getElementsByTagName('body')[0];
 
-                //create and append shadow-test-element
-            shadow = createElem('div');
-            shadow.style.width = '5em';
-            shadow.style.MozHyphens = 'auto';
-            shadow.style['-webkit-hyphens'] = 'auto';
-            shadow.style['-ms-hyphens'] = 'auto';
-            shadow.style.hyphens = 'auto';
-            shadow.style.fontSize = '12px';
-            shadow.style.lineHeight = '12px';
-            shadow.style.wordWrap = 'normal';
-            shadow.style.visibility = 'hidden';
+            shadowContainer = createElem('div');
+            shadowContainer.style.MozHyphens = 'auto';
+            shadowContainer.style['-webkit-hyphens'] = 'auto';
+            shadowContainer.style['-ms-hyphens'] = 'auto';
+            shadowContainer.style.hyphens = 'auto';
+            shadowContainer.style.fontSize = '12px';
+            shadowContainer.style.lineHeight = '12px';
+            shadowContainer.style.wordWrap = 'normal';
+            shadowContainer.style.visibility = 'hidden';
 
-            shadow.lang = lang;
-            shadow.style['-webkit-locale'] = "'" + lang + "'";
-            shadow.innerHTML = longword;
+            for (lang in languages) {
+                if (languages.hasOwnProperty(lang)) {
+                    shadow = createElem('div');
+                    shadow.style.width = '5em';
+                    shadow.lang = lang;
+                    shadow.style['-webkit-locale'] = "'" + lang + "'";
+                    shadow.appendChild(window.document.createTextNode(languages[lang]));
+                    shadowContainer.appendChild(shadow);
+                    shadows.push(shadow);
+                }
+            }
 
-            bdy.appendChild(shadow);
-
-            //measure its height
-            //computedHeight = parseInt(window.getComputedStyle(shadow, null).height.slice(0, -2), 10);
-            computedHeight = shadow.offsetHeight;
-
-            //remove shadow element
-            bdy.removeChild(shadow);
-
-            return (computedHeight > 12) ? true : false;
+            bdy.appendChild(shadowContainer);
+            for (i = 0; i < shadows.length; i += 1) {
+                r = (shadows[i].offsetHeight > 12) && r;
+            }
+            bdy.removeChild(shadowContainer);
+            return r;
         },
 
         /**
@@ -115,7 +119,7 @@ var Hyphenator_Loader = (function (window) {
             hyphenatorLoaded();
         },
 
-        runner = function () {
+        /*runner = function () {
             var loadHyphenator = false, r, results = {}, lang;
             for (lang in languages) {
                 if (languages.hasOwnProperty(lang)) {
@@ -125,6 +129,12 @@ var Hyphenator_Loader = (function (window) {
                 }
             }
             if (loadHyphenator) {
+                loadNrunHyphenator(config);
+            }
+        },*/
+        runner = function () {
+            var allLangsSupported = checkLangSupport();
+            if (!allLangsSupported) {
                 loadNrunHyphenator(config);
             }
         },
