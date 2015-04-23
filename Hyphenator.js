@@ -1346,7 +1346,7 @@ var Hyphenator = (function (window) {
                                 //try catch isn't enough for webkit
                                 try {
                                     //opera throws only on document.toString-access
-                                    haveAccess = window.frames[i].document.toString();
+                                    haveAccess = w.frames[i].document.toString();
                                 } catch (err) {
                                     haveAccess = undefined;
                                 }
@@ -2156,6 +2156,7 @@ var Hyphenator = (function (window) {
                 myBox.style.position = 'absolute';
                 myBox.style.top = '0px';
                 myBox.style.right = '0px';
+                myBox.style.zIndex = '1000';
                 myBox.style.margin = '0';
                 myBox.style.backgroundColor = '#AAAAAA';
                 myBox.style.color = '#FFFFFF';
