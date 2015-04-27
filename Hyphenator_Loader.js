@@ -1,4 +1,4 @@
-/** @license Hyphenator_Loader 5.0.0 - client side hyphenation for webbrowsers
+/** @license Hyphenator_Loader 5.0.0(devel) - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
  * 
@@ -11,7 +11,7 @@
  * @description Checks if there's CSS-hyphenation available for the given languages and
  * loads and runs Hyphenator if there's no CSS-hyphenation
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 1.0.0
+ * @version 5.0.0(devel)
  * @namespace Holds all methods and properties
  */
 
@@ -46,44 +46,48 @@ var Hyphenator_Loader = (function (window) {
         /**
          * @name Hyphenator-checkLangSupport
          * @description
-         * A function alias to document.createElementNS or document.createElement
-         * @type {function(string, string)}
-         * @param {string} lang language code of the language to check
-         * @param {string} longword a word (best 12 characters or longer) to be hyphenated
+         * Checks if hyphenation for all languages are supported
+         * @type {function()}
+         * @return {bool}
          * @private
          */
-        checkLangSupport = function (lang, longword) {
-            var shadow,
-                computedHeight,
-                //to be checked: may be this could be set in a different DOM (don't wait for loading…)
+        checkLangSupport = function () {
+            var shadowContainer,
+                shadow,
+                shadows = [],
+                lang,
+                i,
+                r = true,
                 bdy = window.document.getElementsByTagName('body')[0];
 
-                //create and append shadow-test-element
-            shadow = createElem('div');
-            shadow.style.width = '5em';
-            shadow.style.MozHyphens = 'auto';
-            shadow.style['-webkit-hyphens'] = 'auto';
-            shadow.style['-ms-hyphens'] = 'auto';
-            shadow.style.hyphens = 'auto';
-            shadow.style.fontSize = '12px';
-            shadow.style.lineHeight = '12px';
-            shadow.style.wordWrap = 'normal';
-            shadow.style.visibility = 'hidden';
+            shadowContainer = createElem('div');
+            shadowContainer.style.MozHyphens = 'auto';
+            shadowContainer.style['-webkit-hyphens'] = 'auto';
+            shadowContainer.style['-ms-hyphens'] = 'auto';
+            shadowContainer.style.hyphens = 'auto';
+            shadowContainer.style.fontSize = '12px';
+            shadowContainer.style.lineHeight = '12px';
+            shadowContainer.style.wordWrap = 'normal';
+            shadowContainer.style.visibility = 'hidden';
 
-            shadow.lang = lang;
-            shadow.style['-webkit-locale'] = "'" + lang + "'";
-            shadow.innerHTML = longword;
+            for (lang in languages) {
+                if (languages.hasOwnProperty(lang)) {
+                    shadow = createElem('div');
+                    shadow.style.width = '5em';
+                    shadow.lang = lang;
+                    shadow.style['-webkit-locale'] = "'" + lang + "'";
+                    shadow.appendChild(window.document.createTextNode(languages[lang]));
+                    shadowContainer.appendChild(shadow);
+                    shadows.push(shadow);
+                }
+            }
 
-            bdy.appendChild(shadow);
-
-            //measure its height
-            //computedHeight = parseInt(window.getComputedStyle(shadow, null).height.slice(0, -2), 10);
-            computedHeight = shadow.offsetHeight;
-
-            //remove shadow element
-            bdy.removeChild(shadow);
-
-            return (computedHeight > 12) ? true : false;
+            bdy.appendChild(shadowContainer);
+            for (i = 0; i < shadows.length; i += 1) {
+                r = (shadows[i].offsetHeight > 12) && r;
+            }
+            bdy.removeChild(shadowContainer);
+            return r;
         },
 
         /**
@@ -116,15 +120,8 @@ var Hyphenator_Loader = (function (window) {
         },
 
         runner = function () {
-            var loadHyphenator = false, r, results = {}, lang;
-            for (lang in languages) {
-                if (languages.hasOwnProperty(lang)) {
-                    r = checkLangSupport(lang, languages[lang]);
-                    results[lang] = r;
-                    loadHyphenator = loadHyphenator || !r;
-                }
-            }
-            if (loadHyphenator) {
+            var allLangsSupported = checkLangSupport();
+            if (!allLangsSupported) {
                 loadNrunHyphenator(config);
             }
         },
