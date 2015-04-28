@@ -1754,7 +1754,7 @@ var Hyphenator = (function (window) {
                         charCode = patterns.charCodeAt(charPos);
                         if ((charPos + 1) % patternSizeInt !== 0) {
                             //more to come…
-                            if (charCode >= 49 && charCode <= 57) {
+                            if (charCode <= 57 && charCode >= 49) {
                                 //charCode is a digit
                                 valueStore.add(charCode - 48);
                                 prevWasDigit = true;
@@ -1779,7 +1779,7 @@ var Hyphenator = (function (window) {
                             }
                         } else {
                             //last part of pattern
-                            if (charCode >= 49 && charCode <= 57) {
+                            if (charCode <= 57 && charCode >= 49) {
                                 //the last charCode is a digit
                                 valueStore.add(charCode - 48);
                                 indexedTrie[rowStart + mappedCharCode * 2 + 1] = valueStore.finalize();
@@ -2296,7 +2296,7 @@ var Hyphenator = (function (window) {
                     wwhp[pstart] = 0;
                     charCode = ww.charCodeAt(pstart);
                     if (charMap.hasOwnProperty(charCode)) {
-                        wwAsMappedCharCode[pstart] = charMap[ww.charCodeAt(pstart)];
+                        wwAsMappedCharCode[pstart] = charMap[charCode];
                     } else {
                         wwAsMappedCharCode[pstart] = -1;
                     }
@@ -2604,7 +2604,7 @@ var Hyphenator = (function (window) {
                 lo = Hyphenator.languages[lang];
                 hyphenate = function (match, word, url, mail) {
                     var r;
-                    if ((url !== undefined && url !== "") || (mail !== "" && mail !== undefined)) { //IE<=8 returns "" instead of undefined
+                    if (!!url || !!mail) {
                         r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
