@@ -2280,7 +2280,7 @@ var Hyphenator = (function (window) {
                 hw = parts.join('-');
             } else {
                 ww = word.toLowerCase();
-                if (String().normalize) {
+                if (String.prototype.normalize) {
                     ww = ww.normalize();
                 }
                 if (lo.hasOwnProperty("charSubstitution")) {
@@ -2295,7 +2295,7 @@ var Hyphenator = (function (window) {
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     wwhp[pstart] = 0;
                     charCode = ww.charCodeAt(pstart);
-                    if (charMap.hasOwnProperty(charCode)) {
+                    if (charMap[charCode] !== undefined) {
                         wwAsMappedCharCode[pstart] = charMap[charCode];
                     } else {
                         wwAsMappedCharCode[pstart] = -1;
