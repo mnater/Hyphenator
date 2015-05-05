@@ -2016,7 +2016,7 @@ var Hyphenator = (function (window) {
                     lo.exceptions = {};
                 }
                 convertPatternsToArray(lo);
-                if (String().normalize) {
+                if (String.prototype.normalize) {
                     wrd = '[\\w' + lo.specialChars + lo.specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                 } else {
                     wrd = '[\\w' + lo.specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
@@ -2109,7 +2109,7 @@ var Hyphenator = (function (window) {
                             delete exceptions[lang];
                         }
                         //Replace genRegExp since it may have been changed:
-                        if (String().normalize) {
+                        if (String.prototype.normalize) {
                             tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + Hyphenator.languages[lang].specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                         } else {
                             tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
@@ -2658,24 +2658,26 @@ var Hyphenator = (function (window) {
          */
 
         hyphenateLanguageElements = function (lang) {
-            function bind(fun, arg1, arg2) {
+            /*function bind(fun, arg1, arg2) {
                 return function () {
                     return fun(arg1, arg2);
                 };
-            }
+            }*/
             var i, l;
             if (lang === '*') {
                 elements.each(function (lang, ellist) {
                     var j, le = ellist.length;
                     for (j = 0; j < le; j += 1) {
-                        zeroTimeOut(bind(hyphenateElement, lang, ellist[j]));
+                        //zeroTimeOut(bind(hyphenateElement, lang, ellist[j]));
+                        hyphenateElement(lang, ellist[j]);
                     }
                 });
             } else {
                 if (elements.list.hasOwnProperty(lang)) {
                     l = elements.list[lang].length;
                     for (i = 0; i < l; i += 1) {
-                        zeroTimeOut(bind(hyphenateElement, lang, elements.list[lang][i]));
+                        //zeroTimeOut(bind(hyphenateElement, lang, elements.list[lang][i]));
+                        hyphenateElement(lang, elements.list[lang][i]);
                     }
                 }
             }
@@ -3101,10 +3103,10 @@ var Hyphenator = (function (window) {
                     }
                     autoSetMainLanguage(undefined);
                     gatherDocumentInfos();
-                    prepare(hyphenateLanguageElements);
                     if (displayToggleBox) {
                         toggleBox();
                     }
+                    prepare(hyphenateLanguageElements);
                 } catch (e) {
                     onError(e);
                 }
