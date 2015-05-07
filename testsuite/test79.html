@@ -19,29 +19,33 @@
         </style>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
+            var result = {};
             if (parent != window) {
                 Hyphenator.config({
-                    'onhyphenationdonecallback': function (href) {
-                        var t1, t2, r1, r2, desc, msg;
-                        if (href.indexOf('test79_frame.html') !== -1) {
+                    'onhyphenationdonecallback': function (src) {
+                        var t1, r1, desc, msg;
+                        console.log(src);
+                        if (src.indexOf('frame') !== -1) {
+                            t1 = frames.ifr.document.getElementById('test').innerHTML;
+                            r1 = frames.ifr.document.getElementById('ref').innerHTML;
+                            result.frame1 = (t1 == r1); 
+                        }
+                        if (src.indexOf('test79.html') !== -1) {
                             t1 = window.document.getElementById('test').innerHTML;
                             r1 = window.document.getElementById('ref').innerHTML;
-                            t2 = frames.ifr.document.getElementById('test').innerHTML;
-                            r2 = frames.ifr.document.getElementById('ref').innerHTML;
                             desc = window.document.getElementById('desc').innerHTML;
+                            result.main = (t1 == r1); 
+                        }
+                        if (result.hasOwnProperty('frame1') && result.hasOwnProperty('main')) {
                             msg = {
                                 desc: desc,
-                                index: 79
+                                index: 79,
+                                result: (result.frame1 && result.main ? "passed" : "failed")
                             };
-                            if ((t1 == r1) && (t2 == r2)) {
-                                msg.result = 'passed';
-                            } else {
-                                msg.result = 'failed';
-                            }
                             parent.postMessage(JSON.stringify(msg), window.location.href);
                         }
                     }
-                });         
+                });
             }
             Hyphenator.config({
                 hyphenchar:'|',
