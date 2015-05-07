@@ -2532,7 +2532,7 @@ var Hyphenator = (function (window) {
                     CSSEditors[i].clearChanges();
                 }
                 for (doc in doclist) {
-                    if (doclist.hasOwnProperty(doc)) {
+                    if (doclist.hasOwnProperty(doc) && doc === contextWindow.location.href) {
                         onHyphenationDone(doc);
                     }
                 }
