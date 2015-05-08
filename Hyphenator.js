@@ -2765,7 +2765,7 @@ var Hyphenator = (function (window) {
                                 return res;
                             };
                         /*jslint regexp: true*/
-                        value = value.replace(/-(?:\d{2,}|[^1])/g, unpack);
+                        value = value.replace(/-(?:\d{2,}|[2-9])/g, unpack);
                         return value;
                     },
                     setItem: function (name, value) {
