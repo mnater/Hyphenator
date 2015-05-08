@@ -2747,23 +2747,24 @@ var Hyphenator = (function (window) {
                         return (!!val) ? true : false;
                     },
                     getItem: function (name) {
-                        var value = this.store.getItem(this.prefix + name);
-                        /*jslint unparam: true*/
-                        value = value.replace(/-(\d{2,}|[2-9])/g, function unpack(ignore, p1) {
-                            //convert negative numbers < -1 to zeros e.g. '-3' -> '0,0,0'
-                            var n = parseInt(p1, 10),
-                                res = "";
-                            if (String.prototype.repeat) {
-                                res = "0,".repeat(n - 1);
-                            } else {
-                                while (n > 1) {
-                                    res += "0,";
-                                    n -= 1;
+                        var store = this.store.getItem(this.prefix + name),
+                            value,
+                            unpack = function (match) {
+                                var n = parseInt(match, 10) * -1,
+                                    res = "";
+                                if (String.prototype.repeat) {
+                                    res = "0,".repeat(n - 1);
+                                } else {
+                                    while (n > 1) {
+                                        res += "0,";
+                                        n -= 1;
+                                    }
                                 }
-                            }
-                            res += "0";
-                            return res;
-                        });
+                                res += "0";
+                                return res;
+                            };
+                        /*jslint regexp: true*/
+                        value = store.replace(/-(?:\d{2,}|[^1])/g, unpack);
                         return value;
                     },
                     setItem: function (name, value) {
