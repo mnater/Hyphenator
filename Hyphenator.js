@@ -2025,7 +2025,7 @@ var Hyphenator = (function (window) {
                 lo.prepared = true;
             }
             if (!!storage) {
-                storage.deferred.whenAllDone = function () {
+                storage.deferred.push(function () {
                     var loForStorage = {
                         charMap: {code2int: lo.charMap.code2int},
                         charSubstitution: lo.charSubstitution,
@@ -2040,7 +2040,7 @@ var Hyphenator = (function (window) {
                         }
                     };
                     storage.setItem(lang, window.JSON.stringify(loForStorage));
-                };
+                });
             }
         },
 
@@ -2536,9 +2536,11 @@ var Hyphenator = (function (window) {
                         onHyphenationDone(doc);
                     }
                 }
-                if (!!storage && !!storage.deferred.whenAllDone) {
-                    storage.deferred.whenAllDone.call();
-                    storage.deferred.whenAllDone = undefined;
+                if (!!storage && storage.deferred.length > 0) {
+                    for (i = 0; i < storage.deferred.length; i += 1) {
+                        storage.deferred[i].call();
+                    }
+                    storage.deferred = [];
                 }
             }
         },
@@ -2741,14 +2743,13 @@ var Hyphenator = (function (window) {
                 storage = {
                     prefix: 'Hyphenator_' + Hyphenator.version + '_',
                     store: s,
-                    deferred: {},
+                    deferred: [],
                     test: function (name) {
                         var val = this.store.getItem(this.prefix + name);
                         return (!!val) ? true : false;
                     },
                     getItem: function (name) {
-                        var store = this.store.getItem(this.prefix + name),
-                            value,
+                        var value = this.store.getItem(this.prefix + name),
                             unpack = function (match) {
                                 var n = parseInt(match, 10) * -1,
                                     res = "";
@@ -2764,16 +2765,17 @@ var Hyphenator = (function (window) {
                                 return res;
                             };
                         /*jslint regexp: true*/
-                        value = store.replace(/-(?:\d{2,}|[^1])/g, unpack);
+                        value = value.replace(/-(?:\d{2,}|[^1])/g, unpack);
                         return value;
                     },
                     setItem: function (name, value) {
-                        /*jslint unparam: true, bitwise: true*/
-                        value = value.replace(/((0,){2,})/g, function pack(ignore, p1) {
+                        var pack = function (match) {
+                            /*jslint bitwise: true*/
                             //converts a series of zeros > 2 to a negative number e.g. '0,0,0' -> '-3'
                             //return p1.length / -2 + ",";
-                            return ~(p1.length >> 1) + 1 + ",";
-                        });
+                            return ~(match.length >> 1) + 1 + ",";
+                        };
+                        value = value.replace(/(?:0,){2,}/g, pack);
                         try {
                             this.store.setItem(this.prefix + name, value);
                         } catch (e) {
