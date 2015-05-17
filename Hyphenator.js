@@ -2281,7 +2281,7 @@ var Hyphenator = (function (window) {
             } else {
                 ww = word.toLowerCase();
                 if (String.prototype.normalize) {
-                    ww = ww.normalize();
+                    ww = ww.normalize("NFD");
                 }
                 if (lo.hasOwnProperty("charSubstitution")) {
                     ww = doCharSubst(lo.charSubstitution, ww);
@@ -2764,7 +2764,6 @@ var Hyphenator = (function (window) {
                                 res += "0";
                                 return res;
                             };
-                        /*jslint regexp: true*/
                         value = value.replace(/-(?:\d{2,}|[2-9])/g, unpack);
                         return value;
                     },
