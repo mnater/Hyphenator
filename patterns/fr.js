@@ -2,7 +2,7 @@
 // http://tug_org/svn/texhyphen/trunk/collaboration/repository/hyphenator/
 /*global Hyphenator*/
 Hyphenator.languages['fr'] = {
-    leftmin: 2,
+    leftmin: 3,
     rightmin: 3,
     specialChars: "àâçèéêîïôûœ’'",
     patterns: {
