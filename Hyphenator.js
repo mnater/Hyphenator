@@ -1,4 +1,4 @@
-/** @license Hyphenator 5.0.0(devel) - client side hyphenation for webbrowsers
+/** @license Hyphenator 5.0.1(devel) - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
  * 
@@ -19,7 +19,7 @@
  * @global
  * @namespace Hyphenator
  * @author Mathias Nater, <mathias@mnn.ch>
- * @version 5.0.0(devel)
+ * @version 5.0.1(devel)
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
  * &lt;script type = "text/javascript"&gt;
@@ -2025,7 +2025,7 @@ var Hyphenator = (function (window) {
                 lo.prepared = true;
             }
             if (!!storage) {
-                storage.deferred.whenAllDone = function () {
+                storage.deferred.push(function () {
                     var loForStorage = {
                         charMap: {code2int: lo.charMap.code2int},
                         charSubstitution: lo.charSubstitution,
@@ -2040,7 +2040,7 @@ var Hyphenator = (function (window) {
                         }
                     };
                     storage.setItem(lang, window.JSON.stringify(loForStorage));
-                };
+                });
             }
         },
 
@@ -2281,7 +2281,7 @@ var Hyphenator = (function (window) {
             } else {
                 ww = word.toLowerCase();
                 if (String.prototype.normalize) {
-                    ww = ww.normalize();
+                    ww = ww.normalize("NFD");
                 }
                 if (lo.hasOwnProperty("charSubstitution")) {
                     ww = doCharSubst(lo.charSubstitution, ww);
@@ -2536,9 +2536,11 @@ var Hyphenator = (function (window) {
                         onHyphenationDone(doc);
                     }
                 }
-                if (!!storage && !!storage.deferred.whenAllDone) {
-                    storage.deferred.whenAllDone.call();
-                    storage.deferred.whenAllDone = undefined;
+                if (!!storage && storage.deferred.length > 0) {
+                    for (i = 0; i < storage.deferred.length; i += 1) {
+                        storage.deferred[i].call();
+                    }
+                    storage.deferred = [];
                 }
             }
         },
@@ -2741,38 +2743,38 @@ var Hyphenator = (function (window) {
                 storage = {
                     prefix: 'Hyphenator_' + Hyphenator.version + '_',
                     store: s,
-                    deferred: {},
+                    deferred: [],
                     test: function (name) {
                         var val = this.store.getItem(this.prefix + name);
                         return (!!val) ? true : false;
                     },
                     getItem: function (name) {
-                        var value = this.store.getItem(this.prefix + name);
-                        /*jslint unparam: true*/
-                        value = value.replace(/-(\d{2,}|[2-9])/g, function unpack(ignore, p1) {
-                            //convert negative numbers < -1 to zeros e.g. '-3' -> '0,0,0'
-                            var n = parseInt(p1, 10),
-                                res = "";
-                            if (String.prototype.repeat) {
-                                res = "0,".repeat(n - 1);
-                            } else {
-                                while (n > 1) {
-                                    res += "0,";
-                                    n -= 1;
+                        var value = this.store.getItem(this.prefix + name),
+                            unpack = function (match) {
+                                var n = parseInt(match, 10) * -1,
+                                    res = "";
+                                if (String.prototype.repeat) {
+                                    res = "0,".repeat(n - 1);
+                                } else {
+                                    while (n > 1) {
+                                        res += "0,";
+                                        n -= 1;
+                                    }
                                 }
-                            }
-                            res += "0";
-                            return res;
-                        });
+                                res += "0";
+                                return res;
+                            };
+                        value = value.replace(/-(?:\d{2,}|[2-9])/g, unpack);
                         return value;
                     },
                     setItem: function (name, value) {
-                        /*jslint unparam: true, bitwise: true*/
-                        value = value.replace(/((0,){2,})/g, function pack(ignore, p1) {
+                        var pack = function (match) {
+                            /*jslint bitwise: true*/
                             //converts a series of zeros > 2 to a negative number e.g. '0,0,0' -> '-3'
                             //return p1.length / -2 + ",";
-                            return ~(p1.length >> 1) + 1 + ",";
-                        });
+                            return ~(match.length >> 1) + 1 + ",";
+                        };
+                        value = value.replace(/(?:0,){2,}/g, pack);
                         try {
                             this.store.setItem(this.prefix + name, value);
                         } catch (e) {
