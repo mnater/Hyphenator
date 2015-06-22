@@ -2281,7 +2281,7 @@ var Hyphenator = (function (window) {
             } else {
                 ww = word.toLowerCase();
                 if (String.prototype.normalize) {
-                    ww = ww.normalize("NFD");
+                    ww = ww.normalize("NFC");
                 }
                 if (lo.hasOwnProperty("charSubstitution")) {
                     ww = doCharSubst(lo.charSubstitution, ww);
