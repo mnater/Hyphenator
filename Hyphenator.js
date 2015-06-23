@@ -1,4 +1,5 @@
-/** @license Hyphenator 5.0.1 - client side hyphenation for webbrowsers
+
+/** @license Hyphenator 5.0.2 - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
  * 
@@ -19,7 +20,7 @@
  * @global
  * @namespace Hyphenator
  * @author Mathias Nater, <mathias@mnn.ch>
- * @version 5.0.1
+ * @version 5.0.2
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
  * &lt;script type = "text/javascript"&gt;
@@ -1680,17 +1681,19 @@ var Hyphenator = (function (window) {
             this.actualIndex = 2;
             this.lastValueIndex = 2;
             this.add = function (p) {
-                if (p !== 0) {
-                    this.keys[this.actualIndex] = p;
-                    this.lastValueIndex = this.actualIndex;
-                }
+                this.keys[this.actualIndex] = p;
+                this.lastValueIndex = this.actualIndex;
+                this.actualIndex += 1;
+            };
+            this.add0 = function () {
+                //just do a step, since array is initialized with zeroes
                 this.actualIndex += 1;
             };
             this.finalize = function () {
                 var start = this.startIndex;
                 this.keys[start] = this.lastValueIndex - start;
                 this.startIndex = this.lastValueIndex + 1;
-                this.actualIndex = this.startIndex + 1;
+                this.actualIndex = this.lastValueIndex + 2;
                 return start;
             };
         },
@@ -1754,14 +1757,14 @@ var Hyphenator = (function (window) {
                         charCode = patterns.charCodeAt(charPos);
                         if ((charPos + 1) % patternSizeInt !== 0) {
                             //more to come…
-                            if (charCode >= 49 && charCode <= 57) {
+                            if (charCode <= 57 && charCode >= 49) {
                                 //charCode is a digit
                                 valueStore.add(charCode - 48);
                                 prevWasDigit = true;
                             } else {
                                 //charCode is alphabetical
                                 if (!prevWasDigit) {
-                                    valueStore.add(0);
+                                    valueStore.add0();
                                 }
                                 prevWasDigit = false;
                                 if (nextRowStart === -1) {
@@ -1779,16 +1782,16 @@ var Hyphenator = (function (window) {
                             }
                         } else {
                             //last part of pattern
-                            if (charCode >= 49 && charCode <= 57) {
+                            if (charCode <= 57 && charCode >= 49) {
                                 //the last charCode is a digit
                                 valueStore.add(charCode - 48);
                                 indexedTrie[rowStart + mappedCharCode * 2 + 1] = valueStore.finalize();
                             } else {
                                 //the last charCode is alphabetical
                                 if (!prevWasDigit) {
-                                    valueStore.add(0);
+                                    valueStore.add0();
                                 }
-                                valueStore.add(0);
+                                valueStore.add0();
                                 if (nextRowStart === -1) {
                                     nextRowStart = trieNextEmptyRow + trieRowLength;
                                     trieNextEmptyRow = nextRowStart;
@@ -1979,7 +1982,6 @@ var Hyphenator = (function (window) {
          * - cache
          * - exceptions
          * Converts the patterns to a trie using {@link Hyphenator~convertPatterns}
-         * If storage is active the object is stored there.
          * @access private
          * @param {string} lang The language of the language object
          */
@@ -2016,31 +2018,13 @@ var Hyphenator = (function (window) {
                     lo.exceptions = {};
                 }
                 convertPatternsToArray(lo);
-                if (String().normalize) {
+                if (String.prototype.normalize) {
                     wrd = '[\\w' + lo.specialChars + lo.specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                 } else {
                     wrd = '[\\w' + lo.specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                 }
                 lo.genRegExp = new RegExp('(' + wrd + ')|(' + url + ')|(' + mail + ')', 'gi');
                 lo.prepared = true;
-            }
-            if (!!storage) {
-                storage.deferred.whenAllDone = function () {
-                    var loForStorage = {
-                        charMap: {code2int: lo.charMap.code2int},
-                        charSubstitution: lo.charSubstitution,
-                        exceptions: lo.exceptions,
-                        indexedTrie: Array.prototype.slice.call(lo.indexedTrie),
-                        leftmin: lo.leftmin,
-                        prepared: lo.prepared,
-                        rightmin: lo.rightmin,
-                        specialChars: lo.specialChars,
-                        valueStore: {
-                            keys: Array.prototype.slice.call(lo.valueStore.keys)
-                        }
-                    };
-                    storage.setItem(lang, window.JSON.stringify(loForStorage));
-                };
             }
         },
 
@@ -2051,7 +2035,7 @@ var Hyphenator = (function (window) {
          * that the patternfiles are loaded, all conversions are made and the callback is called.
          * If storage is active the object is retrieved there.
          * If RemoteLoading is on (default), it loads the pattern files and repeatedly checks Hyphenator.languages.
-         * If a patternfile is loaded the patterns are
+         * If a patternfile is loaded the patterns are stored in storage (if enabled),
          * converted to their object style and the lang-object extended.
          * Finally the callback is called.
          * @access private
@@ -2064,6 +2048,9 @@ var Hyphenator = (function (window) {
                         if (docLanguages.hasOwnProperty(l)) {
                             if (Hyphenator.languages.hasOwnProperty(l)) {
                                 delete docLanguages[l];
+                                if (!!storage) {
+                                    storage.setItem(l, window.JSON.stringify(Hyphenator.languages[l]));
+                                }
                                 prepareLanguagesObj(l);
                                 callback(l);
                             }
@@ -2085,11 +2072,7 @@ var Hyphenator = (function (window) {
                 if (docLanguages.hasOwnProperty(lang)) {
                     if (!!storage && storage.test(lang)) {
                         Hyphenator.languages[lang] = window.JSON.parse(storage.getItem(lang));
-                        if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) {
-                            Hyphenator.languages[lang].indexedTrie = new window.Int32Array(Hyphenator.languages[lang].indexedTrie);
-                            Hyphenator.languages[lang].valueStore.keys = new window.Uint8Array(Hyphenator.languages[lang].valueStore.keys);
-                        }
-                        //console.log(Hyphenator.languages[lang]);
+                        prepareLanguagesObj(lang);
                         if (exceptions.hasOwnProperty('global')) {
                             tmp1 = convertExceptionsToObject(exceptions.global);
                             for (tmp2 in tmp1) {
@@ -2109,7 +2092,7 @@ var Hyphenator = (function (window) {
                             delete exceptions[lang];
                         }
                         //Replace genRegExp since it may have been changed:
-                        if (String().normalize) {
+                        if (String.prototype.normalize) {
                             tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + Hyphenator.languages[lang].specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
                         } else {
                             tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}';
@@ -2280,8 +2263,8 @@ var Hyphenator = (function (window) {
                 hw = parts.join('-');
             } else {
                 ww = word.toLowerCase();
-                if (String().normalize) {
-                    ww = ww.normalize();
+                if (String.prototype.normalize) {
+                    ww = ww.normalize("NFC");
                 }
                 if (lo.hasOwnProperty("charSubstitution")) {
                     ww = doCharSubst(lo.charSubstitution, ww);
@@ -2295,8 +2278,8 @@ var Hyphenator = (function (window) {
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     wwhp[pstart] = 0;
                     charCode = ww.charCodeAt(pstart);
-                    if (charMap.hasOwnProperty(charCode)) {
-                        wwAsMappedCharCode[pstart] = charMap[ww.charCodeAt(pstart)];
+                    if (charMap[charCode] !== undefined) {
+                        wwAsMappedCharCode[pstart] = charMap[charCode];
                     } else {
                         wwAsMappedCharCode[pstart] = -1;
                     }
@@ -2532,13 +2515,15 @@ var Hyphenator = (function (window) {
                     CSSEditors[i].clearChanges();
                 }
                 for (doc in doclist) {
-                    if (doclist.hasOwnProperty(doc)) {
+                    if (doclist.hasOwnProperty(doc) && doc === contextWindow.location.href) {
                         onHyphenationDone(doc);
                     }
                 }
-                if (!!storage && !!storage.deferred.whenAllDone) {
-                    storage.deferred.whenAllDone.call();
-                    storage.deferred.whenAllDone = undefined;
+                if (!!storage && storage.deferred.length > 0) {
+                    for (i = 0; i < storage.deferred.length; i += 1) {
+                        storage.deferred[i].call();
+                    }
+                    storage.deferred = [];
                 }
             }
         },
@@ -2604,7 +2589,7 @@ var Hyphenator = (function (window) {
                 lo = Hyphenator.languages[lang];
                 hyphenate = function (match, word, url, mail) {
                     var r;
-                    if ((url !== undefined && url !== "") || (mail !== "" && mail !== undefined)) { //IE<=8 returns "" instead of undefined
+                    if (!!url || !!mail) {
                         r = hyphenateURL(match);
                     } else {
                         r = hyphenateWord(lo, lang, word);
@@ -2658,24 +2643,26 @@ var Hyphenator = (function (window) {
          */
 
         hyphenateLanguageElements = function (lang) {
-            function bind(fun, arg1, arg2) {
+            /*function bind(fun, arg1, arg2) {
                 return function () {
                     return fun(arg1, arg2);
                 };
-            }
+            }*/
             var i, l;
             if (lang === '*') {
                 elements.each(function (lang, ellist) {
                     var j, le = ellist.length;
                     for (j = 0; j < le; j += 1) {
-                        zeroTimeOut(bind(hyphenateElement, lang, ellist[j]));
+                        //zeroTimeOut(bind(hyphenateElement, lang, ellist[j]));
+                        hyphenateElement(lang, ellist[j]);
                     }
                 });
             } else {
                 if (elements.list.hasOwnProperty(lang)) {
                     l = elements.list[lang].length;
                     for (i = 0; i < l; i += 1) {
-                        zeroTimeOut(bind(hyphenateElement, lang, elements.list[lang][i]));
+                        //zeroTimeOut(bind(hyphenateElement, lang, elements.list[lang][i]));
+                        hyphenateElement(lang, elements.list[lang][i]);
                     }
                 }
             }
@@ -2739,38 +2726,15 @@ var Hyphenator = (function (window) {
                 storage = {
                     prefix: 'Hyphenator_' + Hyphenator.version + '_',
                     store: s,
-                    deferred: {},
+                    deferred: [],
                     test: function (name) {
                         var val = this.store.getItem(this.prefix + name);
                         return (!!val) ? true : false;
                     },
                     getItem: function (name) {
-                        var value = this.store.getItem(this.prefix + name);
-                        /*jslint unparam: true*/
-                        value = value.replace(/-(\d{2,}|[2-9])/g, function unpack(ignore, p1) {
-                            //convert negative numbers < -1 to zeros e.g. '-3' -> '0,0,0'
-                            var n = parseInt(p1, 10),
-                                res = "";
-                            if (String.prototype.repeat) {
-                                res = "0,".repeat(n - 1);
-                            } else {
-                                while (n > 1) {
-                                    res += "0,";
-                                    n -= 1;
-                                }
-                            }
-                            res += "0";
-                            return res;
-                        });
-                        return value;
+                        return this.store.getItem(this.prefix + name);
                     },
                     setItem: function (name, value) {
-                        /*jslint unparam: true, bitwise: true*/
-                        value = value.replace(/((0,){2,})/g, function pack(ignore, p1) {
-                            //converts a series of zeros > 2 to a negative number e.g. '0,0,0' -> '-3'
-                            //return p1.length / -2 + ",";
-                            return ~(p1.length >> 1) + 1 + ",";
-                        });
                         try {
                             this.store.setItem(this.prefix + name, value);
                         } catch (e) {
@@ -2851,7 +2815,7 @@ var Hyphenator = (function (window) {
          * minor release: new languages, improvements
          * @access public
          */
-        version: '5.0.1',
+        version: '5.0.2',
 
         /**
          * @member {boolean} Hyphenator.doHyphenation
@@ -3101,10 +3065,10 @@ var Hyphenator = (function (window) {
                     }
                     autoSetMainLanguage(undefined);
                     gatherDocumentInfos();
-                    prepare(hyphenateLanguageElements);
                     if (displayToggleBox) {
                         toggleBox();
                     }
+                    prepare(hyphenateLanguageElements);
                 } catch (e) {
                     onError(e);
                 }
