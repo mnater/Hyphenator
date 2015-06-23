@@ -1979,7 +1979,6 @@ var Hyphenator = (function (window) {
          * - cache
          * - exceptions
          * Converts the patterns to a trie using {@link Hyphenator~convertPatterns}
-         * If storage is active the object is stored there.
          * @access private
          * @param {string} lang The language of the language object
          */
@@ -2033,7 +2032,7 @@ var Hyphenator = (function (window) {
          * that the patternfiles are loaded, all conversions are made and the callback is called.
          * If storage is active the object is retrieved there.
          * If RemoteLoading is on (default), it loads the pattern files and repeatedly checks Hyphenator.languages.
-         * If a patternfile is loaded the patterns are
+         * If a patternfile is loaded the patterns are stored in storage (if enabled),
          * converted to their object style and the lang-object extended.
          * Finally the callback is called.
          * @access private
