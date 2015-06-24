@@ -2,6 +2,21 @@
 
 # Version History #
 
+## [Version 5.1.0](https://github.com/mnater/Hyphenator/releases/tag/5.1.0) (June 24, 2015) ##
+This minor release brings the following changes:
+  * patterns are stored in DOM-Storage in the raw format (instead of as trie); this is faster since building the trie is highly optimised and much faster than unpacking and parsing the huge indexed trie.
+  * fixes a performance issue when checking if String.normalize() is supported
+  * fires hyphenation of elements immediately instead on timeout (better perf)
+  * deferred writing to storage works with frames, too
+  * fixes an issue with toggling hyphenation
+
+
+## [Version 5.0.1](https://github.com/mnater/Hyphenator/releases/tag/5.0.1) (April 27, 2015) ##
+Bugfix release:
+  * Fixes error in bower.json
+  * Hyphenator_Loader.js only relayouts once
+
+
 ## [Version 5.0.0](https://github.com/mnater/Hyphenator/releases/tag/5.0.0) (April 13, 2015) ##
 This major release brings the following changes:
   * better performance 1: The way how the patterns are represented in memory has changed. Instead of a huge objegt tree a (typed) array is used. Arrays use less memory and typed arrays are not garbage collected. To build the typed array information about the length of the arrays are necessary. This information is stored in the pattern files. Make sure to also replace old pattern files by new ones! Since the format of the pattern files changes mergeAndPack.html and compressor.html have changed, too. So this is seen as a major release.

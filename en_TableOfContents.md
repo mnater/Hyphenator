@@ -51,6 +51,8 @@
     * [Convert patterns](https://github.com/mnater/Hyphenator/blob/wiki/en_AddNewLanguage.md#converting-the-patterns)
     * [Adapt Hyphenator](https://github.com/mnater/Hyphenator/blob/wiki/en_AddNewLanguage.md#adapt-code-in-hyphenator)
   * [Version History](https://github.com/mnater/Hyphenator/blob/wiki/en_VersionHistory.md)
+    * [5.1.0](https://github.com/mnater/Hyphenator/blob/wiki/en_VersionHistory.md#version-510-june-24-2015)
+    * [5.0.1](https://github.com/mnater/Hyphenator/blob/wiki/en_VersionHistory.md#version-501-april-27-2015)
     * [5.0.0](https://github.com/mnater/Hyphenator/blob/wiki/en_VersionHistory.md#version-500-april-13-2015)
     * [4.3.0](https://github.com/mnater/Hyphenator/blob/wiki/en_VersionHistory.md#version-430-october-17-2014)
     * [4.2.0](https://github.com/mnater/Hyphenator/blob/wiki/en_VersionHistory.md#420-april-25-2013)
