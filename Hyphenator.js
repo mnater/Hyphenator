@@ -1680,17 +1680,19 @@ var Hyphenator = (function (window) {
             this.actualIndex = 2;
             this.lastValueIndex = 2;
             this.add = function (p) {
-                if (p !== 0) {
-                    this.keys[this.actualIndex] = p;
-                    this.lastValueIndex = this.actualIndex;
-                }
+                this.keys[this.actualIndex] = p;
+                this.lastValueIndex = this.actualIndex;
+                this.actualIndex += 1;
+            };
+            this.add0 = function () {
+                //just do a step, since array is initialized with zeroes
                 this.actualIndex += 1;
             };
             this.finalize = function () {
                 var start = this.startIndex;
                 this.keys[start] = this.lastValueIndex - start;
                 this.startIndex = this.lastValueIndex + 1;
-                this.actualIndex = this.startIndex + 1;
+                this.actualIndex = this.lastValueIndex + 2;
                 return start;
             };
         },
@@ -1761,7 +1763,7 @@ var Hyphenator = (function (window) {
                             } else {
                                 //charCode is alphabetical
                                 if (!prevWasDigit) {
-                                    valueStore.add(0);
+                                    valueStore.add0();
                                 }
                                 prevWasDigit = false;
                                 if (nextRowStart === -1) {
@@ -1786,9 +1788,9 @@ var Hyphenator = (function (window) {
                             } else {
                                 //the last charCode is alphabetical
                                 if (!prevWasDigit) {
-                                    valueStore.add(0);
+                                    valueStore.add0();
                                 }
-                                valueStore.add(0);
+                                valueStore.add0();
                                 if (nextRowStart === -1) {
                                     nextRowStart = trieNextEmptyRow + trieRowLength;
                                     trieNextEmptyRow = nextRowStart;
