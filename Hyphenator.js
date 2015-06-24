@@ -1,5 +1,5 @@
 
-/** @license Hyphenator 5.0.2 - client side hyphenation for webbrowsers
+/** @license Hyphenator 5.1.0 - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
  * 
@@ -20,7 +20,7 @@
  * @global
  * @namespace Hyphenator
  * @author Mathias Nater, <mathias@mnn.ch>
- * @version 5.0.2
+ * @version 5.1.0
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
  * &lt;script type = "text/javascript"&gt;
@@ -2815,7 +2815,7 @@ var Hyphenator = (function (window) {
          * minor release: new languages, improvements
          * @access public
          */
-        version: '5.0.2',
+        version: '5.1.0',
 
         /**
          * @member {boolean} Hyphenator.doHyphenation

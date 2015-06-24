@@ -1,4 +1,4 @@
-/** @license Hyphenator_Loader 5.0.2 - client side hyphenation for webbrowsers
+/** @license Hyphenator_Loader 5.1.0 - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
  * 
@@ -11,7 +11,7 @@
  * @description Checks if there's CSS-hyphenation available for the given languages and
  * loads and runs Hyphenator if there's no CSS-hyphenation
  * @author Mathias Nater, <a href = "mailto:mathias@mnn.ch">mathias@mnn.ch</a>
- * @version 5.0.2
+ * @version 5.1.0
  * @namespace Holds all methods and properties
  */
 
