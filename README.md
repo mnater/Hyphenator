@@ -1,6 +1,7 @@
 # Hyphenator.js
 
-This repository replaces https://code.google.com/p/hyphenator/
+- This repository replaces https://code.google.com/p/hyphenator/
+- Demo: http://mnater.github.io/Hyphenator/
 
 ## Overview
 
