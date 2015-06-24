@@ -44,66 +44,6 @@ var Hyphenator_Loader = (function (window) {
         },
 
         /**
-         * @name Hyphenator-checkLangSupport
-         * @description
-         * Checks if hyphenation for all languages are supported:
-         * If body is present (i.e. DOMContentLoaded) a hidden div is added to the body and the height of probably hyphenated text is measured.
-         * Else a fake body is inserted and used instead of the 'real' body. It will later be removed.
-         * @type {function()}
-         * @return {bool}
-         * @private
-         */
-        checkLangSupport = function () {
-            var shadowContainer,
-                shadow,
-                shadows = [],
-                lang,
-                i,
-                r = true,
-                bdy = window.document.getElementsByTagName('body')[0],
-                fakeBdy = false;
-            if (!bdy) {
-                fakeBdy = createElem('body');
-            }
-            shadowContainer = createElem('div');
-            shadowContainer.style.MozHyphens = 'auto';
-            shadowContainer.style['-webkit-hyphens'] = 'auto';
-            shadowContainer.style['-ms-hyphens'] = 'auto';
-            shadowContainer.style.hyphens = 'auto';
-            shadowContainer.style.fontSize = '12px';
-            shadowContainer.style.lineHeight = '12px';
-            shadowContainer.style.wordWrap = 'normal';
-            shadowContainer.style.visibility = 'hidden';
-
-            for (lang in languages) {
-                if (languages.hasOwnProperty(lang)) {
-                    shadow = createElem('div');
-                    shadow.style.width = '5em';
-                    shadow.lang = lang;
-                    shadow.style['-webkit-locale'] = "'" + lang + "'";
-                    shadow.appendChild(window.document.createTextNode(languages[lang]));
-                    shadowContainer.appendChild(shadow);
-                    shadows.push(shadow);
-                }
-            }
-            if (fakeBdy) {
-                fakeBdy.appendChild(shadowContainer);
-                window.document.documentElement.appendChild(fakeBdy);
-            } else {
-                bdy.appendChild(shadowContainer);
-            }
-            for (i = 0; i < shadows.length; i += 1) {
-                r = (shadows[i].offsetHeight > 12) && r;
-            }
-            if (fakeBdy) {
-                fakeBdy.parentNode.removeChild(fakeBdy);
-            } else {
-                bdy.removeChild(shadowContainer);
-            }
-            return r;
-        },
-
-        /**
          * @name Hyphenator-loadNrunHyphenator
          * @description Loads Hyphenator.js and runs it with the given configuration
          * @type {function({object})}
@@ -134,11 +74,50 @@ var Hyphenator_Loader = (function (window) {
             head.appendChild(script);
         },
 
-        runner = function () {
-            var allLangsSupported = checkLangSupport();
-            if (!allLangsSupported) {
-                loadNrunHyphenator(config);
+        /**
+         * @name Hyphenator-checkLangSupport
+         * @description
+         * Checks if hyphenation for all languages are supported:
+         * If body is present (i.e. DOMContentLoaded) a hidden div is added to the body and the height of probably hyphenated text is measured.
+         * Else a fake body is inserted and used instead of the 'real' body. It will later be removed.
+         * @type {function()}
+         * @return {bool}
+         * @private
+         */
+        checkLangSupport = function () {
+            var shadowContainer,
+                shadow,
+                lang,
+                fakeBdy = createElem('body');
+            shadowContainer = createElem('div');
+            shadowContainer.style.MozHyphens = 'auto';
+            shadowContainer.style['-webkit-hyphens'] = 'auto';
+            shadowContainer.style['-ms-hyphens'] = 'auto';
+            shadowContainer.style.hyphens = 'auto';
+            shadowContainer.style.fontSize = '12px';
+            shadowContainer.style.lineHeight = '12px';
+            shadowContainer.style.wordWrap = 'normal';
+            shadowContainer.style.visibility = 'hidden';
+
+            fakeBdy.appendChild(shadowContainer);
+            window.document.documentElement.appendChild(fakeBdy);
+
+            for (lang in languages) {
+                if (languages.hasOwnProperty(lang)) {
+                    shadow = createElem('div');
+                    shadow.style.width = '5em';
+                    shadow.lang = lang;
+                    shadow.style['-webkit-locale'] = "'" + lang + "'";
+                    shadow.appendChild(window.document.createTextNode(languages[lang]));
+                    shadowContainer.appendChild(shadow);
+                    if (shadow.offsetHeight === 12) {
+                        loadNrunHyphenator(config);
+                        break;
+                    }
+                }
             }
+
+            fakeBdy.parentNode.removeChild(fakeBdy);
         };
 
     return {
@@ -153,7 +132,7 @@ var Hyphenator_Loader = (function (window) {
             languages = langs;
             path = p;
             config = configs || {};
-            runner();
+            checkLangSupport();
         }
     };
 }(window));
