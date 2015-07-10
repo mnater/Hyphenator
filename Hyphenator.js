@@ -1,4 +1,4 @@
-/** @license Hyphenator 5.2.0(devel) - client side hyphenation for webbrowsers
+/** @license Hyphenator 5.2.0(develasm) - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
  * 
@@ -19,7 +19,7 @@
  * @global
  * @namespace Hyphenator
  * @author Mathias Nater, <mathias@mnn.ch>
- * @version 5.2.0(devel)
+ * @version 5.2.0(develasm)
  * @example
  * &lt;script src = "Hyphenator.js" type = "text/javascript"&gt;&lt;/script&gt;
  * &lt;script type = "text/javascript"&gt;
@@ -280,6 +280,7 @@ var Hyphenator = (function (window) {
          * @access private
          */
         onError = function (e) {
+            window.console.log(e);
             window.alert("Hyphenator.js says:\n\nAn Error occurred:\n" + e.message);
         },
 
@@ -1663,7 +1664,7 @@ var Hyphenator = (function (window) {
          * @desc Storage-Object for storing hyphenation points (aka values)
          * @access private
          */
-        ValueStore = function (len) {
+        /*ValueStore = function (len) {
             var startIndex = 1,
                 actualIndex = 2,
                 lastValueIndex = 2;
@@ -1695,7 +1696,7 @@ var Hyphenator = (function (window) {
                 actualIndex = lastValueIndex + 2;
                 return start;
             };
-        },
+        },*/
 
         /**
          * @method Hyphenator~convertPatternsToArray
@@ -1737,117 +1738,213 @@ var Hyphenator = (function (window) {
          * @access private
          * @param {Object} language object
          */
+
         convertPatternsToArray = function (lo) {
-            var trieNextEmptyRow = 0,
-                i,
-                charMapc2i,
-                valueStore,
-                indexedTrie,
-                trieRowLength,
+            var charMapc2i,
+                spLength = 0,
+                spStartPos = 0,
+                itLength = 0,
+                itStartPos = 0,
+                vsLength = 0,
+                data,
+                dataLength,
+                idx = 0,
+                t1 = 0,
+                t2 = 0,
+                t3 = 0,
+                t4 = 0,
+                t5 = 0,
+                t6 = 0,
+                createCharMap = function () {
+                    var i;
+                    lo.charMap = new CharMap();
+                    for (i = 0; i < lo.patternChars.length; i += 1) {
+                        lo.charMap.add(lo.patternChars.charCodeAt(i));
+                    }
+                    charMapc2i = lo.charMap.code2int;
+                },
+                getMappedCharCode = function (charCode) {
+                    return charMapc2i[charCode];
+                },
+                getSerialPatLen = function () {
+                    var lengths = 0,
+                        counter = 0,
+                        total = 0,
+                        count = function (patternSizeS) {
+                            lengths += lo.patterns[patternSizeS].length;
+                            counter += 1;
+                        };
+                    Object.keys(lo.patterns).forEach(count);
+                    total = (counter * 2) + lengths;
+                    return total;
+                },
+                createASMextract = function (std, ext, buf) {
+                    "use asm";
+                    /*jslint bitwise: true*/
+                    var i32 = new std.Int32Array(buf),
+                        getMCharC = ext.getMappedCharCode,
+                        itStart = ext.itStart | 0,
+                        vsStart = ext.vsStart | 0,
+                        trieRowLength = ext.trieRowLength | 0;
 
-                extract = function (patternSizeInt, patterns) {
-                    var charPos = 0,
-                        charCode = 0,
-                        mappedCharCode = 0,
-                        rowStart = 0,
-                        nextRowStart = 0,
-                        prevWasDigit = false;
-                    for (charPos = 0; charPos < patterns.length; charPos += 1) {
-                        charCode = patterns.charCodeAt(charPos);
-                        if ((charPos + 1) % patternSizeInt !== 0) {
-                            //more to come…
-                            if (charCode <= 57 && charCode >= 49) {
-                                //charCode is a digit
-                                valueStore.add(charCode - 48);
-                                prevWasDigit = true;
-                            } else {
-                                //charCode is alphabetical
-                                if (!prevWasDigit) {
-                                    valueStore.add0();
+                    function extract() {
+                        var totalPatLen = 0,
+                            patternLen = 0,
+                            patternStart = 0,
+                            patternSizeInt = 0,
+                            i = 4,
+                            charPos = 0,
+                            charCode = 0,
+                            trieNextEmptyRowB = 0,
+                            itStartB = 0,
+                            vsStartB = 0,
+                            vsIndexB = 0,
+                            vsPIndexB = 0,
+                            trieRowLengthB = 0,
+                            prevWasDigit = 0,
+                            mCCOffsetB = 0,
+                            rowStartB = 0,
+                            nextRowStartB = 0,
+                            ccRed = 0;
+
+                        itStartB = itStart << 2;
+                        vsStartB = vsStart << 2;
+                        trieRowLengthB = trieRowLength << 2;
+                        totalPatLen = (i32[0] | 0) << 2;
+                        trieNextEmptyRowB = itStartB;
+                        rowStartB = itStartB;
+                        nextRowStartB = itStartB;
+                        vsIndexB = (vsStartB + 4) | 0;
+                        while ((i | 0) < (totalPatLen | 0)) {
+                            patternLen = i32[i >> 2] << 2;
+                            i = (i + 4) | 0;
+                            patternSizeInt = i32[i >> 2] | 0;
+                            i = (i + 4) | 0;
+                            patternStart = i | 0;
+                            while ((i | 0) < (((patternStart | 0) + (patternLen | 0)) | 0)) {
+                                charPos = ((i | 0) - (patternStart | 0)) >> 2;
+                                charCode = i32[i >> 2] | 0;
+                                ccRed = (charCode - 48) | 0;
+                                if (((((charPos + 1) | 0) % (patternSizeInt | 0)) | 0) != 0) {
+                                    //more to come…
+                                    if ((ccRed | 0) <= 9) {
+                                        //charCode is a digit
+                                        i32[vsIndexB >> 2] = ccRed;
+                                        vsPIndexB = vsIndexB;
+                                        vsIndexB = (vsIndexB + 4) | 0;
+                                        prevWasDigit = 1;
+                                    } else {
+                                        //charCode is alphabetical
+                                        if ((prevWasDigit | 0) == 0) {
+                                            vsIndexB = (vsIndexB + 4) | 0;
+                                        }
+                                        prevWasDigit = 0;
+                                        if ((nextRowStartB | 0) == -1) {
+                                            nextRowStartB = (trieNextEmptyRowB + trieRowLengthB) | 0;
+                                            trieNextEmptyRowB = nextRowStartB;
+                                            i32[((rowStartB | 0) + (mCCOffsetB | 0)) >> 2] = nextRowStartB;
+                                        }
+                                        mCCOffsetB = ((getMCharC(charCode | 0) | 0) * 2) << 2;
+                                        rowStartB = nextRowStartB;
+                                        nextRowStartB = i32[((rowStartB | 0) + (mCCOffsetB | 0)) >> 2] | 0;
+                                        if ((nextRowStartB | 0) == 0) {
+                                            i32[((rowStartB | 0) + (mCCOffsetB | 0)) >> 2] = -1;
+                                            nextRowStartB = -1;
+                                        }
+                                    }
+                                } else {
+                                    //last part of pattern
+                                    if ((ccRed | 0) <= 9) {
+                                        //the last charCode is a digit
+                                        i32[vsIndexB >> 2] = ccRed;
+                                        vsPIndexB = vsIndexB;
+                                        vsIndexB = (vsIndexB + 4) | 0;
+                                        i32[vsStartB >> 2] = (vsPIndexB - vsStartB) >> 2;
+                                        i32[((rowStartB | 0) + (mCCOffsetB | 0) + 4) >> 2] = vsStartB;
+                                        vsStartB = (vsPIndexB + 4) | 0;
+                                        vsIndexB = (vsPIndexB + 8) | 0;
+                                    } else {
+                                        //the last charCode is alphabetical
+                                        if ((prevWasDigit | 0) == 0) {
+                                            vsIndexB = (vsIndexB + 4) | 0;
+                                        }
+                                        vsIndexB = (vsIndexB + 4) | 0;
+                                        if ((nextRowStartB | 0) == -1) {
+                                            nextRowStartB = (trieNextEmptyRowB + trieRowLengthB) | 0;
+                                            trieNextEmptyRowB = nextRowStartB;
+                                            i32[((rowStartB | 0) + (mCCOffsetB | 0)) >> 2] = nextRowStartB;
+                                        }
+                                        mCCOffsetB = ((getMCharC(charCode | 0) | 0) * 2) << 2;
+                                        rowStartB = nextRowStartB;
+                                        if ((i32[((rowStartB | 0) + (mCCOffsetB | 0)) >> 2] | 0) == 0) {
+                                            i32[((rowStartB | 0) + (mCCOffsetB | 0)) >> 2] = -1;
+                                        }
+                                        i32[vsStartB >> 2] = (vsPIndexB - vsStartB) >> 2;
+                                        i32[((rowStartB | 0) + (mCCOffsetB | 0) + 4) >> 2] = vsStartB;
+                                        vsStartB = (vsPIndexB + 4) | 0;
+                                        vsIndexB = (vsPIndexB + 8) | 0;
+                                    }
+                                    prevWasDigit = 0;
+                                    mCCOffsetB = 0;
+                                    rowStartB = itStartB | 0;
+                                    nextRowStartB = itStartB | 0;
                                 }
-                                prevWasDigit = false;
-                                if (nextRowStart === -1) {
-                                    nextRowStart = trieNextEmptyRow + trieRowLength;
-                                    trieNextEmptyRow = nextRowStart;
-                                    indexedTrie[rowStart + mappedCharCode * 2] = nextRowStart;
-                                }
-                                mappedCharCode = charMapc2i[charCode];
-                                rowStart = nextRowStart;
-                                nextRowStart = indexedTrie[rowStart + mappedCharCode * 2];
-                                if (nextRowStart === 0) {
-                                    indexedTrie[rowStart + mappedCharCode * 2] = -1;
-                                    nextRowStart = -1;
-                                }
+                                i = (i + 4) | 0;
                             }
-                        } else {
-                            //last part of pattern
-                            if (charCode <= 57 && charCode >= 49) {
-                                //the last charCode is a digit
-                                valueStore.add(charCode - 48);
-                                indexedTrie[rowStart + mappedCharCode * 2 + 1] = valueStore.finalize();
-                            } else {
-                                //the last charCode is alphabetical
-                                if (!prevWasDigit) {
-                                    valueStore.add0();
-                                }
-                                valueStore.add0();
-                                if (nextRowStart === -1) {
-                                    nextRowStart = trieNextEmptyRow + trieRowLength;
-                                    trieNextEmptyRow = nextRowStart;
-                                    indexedTrie[rowStart + mappedCharCode * 2] = nextRowStart;
-                                }
-                                mappedCharCode = charMapc2i[charCode];
-                                rowStart = nextRowStart;
-                                if (indexedTrie[rowStart + mappedCharCode * 2] === 0) {
-                                    indexedTrie[rowStart + mappedCharCode * 2] = -1;
-                                }
-                                indexedTrie[rowStart + mappedCharCode * 2 + 1] = valueStore.finalize();
-                            }
-                            rowStart = 0;
-                            nextRowStart = 0;
-                            prevWasDigit = false;
                         }
                     }
-                };/*,
-                prettyPrintIndexedTrie = function (rowLength) {
-                    var s = "0: ",
-                        idx;
-                    for (idx = 0; idx < indexedTrie.length; idx += 1) {
-                        s += indexedTrie[idx];
-                        s += ",";
-                        if ((idx + 1) % rowLength === 0) {
-                            s += "\n" + (idx + 1) + ": ";
-                        }
+                    return extract;
+                },
+                /*prettyPrintBuffer = function () {
+                    var s = "IndexedTrie:",
+                        idx1,
+                        idx2;
+                    for (idx1 = itStartPos; idx1 < itLength; idx1 += 2) {
+                        s += "\n" + idx1 + ": " + (lo.data[idx1] >> 2) + ", " + (lo.data[idx1 + 1] >> 2);
                     }
-                    console.log(s);
-                };*/
+                    s += "\nValueStore:";
+                    for (idx2 = itStartPos + itLength; idx2 < (itStartPos + itLength + lo.valueStoreLength); idx2 += 1) {
+                        s += "\n" + idx2 +  ": " + lo.data[idx2];
+                    }
+                    window.console.log(s);
+                },*/
+                extractor;
+            createCharMap();
+            spLength = getSerialPatLen();
+            spStartPos = 1;
+            itLength = lo.patternArrayLength * 2;
+            itStartPos = spStartPos + spLength;
+            vsLength = lo.valueStoreLength;
+            dataLength = 1 + spLength + itLength + vsLength;
 
-            lo.charMap = new CharMap();
-            for (i = 0; i < lo.patternChars.length; i += 1) {
-                lo.charMap.add(lo.patternChars.charCodeAt(i));
-            }
-            charMapc2i = lo.charMap.code2int;
+            data = new window.Int32Array(Math.max(Math.pow(2, Math.ceil(Math.log2(dataLength))), 0x10000));
 
-            lo.valueStore = valueStore = new ValueStore(lo.valueStoreLength);
-
-            if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
-                lo.indexedTrie = new window.Int32Array(lo.patternArrayLength * 2);
-            } else {
-                lo.indexedTrie = [];
-                lo.indexedTrie.length = lo.patternArrayLength * 2;
-                for (i = lo.indexedTrie.length - 1; i >= 0; i -= 1) {
-                    lo.indexedTrie[i] = 0;
+            //set length of serialized patterns
+            idx = 0;
+            data[idx] = spLength;
+            idx = spStartPos;
+            //store serialized patterns to data
+            Object.keys(lo.patterns).forEach(function serialize(patternSizeS) {
+                var str = lo.patterns[patternSizeS],
+                    len = str.length,
+                    c = 0;
+                data[idx] = len;
+                idx += 1;
+                data[idx] = parseInt(patternSizeS, 10);
+                idx += 1;
+                for (c = 0; c < len; c += 1) {
+                    data[idx] = str.charCodeAt(c);
+                    idx += 1;
                 }
-            }
-            indexedTrie = lo.indexedTrie;
-            trieRowLength = lo.charMap.int2code.length * 2;
-
-            for (i in lo.patterns) {
-                if (lo.patterns.hasOwnProperty(i)) {
-                    extract(parseInt(i, 10), lo.patterns[i]);
-                }
-            }
-            //prettyPrintIndexedTrie(lo.charMap.int2code.length * 2);
+            });
+            extractor = createASMextract(window, {
+                getMappedCharCode: getMappedCharCode,
+                itStart: itStartPos,
+                vsStart: itStartPos + itLength,
+                trieRowLength: lo.charMap.int2code.length * 2
+            }, data.buffer)();
+            lo.data = data;
+            //prettyPrintBuffer();
         },
 
         /**
@@ -2239,8 +2336,7 @@ var Hyphenator = (function (window) {
                 link = 0,
                 value = 0,
                 values,
-                indexedTrie = lo.indexedTrie,
-                valueStore = lo.valueStore.keys,
+                data = lo.data,
                 wwAsMappedCharCode = wwAsMappedCharCodeStore;
 
             word = onBeforeWordHyphenation(word, lang);
@@ -2285,7 +2381,7 @@ var Hyphenator = (function (window) {
                 }
                 //get hyphenation points for all substrings
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
-                    row = 0;
+                    row = data[0] + 1;
                     pattern = '';
                     for (plen = pstart; plen < wwlen; plen += 1) {
                         mappedCharCode = wwAsMappedCharCode[plen];
@@ -2295,24 +2391,25 @@ var Hyphenator = (function (window) {
                         if (enableReducedPatternSet) {
                             pattern += ww.charAt(plen);
                         }
-                        link = indexedTrie[row + mappedCharCode * 2];
-                        value = indexedTrie[row + mappedCharCode * 2 + 1];
+                        link = data[row + mappedCharCode * 2] >> 2;
+                        value = data[row + mappedCharCode * 2 + 1] >> 2;
+                        //console.log(pattern, link, value);
                         if (value > 0) {
-                            hp = valueStore[value];
+                            hp = data[value];
                             while (hp) {
                                 hp -= 1;
-                                if (valueStore[value + 1 + hp] > wwhp[pstart + hp]) {
-                                    wwhp[pstart + hp] = valueStore[value + 1 + hp];
+                                if (data[value + 1 + hp] > wwhp[pstart + hp]) {
+                                    wwhp[pstart + hp] = data[value + 1 + hp];
                                 }
                             }
                             if (enableReducedPatternSet) {
                                 if (!lo.redPatSet) {
                                     lo.redPatSet = {};
                                 }
-                                if (valueStore.subarray) {
-                                    values = valueStore.subarray(value + 1, value + 1 + valueStore[value]);
+                                if (data.subarray) {
+                                    values = data.subarray(value + 1, value + 1 + data[value]);
                                 } else {
-                                    values = valueStore.slice(value + 1, value + 1 + valueStore[value]);
+                                    values = data.slice(value + 1, value + 1 + data[value]);
                                 }
                                 lo.redPatSet[pattern] = recreatePattern(pattern, values);
                             }
@@ -2814,7 +2911,7 @@ var Hyphenator = (function (window) {
          * minor release: new languages, improvements
          * @access public
          */
-        version: '5.2.0(devel)',
+        version: '5.2.0(develasm)',
 
         /**
          * @member {boolean} Hyphenator.doHyphenation
