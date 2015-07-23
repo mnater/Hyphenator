@@ -3,7 +3,7 @@
 As a normal websurfer you'll have to create a [bookmarklet](http://en.wikipedia.org/wiki/Bookmarklet) by saving the following line of code as a bookmark:
 
 ```JavaScript
-javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='http://mnater.github.io/Hyphenator/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
+javascript:if(document.createElement){void(head=document.getElementsByTagName('head').item(0));void(script=document.createElement('script'));void(script.src='https://mnater.github.io/Hyphenator/Hyphenator.js?bm=true');void(script.type='text/javascript');void(head.appendChild(script));}
 ```
 
 When you're on the website to be hyphenated you click on that bookmarklet to start hyphenating the page.
