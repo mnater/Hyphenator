@@ -1,8 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="fr">
+<html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 118</title>
+        <title>Hyphenator.js &ndash; Test 119</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -27,7 +27,7 @@
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
-							index: 118
+							index: 119
 						};
 						if (t1 == t2) {
 							msg.result = 'passed';
@@ -38,16 +38,16 @@
 					}
 				});     	
 			}
-			Hyphenator.config({hyphenchar:'|', safecopy: false});
+			Hyphenator.config({hyphenchar:'·', safecopy: false});
 			Hyphenator.run();
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test117.html">&lt;- Prev</a> | <a href="test119.html">Next -&gt;</a></p>
-        <h1>Test 118</h1>
-        <p id="desc">Hyphenate words in french with rare caracters</p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="index.html">&lt;- Prev</a> | <a href="test2.html">Next -&gt;</a></p>
+        <h1>Test 119</h1>
+        <p id="desc">Hyphenate p45.</p>
 
-        <p id="test" class="hyphenate" lang="fr">noël vurës aiguë ambiguë béguë besaiguë ciguë suraiguë capharnaüm Emmaüs vergeüre Vogüé</p>
-        <p id="ref">noël vurës aiguë ambi|guë béguë besai|guë ciguë sur|ai|guë caphar|naüm Emmaüs ver|geüre Vogüé</p>
+        <p id="test" class="hyphenate" lang="en">pneumonoultramicroscopicsilicovolcanoconiosis</p>
+        <p id="ref">pneu·mo·noul·tra·mi·cro·scop·ic·sil·i·co·vol·canoco·nio·sis</p>
     </body>
 </html>

@@ -2182,7 +2182,7 @@ var Hyphenator = (function (window) {
          */
         wwAsMappedCharCodeStore = (function () {
             if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) {
-                return new window.Int32Array(32);
+                return new window.Int32Array(64);
             }
             return [];
         }()),
@@ -2197,7 +2197,7 @@ var Hyphenator = (function (window) {
         wwhpStore = (function () {
             var r;
             if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
-                r = new window.Uint8Array(32);
+                r = new window.Uint8Array(64);
             } else {
                 r = [];
             }
