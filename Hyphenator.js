@@ -1664,6 +1664,9 @@ var Hyphenator = (function (window) {
          * @access private
          */
         ValueStore = function (len) {
+            var startIndex = 1,
+                actualIndex = 2,
+                lastValueIndex = 2;
             this.keys = (function () {
                 var i, r;
                 if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
@@ -1676,23 +1679,20 @@ var Hyphenator = (function (window) {
                 }
                 return r;
             }());
-            this.startIndex = 1;
-            this.actualIndex = 2;
-            this.lastValueIndex = 2;
             this.add = function (p) {
-                this.keys[this.actualIndex] = p;
-                this.lastValueIndex = this.actualIndex;
-                this.actualIndex += 1;
+                this.keys[actualIndex] = p;
+                lastValueIndex = actualIndex;
+                actualIndex += 1;
             };
             this.add0 = function () {
                 //just do a step, since array is initialized with zeroes
-                this.actualIndex += 1;
+                actualIndex += 1;
             };
             this.finalize = function () {
-                var start = this.startIndex;
-                this.keys[start] = this.lastValueIndex - start;
-                this.startIndex = this.lastValueIndex + 1;
-                this.actualIndex = this.lastValueIndex + 2;
+                var start = startIndex;
+                this.keys[start] = lastValueIndex - start;
+                startIndex = lastValueIndex + 1;
+                actualIndex = lastValueIndex + 2;
                 return start;
             };
         },
@@ -2182,7 +2182,7 @@ var Hyphenator = (function (window) {
          */
         wwAsMappedCharCodeStore = (function () {
             if (Object.prototype.hasOwnProperty.call(window, "Int32Array")) {
-                return new window.Int32Array(32);
+                return new window.Int32Array(64);
             }
             return [];
         }()),
@@ -2197,7 +2197,7 @@ var Hyphenator = (function (window) {
         wwhpStore = (function () {
             var r;
             if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) {
-                r = new window.Uint8Array(32);
+                r = new window.Uint8Array(64);
             } else {
                 r = [];
             }
