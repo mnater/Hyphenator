@@ -2689,7 +2689,7 @@ var Hyphenator = (function (window) {
         /**
          * @method Hyphenator~createStorage
          * @desc
-         * inits the private var {@link Hyphenator~storage) depending of the setting in {@link Hyphenator~storageType}
+         * inits the private var {@link Hyphenator~storage} depending of the setting in {@link Hyphenator~storageType}
          * and the supported features of the system.
          * @access private
          */
@@ -2844,6 +2844,16 @@ var Hyphenator = (function (window) {
          * @access public
          */
         languages: {},
+
+        /**
+         * @member {Object.<string, Hyphenator.languages.language>} Hyphenator.allSupportedLanguages
+         * @desc
+         * Objects that holds key-value pairs, where key is the language and the value is the
+         * map describing how Hyphenator handles this language.
+         * @namespace Hyphenator.allSupportedLanguages
+         * @access public
+         */
+        allSupportedLanguages: supportedLangs,
 
 
         /**
@@ -3080,6 +3090,16 @@ var Hyphenator = (function (window) {
         },
 
         /**
+         * @method Hyphenator.enableLanguage
+         * @desc
+         * Enables the use of the specified language.
+         * @access public
+         */
+        enableLanguage: function (lang) {
+          docLanguages[lang] = true;
+        },
+
+        /**
          * @method Hyphenator.addExceptions
              * @desc
          * Adds the exceptions from the string to the appropriate language in the 
@@ -3252,6 +3272,16 @@ var Hyphenator = (function (window) {
                 storeConfiguration();
                 toggleBox();
             }
+        },
+
+        /**
+         * @method Hyphenator.hyphenateWord
+         * @desc
+         * Hyphenates one word using provided language.
+         * @access public
+         */
+        hyphenateWord: function (lang, word) {
+            return hyphenateWord(Hyphenator.languages[lang], lang, word);
         }
     };
 }(window));

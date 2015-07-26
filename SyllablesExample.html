@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Hyphenator.js</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:30%;
+                margin-left:35%;
+                margin-right:35%;
+            }
+            .text {
+                text-align:justify;
+            }
+        </style>
+        <script src="Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            // setup Hyphenator
+            var ourLangs = Object.keys(Hyphenator.allSupportedLanguages)
+            ourLangs.splice(ourLangs.indexOf("en"), 1) // presense of "en" causes an error message due to some conflict of en and en* elements
+            for (lang in ourLangs) {
+              Hyphenator.enableLanguage(ourLangs[lang])
+            }
+            Hyphenator.config({
+              minwordlength : 1,
+              hyphenchar : '·', // usual symbol to separate syllables
+              persistentconfig : false,
+              storagetype : 'none' // otherwise all languages hit storage quota
+            });
+
+            // shouldn't need to execute Hyphenator.run(), but there is no
+            // separate initialization function available
+            Hyphenator.run();
+            // fill languages into combobox
+            function fillLangs(deftLang) {
+              var eltLangs = document.getElementById('lang')
+              for (lang in ourLangs) {
+                var eltOption = document.createElement("option")
+                eltOption.text = ourLangs[lang]
+                eltLangs.add(eltOption)
+                if (ourLangs[lang] === deftLang)
+                  eltOption.selected = "selected"
+              }
+            }
+            document.addEventListener("DOMContentLoaded", function() {
+              var deftLang = (navigator.language || navigator.userLanguage).toLowerCase()
+              Hyphenator.enableLanguage(deftLang)
+              fillLangs(deftLang)
+            });
+
+            // main syllable-splitting function
+            function doSplit(lang) {
+              // eliminate leftmin and rightmin as they only needed for hyphenation
+              var lo = Hyphenator.languages[lang]
+              lo.leftmin = 0
+              lo.rightmin = 0
+              // find involved document elements
+              var eltWord = document.getElementById('words');
+              var eltSyll = document.getElementById('syllables');
+              // process
+              var result = ""
+              var wlst = eltWord.value.split(/[ \t\r\n]/);
+              for (i = 0; i < wlst.length; i += 1) {
+                if (result.length > 0)
+                  result = result + " "
+                if (wlst[i] != "" && wlst[i].indexOf(/[-,.!?]/) === -1) {
+                  result = result + Hyphenator.hyphenateWord(lang, wlst[i])
+                } else {
+                  result = result + wlst[i]
+                }
+              }
+              // show user
+              eltSyll.value = Hyphenator.hyphenateWord(lang, result)
+            }
+        </script>
+    </head>
+    <body>
+        <h1>How does Hyphenator.js split words into syllables?</h1>
+        <table style="width:100%;">
+          <tr>
+            <td>Language</td>
+            <td><select id="lang"></select></td>
+          </tr>
+          <tr>
+            <td>Words</td>
+            <td><textarea id="words" style="width:100%;"></textarea></td>
+          </tr>
+          <tr>
+            <td></td><td><button onclick="doSplit(document.getElementById('lang').value)">Split into syllables</button></td>
+          </tr>
+          <tr>
+            <td>Syllables</td><td><textarea id="syllables" readonly style="width:100%;"></textarea></td>
+          </tr>
+        </table>
+    </body>
+</html>
