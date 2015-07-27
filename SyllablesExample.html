@@ -53,8 +53,8 @@
             function doSplit(lang) {
               // eliminate leftmin and rightmin as they only needed for hyphenation
               var lo = Hyphenator.languages[lang]
-              lo.leftmin = 0
-              lo.rightmin = 0
+              lo.leftmin = 1
+              lo.rightmin = 1
               // find involved document elements
               var eltWord = document.getElementById('words');
               var eltSyll = document.getElementById('syllables');
