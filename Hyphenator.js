@@ -2326,7 +2326,7 @@ var Hyphenator = (function (window) {
                 }
                 //create hyphenated word
                 for (hp = 0; hp < wordLength; hp += 1) {
-                    if (hp >= lo.leftmin && hp <= (wordLength - lo.rightmin) && (wwhp[hp + 1] % 2) !== 0) {
+                    if (hp >= lo.leftmin && hp <= (wordLength - lo.rightmin) && (wwhp[hp + 1] % 2) !== 0 && (hp != 0 && hp != wordLength)) {
                         hw += hyphen + word.charAt(hp);
                     } else {
                         hw += word.charAt(hp);
