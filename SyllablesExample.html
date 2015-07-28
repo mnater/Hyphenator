@@ -49,29 +49,52 @@
               fillLangs(deftLang)
             });
 
-            // main syllable-splitting function
+            // main syllable-splitting functions
+            function splitText(txt, lang, wordChars) {
+              // build regular expressions
+              var reWordTxt = ""
+              for (i = 0; i < wordChars.length; i += 1) {
+                var chr = wordChars[i]
+                if (chr != '_') {
+                  reWordTxt = reWordTxt + chr + chr.toUpperCase()
+                  // CAVEAT: In some languages not all uppercase characters can be obtained with toUpperCase()
+                  //         ex. Turkish İ isn't an uppercase of any of the provided in patternChars lowercase letters
+                }
+              }
+              var reWord = new RegExp("["+reWordTxt+"]+")
+              var reNotChar = new RegExp("[^"+reWordTxt+"]")
+              // split words
+              var locWord = 0
+              var txtSrc = txt
+              var txtDst = ""
+              while ((locWord = txtSrc.search(reWord)) != -1) {
+                if (locWord > 0) {
+                  txtDst = txtDst + txtSrc.substring(0, locWord)
+                  txtSrc = txtSrc.substring(locWord)
+                }
+                var locEnd = txtSrc.search(reNotChar)
+                if (locEnd > 0) {
+                  txtDst = txtDst + Hyphenator.hyphenateWord(lang, txtSrc.substring(0, locEnd))
+                  txtSrc = txtSrc.substring(locEnd)
+                } else { // last word
+                  txtDst = txtDst + Hyphenator.hyphenateWord(lang, txtSrc)
+                  txtSrc = ""
+                  break
+                }
+              }
+              txtDst = txtDst + txtSrc
+              return txtDst
+            }
             function doSplit(lang) {
               // eliminate leftmin and rightmin as they only needed for hyphenation
               var lo = Hyphenator.languages[lang]
               lo.leftmin = 1
               lo.rightmin = 1
               // find involved document elements
-              var eltWord = document.getElementById('words');
-              var eltSyll = document.getElementById('syllables');
-              // process
-              var result = ""
-              var wlst = eltWord.value.split(/[ \t\r\n]/);
-              for (i = 0; i < wlst.length; i += 1) {
-                if (result.length > 0)
-                  result = result + " "
-                if (wlst[i] != "" && wlst[i].indexOf(/[-,.!?]/) === -1) {
-                  result = result + Hyphenator.hyphenateWord(lang, wlst[i])
-                } else {
-                  result = result + wlst[i]
-                }
-              }
-              // show user
-              eltSyll.value = Hyphenator.hyphenateWord(lang, result)
+              var eltWord = document.getElementById('words')
+              var eltSyll = document.getElementById('syllables')
+              // split and show user
+              eltSyll.value = splitText(eltWord.value, lang, lo.patternChars)
             }
         </script>
     </head>
