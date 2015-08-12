@@ -107,6 +107,7 @@ var Hyphenator_Loader = (function (window) {
                     shadow = createElem('div');
                     shadow.style.width = '5em';
                     shadow.style.border = 'none';
+                    shadow.style.padding = '0';
                     shadow.lang = lang;
                     shadow.style['-webkit-locale'] = "'" + lang + "'";
                     shadow.appendChild(window.document.createTextNode(languages[lang]));
