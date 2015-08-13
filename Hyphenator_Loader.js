@@ -60,7 +60,6 @@ var Hyphenator_Loader = (function (window) {
             script.onload = script.onreadystatechange = function () {
                 if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {
                     done = true;
-
                     Hyphenator.config(config);
                     Hyphenator.run();
 
@@ -90,13 +89,6 @@ var Hyphenator_Loader = (function (window) {
                 lang,
                 fakeBdy = createElem('body');
             shadowContainer = createElem('div');
-            shadowContainer.style.MozHyphens = 'auto';
-            shadowContainer.style['-webkit-hyphens'] = 'auto';
-            shadowContainer.style['-ms-hyphens'] = 'auto';
-            shadowContainer.style.hyphens = 'auto';
-            shadowContainer.style.fontSize = '12px';
-            shadowContainer.style.lineHeight = '12px';
-            shadowContainer.style.wordWrap = 'normal';
             shadowContainer.style.visibility = 'hidden';
 
             fakeBdy.appendChild(shadowContainer);
@@ -105,9 +97,17 @@ var Hyphenator_Loader = (function (window) {
             for (lang in languages) {
                 if (languages.hasOwnProperty(lang)) {
                     shadow = createElem('div');
+                    shadow.style.MozHyphens = 'auto';
+                    shadow.style['-webkit-hyphens'] = 'auto';
+                    shadow.style['-ms-hyphens'] = 'auto';
+                    shadow.style.hyphens = 'auto';
                     shadow.style.width = '5em';
-                    shadow.lang = lang;
+                    shadow.style.lineHeight = '12px';
+                    shadow.style.border = 'none';
+                    shadow.style.padding = '0';
+                    shadow.style.wordWrap = 'normal';
                     shadow.style['-webkit-locale'] = "'" + lang + "'";
+                    shadow.lang = lang;
                     shadow.appendChild(window.document.createTextNode(languages[lang]));
                     shadowContainer.appendChild(shadow);
                     if (shadow.offsetHeight === 12) {
