@@ -86,13 +86,15 @@
         </style>
         <script type="text/javascript" src="Hyphenator.js"></script>
         <script type="text/javascript">
-            var oldpatterns, newpatterns, specialChars;
-            
+            var newpatterns, specialChars;
+
             function lengthSort(a, b) {
+                'use strict';
                 return a.length - b.length;
             }
-                        
+
             function output2String(meta) {
+                'use strict';
                 var tmp, len;
                 tmp = 'Hyphenator.languages[\'' + document.getElementsByName('language')[0].value + '\'] = {\n';
                 tmp += '\tleftmin : ' + document.getElementsByName('leftmin')[0].value + ',\n';
@@ -112,7 +114,8 @@
                 document.getElementsByName('newpattern')[0].value = tmp;
             }
 
-            function createAndMeasure () {
+            function createAndMeasure() {
+                'use strict';
                 var valueStore = (function () {
                         var ValueStore = function () {
                             this.keys = [];
@@ -153,7 +156,7 @@
                     collected = {},
                     collectPatternChars = function (patterns) {
                         var chr = "",
-                            str = "", i;
+                            i;
                         for (i = 0; i < patterns.length; i += 1) {
                             chr = patterns.charAt(i);
                             if (chr === ".") {
@@ -233,7 +236,8 @@
                                 prevWasPosition = false;
                             }
                         }
-                    }, i;
+                    },
+                    i;
                 for (i in newpatterns) {
                     if (newpatterns.hasOwnProperty(i)) {
                         collectPatternChars(newpatterns[i]);
@@ -265,48 +269,66 @@
                     "patternChars": patternChars,
                     "patternArrayLength": indexedTrie.length / 2,
                     "valueStoreLength": valueStore.lastValueIndex + 1
+                };
+            }
+
+            function arr2uniqueString(arr) {
+                'use strict';
+                var s = {},
+                    i,
+                    special = "";
+                for (i = 0; i < arr.length; i += 1) {
+                    s[arr[i]] = true;
                 }
+                for (i in s) {
+                    if (s.hasOwnProperty(i)) {
+                        special += i;
+                    }
+                }
+                return special;
             }
 
             function startConversion() {
-                var len, i, curlen, key, special, s;
+                'use strict';
+                var len, i, curlen, key, special, meta,
+                    oldpatternString = document.getElementsByName('oldpattern')[0].value,
+                    oldpatterns;
                 newpatterns = {};
-                special = document.getElementsByName('oldpattern')[0].value.match(/[^a-z0-9\. ]/gi);
+                special = oldpatternString.match(/[^a-z0-9\. ]/gi);
                 if (special) {
-                    //Todo: Special vereinfachen...
-                    s = {};
-                    for (i = 0; i < special.length; i++) {
-                        s[special[i]] = true;
-                    }
-                    special = '';
-                    for (i in s) {
-                        if (s.hasOwnProperty(i)) {
-                            special += i;
-                        }
-                    }
+                    specialChars = arr2uniqueString(special);
                 } else {
-                    special = '';
+                    specialChars = '';
                 }
-                specialChars = special;
-                oldpatterns = document.getElementsByName('oldpattern')[0].value.replace(/ $/, '').split(' ');
+                oldpatternString = oldpatternString.replace(/ $/, ''); //trim
+                oldpatternString = oldpatternString.replace(/\./g, '_'); // . -> _
+                oldpatterns = oldpatternString.split(' ');
                 oldpatterns.sort(lengthSort);
                 len = oldpatterns.length;
-                for (i = 0; i < len; i++) {
-                    key = oldpatterns[i].replace(/\d/g, '');
+
+                //Sort patterns -> better compression
+                for (i = 0; i < len; i += 1) {
                     curlen = oldpatterns[i].length;
-                    if (curlen in newpatterns) {
-                        newpatterns[curlen] += oldpatterns[i].replace(/\./g, '_');
+                    if (newpatterns.hasOwnProperty(curlen)) {
+                        newpatterns[curlen].push(oldpatterns[i]);
                     } else {
-                        newpatterns[curlen] = oldpatterns[i].replace(/\./g, '_');
+                        newpatterns[curlen] = [oldpatterns[i]];
                     }
                 }
-                var meta = createAndMeasure();
+                for (key in newpatterns) {
+                    if (newpatterns.hasOwnProperty(key)) {
+                        newpatterns[key].sort();
+                        newpatterns[key] = newpatterns[key].join("");
+                    }
+                }
+                meta = createAndMeasure();
                 output2String(meta);
             }
 
             Hyphenator.run();
 
             window.onload = function () {
+                'use strict';
                 var desc = document.getElementById('desc');
                 document.getElementsByName('language')[0].onfocus = function () {
                     if (this.value === 'language') {
@@ -320,7 +342,7 @@
                     }
                     desc.innerHTML = "";
                 };
-            
+
                 document.getElementsByName('leftmin')[0].onfocus = function () {
                     if (this.value === 'leftmin') {
                         this.value = '';
@@ -333,7 +355,7 @@
                     }
                     desc.innerHTML = "";
                 };
-            
+
                 document.getElementsByName('rightmin')[0].onfocus = function () {
                     if (this.value === 'rightmin') {
                         this.value = '';
@@ -346,7 +368,7 @@
                     }
                     desc.innerHTML = "";
                 };
-            
+
                 document.getElementsByName('oldpattern')[0].onfocus = function () {
                     if (this.value === '.a5 .rt4 .d4gt2 asdf2 9kas3') {
                         this.value = '';
@@ -361,13 +383,13 @@
                 };
                 document.getElementById('myform').onsubmit = function (e) {
                     if (e && e.preventDefault) {
-                            e.preventDefault();
+                        e.preventDefault();
                     } else if (window.event) {
                         window.event.returnValue = false;
                     }
                     startConversion();
                 };
-            
+
             };
         </script>
     </head>
@@ -399,7 +421,7 @@
                     <input type="text" name="rightmin" value="rightmin">
                     </p>
                     <p id="desc"></p>
-                <textarea name="oldpattern" cols="80" rows="20">hy3ph he2n hena4 hen5at 1na n2at 1tio 2io o2n</textarea>
+                <<textarea name="oldpattern" cols="80" rows="20">hy3ph he2n hena4 hen5at 1na n2at 1tio 2io o2n</textarea>
                 <input type="submit" value="Convert!"><input type="reset" value="Reset">
             </fieldset>
             <fieldset>
