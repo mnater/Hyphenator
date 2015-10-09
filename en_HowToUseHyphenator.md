@@ -111,6 +111,7 @@ To use Hyphenator\_Loader.js follow the following steps:
     * Setting the appropriate lang-attributes (e.g. `<html lang="en">`).
     * Adding `class="hyphenate"` to the elements whose text should be hyphenated (children do inherit this setting). Hyphenation can be stopped by adding `class="donthyphenate"`.
     * In CSS set the class `.hyphenate` to `hyphens: auto; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto;`
+    * In CSS set the class `.donthyphenate` to `hyphens: none; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none;`
     * Validating (not absolutely necessary, but again highly recommended): http://validator.w3.org/
   1. Use the [mergeAndPack-Tool](http://mnater.github.io/Hyphenator/mergeAndPack.html). Here you can opt-in for Hyphenator\_Loader and set all the configuration options you want (click the info buttons for details).
   1. Hit 'create' and save the resulting scripts as described at the bottom of the mergeAndPack-page.
