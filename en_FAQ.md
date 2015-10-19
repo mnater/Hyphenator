@@ -8,9 +8,9 @@
 
 ## What about CSS3 hyphenation? ##
 There's work going on on standardizing hyphenation in CSS 3 ([css3-text](http://www.w3.org/TR/css3-text/#hyphenation)).
-Modern browsers already support CSS3 hyphenation for a different set of languages and support is growing.
+Modern browsers already support CSS3 hyphenation for a different set of languages and support is growing  (http://caniuse.com/#feat=css-hyphens).
 
-Since Version 4.0.0 Hyphenator.js respects those browsers and automatically activates css3-hyphenation if available. See [the manual](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#property-usecss3hyphenation) on how to enable this in Hyphenator.js.
+Since Version 4.0.0 Hyphenator.js can be configured to respect those browsers and to automatically activate css3-hyphenation if available. See [the manual](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#property-usecss3hyphenation) on how to enable this in Hyphenator.js.
 
 And even if all browsers will generally support hyphenation one day they will not support all languages Hyphenator.js can deal with actually… So Hyphenator.js will remain as a polyfill for this browsers.
 
