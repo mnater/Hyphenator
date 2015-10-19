@@ -1,5 +1,6 @@
 # FAQ #
 
+- [How to select multiple classes to be hyphenated](#how-to-select-multiple-classes-to-be-hyphenated)
 - [What about CSS3 hyphenation?](#what-about-css3-hyphenation)
 - [Shouldn't hyphenation be done on the server side?](#shouldnt-hyphenation-be-done-on-the-server-side)
 - [Hyphenator breaks the search functionality of my browser](#hyphenator-breaks-the-search-functionality-of-my-browser)
@@ -10,6 +11,7 @@
 - [JavaScript is insecure and evil. It should be turned off in every browser!](#javascript-is-insecure-and-evil-it-should-be-turned-off-in-every-browser)
 - [How about Accessibility?](#how-about-accessibility)
 - [How to hyphenate text that has been loaded with AJAX?](#how-to-hyphenate-text-that-has-been-loaded-with-ajax)
+- [Can I use hyphenator.js in a frameset?](#can-i-use-hyphenatorjs-in-a-frameset)
 
 ---
 
@@ -19,7 +21,23 @@ Hyphenator.js only searches for one single class of HTML-Elements to be hyphenat
 Sometimes (e.g. in a CMS with predefined classes) it would be useful to have multiple classes to be hyphenated. Allthough there have been some [requests](https://github.com/mnater/Hyphenator/issues/206) to implement this feature, I decided not to do so.
 
 Instead change the [selectorfunction](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#property-selectorfunction):
-
+````javascript
+Hyphenator.config({
+    selectorfunction: function () {
+        var classNames = ["text", "content", "blocktext"],
+            //            ^ change this!
+            elements2hyphenate = [];
+        classNames.forEach(function (c) {
+            var elementsOfClass = document.getElementsByClassName(c);
+            Array.prototype.forEach.call(elementsOfClass, function (e) {
+                elements2hyphenate.push(e);
+            });
+        });
+        return elements2hyphenate;
+    }
+});
+````
+[> Go to top](#faq)
 
 ## What about CSS3 hyphenation? ##
 There's work going on on standardizing hyphenation in CSS 3 ([css3-text](http://www.w3.org/TR/css3-text/#hyphenation)).
