@@ -1,9 +1,24 @@
 # FAQ #
 
-**List of questions:**
-
+- [What about CSS3 hyphenation?](#what-about-css3-hyphenation)
+- [Shouldn't hyphenation be done on the server side?](#shouldnt-hyphenation-be-done-on-the-server-side)
+- [Hyphenator breaks the search functionality of my browser](#hyphenator-breaks-the-search-functionality-of-my-browser)
+- [Copy&amp;Paste hyphenated text](#when-i-copypaste-hyphenated-texts-from-a-website-spaceshyphens-are-inserted-in-allmost-all-words)
+- [I want to set a value for the minimum of letters that remain on the old line/come to the new line.](#i-want-to-set-a-value-for-the-minimum-of-letters-that-remain-on-the-old-linecome-to-the-new-line)
+- [Could you write an extension/plugin for …](#could-you-write-an-extensionplugin-for-)
+- [Why are the pattern files so different in size?](#why-are-the-pattern-files-so-different-in-size)
+- [JavaScript is insecure and evil. It should be turned off in every browser!](#javascript-is-insecure-and-evil-it-should-be-turned-off-in-every-browser)
+- [How about Accessibility?](#how-about-accessibility)
+- [How to hyphenate text that has been loaded with AJAX?](#how-to-hyphenate-text-that-has-been-loaded-with-ajax)
 
 ---
+
+## How to select multiple classes to be hyphenated ##
+Hyphenator.js only searches for one single class of HTML-Elements to be hyphenated. By default this class is `hyphenate` but you may [change it](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#properties-classname-and-donthyphenateclassname).
+
+Sometimes (e.g. in a CMS with predefined classes) it would be useful to have multiple classes to be hyphenated. Allthough there have been some [requests](https://github.com/mnater/Hyphenator/issues/206) to implement this feature, I decided not to do so.
+
+Instead change the [selectorfunction](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#property-selectorfunction):
 
 
 ## What about CSS3 hyphenation? ##
@@ -39,7 +54,7 @@ This is fixed since version 3.0.0. Make sure that the option `safecopy` is set t
 [> Go to top](#faq)
 
 ## I want to set a value for the minimum of letters that remain on the old line/come to the new line. ##
-In CSS3 are parameters hyphenate-before and hyphenate-before. These setting are made per language in the pattern files. You'll have to change them there.
+In CSS3 are parameters hyphenate-before and hyphenate-after. These setting are made per language in the pattern files. You'll have to change them there.
 
 [> Go to top](#faq)
 
