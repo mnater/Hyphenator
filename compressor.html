@@ -159,9 +159,6 @@
                             i;
                         for (i = 0; i < patterns.length; i += 1) {
                             chr = patterns.charAt(i);
-                            if (chr === ".") {
-                                chr = "_";
-                            }
                             if (!chr.match(/\d/) && chr !== " " && !collected.hasOwnProperty(chr)) {
                                 collected[chr] = true;
                             }
