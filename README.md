@@ -5,7 +5,7 @@
 
 ## Overview
 
-Hyphenator.js is a free open source Javascript library that automatically hyphenates text on websites. It comes in handy as a _polyfill_ for legacy browsers that don't support CSS 3 hyphation at all or for modern browsers that do hyphenation, but do not provide hyphenation dictionaries for a particular language.
+Hyphenator.js is a free open source Javascript library that automatically hyphenates text on websites. It comes in handy as a _polyfill_ for legacy browsers that don't support CSS 3 hyphenation at all or for modern browsers that do hyphenation, but do not provide hyphenation dictionaries for a particular language.
 
 Hyphenator.js …
 
@@ -14,11 +14,11 @@ Hyphenator.js …
 *   is [unobtrusive](http://en.wikipedia.org/wiki/Unobtrusive_JavaScript).
 *   steps behind CSS 3 hyphenation if supported ([how to use Hyphenator_Loader](https://github.com/mnater/Hyphenator/blob/wiki/en_HowToUseHyphenator.md#hyphenator_loaderjs)).
 *   runs on the client in order that the HTML source of the website may be served clean and svelte and that it can respond to text resizings by the user.
-*   is highly configurable and has a well [documented API](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#public-api).
+*   is highly configurable and has a [well-documented API](https://github.com/mnater/Hyphenator/blob/wiki/en_PublicAPI.md#public-api).
 *   relies on Franklin M. Liangs hyphenation algorithm ([PDF](http://www.tug.org/docs/liang/liang-thesis.pdf)) commonly known from LaTeX and OpenOffice.
 *   supports a [large set of different languages](https://github.com/mnater/Hyphenator/blob/wiki/en_AddNewLanguage.md#what-we-have-now).
 *   provides services for [customizing, merging and packing script and patterns](http://mnater.github.io/Hyphenator/mergeAndPack.html).
-*   also wraps URLs and Email-adresses.
+*   also wraps URLs and Email adresses.
 *   is free software licensed under [MIT License](http://mnater.github.io/Hyphenator/LICENSE.txt) (Version 5.0.0 and above).
 
 ## Quick links
@@ -40,10 +40,10 @@ Get [detailed instructions](https://github.com/mnater/Hyphenator/blob/wiki/en_Ho
 
 As with most things, there's a downside, too. Consider the following drawbacks before using Hyphenator.js:
 
-*   Hyphenator.js and the hyphenation patterns are quite large. A good compression and caching is vital.
+*   Hyphenator.js and the hyphenation patterns are quite large. Good compression and caching is vital.
 *   Automatic hyphenation can not be perfect: it may lead to misleading hyphenation like leg-ends (depends on the pattern quality)
 *   There's no support for special (aka non-standard) hyphenation (e.g. omaatje->oma-tje)
-*   There's no way for Javascript to influence the algorithm for laying out text in the browser. Thus we can't control how many hyphens occur on subsequent lines nor can we know which words have actually to be hyphenated. Hyphenator.js just hyphenates all of them.
+*   There's no way for Javascript to influence the algorithm for laying out text in the browser. Thus we can't control how many hyphens occur on subsequent lines nor can we know which words have actually been hyphenated. Hyphenator.js just hyphenates all of them.
 
 ## Philosophy
 
