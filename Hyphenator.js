@@ -2167,10 +2167,10 @@ var Hyphenator = (function (window) {
          * @access private
          */
         doCharSubst = function (loCharSubst, w) {
-            var subst, r;
+            var subst, r = w;
             for (subst in loCharSubst) {
                 if (loCharSubst.hasOwnProperty(subst)) {
-                    r = w.replace(new RegExp(subst, 'g'), loCharSubst[subst]);
+                    r = r.replace(new RegExp(subst, 'g'), loCharSubst[subst]);
                 }
             }
             return r;
