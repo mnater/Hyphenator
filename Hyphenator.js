@@ -1,7 +1,7 @@
 /** @license Hyphenator 5.2.0(devel) - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
- * 
+ *
  *  Released under the MIT license
  *  http://mnater.github.io/Hyphenator/LICENSE.txt
  */
@@ -183,7 +183,7 @@ var Hyphenator = (function (window) {
          * @member {boolean} Hyphenator~persistentConfig
          * @access private
          * @desc
-         * if persistentConfig is set to true (defaults to false), config options and the state of the 
+         * if persistentConfig is set to true (defaults to false), config options and the state of the
          * toggleBox are stored in DOM-storage (according to the storage-setting). So they haven't to be
          * set for each page.
          * @default false
@@ -999,7 +999,7 @@ var Hyphenator = (function (window) {
                  * @member {Object} Hyphenator~CSSEdit~sheet
                  * @desc
                  * A StyleSheet, where Hyphenator can write to.
-                 * If no StyleSheet can be found, lets create one. 
+                 * If no StyleSheet can be found, lets create one.
                  * @access private
                  */
                 sheet = (function () {
@@ -1050,7 +1050,7 @@ var Hyphenator = (function (window) {
                  * @desc
                  * Searches the StyleSheets for a given selector and returns an object containing the rule.
                  * If nothing can be found, false is returned.
-                 * @param {string} sel 
+                 * @param {string} sel
                  * @return {Hyphenator~CSSEdit~rule|false}
                  * @access private
                  */
@@ -1719,7 +1719,7 @@ var Hyphenator = (function (window) {
          *    Use ValueStore.finalize() when the last value of a pattern is added. It will set the length and return the starting index of the pattern.
          *    To prevent doubles we could temporarly store the values in a object {value: startIndex} and only add new values,
          *    but this object deoptimizes very fast (new hidden map for each entry); here we gain speed and pay memory
-         *    
+         *
          * 3. Create and zero initialize a (typed) array to store the trie. The trie uses two slots for each entry/node:
          *    i: a link to another position in the array or -1 if the pattern ends here or more rows have to be added.
          *    i + 1: a link to a value in the ValueStore or 0 if there's no value for the path to this node.
@@ -1735,8 +1735,8 @@ var Hyphenator = (function (window) {
          *    to the trie (adding more "rows" if necessary, i.e. if the last link pointed to -1).
          *    So the first "row" holds all starting characters, where the subsequent rows hold the characters that follow the
          *    character that link to this row. Therefor the array is dense at the beginning and very sparse at the end.
-         * 
-         * 
+         *
+         *
          * @access private
          * @param {Object} language object
          */
@@ -1905,7 +1905,7 @@ var Hyphenator = (function (window) {
          * Checks if the requested file is available in the network.
          * Adds a &lt;script&gt;-Tag to the DOM to load an externeal .js-file containing patterns and settings for the given language.
          * If the given language is not in the {@link Hyphenator~supportedLangs}-Object it returns.
-         * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object 
+         * One may ask why we are not using AJAX to load the patterns. The XMLHttpRequest-Object
          * has a same-origin-policy. This makes the Bookmarklet impossible.
          * @param {string} lang The language to load the patterns for
          * @access private
@@ -3085,7 +3085,7 @@ var Hyphenator = (function (window) {
         /**
          * @method Hyphenator.addExceptions
              * @desc
-         * Adds the exceptions from the string to the appropriate language in the 
+         * Adds the exceptions from the string to the appropriate language in the
          * {@link Hyphenator~languages}-object
          * @param {string} lang The language
          * @param {string} words A comma separated string of hyphenated words WITH spaces.
