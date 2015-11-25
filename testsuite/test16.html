@@ -58,11 +58,20 @@
                     document.writeln("Hyphenator.js has JSLint " + jsl.edition + " check passed." );
                 }
             } else {
-                var errorCount = jsl.warnings.length;
-                document.writeln("JSLint " + jsl.edition + " error(s):\n");
-                for (i = 0; i < errorCount; i++ ) {
-                    document.writeln("\n" + jsl.warnings[i].message + "\n");
-                    document.writeln("    Problem at line " + jsl.warnings[i].line + " column " + jsl.warnings[i].column + ": " + jsl.warnings[i].code);
+                if (window != parent) {
+                    var msg = {
+                        desc: "Make JSLint " + jsl.edition + " happy ;-)",
+                        index: 16,
+                        result: 'failed'
+                    };
+                    parent.postMessage(JSON.stringify(msg), window.location.href);
+                } else {
+                    var errorCount = jsl.warnings.length;
+                    document.writeln("JSLint " + jsl.edition + " error(s):\n");
+                    for (i = 0; i < errorCount; i++ ) {
+                        document.writeln("\n" + jsl.warnings[i].message + "\n");
+                        document.writeln("    Problem at line " + jsl.warnings[i].line + " column " + jsl.warnings[i].column + ": " + jsl.warnings[i].code);
+                    }
                 }
             }
 
