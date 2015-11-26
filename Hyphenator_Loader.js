@@ -1,7 +1,7 @@
 /** @license Hyphenator_Loader 5.0.1(devel) - client side hyphenation for webbrowsers
  *  Copyright (C) 2015  Mathias Nater, Zürich (mathiasnater at gmail dot com)
  *  https://github.com/mnater/Hyphenator
- * 
+ *
  *  Released under the MIT license
  *  http://mnater.github.io/Hyphenator/LICENSE.txt
  */
@@ -16,8 +16,8 @@
  */
 
 /* The following comment is for JSLint: */
-/*jslint browser: true */
-/*global Hyphenator: false */
+/*jslint browser: true*/
+/*global window Hyphenator*/
 
 var Hyphenator_Loader = (function (window) {
     'use strict';
@@ -57,19 +57,21 @@ var Hyphenator_Loader = (function (window) {
             script = createElem('script');
             script.src = path;
             script.type = 'text/javascript';
-            script.onload = script.onreadystatechange = function () {
-                if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {
+            script.onreadystatechange = function () {
+                if (!done && (!script.readyState || script.readyState === "loaded" || script.readyState === "complete")) {
                     done = true;
                     Hyphenator.config(config);
                     Hyphenator.run();
 
                     // Handle memory leak in IE
-                    script.onload = script.onreadystatechange = null;
+                    script.onreadystatechange = null;
+                    script.onload = null;
                     if (head && script.parentNode) {
                         head.removeChild(script);
                     }
                 }
             };
+            script.onload = script.onreadystatechange;
             head.appendChild(script);
         },
 
