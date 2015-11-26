@@ -1674,7 +1674,19 @@ var Hyphenator = (function (window) {
          * @access private
          */
         makeValueStore = function (len) {
-            var indexes = [1, 2, 2],
+            //var indexes = [1, 2, 2],
+            var indexes = (function () {
+                    var arr;
+                    if (Object.prototype.hasOwnProperty.call(window, "Uint32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
+                        arr = new window.Uint32Array(3);
+                        arr[0] = 1;
+                        arr[1] = 2;
+                        arr[2] = 2;
+                    } else {
+                        arr = [1, 2, 2];
+                    }
+                    return arr;
+                }()),
                 keys = (function () {
                     var i, r;
                     if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
@@ -2248,7 +2260,6 @@ var Hyphenator = (function (window) {
                 indexedTrie = lo.indexedTrie,
                 valueStore = lo.valueStore.keys,
                 wwAsMappedCharCode = wwAsMappedCharCodeStore;
-
             word = onBeforeWordHyphenation(word, lang);
             if (word === '') {
                 hw = '';
@@ -2283,11 +2294,9 @@ var Hyphenator = (function (window) {
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
                     wwhp[pstart] = 0;
                     charCode = ww.charCodeAt(pstart);
-                    if (charMap[charCode] !== undefined) {
-                        wwAsMappedCharCode[pstart] = charMap[charCode];
-                    } else {
-                        wwAsMappedCharCode[pstart] = -1;
-                    }
+                    wwAsMappedCharCode[pstart] = charMap.hasOwnProperty(charCode)
+                        ? charMap[charCode]
+                        : -1;
                 }
                 //get hyphenation points for all substrings
                 for (pstart = 0; pstart < wwlen; pstart += 1) {
