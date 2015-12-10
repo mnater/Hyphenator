@@ -12,7 +12,7 @@
  */
 
 /* The following comment is for JSLint: */
-/*jslint browser: true for: false*/
+/*jslint browser: true*/
 /*global Hyphenator window*/
 
 /**
@@ -321,10 +321,9 @@ Hyphenator = (function (window) {
      * @access private
      */
     function forEachKey(o, f) {
-        var a, k;
+        var k;
         if (Object.hasOwnProperty("keys")) {
-            a = Object.keys(o);
-            a.forEach(function (v) {
+            Object.keys(o).forEach(function (v) {
                 f(v);
             });
         } else {
