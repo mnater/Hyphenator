@@ -1,7 +1,16 @@
 # Version History and note about versioning
 
 # Version History #
-
+<!--
+## [Version 5.2.0](https://github.com/mnater/Hyphenator/releases/tag/5.2.0) (January XX, 2016) ##
+This minor release add the following features:
+  * support for Irish (thanks to Kevin Scannell)
+  * adopt the more restrictive coding standarts of new JSLint
+  * adds some missing chars and adjusts leftmin in french patterns
+  * fixes an issue with extremly long words (#226)
+  * fixes an issue where Hyphenator_Loader didn't yield correct results (#231)
+  * fixes ab issue with character substitution (#246)
+-->
 ## [Version 5.1.0](https://github.com/mnater/Hyphenator/releases/tag/5.1.0) (June 24, 2015) ##
 This minor release brings the following changes:
   * patterns are stored in DOM-Storage in the raw format (instead of as trie); this is faster since building the trie is highly optimised and much faster than unpacking and parsing the huge indexed trie.
