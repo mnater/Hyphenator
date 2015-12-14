@@ -10,6 +10,7 @@ This minor release add the following features:
   * fixes an issue with extremly long words (#226)
   * fixes an issue where Hyphenator_Loader didn't yield correct results (#231)
   * fixes ab issue with character substitution (#246)
+  * Adding options to control leftmin and rightmin (#240)
 -->
 ## [Version 5.1.0](https://github.com/mnater/Hyphenator/releases/tag/5.1.0) (June 24, 2015) ##
 This minor release brings the following changes:
