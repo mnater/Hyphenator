@@ -643,6 +643,12 @@ function jsmin(comment, input, level) {
             $('minwordlength_btn').onclick = function () {
                 toggleInfoBoxDisplay($('minwordlength_box'), this, true);
             };
+            $('leftminlength_btn').onclick = function () {
+                toggleInfoBoxDisplay($('leftminlength_box'), this, true);
+            };
+            $('rightminlength_btn').onclick = function () {
+                toggleInfoBoxDisplay($('rightminlength_box'), this, true);
+            };
             $('defaultlanguage_btn').onclick = function () {
                 toggleInfoBoxDisplay($('defaultlanguage_box'), this, true);
             };
@@ -750,6 +756,8 @@ function jsmin(comment, input, level) {
                 var urlclassname = $('urlclassname').value;
                 var donthyphenateclassname = $('donthyphenateclassname').value;
                 var minwordlength = $('minwordlength').value;
+                var leftminlength = $('leftminlength').value;
+                var rightminlength = $('rightminlength').value;
                 var defaultlanguage = $('defaultlanguage').value;
                 var hyphenchar = $('hyphenchar').value;
                 var urlhyphenchar = $('urlhyphenchar').value;
@@ -791,6 +799,12 @@ function jsmin(comment, input, level) {
                 }
                 if(minwordlength !== '') {
                     config += 'minwordlength : '+minwordlength+',\n\t';
+                }
+                if(leftminlength !== '') {
+                    config += 'leftmin : '+leftminlength+',\n\t';
+                }
+                if(rightminlength !== '') {
+                    config += 'rightmin : '+rightminlength+',\n\t';
                 }
                 if(defaultlanguage !== '') {
                     config += 'defaultlanguage : \''+defaultlanguage+'\',\n\t';
@@ -1027,6 +1041,17 @@ function jsmin(comment, input, level) {
                 <label><input type="text" id="minwordlength" name="minwordlength" value="" size="10" title="minwordlength"> Don't hyphenate words shorter than this value (leave empty for default value 6) </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="minwordlength_btn" class="info_btn" alt="Show-Info Button">
                 </p>
                 <div id="minwordlength_box" class="info_box">A value lesser than 4 makes no sense. By increasing this value lesser words will be hyphenated, thus, there's a small speed gain.</div>
+
+                <p>
+                <label><input type="text" id="leftminlength" name="leftminlength" value="" size="10" title="leftminlength"> Minimal number of characters before the first hyphenation point in a word (leave empty for default value defined in pattern file). </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="leftminlength_btn" class="info_btn" alt="Show-Info Button">
+                </p>
+                <div id="leftminlength_box" class="info_box">This value is only used if it is greater than the value in the pattern file.</div>
+
+                <p>
+                <label><input type="text" id="rightminlength" name="rightminlength" value="" size="10" title="rightminlength"> Minimal number of characters after the last hyphenation point in a word (leave empty for default value defined in pattern file). </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="rightminlength_btn" class="info_btn" alt="Show-Info Button">
+                </p>
+                <div id="rightminlength_box" class="info_box">This value is only used if it is greater than the value in the pattern file.</div>
+
                 <p>
                 <label><input type="text" id="hyphenchar" name="hyphenchar" value="" size="10" title="hyphenchar"> The hyphen char for words (leave empty for &amp;shy;)</label>
                 </p>
