@@ -592,6 +592,28 @@ Hyphenator = (function (window) {
     var min = 6;
 
     /**
+     * @member {number} Hyphenator~leftmin
+     * @desc
+     * A number wich indicates the minimal length of characters before the first hyphenation.
+     * This value is only used if it is greater than the value in the pattern file.
+     * @default given by pattern file
+     * @access private
+     * @see {@link Hyphenator.config}
+     */
+    var leftmin = 0;
+
+    /**
+     * @member {number} Hyphenator~rightmin
+     * @desc
+     * A number wich indicates the minimal length of characters after the last hyphenation.
+     * This value is only used if it is greater than the value in the pattern file.
+     * @default given by pattern file
+     * @access private
+     * @see {@link Hyphenator.config}
+     */
+    var rightmin = 0;
+
+    /**
      * @member {number} Hyphenator~orphanControl
      * @desc
      * Control how the last words of a line are handled:
@@ -2079,6 +2101,12 @@ Hyphenator = (function (window) {
             if (enableReducedPatternSet) {
                 lo.redPatSet = {};
             }
+            if (leftmin > lo.leftmin) {
+                lo.leftmin = leftmin;
+            }
+            if (rightmin > lo.rightmin) {
+                lo.rightmin = rightmin;
+            }
             //add exceptions from the pattern file to the local 'exceptions'-obj
             if (lo.hasOwnProperty('exceptions')) {
                 Hyphenator.addExceptions(lang, lo.exceptions);
@@ -2108,6 +2136,7 @@ Hyphenator = (function (window) {
             lo.genRegExp = new RegExp('(' + wrd + ')|(' + url + ')|(' + mail + ')', 'gi');
             lo.prepared = true;
         }
+        console.log(lo);
     }
 
     /****
@@ -3138,6 +3167,16 @@ Hyphenator = (function (window) {
                 case 'onafterwordhyphenation':
                     if (assert('onafterwordhyphenation', 'function')) {
                         onAfterWordHyphenation = obj[key];
+                    }
+                    break;
+                case 'leftmin':
+                    if (assert('leftmin', 'number')) {
+                        leftmin = obj[key];
+                    }
+                    break;
+                case 'rightmin':
+                    if (assert('rightmin', 'number')) {
+                        rightmin = obj[key];
                     }
                     break;
                 default:
