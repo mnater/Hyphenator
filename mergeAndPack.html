@@ -1,10 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <title>Hyphenator &ndash; merge+pack</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta http-equiv="Content-Style-Type" content="text/css">
         <style type="text/css">
             body {
                 font: 11px/1.8em Verdana;
@@ -17,7 +15,7 @@
                 background-color:#FFFFFF;
                 border:1px solid #AAAAAA;
                 margin:1em 0em;
-                padding: 0em 1em 2em 1em;
+                padding: 0em 1em 1em 1em;
             }
             h1 {
                 background-color:#FFFFFF;
@@ -71,10 +69,6 @@
             }
             textarea {
                 width:100%;
-            }
-            .grayedout {
-                border: 1px solid grey;
-                color: grey;
             }
             #Hyphenator_output_block {
                 display: none;
@@ -932,11 +926,11 @@ function jsmin(comment, input, level) {
         <h1>mergeAndPack <svg  height="60" width="150" version="1.1" style="vertical-align: middle">
                 <g font-family="Consolas" font-weight="bold" font-size="36px" transform="translate(-90,-191)">
                     <text y="230" x="139" fill="#bbb">&amp;shy;</text>
-                    <text line-height="70%" fill="#444">
+                    <text fill="#444">
                         <tspan y="218" x="103">Hyphen-</tspan>
                         <tspan y="243" x="103">ator.js</tspan>
                     </text>
-                    <text font-weight="normal" line-height="125%" font-size="32px" y="228" x="89" fill="#000">{</text>
+                    <text font-weight="normal" font-size="32px" y="228" x="89" fill="#000">{</text>
                 </g>
             </svg>
         </h1>
@@ -1037,6 +1031,8 @@ function jsmin(comment, input, level) {
                 <p class="hyphenate">
                     Make the settings for Hyphenator. Leave empty textfields empty for the default value to be set. If no special configuration is made, there will be no Hyphenator.config(); function in the output.
                 </p>
+                <fieldset>
+                <legend>min / leftmin / rightmin</legend>
                 <p>
                 <label><input type="text" id="minwordlength" name="minwordlength" value="" size="10" title="minwordlength"> Don't hyphenate words shorter than this value (leave empty for default value 6) </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="minwordlength_btn" class="info_btn" alt="Show-Info Button">
                 </p>
@@ -1051,14 +1047,18 @@ function jsmin(comment, input, level) {
                 <label><input type="text" id="rightminlength" name="rightminlength" value="" size="10" title="rightminlength"> Minimal number of characters after the last hyphenation point in a word (leave empty for default value defined in pattern file). </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="rightminlength_btn" class="info_btn" alt="Show-Info Button">
                 </p>
                 <div id="rightminlength_box" class="info_box">This value is only used if it is greater than the value in the pattern file.</div>
+                </fieldset>
 
+                <fieldset>
+                <legend>hyphen characters</legend>
                 <p>
                 <label><input type="text" id="hyphenchar" name="hyphenchar" value="" size="10" title="hyphenchar"> The hyphen char for words (leave empty for &amp;shy;)</label>
                 </p>
                 <p>
                 <label><input type="text" id="urlhyphenchar" name="urlhyphenchar" value="" size="10" title="urlhyphenchar"> The hyphen char for URLs and E-Mail (leave empty for zero width space)</label>
                 </p>
-                
+                </fieldset>
+
                 <p>
                 <label><input type="text" id="defaultlanguage" name="defaultlanguage" value="" size="10" title="defaultlanguage"> Make Hyphenator to use this language as a fallback </label><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0B%00%00%00%0B%08%03%00%00%00%9Er%87%14%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%00%0CPLTE%C1%C1%C1%D2%D2%D2%FF%FF%FF%AA%AA%AA%0D%86%93%E6%00%00%00!IDATx%DAb%60F%00%060%C1%C8%00g321%C2%D9%C8j%90%C5)aC%01%40%80%01%00R%EC%01A1%DAn%B3%00%00%00%00IEND%AEB%60%82" width="11" height="11" id="defaultlanguage_btn" class="info_btn" alt="Show-Info Button">
                 </p>
@@ -1329,9 +1329,8 @@ function jsmin(comment, input, level) {
             It will run automatically.</p>
             <p class="hyphenate">
             Note: You are not allowed to remove the licensing at the beginning of the script!</p>
-            <p>
+            <p id="outanchor1">
             <label>Output Hyphenator.js (plus patterns):<br>
-            <a name="outanchor1"></a>
             <textarea id="output1" name="output1" cols="80" rows="20"> </textarea></label>
             </p>
         </div>
@@ -1340,9 +1339,8 @@ function jsmin(comment, input, level) {
             <p class="hyphenate">Copy the packed script from the first output field below as is to a new text-file, give it a name (e.g. <code>"hyphenator.js"</code>. Make sure this is the same name as you configured Hyphenator_Loader.js for.) and include it in your website (<code>&lt;script src="hyphenator.js" type="text/javascript"&gt;&lt;/script&gt;</code>).</p>
             <p class="hyphenate">
             Note: You are not allowed to remove the licensing at the beginning of the script!</p>
-            <p>
+            <p id="outanchor2">
             <label>Output Hyphenator.js:<br>
-            <a name="outanchor2"></a>
             <textarea id="output2" name="output2" cols="80" rows="20"> </textarea></label>
             </p>
 
@@ -1350,9 +1348,8 @@ function jsmin(comment, input, level) {
             It will run automatically. Make sure that Hyphenator.js  and the pattern files are available, too!</p>
             <p class="hyphenate">
             Note: You are not allowed to remove the licensing at the beginning of the script!</p>        
-            <p>
+            <p id="outanchor3">
             <label>Output Hyphenator_Loader.js:<br>
-            <a name="outanchor3"></a>
             <textarea id="output3" name="output3" cols="80" rows="20"> </textarea></label>
             </p>
         </div>
