@@ -1741,6 +1741,56 @@ Hyphenator = (function (window) {
      * @access private
      */
     function makeValueStore(len) {
+        var indexes = (function () {
+                var arr;
+                if (Object.prototype.hasOwnProperty.call(window, "Uint32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
+                    arr = new window.Uint32Array(3);
+                    arr[0] = 1; //start position of a value set
+                    arr[1] = 1; //next index
+                    arr[2] = 1; //last index with a significant value
+                } else {
+                    arr = [1, 1, 1];
+                }
+                return arr;
+            }()),
+            keys = (function () {
+                var i, r;
+                if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
+                    return new window.Uint8Array(len);
+                }
+                r = [];
+                r.length = len;
+                i = r.length - 1;
+                while (i >= 0) {
+                    r[i] = 0;
+                    i -= 1;
+                }
+                return r;
+            }()),
+            add = function (p) {
+                keys[indexes[1]] = p;
+                indexes[2] = indexes[1];
+                indexes[1] += 1;
+            },
+            add0 = function () {
+                //just do a step, since array is initialized with zeroes
+                indexes[1] += 1;
+            },
+            finalize = function () {
+                var start = indexes[0];
+                keys[indexes[2] + 1] = 255;
+                indexes[0] = indexes[2] + 2;
+                indexes[1] = indexes[0];
+                return start;
+            };
+        return {
+            keys: keys,
+            add: add,
+            add0: add0,
+            finalize: finalize
+        };
+    }
+    /*function makeValueStore(len) {
         //var indexes = [1, 2, 2],
         var indexes = (function () {
                 var arr;
@@ -1790,7 +1840,7 @@ Hyphenator = (function (window) {
             add0: add0,
             finalize: finalize
         };
-    }
+    }*/
 
     /**
      * @method Hyphenator~convertPatternsToArray
@@ -2136,7 +2186,6 @@ Hyphenator = (function (window) {
             lo.genRegExp = new RegExp('(' + wrd + ')|(' + url + ')|(' + mail + ')', 'gi');
             lo.prepared = true;
         }
-        console.log(lo);
     }
 
     /****
@@ -2333,6 +2382,7 @@ Hyphenator = (function (window) {
             pstart = 0,
             plen,
             hp,
+            hpc,
             wordLength = word.length,
             hw = '',
             charMap = lo.charMap.code2int,
@@ -2402,12 +2452,14 @@ Hyphenator = (function (window) {
                     link = indexedTrie[row + mappedCharCode * 2];
                     value = indexedTrie[row + mappedCharCode * 2 + 1];
                     if (value > 0) {
-                        hp = valueStore[value];
-                        while (hp) {
-                            hp -= 1;
-                            if (valueStore[value + 1 + hp] > wwhp[pstart + hp]) {
-                                wwhp[pstart + hp] = valueStore[value + 1 + hp];
+                        hpc = 0;
+                        hp = valueStore[value + hpc];
+                        while (hp !== 255) {
+                            if (hp > wwhp[pstart + hpc]) {
+                                wwhp[pstart + hpc] = hp;
                             }
+                            hpc += 1;
+                            hp = valueStore[value + hpc];
                         }
                         if (enableReducedPatternSet) {
                             if (!lo.redPatSet) {
