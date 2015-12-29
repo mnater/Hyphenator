@@ -1778,7 +1778,7 @@ Hyphenator = (function (window) {
             },
             finalize = function () {
                 var start = indexes[0];
-                keys[indexes[2] + 1] = 255;
+                keys[indexes[2] + 1] = 255; //mark end of pattern
                 indexes[0] = indexes[2] + 2;
                 indexes[1] = indexes[0];
                 return start;
@@ -1790,57 +1790,6 @@ Hyphenator = (function (window) {
             finalize: finalize
         };
     }
-    /*function makeValueStore(len) {
-        //var indexes = [1, 2, 2],
-        var indexes = (function () {
-                var arr;
-                if (Object.prototype.hasOwnProperty.call(window, "Uint32Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
-                    arr = new window.Uint32Array(3);
-                    arr[0] = 1;
-                    arr[1] = 2;
-                    arr[2] = 2;
-                } else {
-                    arr = [1, 2, 2];
-                }
-                return arr;
-            }()),
-            keys = (function () {
-                var i, r;
-                if (Object.prototype.hasOwnProperty.call(window, "Uint8Array")) { //IE<9 doesn't have window.hasOwnProperty (host object)
-                    return new window.Uint8Array(len);
-                }
-                r = [];
-                r.length = len;
-                i = r.length - 1;
-                while (i >= 0) {
-                    r[i] = 0;
-                    i -= 1;
-                }
-                return r;
-            }()),
-            add = function (p) {
-                keys[indexes[1]] = p;
-                indexes[2] = indexes[1];
-                indexes[1] += 1;
-            },
-            add0 = function () {
-                //just do a step, since array is initialized with zeroes
-                indexes[1] += 1;
-            },
-            finalize = function () {
-                var start = indexes[0];
-                keys[start] = indexes[2] - start;
-                indexes[0] = indexes[2] + 1;
-                indexes[1] = indexes[2] + 2;
-                return start;
-            };
-        return {
-            keys: keys,
-            add: add,
-            add0: add0,
-            finalize: finalize
-        };
-    }*/
 
     /**
      * @method Hyphenator~convertPatternsToArray
@@ -1854,11 +1803,11 @@ Hyphenator = (function (window) {
      *    the length of charMao.int2code is equal the length of the alphabet
      *
      * 2. Create a ValueStore: (typed) array that holds "values", i.e. the digits extracted from the patterns
-     *    The first value starts at index 1 (since the trie is initialized with zeroes, starting at 0 would create errors)
-     *    Each value starts with its length at index i, actual values are stored in i + n where n < length
-     *    Trailing 0 are not stored. So pattern values like e.g. "010200" will become […,4,0,1,0,2,…]
+     *    The first value set starts at index 1 (since the trie is initialized with zeroes, starting at 0 would create errors)
+     *    Each value set ends with a value of 255; trailing 0's are not stored. So pattern values like e.g. "010200" will become […,0,1,0,2,255,…]
      *    The ValueStore-Object manages handling of indizes automatically. Use ValueStore.add(p) to add a running value.
-     *    Use ValueStore.finalize() when the last value of a pattern is added. It will set the length and return the starting index of the pattern.
+     *    Use ValueStore.finalize() when the last value of a pattern is added. It will add the final 255, prepare the valueStore for new values
+     *    and return the starting index of the pattern.
      *    To prevent doubles we could temporarly store the values in a object {value: startIndex} and only add new values,
      *    but this object deoptimizes very fast (new hidden map for each entry); here we gain speed and pay memory
      *
@@ -2466,9 +2415,9 @@ Hyphenator = (function (window) {
                                 lo.redPatSet = {};
                             }
                             if (valueStore.subarray) {
-                                values = valueStore.subarray(value + 1, value + 1 + valueStore[value]);
+                                values = valueStore.subarray(value, value + hpc);
                             } else {
-                                values = valueStore.slice(value + 1, value + 1 + valueStore[value]);
+                                values = valueStore.slice(value, value + hpc);
                             }
                             lo.redPatSet[pattern] = recreatePattern(pattern, values);
                         }
