@@ -878,6 +878,14 @@ Hyphenator = (function (window) {
     };
 
     /**
+     * @member {string} Hyphenate on this Window-Event
+     * @desc
+     * Hyphenate on this window-event, default 'complete'
+     * @access private
+     */
+    var hyphenationOnReadyState = 'complete';
+
+    /**
      * @name Hyphenator~selectorFunction
      * @desc
      * A function set by the user that has to return a HTMLNodeList or array of Elements to be hyphenated.
@@ -1401,7 +1409,7 @@ Hyphenator = (function (window) {
             }
         }
 
-        if (documentLoaded || w.document.readyState === 'complete') {
+        if (documentLoaded || w.document.readyState === hyphenationOnReadyState) {
             //Hyphenator has run already (documentLoaded is true) or
             //it has been loaded after onLoad
             documentLoaded = true;
@@ -3083,6 +3091,11 @@ Hyphenator = (function (window) {
             case 'onwarninghandler':
                 if (assert('onwarninghandler', 'function')) {
                     onWarning = obj[key];
+                }
+                break;
+            case 'hyphenationOnReadyState':
+                if(assert('hyphenationOnReadyState', 'string')) {
+                    hyphenationOnReadyState = obj[key];
                 }
                 break;
             case 'intermediatestate':
