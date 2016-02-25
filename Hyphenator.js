@@ -132,49 +132,67 @@ Hyphenator = (function (window) {
         return r;
     }());
 
+    /**
+     * @member {Object} Hyphenator~locality
+     * @desc
+     * An object storing isBookmarklet, basePath and isLocal
+     * @access private
+     * @see {@link Hyphenator~loadPatterns}
+     */
+    var locality = (function getLocality() {
+        var r = {
+                isBookmarklet: false,
+                basePath: "//mnater.github.io/Hyphenator/",
+                isLocal: false
+            },
+            scripts = contextWindow.document.getElementsByTagName('script'),
+            i = 0,
+            src,
+            len = scripts.length,
+            p,
+            currScript;
+        while (i < len) {
+            currScript = scripts[i];
+            if (currScript.hasAttribute("src")) {
+                src = currScript.src;
+                p = src.indexOf("Hyphenator.js");
+                if (p !== -1) {
+                    r.basePath = src.substring(0, p);
+                    if (src.indexOf("Hyphenator.js?bm=true") !== -1) {
+                        r.isBookmarklet = true;
+                    }
+                    if (window.location.href.indexOf(r.basePath) !== -1) {
+                        r.isLocal = true;
+                    }
+                    break;
+                }
+            }
+            i += 1;
+        }
+        return r;
+    }());
 
     /**
      * @member {string} Hyphenator~basePath
      * @desc
      * A string storing the basepath from where Hyphenator.js was loaded.
      * This is used to load the pattern files.
-     * The basepath is determined dynamically by searching all script-tags for Hyphenator.js
+     * The basepath is determined dynamically in getLocality by searching all script-tags for Hyphenator.js
      * If the path cannot be determined {@link http://mnater.github.io/Hyphenator/} is used as fallback.
      * @access private
      * @see {@link Hyphenator~loadPatterns}
      */
-    var basePath = (function () {
-        var s = contextWindow.document.getElementsByTagName('script'), i = 0, p, src, t = s[i], r = '';
-        while (!!t) {
-            if (!!t.src) {
-                src = t.src;
-                p = src.indexOf('Hyphenator.js');
-                if (p !== -1) {
-                    r = src.substring(0, p);
-                }
-            }
-            i += 1;
-            t = s[i];
-        }
-        return !!r
-            ? r
-            : '//mnater.github.io/Hyphenator/';
-    }());
+    var basePath = locality.basePath;
 
     /**
      * @member {boolean} Hyphenator~isLocal
      * @access private
      * @desc
+     * This is computed by getLocality.
      * isLocal is true, if Hyphenator is loaded from the same domain, as the webpage, but false, if
      * it's loaded from an external source (i.e. directly from github)
      */
-    var isLocal = (function () {
-        var re = false;
-        if (window.location.href.indexOf(basePath) !== -1) {
-            re = true;
-        }
-        return re;
-    }());
+    var isLocal = locality.isLocal;
 
     /**
      * @member {boolean} Hyphenator~documentLoaded
@@ -324,9 +342,7 @@ Hyphenator = (function (window) {
     function forEachKey(o, f) {
         var k;
         if (Object.hasOwnProperty("keys")) {
-            Object.keys(o).forEach(function (v) {
-                f(v);
-            });
+            Object.keys(o).forEach(f);
         } else {
             for (k in o) {
                 if (o.hasOwnProperty(k)) {
@@ -628,24 +644,11 @@ Hyphenator = (function (window) {
     /**
      * @member {boolean} Hyphenator~isBookmarklet
      * @desc
+     * This is computed by getLocality.
      * True if Hyphanetor runs as bookmarklet.
      * @access private
      */
-    var isBookmarklet = (function () {
-        var loc = null,
-            re = false,
-            scripts = contextWindow.document.getElementsByTagName('script'),
-            i = 0,
-            l = scripts.length;
-        while (!re && i < l) {
-            loc = scripts[i].getAttribute('src');
-            if (!!loc && loc.indexOf('Hyphenator.js?bm=true') !== -1) {
-                re = true;
-            }
-            i += 1;
-        }
-        return re;
-    }());
+    var isBookmarklet = locality.isBookmarklet;
 
     /**
      * @member {string|null} Hyphenator~mainLanguage
