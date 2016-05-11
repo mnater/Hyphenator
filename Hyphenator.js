@@ -12,7 +12,7 @@
  */
 
 /* The following comment is for JSLint: */
-/*jslint browser: true*/
+/*jslint browser: true, multivar: true*/
 /*global Hyphenator window*/
 
 /**
@@ -628,6 +628,19 @@ Hyphenator = (function (window) {
      * @see {@link Hyphenator.config}
      */
     var rightmin = 0;
+
+    /**
+     * @member {number} Hyphenator~rightmin
+     * @desc
+     * Control how compound words are hyphenated.
+     * "auto": factory-made -> fac-tory-made ('old' behaviour of Hyphenator.js)
+     * "all": factory-made -> fac-tory-[ZWSP]made ('made'.length < minWordLength)
+     * "hyphen": factory-made -> factory-[ZWSP]made (Zero Width Space inserted after '-' to provide line breaking opportunity)
+     * @default "auto"
+     * @access private
+     * @see {@link Hyphenator.config}
+     */
+    var compound = "auto";
 
     /**
      * @member {number} Hyphenator~orphanControl
@@ -2290,13 +2303,52 @@ Hyphenator = (function (window) {
     }());
 
     /**
+     * @method Hyphenator~hyphenateCompound
+     * @desc
+     * Treats compound words accordingly to the 'compound' setting
+     *
+     * @param {Object} lo A language object (containing the patterns)
+     * @param {string} lang The language of the word
+     * @param {string} word The word
+     * @returns string The (hyphenated) compound word
+     * @access private
+     */
+    function hyphenateCompound(lo, lang, word) {
+        var hw, parts, i = 0;
+        switch (compound) {
+        case "auto":
+            parts = word.split('-');
+            while (i < parts.length) {
+                parts[i] = hyphenateWord(lo, lang, parts[i]);
+                i += 1;
+            }
+            hw = parts.join('-');
+            break;
+        case "all":
+            parts = word.split('-');
+            while (i < parts.length) {
+                parts[i] = hyphenateWord(lo, lang, parts[i]);
+                i += 1;
+            }
+            hw = parts.join('-' + zeroWidthSpace);
+            break;
+        case "hyphen":
+            hw = word.replace('-', '-' + zeroWidthSpace);
+            break;
+        default:
+            onError(new Error('Hyphenator.settings: compound setting "' + compound + '" not known.'));
+        }
+        return hw;
+    }
+
+    /**
      * @method Hyphenator~hyphenateWord
      * @desc
      * This function is the heart of Hyphenator.js. It returns a hyphenated word.
      *
      * If there's already a {@link Hyphenator~hypen} in the word, the word is returned as it is.
      * If the word is in the exceptions list or in the cache, it is retrieved from it.
-     * If there's a '-' hyphenate the parts.
+     * If there's a '-' it calls Hyphenator~hyphenateCompound
      * The hyphenated word is returned and (if acivated) cached.
      * Both special Events onBeforeWordHyphenation and onAfterWordHyphenation are called for the word.
      * @param {Object} lo A language object (containing the patterns)
@@ -2306,9 +2358,7 @@ Hyphenator = (function (window) {
      * @access private
      */
     function hyphenateWord(lo, lang, word) {
-        var parts,
-            i = 0,
-            pattern = "",
+        var pattern = "",
             ww,
             wwlen,
             wwhp = wwhpStore,
@@ -2339,13 +2389,7 @@ Hyphenator = (function (window) {
         } else if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
             hw = lo.exceptions[word].replace(/-/g, hyphen);
         } else if (word.indexOf('-') !== -1) {
-            //word contains '-' -> hyphenate the parts separated with '-'
-            parts = word.split('-');
-            while (i < parts.length) {
-                parts[i] = hyphenateWord(lo, lang, parts[i]);
-                i += 1;
-            }
-            hw = parts.join('-');
+            hw = hyphenateCompound(lo, lang, word);
         } else {
             ww = word.toLowerCase();
             if (String.prototype.normalize) {
@@ -3161,6 +3205,11 @@ Hyphenator = (function (window) {
             case 'rightmin':
                 if (assert('rightmin', 'number')) {
                     rightmin = obj[key];
+                }
+                break;
+            case 'compound':
+                if (assert('compound', 'string')) {
+                    compound = obj[key];
                 }
                 break;
             default:
