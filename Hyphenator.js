@@ -2952,7 +2952,10 @@ Hyphenator = (function (window) {
             'useCSS3hyphenation': css3,
             'unhide': unhide,
             'onbeforewordhyphenation': onBeforeWordHyphenation,
-            'onafterwordhyphenation': onAfterWordHyphenation
+            'onafterwordhyphenation': onAfterWordHyphenation,
+            'leftmin': leftmin,
+            'rightmin': rightmin,
+            'compound': compound
         };
         storage.setItem('config', window.JSON.stringify(settings));
     }
