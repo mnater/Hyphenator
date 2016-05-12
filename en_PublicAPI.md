@@ -43,6 +43,9 @@ The values for the associated keys must be of the defined type:
 <tr><td>unhide</td><td>string</td></tr>
 <tr><td>onbeforewordhyphenation</td><td>function</td></tr>
 <tr><td>onafterwordhyphenation</td><td>function</td></tr>
+<tr><td>leftmin</td><td>number</td></tr>
+<tr><td>rightmin</td><td>number</td></tr>
+<tr><td>compound</td><td>string</td></tr>
 </table>
 
 For detailed description of each property see below.
@@ -533,6 +536,48 @@ This function must return a string (aka the word).
 
 ---
 
+#### properties `leftmin` and `rightmin` ####
+**new in version 5.2.0**
+Each language pattern file defines its own values for leftmin (the minimum of chars to remain on the old line) and rightmin (the minimum of chars to go on the new line). Sometimes it's usefull to overwrite them with larger values.
+##### Example 24 – using `leftmin` #####
+```HTML
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+    Hyphenator.config({
+        'leftmin': 4 //this inhibits Hy-phenation but allows Hyphen-ation
+    });
+	Hyphenator.run();
+</script>
+```
+
+---
+
+#### property `compound` ####
+**new in version 5.2.0**
+Hyphenation of compound words containing a '-' (e.g. factory-made) can be ugly:
+````
+fac-
+tory-made
+````
+The `compound` property handles this case:
+
+- 'auto': factory-made -> fac&amp;shy;tory-made (this is the default)
+- 'all': factory-made -> fac&amp;shy;tory-[ZWSP]made
+- 'hyphen': factory-made -> factory-[ZWSP]made
+
+Zero width space (ZWSP) is inserted after the hyphen to provide a white-space line break opportunity to UAs that dont automatically hyphenate after a '-'.
+##### Example 25 – using `compound` #####
+```HTML
+<script src="Hyphenator.js" type="text/javascript"></script>
+<script type="text/javascript">
+    Hyphenator.config({
+        'compound': 'hyphen'
+    });
+	Hyphenator.run();
+</script>
+```
+
+---
 
 ### void Hyphenator.run() ###
 Calling this method invokes hyphenation.
