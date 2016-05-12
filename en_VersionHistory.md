@@ -2,7 +2,7 @@
 
 # Version History #
 <!--
-## [Version 5.2.0](https://github.com/mnater/Hyphenator/releases/tag/5.2.0) (January XX, 2016) ##
+## [Version 5.2.0](https://github.com/mnater/Hyphenator/releases/tag/5.2.0) (May XX, 2016) ##
 This minor release add the following features:
   * support for Irish (thanks to Kevin Scannell)
   * adopt the more restrictive coding standarts of new JSLint
@@ -10,7 +10,8 @@ This minor release add the following features:
   * fixes an issue with extremly long words (#226)
   * fixes an issue where Hyphenator_Loader didn't yield correct results (#231)
   * fixes ab issue with character substitution (#246)
-  * Adding options to control leftmin and rightmin (#240)
+  * Adds options to control leftmin and rightmin (#240)
+  * Adds options to prevent ugly hyphenation of compound words (#261)
 -->
 ## [Version 5.1.0](https://github.com/mnater/Hyphenator/releases/tag/5.1.0) (June 24, 2015) ##
 This minor release brings the following changes:
