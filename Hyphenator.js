@@ -2319,7 +2319,9 @@ Hyphenator = (function (window) {
         case "auto":
             parts = word.split('-');
             while (i < parts.length) {
-                parts[i] = hyphenateWord(lo, lang, parts[i]);
+                if (parts[i].length >= min) {
+                    parts[i] = hyphenateWord(lo, lang, parts[i]);
+                }
                 i += 1;
             }
             hw = parts.join('-');
@@ -2327,7 +2329,9 @@ Hyphenator = (function (window) {
         case "all":
             parts = word.split('-');
             while (i < parts.length) {
-                parts[i] = hyphenateWord(lo, lang, parts[i]);
+                if (parts[i].length >= min) {
+                    parts[i] = hyphenateWord(lo, lang, parts[i]);
+                }
                 i += 1;
             }
             hw = parts.join('-' + zeroWidthSpace);
