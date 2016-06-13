@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Test 122</title>
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+                background-color: #ffd6d6;
+            }
+            #ref {
+                background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            if (parent != window) {
+                Hyphenator.config({
+                    'onhyphenationdonecallback': function () {
+                        var t1 = document.getElementById('test').innerHTML,
+                        t2 = document.getElementById('ref').innerHTML,
+                        desc = document.getElementById('desc').firstChild.data,
+                        msg = {
+                            desc: desc,
+                            index: 122
+                        };
+                        if (t1 == t2) {
+                            msg.result = 'passed';
+                        } else {
+                            msg.result = 'failed';
+                        }
+                        parent.postMessage(JSON.stringify(msg), window.location.href);
+                    }
+                });         
+            }
+            Hyphenator.config({
+                hyphenchar:'|',
+                leftmin: 3,
+                rightmin: 4
+            });
+            Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test121.html">&lt;- Prev</a> | <a href="test123.html">Next -&gt;</a></p>
+        <h1>Test 122</h1>
+        <p id="desc">Hyphenate one word restricted by leftmin = 3 and rightmin = 4</p>
+
+        <p id="test" class="hyphenate" lang="de">abbaubar abbaubare abbaubares Abbaubarkeit</p>
+        <p id="ref">abbaubar abbau|bare abbau|bares Abbau|bar|keit</p>
+    </body>
+</html>

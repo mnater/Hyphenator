@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 123</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+                background-color: #ffd6d6;
+            }
+            #ref {
+                background-color: #d6ffd6;
+            }
+            .box {
+                width: 2em;
+                margin: 0.5em;
+                border: 1px solid red;
+            }
+            h2 {
+                clear: both;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            if (parent != window) {
+                Hyphenator.config({
+                    'onhyphenationdonecallback': function () {
+                        var t1 = document.getElementById('test').innerHTML,
+                        t2 = document.getElementById('ref').innerHTML,
+                        desc = document.getElementById('desc').firstChild.data,
+                        msg = {
+                            desc: desc,
+                            index: 123
+                        };
+                        if (t1 == t2) {
+                            msg.result = 'passed';
+                        } else {
+                            msg.result = 'failed';
+                        }
+                        parent.postMessage(JSON.stringify(msg), window.location.href);
+                    }
+                });         
+            }
+            Hyphenator.config({hyphenchar:'&shy;', compound: 'hyphen'});
+            Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test122.html">&lt;- Prev</a> | <a href="test124.html">Next -&gt;</a></p>
+        <h1>Test 123</h1>
+        <p id="desc">Hyphenate compound words only at a hyphen.</p>
+        <p id="test" class="hyphenate box" lang="en">hyphenation-two</p>
+        <p id="ref" class="box" lang="en">hyphenation-&#8203;two</p>
+    </body>
+</html>
