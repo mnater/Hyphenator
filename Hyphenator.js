@@ -2696,35 +2696,16 @@ Hyphenator = (function (window) {
      * @param {string} part - The sring where orphans have to be removed
      * @access private
      */
-    function controlOrphans(part) {
-        var h, r;
-        switch (hyphen) {
-        case '|':
-            h = '\\|';
-            break;
-        case '+':
-            h = '\\+';
-            break;
-        case '*':
-            h = '\\*';
-            break;
-        default:
-            h = hyphen;
+    function controlOrphans(ignore, leadingWhiteSpace, lastWord, trailingWhiteSpace) {
+        var h;
+        //escape hyphen
+        if (".\\+*?[^]$(){}=!<>|:-".indexOf(hyphen) !== -1) {
+            h = "\\" + hyphen;
         }
-        //strip off blank space at the end (omitted closing tags)
-        part = part.replace(/[\s]*$/, '');
-        if (orphanControl >= 2) {
-            //remove hyphen points from last word
-            r = part.split(' ');
-            r[1] = r[1].replace(new RegExp(h, 'g'), '');
-            r[1] = r[1].replace(new RegExp(zeroWidthSpace, 'g'), '');
-            r = r.join(' ');
+        if (orphanControl === 3 && leadingWhiteSpace === " ") {
+            leadingWhiteSpace = String.fromCharCode(160);
         }
-        if (orphanControl === 3) {
-            //replace spaces by non breaking spaces
-            r = r.replace(/[\ ]+/g, String.fromCharCode(160));
-        }
-        return r;
+        return leadingWhiteSpace + lastWord.replace(new RegExp(h + "|" + zeroWidthSpace, 'g'), '') + trailingWhiteSpace;
     }
 
     /**
@@ -2765,7 +2746,8 @@ Hyphenator = (function (window) {
                         && n.data.length >= min) { //longer then min
                     n.data = n.data.replace(lo.genRegExp, hyphenate);
                     if (orphanControl !== 1) {
-                        n.data = n.data.replace(/[\S]+\ [\S]+[\s]*$/, controlOrphans);
+                        //prevent last word from being hyphenated
+                        n.data = n.data.replace(/(\ *)(\S+)(\s*)$/, controlOrphans);
                     }
                 }
                 i += 1;
