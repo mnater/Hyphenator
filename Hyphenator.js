@@ -2492,31 +2492,13 @@ Hyphenator = (function (window) {
      */
     function removeHyphenationFromElement(el) {
         var h, u, i = 0, n;
-        switch (hyphen) {
-        case '|':
-            h = '\\|';
-            break;
-        case '+':
-            h = '\\+';
-            break;
-        case '*':
-            h = '\\*';
-            break;
-        default:
-            h = hyphen;
+        //escape hyphen
+        if (".\\+*?[^]$(){}=!<>|:-".indexOf(hyphen) !== -1) {
+            h = "\\" + hyphen;
         }
-        switch (urlhyphen) {
-        case '|':
-            u = '\\|';
-            break;
-        case '+':
-            u = '\\+';
-            break;
-        case '*':
-            u = '\\*';
-            break;
-        default:
-            u = urlhyphen;
+        //escape hyphen
+        if (".\\+*?[^]$(){}=!<>|:-".indexOf(urlhyphen) !== -1) {
+            u = "\\" + urlhyphen;
         }
         n = el.childNodes[i];
         while (!!n) {
