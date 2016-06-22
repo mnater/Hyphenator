@@ -2679,7 +2679,7 @@ Hyphenator = (function (window) {
      * @access private
      */
     function controlOrphans(ignore, leadingWhiteSpace, lastWord, trailingWhiteSpace) {
-        var h;
+        var h = hyphen;
         //escape hyphen
         if (".\\+*?[^]$(){}=!<>|:-".indexOf(hyphen) !== -1) {
             h = "\\" + hyphen;
