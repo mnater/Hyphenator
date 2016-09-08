@@ -2504,10 +2504,14 @@ Hyphenator = (function (window) {
         //escape hyphen
         if (".\\+*?[^]$(){}=!<>|:-".indexOf(hyphen) !== -1) {
             h = "\\" + hyphen;
+        } else {
+            h = hyphen;
         }
         //escape hyphen
         if (".\\+*?[^]$(){}=!<>|:-".indexOf(urlhyphen) !== -1) {
             u = "\\" + urlhyphen;
+        } else {
+            u = urlhyphen;
         }
         n = el.childNodes[i];
         while (!!n) {
@@ -2692,6 +2696,8 @@ Hyphenator = (function (window) {
         //escape hyphen
         if (".\\+*?[^]$(){}=!<>|:-".indexOf(hyphen) !== -1) {
             h = "\\" + hyphen;
+        } else {
+            h = hyphen;
         }
         if (orphanControl === 3 && leadingWhiteSpace === " ") {
             leadingWhiteSpace = String.fromCharCode(160);
