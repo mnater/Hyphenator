@@ -12,7 +12,7 @@
  */
 
 /* The following comment is for JSLint: */
-/*jslint browser: true, multivar: true*/
+/*jslint browser: true, multivar: true, single: true*/
 /*global Hyphenator window*/
 
 /**
@@ -132,6 +132,8 @@ Hyphenator = (function (window) {
         return r;
     }());
 
+
+
     /**
      * @member {Object} Hyphenator~locality
      * @desc
@@ -141,33 +143,40 @@ Hyphenator = (function (window) {
      */
     var locality = (function getLocality() {
         var r = {
-                isBookmarklet: false,
-                basePath: "//mnater.github.io/Hyphenator/",
-                isLocal: false
-            },
-            scripts = contextWindow.document.getElementsByTagName('script'),
-            i = 0,
-            src,
-            len = scripts.length,
-            p,
-            currScript;
-        while (i < len) {
-            currScript = scripts[i];
-            if (currScript.hasAttribute("src")) {
-                src = currScript.src;
-                p = src.indexOf("Hyphenator.js");
-                if (p !== -1) {
-                    r.basePath = src.substring(0, p);
-                    if (src.indexOf("Hyphenator.js?bm=true") !== -1) {
-                        r.isBookmarklet = true;
-                    }
-                    if (window.location.href.indexOf(r.basePath) !== -1) {
-                        r.isLocal = true;
-                    }
+            isBookmarklet: false,
+            basePath: "//mnater.github.io/Hyphenator/",
+            isLocal: false
+        };
+        var fullPath;
+        function getBasePath(path) {
+            return path.substring(0, path.lastIndexOf("/") + 1);
+        }
+        function findCurrentScript() {
+            var scripts = contextWindow.document.getElementsByTagName('script');
+            var num = scripts.length - 1;
+            var currScript;
+            var src;
+            while (num > 0) {
+                currScript = scripts[num];
+                if (currScript.hasAttribute("src") && currScript.src.indexOf("Hyphenator") !== -1) {
+                    src = currScript.src;
                     break;
                 }
+                num -= 1;
             }
-            i += 1;
+            return src;
+        }
+        if (!!document.currentScript) {
+            fullPath = document.currentScript.src;
+        } else {
+            fullPath = findCurrentScript();
+        }
+        r.basePath = getBasePath(fullPath);
+        if (fullPath.indexOf("bm=true") !== -1) {
+            r.isBookmarklet = true;
+        }
+        if (window.location.href.indexOf(r.basePath) !== -1) {
+            r.isLocal = true;
         }
         return r;
     }());
@@ -2865,7 +2874,6 @@ Hyphenator = (function (window) {
                     break;
                 default:
                     s = undefined;
-                    break;
                 }
                 //check for private mode
                 s.setItem('storageTest', '1');
