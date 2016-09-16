@@ -565,6 +565,7 @@ function jsmin(comment, input, level) {
                 
         window.onload = function(){
             var ul = navigator.language ? navigator.language.slice(0,2) : navigator.userLanguage.slice(0,2);
+            var langBox;
             if(ul) {
                 switch (ul) {
                     case 'en':
@@ -574,7 +575,10 @@ function jsmin(comment, input, level) {
                         ul = 'el-monoton';
                         break;
                 }
-                $(ul).checked = true;
+                langBox = $(ul);
+                if (langBox) {
+                    $(ul).checked = true;
+                }
             }            
             $('alllanguages').onclick = function(){
                 if(this.checked == true) {
