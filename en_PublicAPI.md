@@ -514,13 +514,13 @@ This function must return a string (aka the word).
 ---
 
 
-#### property `onafterhyphenation` ####
+#### property `onafterwordhyphenation` ####
 **new in version 4.2.0**
 In some cases it is usefull to edit a word after it is hyphenated. In this case you can define a function to change the word just after its hyphenation.
 The function is called with two arguments:
 The first argument is the hyphenated word, the second argument is the language of the element.
 This function must return a string (aka the word).
-##### Example 23 – using `onbeforewordhyphenation` #####
+##### Example 23 – using `onafterwordhyphenation` #####
 ```HTML
 <script src="Hyphenator.js" type="text/javascript"></script>
 <script type="text/javascript">
