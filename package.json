@@ -1,0 +1,20 @@
+{
+  "name": "hyphenator",
+  "version": "5.1.1",
+  "description": "Hyphenator.js is a free open source Javascript library that automatically hyphenates text on websites",
+  "main": "Hyphenator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/derflocki/Hyphenator.git"
+  },
+  "author": "Mathias Nater",
+  "license": "SEE LICENSE IN <LICENSE.txt>",
+  "bugs": {
+    "url": "https://github.com/derflocki/Hyphenator/issues"
+  },
+  "homepage": "https://github.com/derflocki/Hyphenator#readme"
+}
+
