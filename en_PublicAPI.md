@@ -383,8 +383,7 @@ In some cases it may happen that one single syllable comes to the last line. To 
 	Hyphenator.run();
 </script>
 ```
-
-
+If the "last word" is an url it may not be split across lines if orphancontrol is set to 2 or 3. To fix this you should wrap such an url in an element with `class="urlhyphenate"` (or whatever classname is set).
 ---
 
 #### property `dohyphenation` ####
