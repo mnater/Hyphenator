@@ -16,7 +16,7 @@
  */
 
 /* The following comment is for JSLint: */
-/*jslint browser: true*/
+/*jslint browser: true multivar: true, single: true*/
 /*global window Hyphenator*/
 
 var Hyphenator_Loader = (function (window) {
