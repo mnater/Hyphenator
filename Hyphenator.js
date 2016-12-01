@@ -825,8 +825,8 @@ Hyphenator = (function (window) {
      * A string containing a insane RegularExpression to match URL's
      * @access private
      */
-    var url = '(?:\\w*:\/\/)?(?:(?:\\w*:)?(?:\\w*)@)?(?:(?:(?:[\\d]{1,3}\\.){3}(?:[\\d]{1,3}))|(?:(?:www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.(?:[a-z]{2,4})))(?::\\d*)?(?:\/[\\w#!:\\.?\\+=&%@!\\-]*)*';
-    //      protocoll     usr     pwd                    ip               or                          host                 tld        port               path
+    var url = '(?:\\w*:\/\/)?(?:(?:\\w*:)?(?:\\w*)@)?(?:(?:(?:[\\d]{1,3}\\.){3}(?:[\\d]{1,3}))|(?:(?:www\\.|[a-zA-Z]\\.)?[a-zA-Z0-9\\-\\.]+\\.(?:[a-z]{2,})))(?::\\d*)?(?:\/[\\w#!:\\.?\\+=&%@!\\-]*)*';
+    //            protocoll     usr     pwd                    ip                             or                       host                           tld        port               path
 
     /**
      * @member {string} Hyphenator~mail
