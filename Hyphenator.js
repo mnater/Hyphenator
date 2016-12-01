@@ -3394,7 +3394,7 @@ Hyphenator = (function (window) {
     /**
      * @method Hyphenator.toggleHyphenation
      * @desc
-     * Checks the current state of the ToggleBox and removes or does hyphenation.
+     * Checks the current state of Hyphenator.doHyphenation and removes or does hyphenation.
      * @access public
      */
     function toggleHyphenation() {
@@ -3405,7 +3405,9 @@ Hyphenator = (function (window) {
             removeHyphenationFromDocument();
             Hyphenator.doHyphenation = false;
             storeConfiguration();
-            toggleBox();
+            if (displayToggleBox) {
+                toggleBox();
+            }
         } else {
             if (!!css3hyphenateClassHandle) {
                 css3hyphenateClassHandle.setRule('.' + css3hyphenateClass, css3_h9n.property + ': auto;');
@@ -3413,7 +3415,9 @@ Hyphenator = (function (window) {
             Hyphenator.doHyphenation = true;
             hyphenateLanguageElements('*');
             storeConfiguration();
-            toggleBox();
+            if (displayToggleBox) {
+                toggleBox();
+            }
         }
     }
 

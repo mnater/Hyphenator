@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 126</title>
+        <title>Hyphenator.js &ndash; Test 127</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -22,6 +22,7 @@
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
             if (parent != window) {
+                var messageSent = false;
                 Hyphenator.config({
                     'onhyphenationdonecallback': function () {
                         var t1 = document.getElementById('test').innerHTML,
@@ -29,25 +30,34 @@
                         desc = document.getElementById('desc').firstChild.data,
                         msg = {
                             desc: desc,
-                            index: 126
+                            index: 127
                         };
                         if (t1 == t2) {
                             msg.result = 'visual';
                         } else {
                             msg.result = 'failed';
                         }
-                        parent.postMessage(JSON.stringify(msg), window.location.href);
+                        if (!messageSent) {
+                            parent.postMessage(JSON.stringify(msg), window.location.href);
+                            messageSent = true;
+                        }
                     }
                 });         
             }
-            Hyphenator.config({hyphenchar:'|'});
+            Hyphenator.config({hyphenchar:'|', displaytogglebox: false});
             Hyphenator.run();
+            window.setTimeout(function () {
+                Hyphenator.toggleHyphenation();
+            }, 1000);
+            window.setTimeout(function () {
+                Hyphenator.toggleHyphenation();
+            }, 2000);
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test125.html">&lt;- Prev</a> | <a href="test127.html">Next -&gt;</a></p>
-        <h1>Test 126</h1>
-        <p id="desc">Load Hyphenator from cdn, patterns should load from there, too (check console)</p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test126.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+        <h1>Test 127</h1>
+        <p id="desc">Call togglehyphenation w/o toggleBox</p>
 
         <p id="test" class="hyphenate" lang="en">Hyphenation</p>
         <p id="ref">Hy|phen|ation</p>
