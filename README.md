@@ -3,6 +3,8 @@
 - This repository replaces https://code.google.com/p/hyphenator/
 - Demo: http://mnater.github.io/Hyphenator/
 
+Note: Hyphenator.js has somewhat grown old. Have a look at its successor: https://github.com/mnater/Hyphenopoly
+
 ## Overview
 
 Hyphenator.js is a free open source Javascript library that automatically hyphenates text on websites. It comes in handy as a _polyfill_ for legacy browsers that don't support CSS 3 hyphenation at all or for modern browsers that do hyphenation, but do not provide hyphenation dictionaries for a particular language.
