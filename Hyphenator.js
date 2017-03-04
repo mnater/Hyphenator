@@ -1262,7 +1262,7 @@ Hyphenator = (function (window) {
      * @access public
      */
     function hyphenateURL(url) {
-        var tmp = url.replace(/([:\/\.\?#&\-_,;!@]+)/gi, '$&' + urlhyphen),
+        var tmp = url.replace(/([:\/.?#&\-_,;!@]+)/gi, '$&' + urlhyphen),
             parts = tmp.split(urlhyphen),
             i = 0;
         while (i < parts.length) {
@@ -2744,7 +2744,7 @@ Hyphenator = (function (window) {
                     n.data = n.data.replace(lo.genRegExp, hyphenate);
                     if (orphanControl !== 1) {
                         //prevent last word from being hyphenated
-                        n.data = n.data.replace(/(\ *)(\S+)(\s*)$/, controlOrphans);
+                        n.data = n.data.replace(/(\u0020*)(\S+)(\s*)$/, controlOrphans);
                     }
                 }
                 i += 1;
