@@ -96,7 +96,7 @@
             function output2String(meta) {
                 'use strict';
                 var tmp, len;
-                tmp = 'Hyphenator.languages[\'' + document.getElementsByName('language')[0].value + '\'] = {\n';
+                tmp = 'Hyphenator.languages["' + document.getElementsByName('language')[0].value + '"] = {\n';
                 tmp += '\tleftmin : ' + document.getElementsByName('leftmin')[0].value + ',\n';
                 tmp += '\trightmin : ' + document.getElementsByName('rightmin')[0].value + ',\n';
                 tmp += '\tspecialChars : "' + specialChars + '",\n';

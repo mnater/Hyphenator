@@ -1,10 +1,10 @@
-﻿// Created by Aleksandr Andreev and Mike Kroutikov (aleksandr.andreev (at) gmail.com)
+// Created by Aleksandr Andreev and Mike Kroutikov (aleksandr.andreev (at) gmail.com)
 //
 // Based on the file: hyph_cu.tex
 // See: https://github.com/slavonic/cu-tex/
 // Copyright (c) 2016 Aleksandr Andreev and Mike Kroutikov
 // License: MIT
-Hyphenator.languages['cu'] = {
+Hyphenator.languages["cu"] = {
 	leftmin : 1,
 	rightmin : 1,
 	specialChars : "а̀́̑҆̈веслѡмктꙋріднїѷѷⷠ҇ⷡⷢⷣⷤⷥⷦⷧⷨⷩⷪⷫⷬⷭⷮⷯⷰⷱⷲⷳⷴⷵⷶⷷⷸⷹⷺⷻⷼⷽⷾⷿꙴꙵꙶꙷꙸꙹꙺꙻ꙼꙽бишоѧхпѣчєгыжзю̆йьщцѝуфэѐёѕѯѳѹѻѽѿӓӥӧӭӱӹᲂꙍꙗ̇̾ъ҃ѱᲆⸯ꙾ꙿ︦︮︯",
