@@ -22,7 +22,7 @@
         	if (parent != window) {
 				Hyphenator.config({
 					'onhyphenationdonecallback': function () {
-						var i, last = 5, t1, t2, r = true,
+						var i, last = 6, t1, t2, r = true,
 						desc = document.getElementById('desc').firstChild.data,
 						msg = {
 							desc: desc,
@@ -65,5 +65,8 @@
         <h2>Ukrainian</h2>
         <p id="test5" class="hyphenate" lang="uk">Українська мова належить до індоєвропейської мовної родини, слов'янської групи і разом з російською та білоруською до східнослов'янської підгрупи.</p>
         <p id="ref5" lang="uk">Укра|їн|ська мо|ва на|ле|жить до ін|до|єв|ро|пей|ської мов|ної ро|ди|ни, слов'|ян|ської гру|пи і ра|зом з ро|сій|ською та бі|ло|ру|ською до схі|дно|слов'|ян|ської під|гру|пи.</p>
+        <h2>Church Slavonic</h2>
+        <p id="test6" class="hyphenate" lang="cu">Ꙗ҆зы́къ сегѡ̀ са́йта не мо́жетъ ѡ҆предѣле́нъ бы́ти. Прошꙋ́ тѧ ᲂу҆каза́ти ꙗ҆зы́къ</p>
+        <p id="ref6" lang="cu">Ꙗ҆зы́къ се|гѡ̀ са́й|та не мо́|жетъ ѡ҆|пре|дѣ|ле́нъ бы́|ти. Про|шꙋ́ тѧ ᲂу҆|ка|за́|ти ꙗ҆зы́къ</p>
     </body>
 </html>
