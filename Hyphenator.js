@@ -2408,7 +2408,6 @@ Hyphenator = (function (window) {
             hw = lo.cache[word];
         } else if (word.indexOf(hyphen) !== -1) {
             //word already contains shy; -> leave at it is!
-            console.log(word, -1);
             hw = word;
         } else if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
             hw = lo.exceptions[word].replace(/-/g, hyphen);
