@@ -83,7 +83,7 @@ Hyphenator = (function (window) {
         o('be', 'be.js', 1, 'Мова гэтага сайта не можа быць вызначаны аўтаматычна. Калі ласка пакажыце мову:');
         o('ca', 'ca.js', 0, '');
         o('cs', 'cs.js', 0, 'Jazyk této internetové stránky nebyl automaticky rozpoznán. Určete prosím její jazyk:');
-	o('cu', 'cu.js', 1, 'Ꙗ҆зы́къ сегѡ̀ са́йта не мо́жетъ ѡ҆предѣле́нъ бы́ти. Прошꙋ́ тѧ ᲂу҆каза́ти ꙗ҆зы́къ:');
+        o('cu', 'cu.js', 1, 'Ꙗ҆зы́къ сегѡ̀ са́йта не мо́жетъ ѡ҆предѣле́нъ бы́ти. Прошꙋ́ тѧ ᲂу҆каза́ти ꙗ҆зы́къ:');
         o('da', 'da.js', 0, 'Denne websides sprog kunne ikke bestemmes. Angiv venligst sprog:');
         o('bn', 'bn.js', 4, '');
         o('de', 'de.js', 0, 'Die Sprache dieser Webseite konnte nicht automatisch bestimmt werden. Bitte Sprache angeben:');
@@ -2086,6 +2086,25 @@ Hyphenator = (function (window) {
     }
 
     /**
+     * @method Hyphenator~createWordRegExp
+     * @desc
+     * build a regexp string for finding a word of a given languate
+     * @access private
+     * @param {string} lang The language
+     * @return {string}
+     */
+    function createWordRegExp(lang) {
+        var lo = Hyphenator.languages[lang],
+            wrd = "";
+        if (String.prototype.normalize) {
+            wrd = '[\\w' + lo.specialChars + lo.specialChars.normalize("NFD") + hyphen + String.fromCharCode(8204) + '-]{' + min + ',}(?!:\\/\\/)';
+        } else {
+            wrd = '[\\w' + lo.specialChars + hyphen + String.fromCharCode(8204) + '-]{' + min + ',}(?!:\\/\\/)';
+        }
+        return wrd;
+    }
+
+    /**
      * @method Hyphenator~prepareLanguagesObj
      * @desc
      * Adds some feature to the language object:
@@ -2096,7 +2115,7 @@ Hyphenator = (function (window) {
      * @param {string} lang The language of the language object
      */
     function prepareLanguagesObj(lang) {
-        var lo = Hyphenator.languages[lang], wrd;
+        var lo = Hyphenator.languages[lang];
 
         if (!lo.prepared) {
             if (enableCache) {
@@ -2134,12 +2153,7 @@ Hyphenator = (function (window) {
                 lo.exceptions = {};
             }
             convertPatternsToArray(lo);
-            if (String.prototype.normalize) {
-                wrd = '[\\w' + lo.specialChars + lo.specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}(?!:\\/\\/)';
-            } else {
-                wrd = '[\\w' + lo.specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}(?!:\\/\\/)';
-            }
-            lo.genRegExp = new RegExp('(' + wrd + ')|(' + url + ')|(' + mail + ')', 'gi');
+            lo.genRegExp = new RegExp('(' + createWordRegExp(lang) + ')|(' + url + ')|(' + mail + ')', 'gi');
             lo.prepared = true;
         }
     }
@@ -2199,12 +2213,7 @@ Hyphenator = (function (window) {
                     delete exceptions[lang];
                 }
                 //Replace genRegExp since it may have been changed:
-                if (String.prototype.normalize) {
-                    tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + Hyphenator.languages[lang].specialChars.normalize("NFD") + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}(?!:\\/\\/)';
-                } else {
-                    tmp1 = '[\\w' + Hyphenator.languages[lang].specialChars + String.fromCharCode(173) + String.fromCharCode(8204) + '-]{' + min + ',}(?!:\\/\\/)';
-                }
-                Hyphenator.languages[lang].genRegExp = new RegExp('(' + tmp1 + ')|(' + url + ')|(' + mail + ')', 'gi');
+                Hyphenator.languages[lang].genRegExp = new RegExp('(' + createWordRegExp(lang) + ')|(' + url + ')|(' + mail + ')', 'gi');
                 if (enableCache) {
                     if (!Hyphenator.languages[lang].cache) {
                         Hyphenator.languages[lang].cache = {};
@@ -2399,6 +2408,7 @@ Hyphenator = (function (window) {
             hw = lo.cache[word];
         } else if (word.indexOf(hyphen) !== -1) {
             //word already contains shy; -> leave at it is!
+            console.log(word, -1);
             hw = word;
         } else if (lo.exceptions.hasOwnProperty(word)) { //the word is in the exceptions list
             hw = lo.exceptions[word].replace(/-/g, hyphen);
