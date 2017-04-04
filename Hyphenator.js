@@ -451,7 +451,7 @@ Hyphenator = (function (window) {
                             computedHeight = shadow.offsetHeight;
                             //remove shadow element
                             bdy.removeChild(shadow);
-                            r = !!(computedHeight > 12);
+                            r = !!(computedHeight > 12 && shadow.style.hyphens == 'auto');
                             supportedBrowserLangs[lang] = r;
                         } else {
                             r = false;
