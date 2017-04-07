@@ -70,6 +70,6 @@ And please, be patient. Hyphenator.js is a hobby of mine and sometimes other thi
 (1) Some of my coding wizards are:
 
 *   Franklin Mark Liang for his beautiful [hyphenation algorithm](http://www.tug.org/docs/liang/)
-*   [Douglas Crockford](http://www.crockford.com) for making Javascript a programming language
+*   [Brendan Eich](https://brendaneich.com/) for making JavaScript a programming language (and [Douglas Crockford](http://www.crockford.com) for finding The Good Parts of it)
 *   Vyacheslav Egorov for his [deep insights to V8](http://mrale.ph/)
 *   Bram Stein for his [initiative on web typography](http://stateofwebtype.com)
