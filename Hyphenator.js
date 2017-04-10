@@ -442,6 +442,7 @@ Hyphenator = (function (window) {
                             shadow.style.fontSize = '12px';
                             shadow.style.lineHeight = '12px';
                             shadow.style.wordWrap = 'normal';
+                            shadow.style.wordBreak = 'normal';
                             shadow.style.visibility = 'hidden';
                             shadow.lang = lang;
                             shadow.style['-webkit-locale'] = "'" + lang + "'";
