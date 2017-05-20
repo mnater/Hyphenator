@@ -1,5 +1,5 @@
 {
-  "name": "Hyphenator",
+  "name": "hyphenator",
   "version": "5.1.0",
   "main": "Hyphenator.js",
   "ignore": [
