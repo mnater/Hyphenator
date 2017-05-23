@@ -157,7 +157,7 @@ Hyphenator = (function (window) {
             var num = scripts.length - 1;
             var currScript;
             var src;
-            while (num > 0) {
+            while (num >= 0) {
                 currScript = scripts[num];
                 if (currScript.hasAttribute("src") && currScript.src.indexOf("Hyphenator") !== -1) {
                     src = currScript.src;
