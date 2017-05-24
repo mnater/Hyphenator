@@ -313,7 +313,7 @@ Hyphenator = (function (window) {
      * @access private
      */
     var onError = function (e) {
-        window.alert("Hyphenator.js says:\n\nAn Error occurred:\n" + e.message);
+        window.console.error(e.message);
     };
 
     /**
@@ -324,7 +324,7 @@ Hyphenator = (function (window) {
      * @access private
      */
     var onWarning = function (e) {
-        window.console.log(e.message);
+        window.console.warn(e.message);
     };
 
     /**
