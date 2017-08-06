@@ -11,6 +11,7 @@
   ],
   "author": "Mathias Nater",
   "license": "MIT",
+  "main": "Hyphenator.js",
   "bugs": {
     "url": "https://github.com/mnater/Hyphenator/issues"
   },
