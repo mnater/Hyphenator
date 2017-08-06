@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
-<html lang="de">
+<html lang="en">
     <head>
-        <title>Hyphenator.js &ndash; Test 110</title>
+        <title>Hyphenator.js &ndash; Test 127</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
@@ -16,9 +16,13 @@
                 background-color: #d6ffd6;
             }
         </style>
+        <script type="text/javascript">
+            window.localStorage.clear();
+        </script>
         <script src="../Hyphenator.js" type="text/javascript"></script>
         <script type="text/javascript">
             if (parent != window) {
+                var messageSent = false;
                 Hyphenator.config({
                     'onhyphenationdonecallback': function () {
                         var t1 = document.getElementById('test').innerHTML,
@@ -26,32 +30,36 @@
                         desc = document.getElementById('desc').firstChild.data,
                         msg = {
                             desc: desc,
-                            index: 110
+                            index: 127
                         };
                         if (t1 == t2) {
-                            msg.result = 'passed';
+                            msg.result = 'visual';
                         } else {
                             msg.result = 'failed';
                         }
-                        parent.postMessage(JSON.stringify(msg), window.location.href);
+                        if (!messageSent) {
+                            parent.postMessage(JSON.stringify(msg), window.location.href);
+                            messageSent = true;
+                        }
                     }
                 });         
             }
-            Hyphenator.config({
-                hyphenchar:'|',
-                orphancontrol: 3,
-                safecopy:false
-            });
+            Hyphenator.config({hyphenchar:'|', displaytogglebox: false});
             Hyphenator.run();
+            window.setTimeout(function () {
+                Hyphenator.toggleHyphenation();
+            }, 1000);
+            window.setTimeout(function () {
+                Hyphenator.toggleHyphenation();
+            }, 2000);
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test109.html">&lt;- Prev</a> | <a href="test111.html">Next -&gt;</a></p>
-        <h1>Test 110</h1>
-        <p id="desc">Orphancontrol level 3 with no end tags</p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test126.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+        <h1>Test 127</h1>
+        <p id="desc">Call togglehyphenation w/o toggleBox</p>
 
-        <p id="test" class="hyphenate">&laquo;Wunderschönen guten Tag allerseits&raquo;, rief Caspar fröhlich in den Raum hinein. Sein Vater aber grummelte: &laquo;Himmelherrgott, so viele Leute hatte ich nicht erwartet!&raquo;
-        <p id="ref">&laquo;Wun|der|schö|nen guten Tag al|ler|seits&raquo;, rief Cas|par fröh|lich in den Raum hin|ein. Sein Vater aber grum|mel|te: &laquo;Him|mel|herr|gott, so viele Leute hatte ich nicht&nbsp;erwartet!&raquo;
-        <p>
-        </body>
+        <p id="test" class="hyphenate" lang="en">Hyphenation</p>
+        <p id="ref">Hy|phen|ation</p>
+    </body>
 </html>

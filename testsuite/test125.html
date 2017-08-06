@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Hyphenator.js &ndash; Test 125</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width:50%;
+                margin-left:25%;
+                margin-right:25%;
+            }
+            #test {
+                background-color: #ffd6d6;
+            }
+            #ref1 {
+                display: none;
+            }
+            
+            #ref2 {
+                background-color: #d6ffd6;
+            }
+        </style>
+        <script src="../Hyphenator.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            if (parent != window) {
+                Hyphenator.config({
+                    'onhyphenationdonecallback': function () {
+                        var t = document.getElementById('test').innerHTML,
+                        r1 = document.getElementById('ref1').innerHTML,
+                        r2 = document.getElementById('ref2').innerHTML,
+                        desc = document.getElementById('desc').firstChild.data,
+                        msg = {
+                            desc: desc,
+                            index: 125
+                        }, r = true;
+                        
+                        r = r && (t == r2);
+                        document.getElementById('HyphenatorToggleBox').onclick();
+                        t = document.getElementById('test').innerHTML;
+                        r = r && (t == r1);
+                        if (r) {
+                            msg.result = 'passed';
+                        } else {
+                            msg.result = 'failed';
+                        }
+                        console.log(msg)
+                        parent.postMessage(JSON.stringify(msg), window.location.href);
+                    }
+                });         
+            }
+
+            Hyphenator.config({
+                hyphenchar:'\u200a',
+                displaytogglebox:true
+            });
+            Hyphenator.run();
+        </script>
+    </head>
+    <body>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test124.html">&lt;- Prev</a> | <a href="test126.html">Next -&gt;</a></p>
+        <h1>Test 125</h1>
+        <p id="desc">Check if turning hyphenation off/on works with escaped unicode (\u200a).</p>
+
+        <p id="test" class="hyphenate">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+        <p id="ref1">To allow more efficient usage of paper, more regular appearance of right-side margins without requiring spacing adjustments, and to eliminate the need to erase hand-written long words begun near the end of a line that do not fit, words may be divided at the nearest breakpoint between syllables and a hyphen inserted to indicate that the letters form a word fragment, not a word.</p>
+        <p id="ref2">To allow more ef&#x200a;fi&#x200a;cient usage of paper, more reg&#x200a;u&#x200a;lar ap&#x200a;pear&#x200a;ance of right-side mar&#x200a;gins with&#x200a;out re&#x200a;quir&#x200a;ing spac&#x200a;ing ad&#x200a;just&#x200a;ments, and to elim&#x200a;i&#x200a;nate the need to erase hand-writ&#x200a;ten long words begun near the end of a line that do not fit, words may be di&#x200a;vided at the near&#x200a;est break&#x200a;point be&#x200a;tween syl&#x200a;la&#x200a;bles and a hy&#x200a;phen in&#x200a;serted to in&#x200a;di&#x200a;cate that the let&#x200a;ters form a word frag&#x200a;ment, not a word.</p>
+    </body>
+</html>

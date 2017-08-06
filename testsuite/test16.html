@@ -45,49 +45,36 @@
         <h1>Test 16</h1>
         <p id="desc">Check Hyphenator with <a href="http://www.jslint.com/">JSLint</a>!</p>
         <pre><script type="text/javascript">
-            JSLINT(loadScript());
-            var errors = JSLINT.errors, l = errors.length, i, global = JSLINT.data().global, lg = global.length, unused, lu = 0;
-            if (JSLINT.data().unused) {
-                unused = JSLINT.data().unused;
-                lu = unused.length;
-            }
-            if (l > 0 || lg > 11 || lu > 0) {
+            var jsl = jslint(loadScript());
+            if (jsl.ok) {
                 if (window != parent) {
                     var msg = {
-                        desc: "Make JSLint happy ;-)",
-                        index: 16,
-                        result: 'failed'
-                    };
-                    parent.postMessage(JSON.stringify(msg), window.location.href);
-                } else {
-                    document.writeln("JSLint error(s):\n");
-                    for (i = 0; i < l; i++ ) {
-                        document.writeln("\n" + errors[i].evidence + "\n");
-                        document.writeln("    Problem at line " + errors[i].line + " character " + errors[i].character + ": " + errors[i].reason);
-                    }
-                    for (i = 0; i < lg; i++ ) {
-                        //if (global[i] !== 'Hyphenator' && global[i] !== 'window') {
-                        if ('Hyphenator, window, Error, Function, Math, RegExp, String, isFinite, parseInt, Array, Object'.indexOf(global[i]) === -1) {
-                            document.writeln("\n bad global:\n");
-                            document.writeln("    " + global[i]);
-                        }
-                    }
-                    for (i = 0; i < lu; i++ ) {
-                        document.writeln("    unused variable \'" + unused[i].name + "\' at line: " + unused[i].line + " in function: " + unused[i]['function']);
-                    }
-                }
-            } else {
-                if (window != parent) {
-                    var msg = {
-                        desc: "Make JSLint happy ;-)",
+                        desc: "Make JSLint " + jsl.edition + " happy ;-)",
                         index: 16,
                         result: 'passed'
                     };
                     parent.postMessage(JSON.stringify(msg), window.location.href);
                 } else {
-                    document.writeln("Hyphenator.js has JSLint check passed." );
+                    document.writeln("Hyphenator.js has JSLint " + jsl.edition + " check passed." );
+                }
+            } else {
+                if (window != parent) {
+                    var msg = {
+                        desc: "Make JSLint " + jsl.edition + " happy ;-)",
+                        index: 16,
+                        result: 'failed'
+                    };
+                    parent.postMessage(JSON.stringify(msg), window.location.href);
+                } else {
+                    var errorCount = jsl.warnings.length;
+                    document.writeln("JSLint " + jsl.edition + " error(s):\n");
+                    for (i = 0; i < errorCount; i++ ) {
+                        document.writeln("\n" + jsl.warnings[i].message + "\n");
+                        document.writeln("    Problem at line " + jsl.warnings[i].line + " column " + jsl.warnings[i].column + ": " + jsl.warnings[i].code);
+                    }
                 }
             }
+
         </script></pre>
      </body>
 </html>

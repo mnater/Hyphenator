@@ -192,10 +192,16 @@
                 {exec: true, path: 'test115.html'},
                 {exec: true, path: 'test116.html'},
                 {exec: true, path: 'test117.html'},
-                {exec: true, path: 'test118.html'}
-
-
-
+                {exec: true, path: 'test118.html'},
+                {exec: true, path: 'test119.html'},
+                {exec: true, path: 'test120.html'},
+                {exec: true, path: 'test121.html'},
+                {exec: true, path: 'test122.html'},
+                {exec: true, path: 'test123.html'},
+                {exec: true, path: 'test124.html'},
+                {exec: true, path: 'test125.html'},
+                {exec: true, path: 'test126.html'},
+                {exec: true, path: 'test127.html'}
             ],
                 testframe = document.getElementById('testframe'),
                 currentTest = 1, total = 'passed';
@@ -211,6 +217,12 @@
                 tests[60] = {exec: false, path: 'test60.xml'};
                 tests[63] = {exec: false, path: 'test63.xhtml'};
             }
+
+            if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
+                tests[124] = {exec: false, path: 'test124.html'};
+            }
+
+            console.log(navigator.userAgent);
 
             function addTestResult(name, desc, result) {
                 var dl = document.getElementById('testresults'),

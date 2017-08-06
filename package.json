@@ -1,0 +1,19 @@
+{
+  "name": "hyphenator.js",
+  "version": "5.1.0",
+  "description": "Client-side hyphenation of HTML-Documents",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mnater/Hyphenator.git"
+  },
+  "keywords": [
+    "hyphenation"
+  ],
+  "author": "Mathias Nater",
+  "license": "MIT",
+  "main": "Hyphenator.js",
+  "bugs": {
+    "url": "https://github.com/mnater/Hyphenator/issues"
+  },
+  "homepage": "https://github.com/mnater/Hyphenator#readme"
+}
