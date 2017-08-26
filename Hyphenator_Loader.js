@@ -112,7 +112,8 @@ var Hyphenator_Loader = (function (window) {
                     shadow.lang = lang;
                     shadow.appendChild(window.document.createTextNode(languages[lang]));
                     shadowContainer.appendChild(shadow);
-                    if (shadow.offsetHeight === 12) {
+                    console.log(lang, shadow.offsetHeight);
+                    if (shadow.offsetHeight <= 13) {
                         loadNrunHyphenator(config);
                         break;
                     }
