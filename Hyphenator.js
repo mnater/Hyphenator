@@ -152,7 +152,7 @@ Hyphenator = (function (window) {
         var fullPath;
         function getBasePath(path) {
             if (!path) {
-              return r.basePath;
+                return r.basePath;
             }
             return path.substring(0, path.lastIndexOf("/") + 1);
         }
