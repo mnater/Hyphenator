@@ -177,7 +177,7 @@ Hyphenator = (function (window) {
             fullPath = findCurrentScript();
         }
         r.basePath = getBasePath(fullPath);
-        if (fullPath.indexOf("bm=true") !== -1) {
+        if (fullPath && fullPath.indexOf("bm=true") !== -1) {
             r.isBookmarklet = true;
         }
         if (window.location.href.indexOf(r.basePath) !== -1) {
