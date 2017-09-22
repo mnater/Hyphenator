@@ -1152,22 +1152,8 @@ function jsmin(comment, input, level) {
                     </div>
                     <div id="selectorfunction_block">
                     <label>Selector Function:<br>
-                    <textarea cols="80" rows="20" id="selectorfunction" name="selectorfunction">function (hyphenateClass) {
-    var tmp, el = [], i, l;
-    if (window.document.getElementsByClassName) {
-        el = contextWindow.document.getElementsByClassName(hyphenateClass);
-    } else if (window.document.querySelectorAll) {
-        el = contextWindow.document.querySelectorAll('.' + hyphenateClass);
-    } else {
-        tmp = contextWindow.document.getElementsByTagName('*');
-        l = tmp.length;
-        for (i = 0; i < l; i += 1) {
-            if (tmp[i].className.indexOf(hyphenateClass) !== -1 && tmp[i].className.indexOf(dontHyphenateClass) === -1) {
-                el.push(tmp[i]);
-            }
-        }
-    }
-    return el;
+                    <textarea cols="80" rows="20" id="selectorfunction" name="selectorfunction">function selectorFunction() {
+    return window.document.getElementsByClassName("hyphenate");
 }</textarea>
                     </label>
                     </div>
@@ -1341,7 +1327,7 @@ function jsmin(comment, input, level) {
         </div>
         <div id="Hyphenator_Loader_output_block">
             <p class="hyphenate">You are using Hyphenator_Loader.js. Therefor you have to create two script files as described below:</p>
-            <p class="hyphenate">Copy the packed script from the first output field below as is to a new text-file, give it a name (e.g. <code>"hyphenator.js"</code>. Make sure this is the same name as you configured Hyphenator_Loader.js for). Since patterns are not packed in the script, the <code>patterns</code>code> subdirectory must be available, too.</p>
+            <p class="hyphenate">Copy the packed script from the first output field below as is to a new text-file, give it a name (e.g. <code>"hyphenator.js"</code>. Make sure this is the same name as you configured Hyphenator_Loader.js for). Since patterns are not packed in the script, the <code>patterns</code> subdirectory must be available, too.</p>
             <p class="hyphenate">
             Note: You are not allowed to remove the licensing at the beginning of the script!</p>
             <p id="outanchor2">

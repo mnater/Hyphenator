@@ -75,8 +75,10 @@
                             if (container.innerHTML == ref2) {
                                 msg.result = "passed";
                             }
-                            parent.postMessage(JSON.stringify(msg), window.location.href);
+                        } else {
+                            msg.result = "visual";
                         }
+                        parent.postMessage(JSON.stringify(msg), window.location.href);
                     }, 1000);
                 };
         </script>

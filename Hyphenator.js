@@ -151,6 +151,9 @@ Hyphenator = (function (window) {
         };
         var fullPath;
         function getBasePath(path) {
+            if (!path) {
+                return r.basePath;
+            }
             return path.substring(0, path.lastIndexOf("/") + 1);
         }
         function findCurrentScript() {
@@ -174,7 +177,7 @@ Hyphenator = (function (window) {
             fullPath = findCurrentScript();
         }
         r.basePath = getBasePath(fullPath);
-        if (fullPath.indexOf("bm=true") !== -1) {
+        if (fullPath && fullPath.indexOf("bm=true") !== -1) {
             r.isBookmarklet = true;
         }
         if (window.location.href.indexOf(r.basePath) !== -1) {
@@ -2572,7 +2575,6 @@ Hyphenator = (function (window) {
                     bdy.appendChild(shadow);
                     if (!!window.getSelection) {
                         //FF3, Webkit, IE9
-                        e.stopPropagation();
                         selection = targetWindow.getSelection();
                         range = selection.getRangeAt(0);
                         shadow.appendChild(range.cloneContents());
@@ -2585,7 +2587,6 @@ Hyphenator = (function (window) {
                         };
                     } else {
                         // IE<9
-                        e.cancelBubble = true;
                         selection = targetWindow.document.selection;
                         range = selection.createRange();
                         shadow.innerHTML = range.htmlText;
