@@ -2575,7 +2575,6 @@ Hyphenator = (function (window) {
                     bdy.appendChild(shadow);
                     if (!!window.getSelection) {
                         //FF3, Webkit, IE9
-                        e.stopPropagation();
                         selection = targetWindow.getSelection();
                         range = selection.getRangeAt(0);
                         shadow.appendChild(range.cloneContents());
@@ -2588,7 +2587,6 @@ Hyphenator = (function (window) {
                         };
                     } else {
                         // IE<9
-                        e.cancelBubble = true;
                         selection = targetWindow.document.selection;
                         range = selection.createRange();
                         shadow.innerHTML = range.htmlText;
