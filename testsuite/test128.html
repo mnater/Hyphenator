@@ -32,20 +32,25 @@
                 });         
             }
             Hyphenator.config({
-                hyphenchar:'|',
-                safecopy: true
+                hyphenchar:'•',
+                urlhyphenchar: "·",
+                safecopy: true,
+                displaytogglebox: true
             });
             Hyphenator.run();
         </script>
     </head>
     <body>
-        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test128.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
+        <p><a href="index.html">&lt;&lt;- index</a> | <a href="test127.html">&lt;- Prev</a> | <a href="index.html">Next -&gt;</a></p>
         <h1>Test 128</h1>
-        <p id="desc">Hyphenate one word.</p>
+        <p id="desc">Test oncopy behaviour.</p>
 
-        <div id="test" class="hyphenate" lang="en" oncopy="alert('copied')">
+        <div id="test" class="hyphenate" lang="en" oncopy="/*alert('copied')*/">
             Copy the following text:
             <p>An alert saying 'copied' should pop up.</p>
+            <p class="urlhyphenate">http://www.domainname.tld/path/to/file.ext</p>
         </div>
+        <p class="urlhyphenate">http://www.domainname.tld/path/to/file.ext</p>
+        <textarea rows="5" cols="60" placeholder="paste here"></textarea>
     </body>
 </html>
