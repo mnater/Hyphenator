@@ -29,7 +29,7 @@
  */
 var Hyphenator;
 Hyphenator = (function (window) {
-    'use strict';
+    "use strict";
 
     /**
      * @member Hyphenator~contextWindow
