@@ -4,6 +4,7 @@
 - Demo: http://mnater.github.io/Hyphenator/
 
 Note: Hyphenator.js has somewhat grown old. Have a look at its successor: https://github.com/mnater/Hyphenopoly
+While there will still be bugfixes for Hyphenator.js, new features will not be added anymore (except new languages).
 
 ## Overview
 
