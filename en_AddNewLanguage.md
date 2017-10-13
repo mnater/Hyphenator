@@ -34,6 +34,8 @@ Currently, there's support for
   * Romanian (thanks to irragal)
   * Slovak (thanks to Zdenko Podobný)
   * Serbian Cyrillic (thanks to Milan Gurjanov)
+  * Irish (thanks to Kevin Scannell)
+  * Georgian (thanks to Levan Shoshiashvili)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
