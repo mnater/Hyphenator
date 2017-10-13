@@ -14,6 +14,7 @@ This minor release add the following features:
   * updated patterns for german
   * support for Irish (thanks to Kevin Scannell)
   * support for Georgian (thanks to Levan Shoshiashvili)
+  * support for Church Slavonic (thanks to Aleksandr Andreev)
   * adopt the more restrictive coding standarts of new JSLint
   * adds some missing chars and adjusts leftmin in french patterns
   * fixes an issue with extremly long words (#226)
