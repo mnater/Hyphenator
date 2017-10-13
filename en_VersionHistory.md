@@ -1,6 +1,14 @@
 # Version History and note about versioning
 
 # Version History #
+## [Version 5.3.0](https://github.com/mnater/Hyphenator/releases/tag/5.3.0) (October 13, 2017) ##
+  * fall back to loading patterns from GitHub (#275, #311 )
+  * fix regex to match urls like example.co.uk
+  * oncopy-handler is now registered on parent-elements only (#310)
+  * fixed issue when toggling hyphenation for elements with `class="urlhyphenate"`
+  * removed deprecated showModalDialog
+  * some refactoring to meet JSLint standards
+
 ## [Version 5.2.0](https://github.com/mnater/Hyphenator/releases/tag/5.2.0) (August 07, 2017) ##
 This minor release add the following features:
   * updated patterns for german
