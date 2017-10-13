@@ -12,7 +12,7 @@
  */
 
 /* The following comment is for JSLint: */
-/*jslint browser: true, multivar: true, single: false*/
+/*jslint browser: true, multivar: true, eval: true*/
 /*global Hyphenator window*/
 
 /**
