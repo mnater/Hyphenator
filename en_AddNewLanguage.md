@@ -36,6 +36,7 @@ Currently, there's support for
   * Serbian Cyrillic (thanks to Milan Gurjanov)
   * Irish (thanks to Kevin Scannell)
   * Georgian (thanks to Levan Shoshiashvili)
+  * Church Slavonic (thanks to Aleksandr Andreev)
 
 But Hyphenator is written in a manner that makes it easy to add support for other languages.
 
