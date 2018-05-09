@@ -3,8 +3,7 @@
 - This repository replaces https://code.google.com/p/hyphenator/
 - Demo: http://mnater.github.io/Hyphenator/
 
-Note: Hyphenator.js has somewhat grown old. Have a look at its successor: https://github.com/mnater/Hyphenopoly
-While there will still be bugfixes for Hyphenator.js, new features will not be added anymore (except new languages).
+**Warning: Active maintenance of this project will come to an end on fall 2018.** Have a look at its successor: https://github.com/mnater/Hyphenopoly.
 
 ## Overview
 
