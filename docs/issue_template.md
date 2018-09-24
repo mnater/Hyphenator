@@ -1,7 +1,1 @@
-_Expected behavior and actual behavior._
-
-
-_Steps to reproduce the problem._
-
-
-_Specifications: Version of Hyphenator.js, Versions of Browsers_
+# Hyphenator will no longer be supported. Please use [Hyphenopoly](https://github.com/mnater/Hyphenopoly) instead!
