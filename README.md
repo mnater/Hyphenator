@@ -1,9 +1,10 @@
-# Hyphenator.js
+# DEPRECATED
 
-- This repository replaces https://code.google.com/p/hyphenator/
-- Demo: http://mnater.github.io/Hyphenator/
+⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️
 
-**Warning: Active maintenance of this project will come to an end on fall 2018.** Have a look at its successor: https://github.com/mnater/Hyphenopoly.
+**Warning: This project is no longer maintained.** Have a look at its successor: https://github.com/mnater/Hyphenopoly.
+
+⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️⛔️
 
 ## Overview
 
