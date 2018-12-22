@@ -130,6 +130,7 @@ Hyphenator = (function (window) {
         o("tr", "tr.js", 0, "Bu web sitesinin dili otomatik olarak tespit edilememiştir. Lütfen dökümanın dilini seçiniz%A0:");
         o("uk", "uk.js", 1, "Мова цього веб-сайту не може бути визначена автоматично. Будь ласка, вкажіть головну мову:");
         o("ro", "ro.js", 0, "Limba acestui sit nu a putut fi determinată automat. Alege limba principală:");
+        o("id", "id.js", 0, "Bahasa di dalam situs ini tidak dapat ditentukan secara otomatis. Harap tentukan bahasa utamanya:");
 
         return r;
     }());
